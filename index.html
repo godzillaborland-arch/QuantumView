@@ -6,23 +6,256 @@
   <title>The Sanctuary — Sundar Rajan</title>
   <meta name="description" content="Mindfulness, Exploration, and Self-Reflection" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+    html, body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #f7f3ff;
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #6b46c1 0%, #a78bfa 100%);
+    }
+    .card {
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+    }
+    .btn {
+      transition: 0.2s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 14px rgba(0, 0, 0, 0.12);
+    }
+    .embed {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+    }
+    .embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    /* 🌿 Elegant Wisdom Wall */
+    #wisdom-wall {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .wisdom-card {
+      background: rgba(255, 255, 255, 0.85);
+      border-left: 4px solid #06b6d4;
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(6px);
+      animation: fadeInUp 0.5s ease forwards;
+      transition: all 0.2s ease-in-out;
+    }
+    .wisdom-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    }
+    .wisdom-text {
+      font-size: 0.95rem;
+      color: #1e293b;
+    }
+    .wisdom-time {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 0.3rem;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
+
 <body class="min-h-screen antialiased text-slate-800">
-  <header class="bg-gradient-to-r from-purple-700 to-indigo-500 py-10 shadow-lg text-center text-white">
-    <h1 class="text-4xl font-bold">The Sanctuary</h1>
-    <p class="text-indigo-100">Mindfulness, Exploration, and Self-Reflection</p>
+  <!-- Header -->
+  <header class="gradient-bg py-10 shadow-lg text-center">
+    <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">The Sanctuary</h1>
+    <p class="text-indigo-200 text-lg">Mindfulness • Exploration • Self-Reflection</p>
   </header>
 
-  <main class="max-w-4xl mx-auto p-6">
-    <h2 class="text-2xl font-semibold mb-4">Welcome</h2>
-    <p>This is your live spiritual hub — with your meditation app, playlists, and blog all connected.</p>
+  <main class="max-w-5xl mx-auto p-6 space-y-12">
+    <!-- Navigation Buttons -->
+    <section class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+      <a href="http://quantumviewpoint.blogspot.com/" class="btn bg-white p-4 rounded-xl font-semibold border hover:bg-indigo-50 flex flex-col items-center">📘 Blog<span class="text-xs text-gray-500 mt-1">Spiritual deep dives</span></a>
+      <a href="https://youtube.com/playlist?list=PLPA2J3pvHbj6XSZ9HzSjYVB0xtjnxETdv" class="btn bg-white p-4 rounded-xl font-semibold border hover:bg-indigo-50 flex flex-col items-center">▶️ Videos<span class="text-xs text-gray-500 mt-1">Guided meditations</span></a>
+      <a href="https://open.spotify.com/playlist/3eNqGBuC1oKbhlYlvRzKh5" class="btn bg-white p-4 rounded-xl font-semibold border hover:bg-indigo-50 flex flex-col items-center">🎵 Playlists<span class="text-xs text-gray-500 mt-1">Focus & relaxation</span></a>
+      <a href="mailto:godzilaborland@gmail.com" class="btn bg-white p-4 rounded-xl font-semibold border hover:bg-indigo-50 flex flex-col items-center">✉️ Contact Me<span class="text-xs text-gray-500 mt-1">Send an email</span></a>
+    </section>
+
+    <!-- Latest Content by Theme -->
+    <section>
+      <h2 class="text-2xl font-bold text-center text-indigo-700 mb-6">Latest Content by Theme</h2>
+      <div class="grid md:grid-cols-3 gap-5">
+        <div class="card border-t-4 border-purple-400 p-4">
+          <h3 class="font-semibold text-purple-700 mb-3 text-lg flex items-center gap-2">🕉️ Spiritual Focus</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="https://quantumviewpoint.blogspot.com/2025/10/tesla-dhyana-analogy-fulfilled.html" class="text-gray-800 hover:text-purple-600 font-medium">Blog: Tesla Dhyana Analogy Fulfilled</a></li>
+            <li><a href="https://medium.com/@sundar2rajan/building-the-meditation-states-monitor-from-inner-yardstick-to-interactive-app-adca28e41481" class="text-gray-800 hover:text-purple-600 font-medium">Medium: Meditation States Monitor</a></li>
+            <li><a href="https://open.spotify.com/playlist/3eNqGBuC1oKbhlYlvRzKh5" class="text-gray-800 hover:text-purple-600 font-medium">Spotify: Alpha Wave Sleep Playlist</a></li>
+          </ul>
+        </div>
+        <div class="card border-t-4 border-cyan-400 p-4">
+          <h3 class="font-semibold text-cyan-700 mb-3 text-lg flex items-center gap-2">🌍 Travel & Exploration</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="text-gray-800 hover:text-cyan-600 font-medium">YouTube: Bali’s Hidden Waterfalls</a></li>
+            <li><a href="#" class="text-gray-800 hover:text-cyan-600 font-medium">Blog: Solo Hiking the Dolomites</a></li>
+          </ul>
+        </div>
+        <div class="card border-t-4 border-pink-400 p-4">
+          <h3 class="font-semibold text-pink-700 mb-3 text-lg flex items-center gap-2">💡 Personal & Projects</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="text-gray-800 hover:text-pink-600 font-medium">Project: 30-Day Digital Detox Challenge</a></li>
+            <li><a href="#" class="text-gray-800 hover:text-pink-600 font-medium">Playlist: Focus Music for Deep Work</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Meditation App -->
+    <section class="card p-6">
+      <h2 class="text-2xl font-bold text-purple-700 mb-3">🧘 Featured App — Meditation Monitor</h2>
+      <p class="text-gray-600 mb-4">Experience the Meditation Stages Monitor — an AI-guided reflection tool for measuring inner absorption, peace, and bliss.</p>
+      <div class="embed border-2 border-indigo-300 rounded-lg overflow-hidden">
+        <iframe src="https://godzillaborland-arch.github.io/meditation-stages-monitor-app/" frameborder="0" allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <!-- Playlists -->
+    <section class="grid md:grid-cols-2 gap-6">
+      <div class="card p-5">
+        <h3 class="text-xl font-semibold text-indigo-700 mb-2">🎥 YouTube Playlist</h3>
+        <div class="embed rounded-lg overflow-hidden">
+          <iframe src="https://www.youtube.com/embed/videoseries?list=PLPA2J3pvHbj6XSZ9HzSjYVB0xtjnxETdv" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="card p-5">
+        <h3 class="text-xl font-semibold text-indigo-700 mb-2">🎧 Spotify Playlist</h3>
+        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/3eNqGBuC1oKbhlYlvRzKh5?utm_source=generator" width="100%" height="380" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+      </div>
+    </section>
+
+    <!-- Wisdom Wall -->
+    <section class="card p-6 border-cyan-100">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">🌿 Contribute Your Wisdom</h2>
+      <p class="text-gray-600 mb-3">What is your measure for successful meditation?</p>
+      <div class="flex gap-2">
+        <input id="meditation-measure" type="text" placeholder="My measure is ..." class="flex-1 p-3 rounded-lg border focus:ring-cyan-500 focus:border-cyan-500">
+        <button id="share-wisdom-button" class="bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg px-4 font-semibold">Share</button>
+      </div>
+      <p id="wisdom-message" class="text-sm mt-2 text-gray-500"></p>
+      <h3 class="text-lg font-semibold text-gray-700 mt-6 mb-3">Collective Wisdom Wall</h3>
+      <div id="wisdom-wall"><p class="text-gray-500 text-sm">Loading submissions ...</p></div>
+    </section>
+
+    <!-- Ask The Sanctuary -->
+    <section class="card p-6 bg-indigo-50 border border-indigo-200">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">🔮 Ask The Sanctuary</h2>
+      <button id="ask-button" class="w-full bg-indigo-700 hover:bg-indigo-800 text-white p-3 rounded-lg font-semibold">What is the Measure for Good Meditation?</button>
+      <div id="gemini-output" class="mt-4 p-4 bg-white rounded-lg border border-indigo-100 min-h-[50px] text-sm text-slate-700">Tap the button above to receive the answer.</div>
+    </section>
+
+    <footer class="text-center text-sm text-slate-500 pt-2 pb-8">© <span id="year"></span> Sundar Rajan • Built with love & light</footer>
   </main>
 
-  <footer class="text-center py-6 text-gray-500 text-sm">
-    © <span id="year"></span> Sundar Rajan — Built with love & light
-  </footer>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
 
   <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCTwIvONkXFsUsnn7GZxVG9x0RYCcB1xSw",
+      authDomain: "quantumviewpoint.firebaseapp.com",
+      projectId: "quantumviewpoint",
+      storageBucket: "quantumviewpoint.firebasestorage.app",
+      messagingSenderId: "1081460817095",
+      appId: "1:1081460817095:web:e59f6e67da956201ec52e2",
+      measurementId: "G-FSEE5PY6S7"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    auth.signInAnonymously().then(loadResponses);
+
+    async function saveResponse() {
+      const input = document.getElementById('meditation-measure');
+      const msg = document.getElementById('wisdom-message');
+      const val = input.value.trim();
+      if (!val) {
+        msg.textContent = 'Please enter your measure.';
+        return;
+      }
+      await db.collection('meditation_measures').add({
+        measure: val,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      msg.textContent = 'Wisdom shared successfully!';
+      input.value = '';
+    }
+
+    function loadResponses() {
+      const wall = document.getElementById('wisdom-wall');
+      db.collection('meditation_measures').orderBy('timestamp', 'desc').limit(30)
+        .onSnapshot(snapshot => {
+          if (snapshot.empty) {
+            wall.innerHTML = '<p class="text-gray-500 text-sm">Be the first to share your wisdom!</p>';
+            return;
+          }
+          wall.innerHTML = snapshot.docs.map(doc => {
+            const data = doc.data();
+            const t = data.timestamp ? new Date(data.timestamp.toMillis()).toLocaleString() : '';
+            return `
+              <div class="wisdom-card">
+                <p class="wisdom-text">💭 ${data.measure || ''}</p>
+                <p class="wisdom-time">${t}</p>
+              </div>`;
+          }).join('');
+        });
+    }
+
+    document.getElementById('share-wisdom-button').onclick = saveResponse;
+
+    const GEMINI_KEY = "AIzaSyCsAuB6tVaoccHMcYvRiXkX41uFBcbpyRs";
+    async function getGeminiResponse() {
+      const btn = document.getElementById('ask-button');
+      const out = document.getElementById('gemini-output');
+      btn.disabled = true;
+      out.textContent = 'Seeking wisdom ...';
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: 'What is a good measure for successful meditation covering spiritual and neurological aspects?' }] }],
+            systemInstruction: { parts: [{ text: 'Act as a compassionate spiritual guide and neuroscience enthusiast.' }] }
+          })
+        });
+        const data = await res.json();
+        out.textContent = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response.';
+      } catch (e) {
+        out.textContent = 'Error: ' + e.message;
+      }
+      btn.disabled = false;
+    }
+
+    document.getElementById('ask-button').onclick = getGeminiResponse;
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 </body>
