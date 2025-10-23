@@ -5,91 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Sanctuary — Sundar Rajan</title>
   <meta name="description" content="Mindfulness, Exploration, and Self-Reflection" />
+
+  <!-- ✅ Plausible Analytics -->
+  <script defer data-domain="godzillaborland-arch.github.io"
+          src="https://plausible.io/js/script.js"></script>
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
-    html, body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: #f7f3ff;
-    }
-    .gradient-bg {
-      background: linear-gradient(135deg, #6b46c1 0%, #a78bfa 100%);
-    }
-    .card {
-      background: #fff;
-      border-radius: 1rem;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
-    }
-    .btn {
-      transition: 0.2s ease;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-    }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 14px rgba(0, 0, 0, 0.12);
-    }
-    .embed {
-      position: relative;
-      width: 100%;
-      padding-bottom: 56.25%;
-    }
-    .embed iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-    /* 🌿 Elegant Wisdom Wall */
-    #wisdom-wall {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    .wisdom-card {
-      background: rgba(255, 255, 255, 0.85);
-      border-left: 4px solid #06b6d4;
-      border-radius: 12px;
-      padding: 0.9rem 1rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-      backdrop-filter: blur(6px);
-      animation: fadeInUp 0.5s ease forwards;
-      transition: all 0.2s ease-in-out;
-    }
-    .wisdom-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-    }
-    .wisdom-text {
-      font-size: 0.95rem;
-      color: #1e293b;
-    }
-    .wisdom-time {
-      font-size: 0.75rem;
-      color: #64748b;
-      margin-top: 0.3rem;
-    }
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+    html,body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;}
+    body{background-color:#f7f3ff;}
+    .gradient-bg{background:linear-gradient(135deg,#6b46c1 0%,#a78bfa 100%);}
+    .lavender-strip{background:linear-gradient(135deg,rgba(167,139,250,.22) 0%,rgba(247,243,255,.98) 100%);}
+    .card-shadow{box-shadow:0 10px 15px -3px rgba(0,0,0,.10),0 4px 6px -2px rgba(0,0,0,.05);}
+    .btn{transition:transform .2s ease,box-shadow .2s ease;box-shadow:0 4px 6px rgba(0,0,0,.08);}
+    .btn:hover{transform:translateY(-1px);box-shadow:0 6px 12px rgba(0,0,0,.12);}
+    .aspect-video{position:relative;width:100%;padding-bottom:56.25%;}
+    .aspect-video>iframe{position:absolute;inset:0;width:100%;height:100%;}
   </style>
+  <!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-Nj2nSV8L4u6iRao34TF3q.js"></script>
+<script>
+  window.plausible = window.plausible || function(){(plausible.q = plausible.q || []).push(arguments)};
+  plausible.init = plausible.init || function(i){plausible.o = i || {}};
+  plausible.init();
+</script>
 </head>
-
 <body class="min-h-screen antialiased text-slate-800">
+
   <!-- Header -->
-  <header class="gradient-bg py-10 shadow-lg text-center">
-    <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">The Sanctuary</h1>
-    <p class="text-indigo-200 text-lg">Mindfulness • Exploration • Self-Reflection</p>
+  <header class="gradient-bg py-10 shadow-lg">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">The Sanctuary</h1>
+      <p class="text-indigo-200 text-lg">Mindfulness, Exploration, and Self-Reflection</p>
+    </div>
   </header>
 
-  <main class="max-w-5xl mx-auto p-6 space-y-12">
+  <!-- Main container -->
+  <main class="max-w-4xl mx-auto p-4 md:p-6 space-y-10">
+
     <!-- Navigation Buttons -->
     <section class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
       <a href="http://quantumviewpoint.blogspot.com/" class="btn bg-white p-4 rounded-xl font-semibold border hover:bg-indigo-50 flex flex-col items-center">📘 Blog<span class="text-xs text-gray-500 mt-1">Spiritual deep dives</span></a>
@@ -98,181 +54,423 @@
       <a href="mailto:godzilaborland@gmail.com" class="btn bg-white p-4 rounded-xl font-semibold border hover:bg-indigo-50 flex flex-col items-center">✉️ Contact Me<span class="text-xs text-gray-500 mt-1">Send an email</span></a>
     </section>
 
-    <!-- Latest Content by Theme -->
-    <section>
-      <h2 class="text-2xl font-bold text-center text-indigo-700 mb-6">Latest Content by Theme</h2>
-      <div class="grid md:grid-cols-3 gap-5">
-        <div class="card border-t-4 border-purple-400 p-4">
-          <h3 class="font-semibold text-purple-700 mb-3 text-lg flex items-center gap-2">🕉️ Spiritual Focus</h3>
-          <ul class="space-y-2 text-sm">
-            <li><a href="https://quantumviewpoint.blogspot.com/2025/10/tesla-dhyana-analogy-fulfilled.html" class="text-gray-800 hover:text-purple-600 font-medium">Blog: Tesla Dhyana Analogy Fulfilled</a></li>
-            <li><a href="https://medium.com/@sundar2rajan/building-the-meditation-states-monitor-from-inner-yardstick-to-interactive-app-adca28e41481" class="text-gray-800 hover:text-purple-600 font-medium">Medium: Meditation States Monitor</a></li>
-            <li><a href="https://medium.com/@sundar2rajan/whats-your-measure-of-a-good-meditation-fff0a7607a75" class="text-gray-800 hover:text-purple-600 font-medium">What’s Your Measure of a Good Meditation?</a></li>
+    <!-- Latest Content by Theme (compact grid) -->
+    <section class="bg-white p-6 rounded-xl card-shadow border border-purple-100">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Latest Content by Theme</h2>
+      <div class="grid md:grid-cols-3 gap-6 text-sm">
+        <!-- Spiritual -->
+        <div>
+          <h3 class="text-lg font-semibold text-purple-700 mb-2 flex items-center">
+            <svg class="w-5 h-5 mr-1 text-cyan-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2a10 10 0 100 20 10 10 0 000-20zM13 17h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+            </svg>
+            Spiritual Focus
+          </h3>
+          <ul class="space-y-2">
+            <li><a class="hover:text-cyan-600" href="https://quantumviewpoint.blogspot.com/2025/08/guru-purnima-offering.html">Blog: Tesla Dhyana Initial Analogy</a></li>
+            <li><a class="hover:text-cyan-600" href="https://quantumviewpoint.blogspot.com/2025/10/tesla-dhyana-analogy-fulfilled.html">Blog: Tesla Dhyana Analogy Fulfilled</a></li>
           </ul>
         </div>
-        <div class="card border-t-4 border-cyan-400 p-4">
-          <h3 class="font-semibold text-cyan-700 mb-3 text-lg flex items-center gap-2">🌍 Travel & Exploration</h3>
-          <ul class="space-y-2 text-sm">
-            <li><a href="https://youtu.be/KBFemHH5feU?si=fd6eX6OLWAbAA9oX" class="text-gray-800 hover:text-cyan-600 font-medium">YouTube: Kauai — Sunrises & Nā Pali Cruise</a></li>
-            <li><a href="#" class="text-gray-800 hover:text-cyan-600 font-medium">Blog: Solo Hiking the Dolomites</a></li>
+        <!-- Travel -->
+        <div>
+          <h3 class="text-lg font-semibold text-purple-700 mb-2 flex items-center">
+            <svg class="w-5 h-5 mr-1 text-cyan-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/>
+            </svg>
+            Travel & Exploration
+          </h3>
+          <ul class="space-y-2">
+            <li><a class="hover:text-cyan-600" href="https://youtu.be/KBFemHH5feU?si=fd6eX6OLWAbAA9oX">YouTube: Kauai — Sunrises & Nā Pali Cruise</a></li>
+            <li><a class="hover:text-cyan-600" href="#">Blog: Solo Hiking the Dolomites</a></li>
           </ul>
         </div>
-        <div class="card border-t-4 border-pink-400 p-4">
-          <h3 class="font-semibold text-pink-700 mb-3 text-lg flex items-center gap-2">💡 Personal & Projects</h3>
-          <ul class="space-y-2 text-sm">
-            <li><a href="#" class="text-gray-800 hover:text-pink-600 font-medium">Project: 30-Day Digital Detox Challenge</a></li>
-            <li><a href="#" class="text-gray-800 hover:text-pink-600 font-medium">Playlist: Focus Music for Deep Work</a></li>
+        <!-- Personal -->
+        <div>
+          <h3 class="text-lg font-semibold text-purple-700 mb-2 flex items-center">
+            <svg class="w-5 h-5 mr-1 text-cyan-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+            Personal & Projects
+          </h3>
+          <ul class="space-y-2">
+            <li><a class="hover:text-cyan-600" href="https://medium.com/@sundar2rajan/building-the-meditation-states-monitor-from-inner-yardstick-to-interactive-app-adca28e41481">Building the Meditation Monitor</a></li>
+            <li><a class="hover:text-cyan-600" href="#">Playlist: Focus Music for Deep Work</a></li>
           </ul>
         </div>
       </div>
     </section>
 
-   <!-- Featured Video (hero card) -->
-<section class="bg-white p-5 rounded-xl card-shadow border border-indigo-100">
-  <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">
-    Featured Video: Kauai — Sunrises, Tubing & Nā Pali Cruise
-  </h2>
-  <div class="relative w-full overflow-hidden rounded-lg shadow-sm" style="padding-bottom: 56.25%;">
-    <iframe
-      class="absolute top-0 left-0 w-full h-full"
-      src="https://www.youtube.com/embed/KBFemHH5feU?si=fd6eX6OLWAbAA9oX"
-      title="Kauai — Gorgeous Sunrises, Mountain Tubing & Na Pali Cruise"
-      allowfullscreen
-      loading="lazy"
-    ></iframe>
-  </div>
-</section>
-
-    
-    <!-- Meditation App -->
-    <section class="card p-6">
-      <h2 class="text-2xl font-bold text-purple-700 mb-3">🧘 Featured App — Meditation Monitor</h2>
-      <p class="text-gray-600 mb-4">Experience the Meditation Stages Monitor — an AI-guided reflection tool for measuring inner absorption, peace, and bliss.</p>
-      <div class="embed border-2 border-indigo-300 rounded-lg overflow-hidden">
-        <iframe src="https://godzillaborland-arch.github.io/meditation-stages-monitor-app/" frameborder="0" allowfullscreen></iframe>
+    <!-- Featured Video (hero card) -->
+    <section class="bg-white p-5 rounded-xl card-shadow border border-indigo-100">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Featured Video: Kauai — Sunrises, Tubing & Nā Pali Cruise</h2>
+      <div class="aspect-video">
+        <iframe
+          src="https://www.youtube.com/embed/KBFemHH5feU?si=fd6eX6OLWAbAA9oX"
+          title="Kauai — Gorgeous Sunrises, Mountain Tubing & Na Pali Cruise"
+          allowfullscreen></iframe>
       </div>
     </section>
 
-    <!-- Playlists -->
-    <section class="grid md:grid-cols-2 gap-6">
-      <div class="card p-5">
-        <h3 class="text-xl font-semibold text-indigo-700 mb-2">🎥 YouTube Playlist</h3>
-        <div class="embed rounded-lg overflow-hidden">
-          <iframe src="https://www.youtube.com/embed/videoseries?list=PLPA2J3pvHbj6XSZ9HzSjYVB0xtjnxETdv" frameborder="0" allowfullscreen></iframe>
-        </div>
-      </div>
-      <div class="card p-5">
-        <h3 class="text-xl font-semibold text-indigo-700 mb-2">🎧 Spotify Playlist</h3>
-        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/3eNqGBuC1oKbhlYlvRzKh5?utm_source=generator" width="100%" height="380" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+    <!-- Meditation Monitor (full-width embed card) -->
+    <section class="p-5 bg-indigo-50 rounded-xl card-shadow">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b border-indigo-200 pb-2 flex items-center">
+        <svg class="w-6 h-6 mr-2 text-indigo-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0h6"></path>
+        </svg>
+        Featured Project: Meditation Monitor
+      </h2>
+      <p class="text-gray-600 mb-4">Interact with the meditation states monitor app below.</p>
+      <div class="relative w-full overflow-hidden rounded-lg border-2 border-indigo-300 aspect-video">
+        <iframe
+          src="https://godzillaborland-arch.github.io/meditation-stages-monitor-app/"
+          class="absolute top-0 left-0 w-full h-full"
+          frameborder="0" allowfullscreen title="Meditation Stages Monitor App"></iframe>
       </div>
     </section>
-
-    <!-- Wisdom Wall -->
-    <section class="card p-6 border-cyan-100">
-      <h2 class="text-2xl font-bold text-gray-800 mb-4">🌿 Contribute Your Wisdom</h2>
-      <p class="text-gray-600 mb-3">What is your measure for successful meditation?</p>
-      <div class="flex gap-2">
-        <input id="meditation-measure" type="text" placeholder="My measure is ..." class="flex-1 p-3 rounded-lg border focus:ring-cyan-500 focus:border-cyan-500">
-        <button id="share-wisdom-button" class="bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg px-4 font-semibold">Share</button>
-      </div>
-      <p id="wisdom-message" class="text-sm mt-2 text-gray-500"></p>
-      <h3 class="text-lg font-semibold text-gray-700 mt-6 mb-3">Collective Wisdom Wall</h3>
-      <div id="wisdom-wall"><p class="text-gray-500 text-sm">Loading submissions ...</p></div>
-    </section>
-
-    <!-- Ask The Sanctuary -->
-    <section class="card p-6 bg-indigo-50 border border-indigo-200">
-      <h2 class="text-2xl font-bold text-gray-800 mb-4">🔮 Ask The Sanctuary</h2>
-      <button id="ask-button" class="w-full bg-indigo-700 hover:bg-indigo-800 text-white p-3 rounded-lg font-semibold">What is the Measure for Good Meditation?</button>
-      <div id="gemini-output" class="mt-4 p-4 bg-white rounded-lg border border-indigo-100 min-h-[50px] text-sm text-slate-700">Tap the button above to receive the answer.</div>
-    </section>
-
-    <footer class="text-center text-sm text-slate-500 pt-2 pb-8">© <span id="year"></span> Sundar Rajan • Built with love & light</footer>
   </main>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+  <!-- Full-width lavender strip: Connect & Explore -->
+  <section class="lavender-strip w-full py-8">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Connect & Explore</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- YouTube Playlist -->
+        <div class="bg-white rounded-xl card-shadow border border-indigo-100 p-4">
+          <h3 class="text-lg font-semibold text-indigo-700 mb-3">📺 YouTube Playlist: Tesla & the Yogin</h3>
+          <div class="aspect-video">
+            <iframe
+              src="https://www.youtube.com/embed/videoseries?list=PLPA2J3pvHbj6XSZ9HzSjYVB0xtjnxETdv"
+              title="Tesla & the Yogin Playlist" allowfullscreen></iframe>
+          </div>
+        </div>
+        <!-- Spotify Playlist -->
+        <div class="bg-white rounded-xl card-shadow border border-indigo-100 p-4">
+          <h3 class="text-lg font-semibold text-indigo-700 mb-3">🎧 Spotify: Tesla = Dhyāna</h3>
+          <iframe style="border-radius:12px"
+                  src="https://open.spotify.com/embed/playlist/3eNqGBuC1oKbhlYlvRzKh5?utm_source=generator&theme=0"
+                  width="100%" height="380" frameborder="0"
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- Back to the main container for the rest -->
+  <main class="max-w-4xl mx-auto p-4 md:p-6 space-y-10">
+    <!-- Contribute Wisdom (links) -->
+    <section class="p-5 bg-white rounded-xl card-shadow border border-cyan-100">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b border-cyan-300 pb-2">Contribute Your Wisdom</h2>
+      <p class="text-gray-600 mb-4">Share your reflection with the community.</p>
+      <a href="submit.html"
+         class="inline-block px-6 py-3 rounded-lg bg-cyan-500 text-white font-semibold hover:bg-cyan-600 transition">
+         Share My Wisdom
+      </a>
+      <!--
+        <a href="wisdom.html" class="ml-3 inline-block text-indigo-600 hover:underline">
+        View Wisdom Wall
+      </a>
+      -->
+
+    </section>
+
+    <!-- Ask The Sanctuary (Gemini) -->
+    <section class="p-5 bg-indigo-50 rounded-xl card-shadow border border-indigo-200">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b border-indigo-300 pb-2">Ask The Sanctuary</h2>
+      <button id="ask-button" class="w-full bg-indigo-700 text-white p-3 rounded-lg font-semibold hover:bg-indigo-800 transition">
+        What is the Measure for Good Meditation?
+      </button>
+      <div id="gemini-output" class="mt-4 p-4 bg-white rounded-lg border border-indigo-100 min-h-[50px] text-sm text-slate-700">
+        Tap the button above to receive the answer.
+      </div>
+    </section>
+
+    <footer class="text-center text-sm text-slate-500 pt-2 pb-8">
+      © <span id="year"></span> Sundar Rajan • Built with love & light
+    </footer><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Sanctuary — QuantumView</title>
+  <meta name="description" content="Mindfulness, Exploration, and Self-Reflection." />
+
+  <!-- ✅ Plausible (your project-specific script kept exactly) -->
+  <!-- Privacy-friendly analytics by Plausible -->
+  <script async src="https://plausible.io/js/pa-Nj2nSV8L4u6iRao34TF3q.js"></script>
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyCTwIvONkXFsUsnn7GZxVG9x0RYCcB1xSw",
-      authDomain: "quantumviewpoint.firebaseapp.com",
-      projectId: "quantumviewpoint",
-      storageBucket: "quantumviewpoint.firebasestorage.app",
-      messagingSenderId: "1081460817095",
-      appId: "1:1081460817095:web:e59f6e67da956201ec52e2",
-      measurementId: "G-FSEE5PY6S7"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const auth = firebase.auth();
+    window.plausible = window.plausible || function(){(plausible.q = plausible.q || []).push(arguments)};
+    plausible.init = plausible.init || function(i){plausible.o = i || {}};
+    plausible.init();
+  </script>
 
-    auth.signInAnonymously().then(loadResponses);
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    async function saveResponse() {
-      const input = document.getElementById('meditation-measure');
-      const msg = document.getElementById('wisdom-message');
-      const val = input.value.trim();
-      if (!val) {
-        msg.textContent = 'Please enter your measure.';
-        return;
-      }
-      await db.collection('meditation_measures').add({
-        measure: val,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      msg.textContent = 'Wisdom shared successfully!';
-      input.value = '';
-    }
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+    html,body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f7f3ff;color:#111827;}
+    .gradient-bg{background:linear-gradient(135deg,#6b46c1 0%,#a78bfa 100%);}
+    .lavender-strip{background:linear-gradient(135deg,rgba(167,139,250,.22) 0%,rgba(247,243,255,.98) 100%);}
+    .card-shadow{box-shadow:0 10px 15px -3px rgba(0,0,0,.10),0 4px 6px -2px rgba(0,0,0,.05);}
+    .btn{transition:transform .2s ease,box-shadow .2s ease;box-shadow:0 4px 6px rgba(0,0,0,.08);}
+    .btn:hover{transform:translateY(-1px);box-shadow:0 6px 12px rgba(0,0,0,.12);}
+    .aspect-video{position:relative;width:100%;padding-bottom:56.25%;}
+    .aspect-video>iframe{position:absolute;inset:0;width:100%;height:100%;}
+  </style>
+</head>
+<body class="min-h-screen antialiased">
 
-    function loadResponses() {
-      const wall = document.getElementById('wisdom-wall');
-      db.collection('meditation_measures').orderBy('timestamp', 'desc').limit(30)
-        .onSnapshot(snapshot => {
-          if (snapshot.empty) {
-            wall.innerHTML = '<p class="text-gray-500 text-sm">Be the first to share your wisdom!</p>';
-            return;
-          }
-          wall.innerHTML = snapshot.docs.map(doc => {
-            const data = doc.data();
-            const t = data.timestamp ? new Date(data.timestamp.toMillis()).toLocaleString() : '';
-            return `
-              <div class="wisdom-card">
-                <p class="wisdom-text">💭 ${data.measure || ''}</p>
-                <p class="wisdom-time">${t}</p>
-              </div>`;
-          }).join('');
-        });
-    }
+  <!-- Header -->
+  <header class="gradient-bg py-10 shadow-lg">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">The Sanctuary</h1>
+      <p class="text-indigo-200 text-lg">Mindfulness, Exploration, and Self-Reflection</p>
+    </div>
+  </header>
 
-    document.getElementById('share-wisdom-button').onclick = saveResponse;
+  <main class="max-w-4xl mx-auto p-4 md:p-6 space-y-10">
 
-    const GEMINI_KEY = "AIzaSyCsAuB6tVaoccHMcYvRiXkX41uFBcbpyRs";
-    async function getGeminiResponse() {
-      const btn = document.getElementById('ask-button');
+    <!-- Quick Links with Icons -->
+    <section>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <!-- Blog -->
+        <a href="http://quantumviewpoint.blogspot.com/"
+           class="btn bg-white text-gray-700 p-3 rounded-lg text-center font-semibold border border-indigo-200 hover:bg-indigo-50 flex flex-col items-center justify-center">
+          <svg class="w-6 h-6 mb-1 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 21H5a2 2 0 01-2-2V7a2 2 0 012-2h5l2-2h7a2 2 0 012 2v16a2 2 0 01-2 2z"/>
+          </svg>
+          Blog
+        </a>
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/playlist?list=PLPA2J3pvHbj6XSZ9HzSjYVB0xtjnxETdv"
+           class="btn bg-white text-gray-700 p-3 rounded-lg text-center font-semibold border border-indigo-200 hover:bg-indigo-50 flex flex-col items-center justify-center">
+          <svg class="w-6 h-6 mb-1 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M10 15l5.19-3L10 9v6zm12-3c0-2.76-2.24-5-5-5H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h10c2.76 0 5-2.24 5-5z"/>
+          </svg>
+          Videos
+        </a>
+        <!-- Spotify -->
+        <a href="https://open.spotify.com/playlist/3eNqGBuC1oKbhlYlvRzKh5"
+           class="btn bg-white text-gray-700 p-3 rounded-lg text-center font-semibold border border-indigo-200 hover:bg-indigo-50 flex flex-col items-center justify-center">
+          <svg class="w-6 h-6 mb-1 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.475 2 2 6.477 2 12s4.475 10 10 10 10-4.477 10-10S17.525 2 12 2zm4.528 14.713a.75.75 0 01-1.042.274c-2.843-1.73-6.438-2.12-10.17-1.109a.75.75 0 11-.385-1.453c4.07-1.08 8.016-.64 11.157 1.282a.75.75 0 01.44 1.006zm1.3-2.765a.9.9 0 01-1.248.33c-3.268-1.96-8.248-2.533-12.128-1.3a.9.9 0 01-.535-1.72c4.285-1.33 9.728-.69 13.406 1.555a.9.9 0 01.505 1.135zM18 9.5c-3.8-2.15-9.046-2.34-13-.65a1 1 0 11-.667-1.885C8.86 6.065 15 6.29 19.25 8.75a1 1 0 11-1.25.75z"/>
+          </svg>
+          Playlists
+        </a>
+        <!-- Contact -->
+        <a href="mailto:godzilaborland@gmail.com"
+           class="btn bg-indigo-500 text-white p-3 rounded-lg text-center font-semibold border border-indigo-700 hover:bg-indigo-600 flex flex-col items-center justify-center col-span-2 sm:col-span-1">
+          <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M16 12H8m8-6H8m8 12H8m12-9v9a2 2 0 01-2 2H6a2 2 0 01-2-2V9m16 0L12 4 4 9"/>
+          </svg>
+          Contact Me
+        </a>
+        <!-- Meditation App -->
+        <a href="https://godzillaborland-arch.github.io/meditation-stages-monitor-app/"
+           class="btn bg-cyan-500 text-white p-3 rounded-lg text-center font-semibold border border-cyan-700 hover:bg-cyan-600 flex flex-col items-center justify-center col-span-2 sm:col-span-1">
+          <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          Meditation App
+        </a>
+      </div>
+    </section>
+
+    <!-- Latest Content by Theme (compact grid) -->
+    <section class="bg-white p-6 rounded-xl card-shadow border border-purple-100">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Latest Content by Theme</h2>
+      <div class="grid md:grid-cols-3 gap-6 text-sm">
+        <!-- Spiritual -->
+        <div>
+          <h3 class="text-lg font-semibold text-purple-700 mb-2 flex items-center">
+            <svg class="w-5 h-5 mr-1 text-cyan-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2a10 10 0 100 20 10 10 0 000-20zM13 17h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+            </svg>
+            Spiritual Focus
+          </h3>
+          <ul class="space-y-2">
+            <li><a class="hover:text-cyan-600" href="https://quantumviewpoint.blogspot.com/2025/10/tesla-dhyana-analogy-fulfilled.html">Blog: Tesla = Dhyāna — The Analogy Fulfilled</a></li>
+            <li><a class="hover:text-cyan-600" href="https://medium.com/@sundar2rajan/building-the-meditation-states-monitor-from-inner-yardstick-to-interactive-app-adca28e41481">Medium: Building the Meditation States Monitor</a></li>
+          </ul>
+        </div>
+        <!-- Travel -->
+        <div>
+          <h3 class="text-lg font-semibold text-purple-700 mb-2 flex items-center">
+            <svg class="w-5 h-5 mr-1 text-cyan-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/>
+            </svg>
+            Travel & Exploration
+          </h3>
+          <ul class="space-y-2">
+            <li><a class="hover:text-cyan-600" href="https://youtu.be/KBFemHH5feU?si=fd6eX6OLWAbAA9oX">YouTube: Kauai — Sunrises & Nā Pali Cruise</a></li>
+            <li><a class="hover:text-cyan-600" href="#">Blog: Solo Hiking the Dolomites</a></li>
+          </ul>
+        </div>
+        <!-- Personal -->
+        <div>
+          <h3 class="text-lg font-semibold text-purple-700 mb-2 flex items-center">
+            <svg class="w-5 h-5 mr-1 text-cyan-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+          Personal & Projects
+          </h3>
+          <ul class="space-y-2">
+            <li><a class="hover:text-cyan-600" href="#">Project: 30-Day Digital Detox Challenge</a></li>
+            <li><a class="hover:text-cyan-600" href="#">Playlist: Focus Music for Deep Work</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Video (hero card) -->
+    <section class="bg-white p-5 rounded-xl card-shadow border border-indigo-100">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Featured Video: Kauai — Sunrises, Tubing & Nā Pali Cruise</h2>
+      <div class="relative w-full overflow-hidden rounded-lg shadow-sm" style="padding-bottom:56.25%;">
+        <iframe
+          class="absolute top-0 left-0 w-full h-full"
+          src="https://www.youtube.com/embed/KBFemHH5feU?si=fd6eX6OLWAbAA9oX"
+          title="Kauai — Gorgeous Sunrises, Mountain Tubing & Na Pali Cruise"
+          allowfullscreen loading="lazy"></iframe>
+      </div>
+    </section>
+
+    <!-- Meditation Monitor -->
+    <section class="p-5 bg-indigo-50 rounded-xl card-shadow">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b border-indigo-200 pb-2 flex items-center">
+        <svg class="w-6 h-6 mr-2 text-indigo-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0h6"></path>
+        </svg>
+        Featured Project: Meditation Monitor
+      </h2>
+      <p class="text-gray-600 mb-4">Interact with the meditation states monitor app below.</p>
+      <div class="relative w-full overflow-hidden rounded-lg border-2 border-indigo-300 aspect-video">
+        <iframe
+          src="https://godzillaborland-arch.github.io/meditation-stages-monitor-app/"
+          class="absolute top-0 left-0 w-full h-full"
+          frameborder="0" allowfullscreen title="Meditation Stages Monitor App"></iframe>
+      </div>
+    </section>
+  </main>
+
+  <!-- Full-width lavender strip: Connect & Explore -->
+  <section class="lavender-strip w-full py-8">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Connect & Explore</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- YouTube Playlist -->
+        <div class="bg-white rounded-xl card-shadow border border-indigo-100 p-4">
+          <h3 class="text-lg font-semibold text-indigo-700 mb-3">📺 YouTube Playlist: Tesla & the Yogin</h3>
+          <div class="aspect-video">
+            <iframe
+              src="https://www.youtube.com/embed/videoseries?list=PLPA2J3pvHbj6XSZ9HzSjYVB0xtjnxETdv"
+              title="Tesla & the Yogin Playlist" allowfullscreen></iframe>
+          </div>
+        </div>
+        <!-- Spotify Playlist -->
+        <div class="bg-white rounded-xl card-shadow border border-indigo-100 p-4">
+          <h3 class="text-lg font-semibold text-indigo-700 mb-3">🎧 Spotify: Tesla = Dhyāna</h3>
+          <iframe style="border-radius:12px"
+                  src="https://open.spotify.com/embed/playlist/3eNqGBuC1oKbhlYlvRzKh5?utm_source=generator&theme=0"
+                  width="100%" height="380" frameborder="0"
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Back to main for CTA + Gemini -->
+  <main class="max-w-4xl mx-auto p-4 md:p-6 space-y-10">
+    <!-- Contribute + View Wall -->
+    <section class="p-5 bg-white rounded-xl card-shadow border border-cyan-100">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b border-cyan-300 pb-2">Contribute Your Wisdom</h2>
+      <p class="text-gray-600 mb-4">Share your reflection with the community.</p>
+      <a href="submit.html"
+         class="inline-block px-6 py-3 rounded-lg bg-cyan-500 text-white font-semibold hover:bg-cyan-600 transition">
+         Share My Wisdom
+      </a>
+      <a href="wisdom.html" class="ml-3 inline-block text-indigo-600 hover:underline">View Wisdom Wall</a>
+    </section>
+
+    <!-- Ask The Sanctuary (Gemini) -->
+    <section class="p-5 bg-indigo-50 rounded-xl card-shadow border border-indigo-200">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b border-indigo-300 pb-2">Ask The Sanctuary</h2>
+      <button id="ask-button" class="w-full bg-indigo-700 text-white p-3 rounded-lg font-semibold hover:bg-indigo-800 transition">
+        What is the Measure for Good Meditation?
+      </button>
+      <div id="gemini-output" class="mt-4 p-4 bg-white rounded-lg border border-indigo-100 min-h-[56px] text-sm text-slate-700">
+        Tap the button above to receive the answer.
+      </div>
+    </section>
+
+    <footer class="text-center text-sm text-slate-500 pt-2 pb-8">
+      © <span id="year"></span> Sundar Rajan • Built with love & light
+    </footer>
+  </main>
+
+  <!-- Gemini (short response) -->
+  <script>
+    const GEMINI_API_KEY = "AIzaSyCsAuB6tVaoccHMcYvRiXkX41uFBcbpyRs";
+    const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + GEMINI_API_KEY;
+
+    document.getElementById('ask-button').onclick = async () => {
       const out = document.getElementById('gemini-output');
-      btn.disabled = true;
-      out.textContent = 'Seeking wisdom ...';
+      out.textContent = 'Seeking wisdom...';
+      if (window.plausible) plausible('Ask Sanctuary Clicked');
       try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`, {
+        const res = await fetch(GEMINI_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: 'What is a good measure for successful meditation covering spiritual and neurological aspects?' }] }],
-            systemInstruction: { parts: [{ text: 'Act as a compassionate spiritual guide and neuroscience enthusiast.' }] }
+            contents: [{ parts: [{ text: 'What is a good measure for successful meditation, covering spiritual and neurological aspects?' }]}],
+            systemInstruction: { parts: [{ text: 'Act as a compassionate spiritual guide and neuroscience enthusiast. Respond in under 100 words, 3–4 sentences max.' }]} ,
+            generationConfig: { maxOutputTokens: 120 }
           })
         });
         const data = await res.json();
         out.textContent = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response.';
       } catch (e) {
-        out.textContent = 'Error: ' + e.message;
+        out.textContent = 'Sanctuary unreachable: ' + e.message;
       }
-      btn.disabled = false;
-    }
+    };
 
-    document.getElementById('ask-button').onclick = getGeminiResponse;
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+
+  </main>
+
+  <!-- Gemini -->
+  <script>
+    const GEMINI_API_KEY = "AIzaSyCsAuB6tVaoccHMcYvRiXkX41uFBcbpyRs";
+    const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + GEMINI_API_KEY;
+
+    document.getElementById('ask-button').onclick = async () => {
+      const out = document.getElementById('gemini-output');
+      out.textContent = 'Seeking wisdom...';
+      if (window.plausible) plausible('Ask Sanctuary Clicked');
+      try {
+        const res = await fetch(GEMINI_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: 'What is a good measure for successful meditation, covering spiritual and neurological aspects?' }]}],
+            systemInstruction: { parts: [{ text: 'Act as a compassionate spiritual teacher and neuroscience enthusiast. Give a one-paragraph balanced response.' }]}
+          })
+        });
+        const data = await res.json();
+        out.textContent = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response.';
+      } catch (e) {
+        out.textContent = 'Sanctuary unreachable: ' + e.message;
+      }
+    };
+
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 </body>

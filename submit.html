@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Sanctuary — Share Your Wisdom</title>
+  <meta name="description" content="Share your meditation insight with The Sanctuary by Sundar Rajan." />
+
+  <!-- Plausible -->
+  <script defer data-domain="godzillaborland-arch.github.io" src="https://plausible.io/js/script.js"></script>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    body{font-family:'Inter',sans-serif;background-color:#f7f3ff;color:#1f2937;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:1.5rem;}
+    .gradient-bg{background:linear-gradient(135deg,#6b46c1,#7c3aed,#a78bfa);background-size:300% 300%;animation:gradientShift 10s ease infinite;}
+    @keyframes gradientShift{0%,100%{background-position:left top;}50%{background-position:right bottom;}}
+    @keyframes fadeUp{0%{opacity:0;transform:translateY(12px);}100%{opacity:1;transform:translateY(0);}}
+    .question{animation:fadeUp .9s ease-out .2s both;}
+    .card-shadow{box-shadow:0 10px 15px -3px rgba(0,0,0,.10),0 4px 6px -2px rgba(0,0,0,.05);}
+    .btn{transition:transform .2s ease, box-shadow .2s ease;box-shadow:0 4px 6px rgba(0,0,0,.08);}
+    .btn:hover{transform:translateY(-1px);box-shadow:0 6px 12px rgba(0,0,0,.12);}
+  </style>
+  <!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-Nj2nSV8L4u6iRao34TF3q.js"></script>
+<script>
+  window.plausible = window.plausible || function(){(plausible.q = plausible.q || []).push(arguments)};
+  plausible.init = plausible.init || function(i){plausible.o = i || {}};
+  plausible.init();
+</script>
+
+</head>
+<body>
+  <header class="gradient-bg w-full py-10 text-center text-white shadow-md rounded-b-2xl mb-8">
+    <h1 class="text-3xl md:text-4xl font-extrabold mb-2">The Sanctuary</h1>
+    <p class="text-indigo-100 text-sm md:text-base">Share Your Meditation Insight</p>
+  </header>
+
+  <main class="max-w-md w-full">
+    <section class="bg-white rounded-xl card-shadow p-8 border border-indigo-100 text-center">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Contribute Your Wisdom 🌿</h2>
+      <p class="question text-lg md:text-xl leading-snug mb-6">
+        What phrase or idea best captures a <span class="text-indigo-600 font-semibold">good meditation session</span> for you?
+      </p>
+      <input id="meditation-measure" type="text" placeholder="My measure is..." class="w-full p-3 rounded-lg border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 mb-4" />
+      <button id="share-wisdom-button" class="btn bg-indigo-600 text-white w-full py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">Share Insight</button>
+      <p id="wisdom-message" class="text-sm mt-4 text-gray-500"></p>
+    </section>
+    <footer class="text-center text-xs text-slate-400 mt-6">© <span id="year"></span> Sundar Rajan — Part of <a href="index.html" class="text-indigo-500 hover:underline">The Sanctuary</a></footer>
+  </main>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+  <script>
+    // Init
+    const firebaseConfig = {
+      apiKey: "AIzaSyCTwIvONkXFsUsnn7GZxVG9x0RYCcB1xSw",
+      authDomain: "quantumviewpoint.firebaseapp.com",
+      projectId: "quantumviewpoint",
+      storageBucket: "quantumviewpoint.firebasestorage.app",
+      messagingSenderId: "1081460817095",
+      appId: "1:1081460817095:web:e59f6e67da956201ec52e2",
+      measurementId: "G-FSEE5PY6S7"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.plausible) plausible('Visited Submit Page');
+    });
+
+    auth.signInAnonymously().catch(err => {
+      document.getElementById('wisdom-message').textContent = "Auth error: " + err.message;
+    });
+
+    async function saveResponse() {
+      const input = document.getElementById('meditation-measure');
+      const msg = document.getElementById('wisdom-message');
+      const val = (input.value || '').trim();
+      if (!val) {
+        msg.textContent = 'Please enter your measure.';
+        msg.classList.add('text-red-500');
+        return;
+      }
+      try {
+        await db.collection('meditation_measures').add({
+          measure: val,
+          approved: false,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        // Plausible custom event
+        if (window.plausible) plausible('Wisdom Submitted');
+
+        // Thank-you then redirect
+        msg.textContent = '🌸 Thank you for sharing! Taking you to the Wisdom Wall...';
+        msg.classList.remove('text-red-500');
+        msg.classList.add('text-gray-600');
+        input.value = '';
+        setTimeout(() => { window.location.href = 'wisdom.html'; }, 2200);
+      } catch (e) {
+        msg.textContent = 'Error: ' + e.message;
+        msg.classList.add('text-red-500');
+      }
+    }
+
+    document.getElementById('share-wisdom-button').addEventListener('click', saveResponse);
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
