@@ -1,0 +1,395 @@
+<!-- QuantumView — Final Integrated Version (Oct 2025) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- META -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Sanctuary — QuantumView</title>
+  <meta name="description" content="Mindfulness, Exploration, and Self-Reflection" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Theme styles -->
+  <style>
+    html, body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    body { background-color: #f7f3ff; }
+    .gradient-bg { background: linear-gradient(135deg, #6b46c1 0%, #a78bfa 100%); }
+    .card-shadow { box-shadow: 0 10px 15px -3px rgba(0,0,0,.10), 0 4px 6px -2px rgba(0,0,0,.05); }
+    .btn { transition: transform .2s ease, box-shadow .2s ease; box-shadow: 0 4px 6px rgba(0,0,0,.08); }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 12px rgba(0,0,0,.12); }
+    .aspect-video { position: relative; width: 100%; padding-bottom: 56.25%; }
+    .aspect-video > iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .lavender-strip { background: #f5f2ff; }
+    .fade-in { animation: fadeIn 0.5s ease both; }
+    @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+    .fade-swap { transition: opacity 0.8s ease; opacity: 1; }
+    .fade-swap.hidden-soft { opacity: 0; pointer-events: none; }
+  </style>
+</head>
+
+<body class="min-h-screen antialiased text-slate-800">
+
+  <!-- Header -->
+  <header class="gradient-bg py-10 shadow-lg">
+    <div class="max-w-5xl mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2">The Sanctuary</h1>
+      <p class="text-indigo-100 text-lg">Mindfulness, Exploration, and Self-Reflection</p>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto p-4 md:p-6 space-y-10">
+
+    <!-- Quick Links (4 buttons in one line; Meditation App button removed) -->
+    <section>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <a href="http://quantumviewpoint.blogspot.com/"
+           class="btn bg-white text-gray-700 p-3 rounded-lg text-center font-semibold border border-indigo-200 hover:bg-indigo-50">Blog</a>
+
+        <a href="https://www.youtube.com/playlist?list=PLPA2J3pvHbj6XSZ9HzSjYVB0xtjnxETdv"
+           class="btn bg-white text-gray-700 p-3 rounded-lg text-center font-semibold border border-indigo-200 hover:bg-indigo-50">Videos</a>
+
+        <a href="https://open.spotify.com/playlist/3eNqGBuC1oKbhlYlvRzKh5"
+           class="btn bg-white text-gray-700 p-3 rounded-lg text-center font-semibold border border-indigo-200 hover:bg-indigo-50">Playlists</a>
+
+        <a href="mailto:godzilaborland@gmail.com"
+           class="btn bg-indigo-500 text-white p-3 rounded-lg text-center font-semibold border border-indigo-700 hover:bg-indigo-600">Contact Me</a>
+      </div>
+    </section>
+
+    <!-- Latest Content by Theme (centered) -->
+    <section>
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2 text-center">Latest Content by Theme</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+
+        <!-- Spiritual Focus -->
+        <div class="bg-white p-5 rounded-xl card-shadow border border-purple-100">
+          <h3 class="text-xl font-semibold text-purple-700 mb-3 flex items-center">
+            <svg class="w-6 h-6 mr-2 text-cyan-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            Spiritual Focus
+          </h3>
+          <ul class="space-y-3">
+            <li class="border-b pb-2">
+              <a href="https://quantumviewpoint.blogspot.com/2025/10/tesla-dhyana-analogy-fulfilled.html" class="block hover:text-cyan-500 transition duration-200">
+                <p class="font-medium">Blog: Tesla Dhyana Analogy Fulfilled</p>
+                <span class="text-xs text-gray-500">Topic: Consciousness & Physics</span>
+              </a>
+            </li>
+            <li class="border-b pb-2">
+              <a href="https://medium.com/@sundar2rajan/building-the-meditation-states-monitor-from-inner-yardstick-to-interactive-app-adca28e41481" class="block hover:text-cyan-500 transition duration-200">
+                <p class="font-medium">Medium: Building the Meditation States Monitor</p>
+                <span class="text-xs text-gray-500">Topic: App Development & Theory</span>
+              </a>
+            </li>
+            <li class="pb-2">
+              <a href="https://open.spotify.com/playlist/3eNqGBuC1oKbhlYlvRzKh5" class="block hover:text-cyan-500 transition duration-200">
+                <p class="font-medium">Spotify: Alpha Wave Sleep Playlist</p>
+                <span class="text-xs text-gray-500">Playlist: Deep Rest</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Travel & Exploration -->
+        <div class="bg-white p-5 rounded-xl card-shadow border border-purple-100">
+          <h3 class="text-xl font-semibold text-purple-700 mb-3 flex items-center">
+            <svg class="w-6 h-6 mr-2 text-cyan-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
+            Travel & Exploration
+          </h3>
+          <ul class="space-y-3">
+            <li class="border-b pb-2">
+              <a href="https://youtu.be/KBFemHH5feU?si=fd6eX6OLWAbAA9oX" class="block hover:text-cyan-500 transition duration-200">
+                <p class="font-medium">YouTube: Kauai’s Nā Pali Cruise & Sunrises</p>
+                <span class="text-xs text-gray-500">Destination: Hawaiʻi</span>
+              </a>
+            </li>
+            <li class="pb-2">
+              <a href="#" class="block hover:text-cyan-500 transition duration-200">
+                <p class="font-medium">Blog: Solo Hiking the Dolomites (Photo Essay)</p>
+                <span class="text-xs text-gray-500">Topic: Mountain Adventures</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Personal & Projects -->
+        <div class="bg-white p-5 rounded-xl card-shadow border border-purple-100">
+          <h3 class="text-xl font-semibold text-purple-700 mb-3 flex items-center">
+            <svg class="w-6 h-6 mr-2 text-cyan-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-2h-2v2zm0-4h2V7h-2v6z"></path></svg>
+            Personal & Projects
+          </h3>
+          <ul class="space-y-3">
+            <li class="border-b pb-2">
+              <a href="#" class="block hover:text-cyan-500 transition duration-200">
+                <p class="font-medium">Project: My 30-Day Digital Detox Challenge</p>
+                <span class="text-xs text-gray-500">Topic: Well-being & Habits</span>
+              </a>
+            </li>
+            <li class="pb-2">
+              <a href="#" class="block hover:text-cyan-500 transition duration-200">
+                <p class="font-medium">Playlist: Focus Music for Deep Work</p>
+                <span class="text-xs text-gray-500">Spotify: Productivity Mix</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Featured Video -->
+    <section class="bg-white p-5 rounded-xl card-shadow border border-indigo-100">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Featured Video: Kauai — Sunrises, Tubing & Nā Pali Cruise</h2>
+      <div class="aspect-video">
+        <iframe
+          src="https://www.youtube.com/embed/KBFemHH5feU?si=fd6eX6OLWAbAA9oX"
+          title="Kauai — Gorgeous Sunrises, Mountain Tubing & Na Pali Cruise"
+          allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <!-- Meditation Monitor -->
+    <section class="p-5 bg-indigo-50 rounded-xl card-shadow">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b border-indigo-200 pb-2 flex items-center">
+        <svg class="w-6 h-6 mr-2 text-indigo-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0h6"></path></svg>
+        Featured Project: Meditation Monitor
+      </h2>
+      <p class="text-gray-600 mb-4">Interact with the meditation states monitor app below. This is an embedded web application.</p>
+      <div class="relative w-full overflow-hidden rounded-lg border-2 border-indigo-300 aspect-video">
+        <iframe src="https://godzillaborland-arch.github.io/meditation-stages-monitor-app/"
+                class="absolute top-0 left-0 w-full h-full" title="Meditation Stages Monitor App"
+                frameborder="0" allowfullscreen></iframe>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- CONNECT & EXPLORE (multilingual) -->
+  <section class="lavender-strip py-10">
+    <div class="max-w-5xl mx-auto px-4">
+
+      <div class="bg-white p-6 rounded-xl card-shadow border border-indigo-100 mt-2 fade-in">
+        <h2 class="text-3xl font-extrabold text-indigo-800 mb-4 flex items-center">
+          <span class="text-3xl mr-2">🕉️</span> Connect & Explore — Your Inner Sanctuary
+        </h2>
+        <p class="text-gray-600 mb-6">
+          Explore teachings, sounds, and meditations across languages — your Sanctuary, wherever you are.
+        </p>
+
+        <!-- Language Selector -->
+        <div class="flex flex-wrap justify-center gap-2 mb-3">
+          <button class="lang-btn px-3 py-1 bg-indigo-600 text-white rounded" data-lang="english">English</button>
+          <button class="lang-btn px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded" data-lang="hindi">हिन्दी</button>
+          <button class="lang-btn px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded" data-lang="tamil">தமிழ்</button>
+          <button class="lang-btn px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded" data-lang="telugu">తెలుగు</button>
+          <button class="lang-btn px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded" data-lang="kannada">ಕನ್ನಡ</button>
+          <button class="lang-btn px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded" data-lang="spanish">Español</button>
+        </div>
+
+        <!-- Now Playing -->
+        <div id="nowPlaying" class="text-lg font-extrabold text-purple-700 text-center mb-4">
+          Now Playing: English · YouTube + Spotify
+        </div>
+
+        <!-- YouTube + Spotify -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <!-- YouTube -->
+          <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm">
+            <h3 class="text-base font-semibold text-indigo-800 mb-2">🎥 YouTube Playlist</h3>
+
+            <!-- English -->
+            <div id="youtube-english" class="playlist fade-swap">
+              <div class="aspect-video">
+                <iframe
+                  src="https://www.youtube.com/embed/videoseries?list=PLPA2J3pvHbj6XSZ9HzSjYVB0xtjnxETdv"
+                  title="English YouTube Playlist" allowfullscreen></iframe>
+              </div>
+              <!-- Local fallback (for file:// testing) -->
+              <p class="yt-fallback hidden text-center mt-2">
+                <a class="text-indigo-700 underline" target="_blank"
+                   href="https://www.youtube.com/playlist?list=PLPA2J3pvHbj6XSZ9HzSjYVB0xtjnxETdv">
+                  🎥 Watch on YouTube (opens new tab)
+                </a>
+              </p>
+            </div>
+
+            <!-- Hindi -->
+            <div id="youtube-hindi" class="playlist fade-swap hidden-soft hidden">
+              <div class="aspect-video">
+                <iframe src="https://www.youtube.com/embed/videoseries?list=PLPA2J3pvHbj4HigwlZDAfI9vUMlK2uTie" allowfullscreen></iframe>
+              </div>
+              <p class="yt-fallback hidden text-center mt-2">
+                <a class="text-indigo-700 underline" target="_blank"
+                   href="https://www.youtube.com/playlist?list=PLPA2J3pvHbj4HigwlZDAfI9vUMlK2uTie">
+                  🎥 Watch on YouTube (opens new tab)
+                </a>
+              </p>
+            </div>
+
+            <!-- Tamil -->
+            <div id="youtube-tamil" class="playlist fade-swap hidden-soft hidden">
+              <div class="aspect-video">
+                <iframe src="https://www.youtube.com/embed/videoseries?list=PLPA2J3pvHbj7ImfazZu4xXqQBh0xSKCQw" allowfullscreen></iframe>
+              </div>
+              <p class="yt-fallback hidden text-center mt-2">
+                <a class="text-indigo-700 underline" target="_blank"
+                   href="https://www.youtube.com/playlist?list=PLPA2J3pvHbj7ImfazZu4xXqQBh0xSKCQw">
+                  🎥 Watch on YouTube (opens new tab)
+                </a>
+              </p>
+            </div>
+
+            <!-- Telugu / Kannada / Spanish placeholders -->
+            <div id="youtube-telugu"  class="playlist fade-swap hidden-soft hidden"><div class="aspect-video"><iframe src="https://www.youtube.com/embed/videoseries?list=YOUR_TELUGU_LIST"  allowfullscreen></iframe></div></div>
+            <div id="youtube-kannada" class="playlist fade-swap hidden-soft hidden"><div class="aspect-video"><iframe src="https://www.youtube.com/embed/videoseries?list=YOUR_KANNADA_LIST" allowfullscreen></iframe></div></div>
+            <div id="youtube-spanish" class="playlist fade-swap hidden-soft hidden"><div class="aspect-video"><iframe src="https://www.youtube.com/embed/videoseries?list=YOUR_SPANISH_LIST" allowfullscreen></iframe></div></div>
+          </div>
+
+          <!-- Spotify -->
+          <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm">
+            <h3 class="text-base font-semibold text-indigo-800 mb-2">🎧 Spotify Playlist</h3>
+
+            <!-- English -->
+            <div id="spotify-english" class="playlist fade-swap">
+              <iframe style="border-radius:12px"
+                src="https://open.spotify.com/embed/playlist/3eNqGBuC1oKbhlYlvRzKh5"
+                class="w-full" height="260" frameborder="0"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+            </div>
+
+            <!-- Placeholders -->
+            <div id="spotify-hindi"   class="playlist fade-swap hidden-soft hidden"><iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/YOUR_HINDI_LIST"   class="w-full" height="260"></iframe></div>
+            <div id="spotify-tamil"   class="playlist fade-swap hidden-soft hidden"><iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/YOUR_TAMIL_LIST"   class="w-full" height="260"></iframe></div>
+            <div id="spotify-telugu"  class="playlist fade-swap hidden-soft hidden"><iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/YOUR_TELUGU_LIST"  class="w-full" height="260"></iframe></div>
+            <div id="spotify-kannada" class="playlist fade-swap hidden-soft hidden"><iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/YOUR_KANNADA_LIST" class="w-full" height="260"></iframe></div>
+            <div id="spotify-spanish" class="playlist fade-swap hidden-soft hidden"><iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/YOUR_SPANISH_LIST" class="w-full" height="260"></iframe></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contribute Your Wisdom (link to submit.html) -->
+  <section class="p-5 bg-white rounded-xl card-shadow border border-cyan-100 max-w-5xl mx-auto my-10">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b border-cyan-300 pb-2 flex items-center">
+      <svg class="w-6 h-6 mr-2 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5M17 4h5M5 4h5M5 20h5M13 14h-2m-4-4V7a4 4 0 014-4h2a4 4 0 014 4v3m-8 4h8a4 4 0 004-4v-1a4 4 0 00-4-4h-8a4 4 0 00-4 4v1a4 4 0 004 4z"></path></svg>
+      Contribute Your Wisdom
+    </h2>
+    <p class="text-gray-600 mb-4">Share your measure for successful meditation. Your note goes to the approval queue.</p>
+    <a href="submit.html" class="inline-flex items-center px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 font-semibold">
+      ✍️ Submit Wisdom
+    </a>
+  </section>
+
+  <!-- Ask The Sanctuary (Gemini) -->
+  <section class="p-5 bg-indigo-50 rounded-xl card-shadow border border-indigo-200 max-w-5xl mx-auto mb-10">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b border-indigo-300 pb-2 flex items-center">
+      <svg class="w-6 h-6 mr-2 text-indigo-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17l4.243-4.243a4 4 0 10-5.657-5.657 4 4 0 005.657 5.657z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.243 14.243L19 19"></path></svg>
+      Ask The Sanctuary
+    </h2>
+    <p class="text-gray-600 mb-4">Tap below for a grounded, concise answer on the measure of good meditation.</p>
+    <button id="ask-button" class="w-full bg-indigo-700 text-white p-3 rounded-lg font-semibold hover:bg-indigo-800 transition">
+      What is the Measure for Good Meditation?
+    </button>
+    <div id="gemini-output" class="mt-4 p-4 bg-white rounded-lg border border-indigo-100 min-h-[50px] text-sm text-slate-700">
+      Tap the button above to receive the answer.
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center text-sm text-slate-500 pt-2 pb-10">
+    © <span id="year"></span> Sundar Rajan • Built with love & light
+  </footer>
+
+  <!-- Scripts: Year + Language Switch + Local Fallback -->
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Language switch with fade (keeps selected visible)
+    function setLanguage(lang, clicked) {
+      const labels = { english:'English', hindi:'हिन्दी', tamil:'தமிழ்', telugu:'తెలుగు', kannada:'ಕನ್ನಡ', spanish:'Español' };
+      const now = document.getElementById('nowPlaying');
+      if (now) now.textContent = `Now Playing: ${labels[lang]} · YouTube + Spotify`;
+
+      // hide others
+      document.querySelectorAll('.playlist').forEach(el => {
+        if (!el.id.includes(lang)) {
+          el.classList.add('hidden-soft');
+          setTimeout(() => el.classList.add('hidden'), 200);
+        }
+      });
+
+      // show selected
+      const ids = [`youtube-${lang}`, `spotify-${lang}`];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.remove('hidden');
+        requestAnimationFrame(() => el.classList.remove('hidden-soft'));
+      });
+
+      // active button
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('bg-indigo-600','text-white'));
+      if (clicked?.target) clicked.target.classList.add('bg-indigo-600','text-white');
+    }
+
+    // hook up buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => setLanguage(e.currentTarget.dataset.lang, e));
+    });
+
+    // Default: English + file:// fallback for YouTube embeds
+    document.addEventListener('DOMContentLoaded', () => {
+      setLanguage('english');
+      if (location.protocol === 'file:') {
+        document.querySelectorAll('#youtube-english .yt-fallback, #youtube-hindi .yt-fallback, #youtube-tamil .yt-fallback')
+          .forEach(el => el.classList.remove('hidden'));
+      }
+    });
+  </script>
+
+  <!-- Gemini (kept minimal to short answers) -->
+  <script>
+    const GEMINI_API_KEY = "AIzaSyCsAuB6tVaoccHMcYvRiXkX41uFBcbpyRs";
+    async function getGeminiResponse() {
+      const btn = document.getElementById('ask-button');
+      const out = document.getElementById('gemini-output');
+      btn.disabled = true; out.textContent = 'Seeking wisdom...';
+      try {
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: 'What is a good measure for successful meditation, covering spiritual and neurological aspects? Keep it to 3–4 lines.' }] }],
+              systemInstruction: { parts: [{ text: 'Act as a compassionate and knowledgeable spiritual guide and neuroscience enthusiast. Answer concisely in 3–4 lines.' }] }
+            })
+          }
+        );
+        const data = await res.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response.';
+        out.textContent = text;
+      } catch (err) {
+        out.textContent = 'Sanctuary unreachable: ' + err.message;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+    document.getElementById('ask-button').addEventListener('click', getGeminiResponse);
+  </script>
+
+  <!-- Plausible Analytics (kept as in your version) -->
+  <script async src="https://plausible.io/js/pa-Nj2nSV8L4u6iRao34TF3q.js"></script>
+  <script>
+    window.plausible = window.plausible || function(){(plausible.q=plausible.q||[]).push(arguments)};
+    plausible.init = plausible.init || function(i){plausible.o = i || {}};
+    plausible.init();
+  </script>
+</body>
+</html>
