@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Effort to Effortless Awareness</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            overflow: hidden;
+            color: #fff;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .slide {
+            width: 100%;
+            max-width: 1100px;
+            height: 100%;
+            max-height: 90vh;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+            animation: fadeIn 0.4s ease;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #e0e7ff;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: #a5b4fc;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .quote {
+            font-size: 2rem;
+            font-style: italic;
+            color: #e0e7ff;
+            margin: 30px 0;
+            padding-left: 25px;
+            border-left: 4px solid #667eea;
+            line-height: 1.6;
+        }
+
+        .emphasis {
+            font-size: 1.7rem;
+            color: #60efff;
+            font-weight: 700;
+            margin: 25px 0;
+            line-height: 1.4;
+        }
+
+        .bullet-list {
+            list-style: none;
+            margin: 25px 0;
+        }
+
+        .bullet-list li {
+            font-size: 1.5rem;
+            margin: 18px 0;
+            padding-left: 40px;
+            position: relative;
+            color: #e0e7ff;
+            line-height: 1.6;
+        }
+
+        .bullet-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #60efff;
+            font-weight: bold;
+            font-size: 1.8rem;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(96, 239, 255, 0.15), rgba(102, 126, 234, 0.15));
+            padding: 30px;
+            border-radius: 16px;
+            margin: 25px 0;
+            border: 2px solid rgba(96, 239, 255, 0.3);
+        }
+
+        .framework {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .framework-item {
+            background: rgba(102, 126, 234, 0.12);
+            padding: 25px;
+            border-radius: 16px;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .framework-item h4 {
+            font-size: 1.4rem;
+            color: #60efff;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .framework-item p {
+            font-size: 1.2rem;
+            color: #c7d2fe;
+            line-height: 1.5;
+        }
+
+        .img-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .img-container img {
+            max-width: 85%;
+            max-height: 55vh;
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        }
+
+        .stages {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin: 25px 0;
+        }
+
+        .stage {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1), rgba(96, 239, 255, 0.1));
+            padding: 22px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .stage-title {
+            font-size: 1.4rem;
+            color: #60efff;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .stage-desc {
+            font-size: 1.2rem;
+            color: #c7d2fe;
+            line-height: 1.5;
+        }
+
+        .apb-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .apb-item {
+            background: rgba(96, 239, 255, 0.1);
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid rgba(96, 239, 255, 0.3);
+        }
+
+        .apb-letter {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #60efff;
+            margin-bottom: 12px;
+        }
+
+        .apb-word {
+            font-size: 1.6rem;
+            color: #e0e7ff;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .apb-desc {
+            font-size: 1.1rem;
+            color: #a5b4fc;
+            line-height: 1.4;
+        }
+
+        .tesla-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin: 25px 0;
+        }
+
+        .tesla-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+            padding: 22px;
+            border-radius: 12px;
+            border: 2px solid rgba(102, 126, 234, 0.4);
+        }
+
+        .tesla-number {
+            font-size: 2.2rem;
+            color: #60efff;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .tesla-title {
+            font-size: 1.3rem;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .tesla-text {
+            font-size: 1.1rem;
+            color: #c7d2fe;
+            line-height: 1.4;
+        }
+
+        .diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin: 30px 0;
+        }
+
+        .diagram-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            padding: 25px;
+            border-radius: 16px;
+            border: 2px solid #667eea;
+            min-width: 180px;
+            text-align: center;
+        }
+
+        .diagram-arrow {
+            font-size: 2.5rem;
+            color: #60efff;
+        }
+
+        .gap-indicator {
+            color: #ff6b9d;
+            font-size: 1.6rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(102, 126, 234, 0.3);
+            border: 2px solid #667eea;
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            background: #667eea;
+            transform: scale(1.05);
+        }
+
+        .slide-counter {
+            color: #c7d2fe;
+            font-size: 1.1rem;
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px 20px;
+                max-height: 92vh;
+            }
+
+            h1 { font-size: 2.2rem !important; margin-bottom: 15px !important; }
+            h2 { font-size: 1.8rem !important; margin-bottom: 20px !important; }
+            .subtitle { font-size: 1.2rem !important; }
+            .quote { font-size: 1.4rem !important; padding-left: 15px !important; }
+            .emphasis { font-size: 1.4rem !important; }
+            .bullet-list li { font-size: 1.2rem !important; padding-left: 30px !important; }
+            .framework { grid-template-columns: 1fr !important; gap: 15px !important; }
+            .diagram { flex-direction: column !important; gap: 15px !important; }
+            .diagram-arrow { transform: rotate(90deg); font-size: 2rem !important; }
+            .stages { gap: 12px !important; }
+            .stage { padding: 18px !important; }
+            .stage-title { font-size: 1.2rem !important; }
+            .stage-desc { font-size: 1.05rem !important; }
+            .apb-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+            .apb-letter { font-size: 2.8rem !important; }
+            .apb-word { font-size: 1.4rem !important; }
+            .tesla-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+            .img-container img { max-width: 95%; max-height: 50vh; }
+            .navigation { bottom: 10px !important; gap: 8px !important; }
+            .nav-btn { padding: 10px 18px !important; font-size: 0.9rem !important; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8rem !important; }
+            h2 { font-size: 1.5rem !important; }
+            .quote { font-size: 1.2rem !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>From Effort to<br>Effortless Awareness</h1>
+            <p class="subtitle">The Journey from Manual Control to Self-Driving Meditation</p>
+            <div class="highlight">
+                <p class="quote">"The mind is restless, turbulent, and strong—harder to control than the wind."</p>
+                <p style="text-align: right; color: #a5b4fc; font-size: 1.3rem; margin-top: 15px;">— Arjuna, Bhagavad Gita</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: The Universal Problem -->
+        <div class="slide">
+            <h2>The Timeless Struggle</h2>
+            <ul class="bullet-list">
+                <li>Mental turbulence is not a modern problem</li>
+                <li>It's inherent to the untrained human mind</li>
+                <li>Even Yuval Harari acknowledges this ancient difficulty</li>
+                <li>The question remains: <span style="color: #60efff; font-weight: 700;">Why does my mind wander everywhere?</span></li>
+            </ul>
+            <div class="emphasis" style="margin-top: 40px;">
+                Who doesn't have Arjuna's problem?
+            </div>
+        </div>
+
+        <!-- Slide 3: The Secret -->
+        <div class="slide">
+            <h2>"Dhyana is a Secret"</h2>
+            <p class="subtitle">— Jagadguru Sri Abhinava Vidyatheertha Mahaswamigal<br>Sringeri Sharada Peetham</p>
+            <div class="highlight">
+                <p style="font-size: 1.6rem; color: #e0e7ff; line-height: 1.6; margin-bottom: 25px;">
+                    Not hidden deliberately, but secret because it cannot be transmitted through words alone
+                </p>
+            </div>
+            <ul class="bullet-list">
+                <li>Must be taught by a qualified teacher</li>
+                <li>Only after confirming student readiness</li>
+                <li>Foundation must be built first</li>
+                <li>Cannot skip to advanced practice</li>
+            </ul>
+            <div class="emphasis" style="margin-top: 25px;">
+                Yet he adds: "It is definitely possible"
+            </div>
+        </div>
+
+        <!-- Slide 4: The Money Experiment -->
+        <div class="slide">
+            <h2>The 100-Rupee Note Experiment</h2>
+            <p class="subtitle">From the Sringeri Jagadguru's Teaching</p>
+            <div class="highlight">
+                <p style="font-size: 1.6rem; color: #e0e7ff; line-height: 1.6; margin-bottom: 25px;">
+                    Give someone a stack of cash to count carefully.<br>
+                    Ask them: "Did your mind wander?"
+                </p>
+                <p class="emphasis" style="font-size: 2rem; margin: 0;">
+                    Answer: "No, it did not."
+                </p>
+            </div>
+            <ul class="bullet-list">
+                <li>The mind CAN focus when the value is clear</li>
+                <li>The mechanism exists—it needs the right motivation</li>
+                <li>This intensity is called <span style="color: #60efff; font-weight: 700;">Shraddha</span></li>
+            </ul>
+        </div>
+
+        <!-- Slide 5: The Value Problem -->
+        <div class="slide">
+            <h2>The Value Problem</h2>
+            <div class="framework">
+                <div class="framework-item">
+                    <h4>Counting Money</h4>
+                    <p>✓ Tangible value<br>✓ Immediate consequences<br>✓ Clear stakes<br>✓ Natural focus</p>
+                </div>
+                <div class="framework-item">
+                    <h4>Meditation</h4>
+                    <p>? Abstract value<br>? Distant payoff<br>? Unclear stakes<br>? Scattered attention</p>
+                </div>
+            </div>
+            <div class="emphasis">
+                The solution: Genuine revaluation of inner work
+            </div>
+            <p style="font-size: 1.4rem; color: #c7d2fe; margin-top: 20px;">
+                Can you value stillness as much as your salary?
+            </p>
+        </div>
+
+        <!-- Slide 6: Two Types of Meditation -->
+        <div class="slide">
+            <h2>Two Types of Meditation</h2>
+            <div class="img-container">
+                <img src="images/bicycle.jpg" alt="Meditation vs Meditation" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div style="display: none; text-align: center; padding: 40px; background: rgba(255,255,255,0.05); border-radius: 16px; border: 2px dashed rgba(96, 239, 255, 0.3);">
+                    <p style="font-size: 1.4rem; color: #c7d2fe; margin-bottom: 20px;">🚲 Training Wheels (Secular) vs 🚲 Transformation (Spiritual)</p>
+                    <p style="font-size: 1.2rem; color: #a5b4fc;">Health & Stress Relief ← → Spiritual Transformation</p>
+                </div>
+            </div>
+            <p style="font-size: 1.4rem; color: #c7d2fe; text-align: center; margin-top: 20px;">
+                One adjusts the psyche • The other transforms consciousness
+            </p>
+        </div>
+
+        <!-- Slide 7: The Reversal -->
+        <div class="slide">
+            <h2>The Fundamental Reversal</h2>
+            <p class="subtitle">Ordinary concentration vs. True meditation</p>
+            <div class="diagram">
+                <div class="diagram-box">
+                    <h4 style="color: #60efff; font-size: 1.4rem; margin-bottom: 8px;">Ordinary Focus</h4>
+                    <p style="font-size: 1.2rem; color: #c7d2fe;">Outward → Objects</p>
+                </div>
+                <div class="diagram-arrow">⟲</div>
+                <div class="diagram-box">
+                    <h4 style="color: #667eea; font-size: 1.4rem; margin-bottom: 8px;">True Dhyana</h4>
+                    <p style="font-size: 1.2rem; color: #c7d2fe;">Inward → Source</p>
+                </div>
+            </div>
+            <div class="highlight">
+                <p style="font-size: 1.4rem; color: #e0e7ff; line-height: 1.6;">
+                    <strong>Sri Ramakrishna's Lantern:</strong><br>
+                    The police officer's lantern shines outward, illuminating everything except itself. To see the source, you must turn the light around.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 8: The Inward Pull -->
+        <div class="slide">
+            <h2>Pratyak Pravahata</h2>
+            <p class="subtitle">The Natural Inward Pull</p>
+            <div class="highlight">
+                <p style="font-size: 1.6rem; color: #e0e7ff; margin-bottom: 25px;">
+                    You cannot <span style="color: #ff6b9d; font-weight: 700;">force</span> the mind inward
+                </p>
+                <p style="font-size: 1.6rem; color: #e0e7ff;">
+                    The mind must be <span style="color: #60efff; font-weight: 700;">drawn</span> naturally
+                </p>
+            </div>
+            <ul class="bullet-list">
+                <li>The Spiritual Heart must awaken</li>
+                <li>It creates a magnetic pull on awareness</li>
+                <li>Like a bird returning to its nest at evening</li>
+                <li>Effort prepares the ground; the center provides the pull</li>
+            </ul>
+        </div>
+
+        <!-- Slide 9: APB Compass -->
+        <div class="slide">
+            <h2>The APB Compass</h2>
+            <p class="subtitle">Measuring Inner Progress</p>
+            <div class="apb-grid">
+                <div class="apb-item">
+                    <div class="apb-letter">A</div>
+                    <div class="apb-word">Absorption</div>
+                    <p class="apb-desc">Quality of focus—truly present with your practice</p>
+                </div>
+                <div class="apb-item">
+                    <div class="apb-letter">P</div>
+                    <div class="apb-word">Peace</div>
+                    <p class="apb-desc">Natural calm arising from within, not forced</p>
+                </div>
+                <div class="apb-item">
+                    <div class="apb-letter">B</div>
+                    <div class="apb-word">Bliss</div>
+                    <p class="apb-desc">Ananda—subtle well-being from approaching the source</p>
+                </div>
+            </div>
+            <div class="emphasis">
+                Forget the stopwatch. Track these internal signposts.
+            </div>
+        </div>
+
+        <!-- Slide 10: Journey Stages -->
+        <div class="slide">
+            <h2>Stages of the Journey</h2>
+            <div class="stages">
+                <div class="stage">
+                    <div class="stage-title">Stage 1A: Scattered Mind (0-25%)</div>
+                    <div class="stage-desc">Frustration dominates. Pure grit and willpower.</div>
+                </div>
+                <div class="stage">
+                    <div class="stage-title">Stage 1B: Building Foundation (25-40%)</div>
+                    <div class="stage-desc">Routine + discipline. Short windows of calm emerge.</div>
+                </div>
+                <div class="stage">
+                    <div class="stage-title">Stage 1C: Emerging Stability (40-49%)</div>
+                    <div class="stage-desc">Mature practice. First hints of the inward pull.</div>
+                </div>
+                <div class="stage" style="border-left-color: #60efff;">
+                    <div class="stage-title" style="color: #fff; font-size: 1.6rem;">⚡ 50% Threshold: The Shift</div>
+                    <div class="stage-desc" style="color: #e0e7ff;">Effort transforms into effortlessness. Grace engages.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: From Training Wheels to Grace -->
+        <div class="slide">
+            <h2>From Training Wheels to Grace</h2>
+            <div class="img-container">
+                <img src="images/journey.jpg" alt="Journey Visualization" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div style="display: none; text-align: center; padding: 40px; background: rgba(255,255,255,0.05); border-radius: 16px; border: 2px dashed rgba(96, 239, 255, 0.3);">
+                    <p style="font-size: 1.4rem; color: #c7d2fe; margin-bottom: 15px;">📍 Training Wheels → 📈 Emerging Stability</p>
+                    <p style="font-size: 1.4rem; color: #c7d2fe; margin-bottom: 15px;">⬆️ Dhāraṇā (Effort)</p>
+                    <p style="font-size: 1.4rem; color: #60efff; margin-bottom: 15px;">✨ Grace / Guru's Karuṇā</p>
+                    <p style="font-size: 1.5rem; color: #60efff; font-weight: 700;">🕉️ Supreme Peace (Śānti)</p>
+                </div>
+            </div>
+            <p style="font-size: 1.3rem; color: #c7d2fe; text-align: center; margin-top: 15px; line-height: 1.5;">
+                Effort prepares the chassis • Grace powers the drive • Awareness reaches stillness
+            </p>
+        </div>
+
+        <!-- Slide 12: The Gap -->
+        <div class="slide">
+            <h2>The Unbridgeable Gap</h2>
+            <div class="diagram">
+                <div class="diagram-box">
+                    <h4 style="color: #60efff; font-size: 1.3rem; margin-bottom: 10px;">Training Wheels</h4>
+                    <p style="font-size: 1.1rem; color: #c7d2fe;">
+                        Secular + Spiritual<br>
+                        Supports<br>
+                        (Up to 49%)
+                    </p>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="diagram-arrow">→</div>
+                    <div class="gap-indicator">THE GAP</div>
+                    <div class="diagram-arrow">→</div>
+                </div>
+                <div class="diagram-box">
+                    <h4 style="color: #667eea; font-size: 1.3rem; margin-bottom: 10px;">True Dhyana</h4>
+                    <p style="font-size: 1.1rem; color: #c7d2fe;">
+                        Effortless<br>
+                        Awareness<br>
+                        (50%+)
+                    </p>
+                </div>
+            </div>
+            <div class="highlight" style="margin-top: 30px;">
+                <p style="font-size: 1.5rem; color: #e0e7ff; line-height: 1.6;">
+                    <strong>The Paradox:</strong> The ego cannot engineer its own dissolution.<br>
+                    No amount of willpower can force non-effort.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 13: Grace -->
+        <div class="slide">
+            <h2>The Bridge: Divine Grace</h2>
+            <ul class="bullet-list">
+                <li>Effort builds the vehicle; Grace provides the fuel</li>
+                <li>Practice prepares; Grace fulfills</li>
+                <li>Not arbitrary magic—a catalyst interacting with preparation</li>
+                <li>When readiness is complete, Grace flows naturally</li>
+            </ul>
+            <div class="highlight" style="margin-top: 35px;">
+                <p style="font-size: 1.6rem; color: #60efff; text-align: center; font-weight: 700;">
+                    Guru Kripa = Divine Compassion
+                </p>
+                <p style="font-size: 1.3rem; color: #c7d2fe; text-align: center; margin-top: 15px;">
+                    The force that flows across the chasm
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 14: Role of Guru -->
+        <div class="slide">
+            <h2>The Role of the Guru</h2>
+            <div class="framework">
+                <div class="framework-item">
+                    <h4>Function 1: Vision</h4>
+                    <p>Implants the true goal. Makes Self-realization feel real and attainable. Provides the map and conviction.</p>
+                </div>
+                <div class="framework-item">
+                    <h4>Function 2: Energy</h4>
+                    <p>Transmits Tapahsakti—spiritual power from their own practice. The voltage surge to cross the gap.</p>
+                </div>
+            </div>
+            <div class="emphasis" style="margin-top: 35px;">
+                The Guru builds the wire to 49%<br>
+                Tapahsakti provides the final voltage to bridge the gap
+            </div>
+        </div>
+
+        <!-- Slide 15: Tesla Framework -->
+        <div class="slide">
+            <h2>Tesla Dhyana</h2>
+            <p class="subtitle">5 Components of Transformation</p>
+            <div class="tesla-grid">
+                <div class="tesla-item">
+                    <div class="tesla-number">1</div>
+                    <div class="tesla-title">Lifetime Charging</div>
+                    <p class="tesla-text">Guru's Grace—the Supercharger network for the spiritual journey</p>
+                </div>
+                <div class="tesla-item">
+                    <div class="tesla-number">2</div>
+                    <div class="tesla-title">Full Self-Driving</div>
+                    <p class="tesla-text">Pratyak Pravahata—autonomous inward navigation</p>
+                </div>
+                <div class="tesla-item">
+                    <div class="tesla-number">3</div>
+                    <div class="tesla-title">Sensor Calibration</div>
+                    <p class="tesla-text">Abhyasa + Vairagya—practice and dispassion clean the data</p>
+                </div>
+                <div class="tesla-item">
+                    <div class="tesla-number">4</div>
+                    <div class="tesla-title">Firmware Update</div>
+                    <p class="tesla-text">Study + Reflection—cognitive retraining removes bugs</p>
+                </div>
+            </div>
+            <div class="highlight" style="margin-top: 25px;">
+                <p style="font-size: 1.4rem; color: #e0e7ff; text-align: center;">
+                    <strong>5. Silent Cabin Mode:</strong> Inner Mauna—motion within stillness
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 16: The Answer -->
+        <div class="slide">
+            <h2>Who Lacks Arjuna's Problem?</h2>
+            <div class="highlight">
+                <p style="font-size: 1.8rem; color: #60efff; margin-bottom: 25px; font-weight: 700;">
+                    Those who have moved beyond the training wheels
+                </p>
+                <ul class="bullet-list" style="margin-left: 20px;">
+                    <li>From manual control to autopilot awareness</li>
+                    <li>From pushing the mind to being pulled naturally</li>
+                    <li>From effort to effortlessness</li>
+                    <li>From discipline to grace-guided flow</li>
+                </ul>
+            </div>
+            <div class="emphasis" style="margin-top: 40px;">
+                For them, meditation meditates itself
+            </div>
+        </div>
+
+        <!-- Slide 17: The Reflection -->
+        <div class="slide">
+            <h2>The Core Question</h2>
+            <div class="highlight">
+                <p style="font-size: 2rem; color: #e0e7ff; line-height: 1.6; text-align: center; margin-bottom: 35px;">
+                    If intense focus arises when value is vivid and stakes are high...
+                </p>
+                <p style="font-size: 2.2rem; color: #60efff; font-weight: 700; text-align: center;">
+                    How seriously do you value your inner stillness?
+                </p>
+            </div>
+            <p style="font-size: 1.4rem; color: #c7d2fe; margin-top: 40px; text-align: center; line-height: 1.6;">
+                Is it a nice-to-have hobby?<br>
+                Or is it as vital as counting your rent money?
+            </p>
+        </div>
+
+        <!-- Slide 18: Key Takeaways -->
+        <div class="slide">
+            <h2>Three Key Pillars</h2>
+            <div class="stages">
+                <div class="stage">
+                    <div class="stage-title">1. Vivid Purpose (Shraddha)</div>
+                    <div class="stage-desc">Your mind knows how to focus intensely. Cultivate that same seriousness for inner work.</div>
+                </div>
+                <div class="stage">
+                    <div class="stage-title">2. The Inward Pull (Pratyak Pravahata)</div>
+                    <div class="stage-desc">Stop forcing. Cultivate conditions that allow natural homecoming. Less shepherd, more magnet.</div>
+                </div>
+                <div class="stage">
+                    <div class="stage-title">3. Grace Completes Effort</div>
+                    <div class="stage-desc">Track APB (Absorption, Peace, Bliss) to 50%. Grace bridges the final gap. Effort initiates, Grace fulfills.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 19: Closing -->
+        <div class="slide">
+            <h1 style="font-size: 3rem;">From Effort to<br>Effortless Awareness</h1>
+            <div class="highlight" style="margin-top: 50px;">
+                <p style="font-size: 1.8rem; color: #e0e7ff; line-height: 1.6; text-align: center;">
+                    The journey from wrestling with the wind<br>
+                    to discovering the still point<br>
+                    where the wind naturally comes to rest
+                </p>
+            </div>
+            <p style="font-size: 1.6rem; color: #60efff; margin-top: 50px; text-align: center; font-weight: 700; line-height: 1.5;">
+                What level of seriousness would make you ready<br>to let go of the training wheels?
+            </p>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">← Previous</button>
+        <span class="slide-counter"><span id="current">1</span> / <span id="total">19</span></span>
+        <button class="nav-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('total').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            document.getElementById('current').textContent = currentSlide + 1;
+            slides[currentSlide].scrollTop = 0;
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function previousSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            }
+        });
+
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) previousSlide();
+        }
+    </script>
+</body>
+</html>
