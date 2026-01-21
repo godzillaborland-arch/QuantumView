@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla Dhyana: The Lifetime Charging Revolution</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --midnight: #0d1b2a;
+            --slate: #1b263b;
+            --steel: #415a77;
+            --silver: #778da9;
+            --pearl: #e0e1dd;
+            --gold: #d4a574;
+            --copper: #c77d51;
+            --electric: #00d9ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--midnight);
+            color: var(--pearl);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 217, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(212, 165, 116, 0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a1b2a 0%, #1b263b 50%, #2d3e5f 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 50%, rgba(0, 217, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(212, 165, 116, 0.15) 0%, transparent 50%),
+                url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            text-align: center;
+        }
+
+        .hero-label {
+            font-family: 'Work Sans', sans-serif;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: #00d9ff;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            animation: fadeIn 1s ease-out;
+            text-shadow: 0 2px 20px rgba(0, 217, 255, 0.5);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #ffffff 0%, #d4a574 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeIn 1.2s ease-out 0.2s backwards;
+            filter: drop-shadow(0 4px 20px rgba(212, 165, 116, 0.3));
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.3rem, 3vw, 2rem);
+            color: #c7d5e8;
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+            animation: fadeIn 1.4s ease-out 0.4s backwards;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-cta {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: #00d9ff;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            animation: fadeIn 1.6s ease-out 0.6s backwards;
+            text-shadow: 0 2px 15px rgba(0, 217, 255, 0.5);
+        }
+
+        /* Main Content */
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        /* Story Section */
+        .story-intro {
+            margin-bottom: 6rem;
+        }
+
+        .story-intro h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .lead-text {
+            font-size: clamp(1.2rem, 2.5vw, 1.4rem);
+            color: #b0bfd1;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        p {
+            font-size: clamp(1.05rem, 2vw, 1.15rem);
+            color: #dce3ed;
+            margin-bottom: 1.8rem;
+            line-height: 1.8;
+        }
+
+        /* Quote Callout */
+        .quote-callout {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.05), rgba(212, 165, 116, 0.05));
+            border-left: 4px solid var(--electric);
+            padding: 3rem;
+            margin: 4rem 0;
+            border-radius: 0 20px 20px 0;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quote-callout::before {
+            content: '"';
+            position: absolute;
+            top: -1rem;
+            left: 1rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 12rem;
+            color: var(--electric);
+            opacity: 0.08;
+            line-height: 1;
+        }
+
+        .quote-callout p {
+            font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+            font-style: italic;
+            color: var(--electric);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* The Paradox Grid */
+        .paradox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 3rem;
+            margin: 5rem 0;
+        }
+
+        .paradox-card {
+            background: linear-gradient(135deg, var(--slate), var(--midnight));
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(119, 141, 169, 0.2);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .paradox-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--electric), var(--gold));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .paradox-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 217, 255, 0.15);
+        }
+
+        .paradox-card:hover::before {
+            opacity: 1;
+        }
+
+        .paradox-label {
+            font-family: 'Work Sans', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--electric);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .paradox-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 3vw, 2.2rem);
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .paradox-card p {
+            font-size: 1.05rem;
+            color: var(--silver);
+            line-height: 1.7;
+        }
+
+        /* Visual Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--steel), transparent);
+            margin: 6rem 0;
+        }
+
+        /* The Origin Story */
+        .origin-story {
+            background: linear-gradient(135deg, var(--slate) 0%, var(--midnight) 100%);
+            padding: 5rem 3rem;
+            border-radius: 30px;
+            margin: 6rem 0;
+            border: 1px solid rgba(119, 141, 169, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .origin-story::before {
+            content: '⚡';
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 8rem;
+            opacity: 0.05;
+        }
+
+        .origin-story h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            color: var(--gold);
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .origin-detail {
+            background: rgba(0, 217, 255, 0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border-left: 3px solid var(--electric);
+        }
+
+        .origin-detail strong {
+            color: var(--electric);
+            font-weight: 600;
+        }
+
+        /* The Two Methods */
+        .methods-section {
+            margin: 6rem 0;
+        }
+
+        .methods-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 4rem;
+            font-weight: 700;
+        }
+
+        .method-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+
+        .method-box {
+            padding: 3rem;
+            border-radius: 25px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .method-box:hover {
+            transform: scale(1.03);
+        }
+
+        .method-a {
+            background: linear-gradient(135deg, rgba(199, 125, 81, 0.1), rgba(212, 165, 116, 0.05));
+            border: 2px solid var(--copper);
+        }
+
+        .method-b {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(0, 217, 255, 0.05));
+            border: 2px solid var(--electric);
+        }
+
+        .method-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .method-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .method-a .method-title {
+            color: var(--copper);
+        }
+
+        .method-b .method-title {
+            color: var(--electric);
+        }
+
+        .method-desc {
+            font-size: 1.1rem;
+            color: var(--silver);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .method-example {
+            font-style: italic;
+            color: var(--pearl);
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-top: 1.5rem;
+        }
+
+        /* Tesla Metaphor */
+        .tesla-section {
+            background: linear-gradient(135deg, var(--midnight), var(--slate));
+            padding: 5rem 3rem;
+            border-radius: 30px;
+            margin: 6rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tesla-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--electric), var(--gold), var(--electric));
+        }
+
+        .tesla-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: var(--gold);
+            margin-bottom: 2rem;
+            font-weight: 900;
+        }
+
+        .tesla-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .tesla-item {
+            background: rgba(0, 217, 255, 0.05);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .tesla-item:hover {
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .tesla-item h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--electric);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .tesla-item p {
+            font-size: 1.05rem;
+            color: var(--silver);
+        }
+
+        /* Key Insight Box */
+        .insight-box {
+            background: linear-gradient(135deg, var(--steel), var(--slate));
+            padding: 4rem 3rem;
+            border-radius: 25px;
+            margin: 6rem 0;
+            border: 2px solid var(--gold);
+            position: relative;
+        }
+
+        .insight-box::before {
+            content: '💡';
+            position: absolute;
+            top: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4rem;
+            background: var(--midnight);
+            padding: 1rem 1.5rem;
+            border-radius: 50%;
+        }
+
+        .insight-box h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .insight-box p {
+            font-size: clamp(1.15rem, 2vw, 1.3rem);
+            color: var(--pearl);
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        /* The Mentor Section */
+        .mentor-section {
+            margin: 6rem 0;
+            padding: 4rem 3rem;
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.05), rgba(0, 217, 255, 0.05));
+            border-radius: 25px;
+        }
+
+        .mentor-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            color: var(--gold);
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .mentor-visual {
+            text-align: center;
+            font-size: 5rem;
+            margin: 3rem 0;
+            opacity: 0.7;
+        }
+
+        /* Final Message */
+        .final-message {
+            background: linear-gradient(135deg, var(--midnight) 0%, var(--slate) 50%, var(--steel) 100%);
+            padding: 6rem 3rem;
+            border-radius: 30px;
+            margin: 6rem -2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-message::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 30% 50%, rgba(0, 217, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(212, 165, 116, 0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .final-message-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .final-message h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: var(--gold);
+            margin-bottom: 2rem;
+            font-weight: 900;
+        }
+
+        .final-message p {
+            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+            color: var(--pearl);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+        }
+
+        .final-question {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: var(--electric);
+            font-weight: 700;
+            margin-top: 3rem;
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 80vh;
+                padding: 3rem 1.5rem;
+            }
+
+            .content {
+                padding: 4rem 1.5rem;
+            }
+
+            .paradox-grid,
+            .method-comparison,
+            .tesla-comparison {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .origin-story,
+            .tesla-section,
+            .mentor-section {
+                padding: 3rem 2rem;
+            }
+
+            .final-message {
+                padding: 4rem 2rem;
+                margin: 4rem -1.5rem 0;
+            }
+
+            .quote-callout {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--electric);
+            color: var(--midnight);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-label">Tesla Dhyana</div>
+            <h1>The Lifetime<br>Charging<br>Revolution</h1>
+            <p class="hero-subtitle">
+                What if spiritual connection wasn't a subscription you pay for with willpower,<br>but an asset you actually own?
+            </p>
+            <div class="hero-cta">Stop Renting. Start Owning.</div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="content">
+        <!-- Introduction -->
+        <section class="story-intro">
+            <h2>Subscription Fatigue</h2>
+            <p class="lead-text">
+                You look at your bank statement and it's just this endless list of things you have to keep paying for every month. Software, streaming, gym memberships. The moment you stop paying, the service cuts off. You lose access.
+            </p>
+            <p>
+                But we don't just apply this model to our wallets. We apply it to our own psychology. We treat self-improvement like a subscription service. If I want to be calm, I have to pay with daily meditation. If I want to be fit, I have to pay with hours at the gym. And if I stop paying that discipline tax for even a week, I lose the asset. It's gone.
+            </p>
+            <p>
+                It's an incredibly exhausting way to live. It implies that your baseline state is somehow broken and you have to constantly rent a better version of yourself.
+            </p>
+        </section>
+
+        <div class="quote-callout">
+            <p>
+                What if spiritual connection wasn't a subscription you pay for with willpower, but an asset you actually own? Like buying a car with lifetime charging included.
+            </p>
+        </div>
+
+        <!-- The Paradox -->
+        <section>
+            <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem); color: var(--gold); margin-bottom: 3rem; font-weight: 700;">The Meditation Paradox</h2>
+            
+            <div class="paradox-grid">
+                <div class="paradox-card">
+                    <div class="paradox-label">Subject A</div>
+                    <h3>Maximum Discipline<br>Zero Connection</h3>
+                    <p>
+                        She's the ultimate super-user of life. Highly disciplined, extremely organized, an efficiency machine. Color-coded calendars, to-do lists for her to-do lists. She manages household, finances, career—everything with absolute precision.
+                    </p>
+                    <p style="margin-top: 1.5rem; font-style: italic; color: var(--copper);">
+                        "I can't for the life of me get meditation. Even when I sit down, the connection just isn't there."
+                    </p>
+                </div>
+
+                <div class="paradox-card">
+                    <div class="paradox-label">Subject B</div>
+                    <h3>Minimum Discipline<br>Consistent Connection</h3>
+                    <p>
+                        Disorganized, pretty random. Discipline is definitely not his strength. If life was a subscription service, his payments would be bouncing every month. He's chaotic.
+                    </p>
+                    <p style="margin-top: 1.5rem; font-style: italic; color: var(--electric);">
+                        "I've been able to meditate for 45 years. I never found it too hard to connect when I wanted to. The access was always there."
+                    </p>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <h3>The Equation Breaks Down</h3>
+                <p>
+                    Subject A has maximum discipline and zero connection. Subject B has minimum discipline and consistent connection. If you look at these two data points side-by-side, the equation <em>discipline = results</em> completely breaks down.
+                </p>
+                <p style="margin-top: 1.5rem; color: var(--electric);">
+                    There has to be a missing variable.
+                </p>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- The Origin Story -->
+        <section class="origin-story">
+            <h2>Guindy Engineering: The Catalyst</h2>
+            <p style="font-size: 1.2rem; color: var(--silver); margin-bottom: 2rem;">
+                College of Engineering, Guindy, India — 1978
+            </p>
+
+            <div class="origin-detail">
+                <p>
+                    <strong>The Skeptic:</strong> An 18-year-old nicknamed "Quantum." Obsessed with Richard Feynman, quantum mechanics, electron spin. A fierce rationalist who believed the universe was purely mechanical. If you couldn't measure it with a ruler or an equation, it didn't exist. He had specific disdain for religious markings—saw them as signs of illogical, weak minds.
+                </p>
+            </div>
+
+            <div class="origin-detail">
+                <p>
+                    <strong>The Mentor:</strong> A young PhD candidate standing next to a Royal Enfield motorcycle. Tall, good-looking, clean-shaven face literally shining. Wearing an immaculate well-ironed white half-sleeve shirt and full white pants. But here's the twist—he wore <em>Pattai Vibhuti</em>, those prominent religious ash stripes on his forehead.
+                </p>
+            </div>
+
+            <p style="margin-top: 2rem;">
+                The arrogant teenager decided to poke holes in this "religious guy's" worldview. He wanted to mock him, destroy him with facts and logic.
+            </p>
+
+            <p style="font-size: 1.3rem; color: var(--electric); font-weight: 600; margin-top: 2rem;">
+                But the PhD candidate didn't quote scripture. He didn't say "you just have to have faith."
+            </p>
+
+            <p>
+                Instead, he met the skeptic exactly where he was. He answered every single question using pure logic. He dismantled the author's arguments using the author's own toolset: rationality and engineering principles. It was like a master engineer talking to a mechanic.
+            </p>
+
+            <p style="margin-top: 2rem; font-style: italic; color: var(--gold);">
+                The bubble burst. This person in the white shirt and ash wasn't illogical—he was operating on a level of logic the teenager hadn't even accessed yet.
+            </p>
+
+            <div class="mentor-visual">🏍️ ⚡ 🕉️</div>
+
+            <p style="font-size: 1.2rem; text-align: center; color: var(--pearl);">
+                <strong>The mentor was a <em>Siddha Purusha</em></strong>—a perfected being, a realized soul. Someone who had completed the game. He could drop into <em>Samadhi</em> at will, like flipping a light switch. His challenge wasn't entering peace; it was coming out of it to do normal chores.
+            </p>
+        </section>
+
+        <!-- The Two Methods -->
+        <section class="methods-section">
+            <h2>Two Ways to Move the Mind</h2>
+
+            <div class="method-comparison">
+                <div class="method-box method-a">
+                    <span class="method-icon">🐑</span>
+                    <h3 class="method-title">Method A: The Shepherd</h3>
+                    <p class="method-desc">
+                        Like a shepherd driving sheep into a pen. You have to bark orders, use a stick, force the sheep to go where they don't want to go. The moment you look away, the sheep scatter.
+                    </p>
+                    <div class="method-example">
+                        "This is Method A discipline. An adversarial relationship with your own brain. You're trying to force the mind into stillness, but it keeps trying to run away to the next to-do list item."
+                    </div>
+                </div>
+
+                <div class="method-box method-b">
+                    <span class="method-icon">🕊️</span>
+                    <h3 class="method-title">Method B: The Bird</h3>
+                    <p class="method-desc">
+                        Like a bird coming to roost in its own nest. Do you have to force a bird to go home at sunset? No, it wants to go there. The bird isn't forced; it's pulled. It's a magnetic attraction to home.
+                    </p>
+                    <div class="method-example">
+                        "This is <em>Pratyak Pravahata</em>—natural inwardness. There's a higher center in you. When that center is activated, it acts like a giant magnet, pulling the mind inward. You don't drive the meditation; the meditation drives you."
+                    </div>
+                </div>
+            </div>
+
+            <p style="text-align: center; font-size: 1.3rem; color: var(--gold); margin-top: 4rem; font-weight: 600;">
+                Subject A is working hard to push the river.<br>
+                Subject B found the current and is floating.
+            </p>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Tesla Metaphor -->
+        <section class="tesla-section">
+            <h2>The Tesla Metaphor</h2>
+            <p style="font-size: 1.3rem; color: var(--silver); max-width: 700px; margin: 0 auto 3rem;">
+                The early Tesla models came with lifetime supercharging. You pay for the car once—or in this case, you receive the grace—and the energy is free forever.
+            </p>
+
+            <div class="tesla-comparison">
+                <div class="tesla-item">
+                    <h3>Subscription Model</h3>
+                    <p>Pay monthly with discipline. Miss a payment, lose access. Constant maintenance required. Anxiety about slipping up.</p>
+                </div>
+
+                <div class="tesla-item">
+                    <h3>Lifetime Charging</h3>
+                    <p>One-time installation. Energy flows freely. Can be neglected for years. Signal never dies. An owned asset.</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem; padding: 3rem; background: rgba(0, 217, 255, 0.08); border-radius: 20px;">
+                <p style="font-size: 1.2rem; color: var(--electric); margin-bottom: 1.5rem;">
+                    <strong>The 45-Year Stress Test:</strong>
+                </p>
+                <p style="color: var(--pearl);">
+                    The author admits he wasn't a perfect yogi. He "drove the car to Vegas," stopped practicing for years at a time, was inconsistent. He did all the things that in a subscription model would result in losing access.
+                </p>
+                <p style="margin-top: 1.5rem; font-size: 1.3rem; color: var(--electric); font-weight: 600;">
+                    But the signal never died. 45 years later, it's still there.
+                </p>
+            </div>
+        </section>
+
+        <!-- The Mechanism -->
+        <section style="margin: 6rem 0;">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem); color: var(--gold); margin-bottom: 3rem; font-weight: 700; text-align: center;">The Missing Variable</h2>
+
+            <div style="background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(212, 165, 116, 0.1)); padding: 4rem 3rem; border-radius: 25px; margin: 3rem 0;">
+                <p style="font-size: 1.3rem; color: var(--pearl); text-align: center; margin-bottom: 2rem;">
+                    During those hangouts by the Royal Enfield, something happened. The skeptic didn't just learn logic—he got <em>activated</em>.
+                </p>
+                <p style="font-size: 1.5rem; color: var(--electric); text-align: center; font-weight: 600;">
+                    He received a charge. A transmission.
+                </p>
+                <p style="font-size: 1.2rem; color: var(--silver); text-align: center; margin-top: 2rem;">
+                    In the tradition, they call it <em>Krupa</em>—Grace.
+                </p>
+            </div>
+
+            <p style="margin-top: 3rem;">
+                Once that higher center was opened, the pull began. That's why he never found it too hard to meditate for the next 45 years. He wasn't pushing the sheep; he was just letting the bird fly home.
+            </p>
+
+            <p style="font-size: 1.3rem; color: var(--gold); font-weight: 600; margin-top: 2rem;">
+                The ability to connect isn't something you do. It's something you have.
+            </p>
+        </section>
+
+        <!-- The Anonymous Mentor -->
+        <section class="mentor-section">
+            <h2>The Anonymous Siddha</h2>
+            
+            <p>
+                This mentor, this <em>Siddha Purusha</em>, has absolutely zero digital footprint. No Facebook, no Instagram, no LinkedIn, no photos online. In 2026, that's basically being a ghost. He remains completely anonymous. He doesn't want the fame.
+            </p>
+
+            <p style="margin-top: 2rem; font-size: 1.2rem; color: var(--electric);">
+                So how does someone access this transmission if they can't hang out by a Royal Enfield in India in 1978?
+            </p>
+
+            <p>
+                The mentor wrote one book: <strong><em>Yoga, Enlightenment and Perfection</em></strong>. Interestingly, it's not about himself—it's about his own guru.
+            </p>
+
+            <div style="background: rgba(0, 217, 255, 0.05); padding: 2.5rem; border-radius: 20px; margin: 3rem 0; border-left: 4px solid var(--electric);">
+                <p style="font-size: 1.2rem; color: var(--pearl); margin-bottom: 1.5rem;">
+                    <strong>The Railway Track Protocol:</strong>
+                </p>
+                <p>
+                    Years later, the author gave this book to another young engineer—someone who never met the mentor, never saw the Royal Enfield, never got the physical presence. He just had the text.
+                </p>
+                <p style="margin-top: 1.5rem; color: var(--electric);">
+                    That student described the book as "the railway track he runs his spiritual life on." He became a spiritual teacher himself, all guided by this one book from an anonymous author.
+                </p>
+            </div>
+
+            <p style="font-size: 1.2rem; font-style: italic; color: var(--gold); text-align: center; margin-top: 3rem;">
+                The charge can transmit remotely. It can be encoded in words. The text acts as the carrier wave for the transmission.
+            </p>
+        </section>
+
+        <!-- Final Message -->
+        <section class="final-message">
+            <div class="final-message-content">
+                <h2>Stop Pushing the River</h2>
+                
+                <p>
+                    We might be approaching our inner lives with the wrong business model. We're trying to subscribe to peace through sheer force of will. We're trying to drive the sheep into the pen, day after day, getting exhausted, feeling guilty when we fail.
+                </p>
+
+                <p>
+                    But this story suggests there's another way. A quantum rationalist was hacked by a realized soul using pure logic. He received a battery charge that has outlasted 45 years of wear and tear.
+                </p>
+
+                <p style="font-size: 1.4rem; color: var(--electric); font-weight: 600; margin-top: 3rem;">
+                    The goal isn't to work harder at the discipline.
+                </p>
+
+                <p style="font-size: 1.4rem; color: var(--gold); font-weight: 600;">
+                    The goal is to find the source that makes the hard work unnecessary.
+                </p>
+
+                <p class="final-question">
+                    Maybe we just need to find the current.
+                </p>
+
+                <div style="margin-top: 4rem; padding-top: 3rem; border-top: 1px solid rgba(119, 141, 169, 0.3);">
+                    <p style="font-size: 1rem; color: var(--silver); font-style: italic;">
+                        If you're feeling that subscription fatigue, maybe it's time to stop renting and look for a lifetime asset.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
