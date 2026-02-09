@@ -64,7 +64,7 @@
     -->
 
 <section class="grid grid-cols-2 sm:grid-cols-6 gap-4 text-center">
-  <a href="tesla-dhyana-blog.html" class="btn bg-white p-4 rounded-xl font-semibold border hover:bg-indigo-50 flex flex-col items-center">
+  <a href="https://godzillaborland-arch.github.io/QuantumView/tesla-dhyana-blog.html" class="btn bg-white p-4 rounded-xl font-semibold border hover:bg-indigo-50 flex flex-col items-center">
     📕 The Book<span class="text-xs text-gray-500 mt-1">Tesla = Dhyāna</span>
   </a>
   <a href="http://quantumviewpoint.blogspot.com/" class="btn bg-white p-4 rounded-xl font-semibold border hover:bg-indigo-50 flex flex-col items-center">
@@ -83,6 +83,7 @@
     ✉️ Contact Me<span class="text-xs text-gray-500 mt-1">Send an email</span>
   </a>
 </section> 
+
 
 
     <!-- Latest Content by Theme (centered) -->
@@ -342,7 +343,20 @@
   </footer>
 
   <!-- Scripts: Year + Language Switch + Local Fallback -->
-  <script>
+ <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // Redirect #Book anchor to Tesla Dhyana blog
+    function checkBookRedirect() {
+      if (window.location.hash === '#Book') {
+        window.location.href = 'https://godzillaborland-arch.github.io/QuantumView/tesla-dhyana-blog.html';
+      }
+    }
+    
+    // Check on page load
+    checkBookRedirect();
+    
+    // Check when hash changes
+    window.addEventListener('hashchange', checkBookRedirect);
+    
     document.getElementById('year').textContent = new Date().getFullYear();
 
     // Language switch with fade (keeps selected visible)
