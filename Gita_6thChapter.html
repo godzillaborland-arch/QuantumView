@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhagavad Gita - Chapter 6</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        /* Improved readability and touch targets */
+        .verse-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #ff6b35;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            touch-action: manipulation;
+        }
+
+        .verse-number {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #ff6b35;
+            margin-bottom: 20px;
+        }
+
+        .sanskrit {
+            font-size: 1.3em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            font-family: 'Times New Roman', serif;
+            color: #2c3e50;
+        }
+
+        .translation {
+            font-size: 1.1em;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            font-style: italic;
+        }
+
+        .commentary {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #17a2b8;
+            margin-top: 20px;
+        }
+
+        .commentary h3 {
+            color: #17a2b8;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .commentary p {
+            line-height: 1.6;
+            color: #495057;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .speaking {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff6b35, transparent);
+            margin: 30px 0;
+        }
+
+        /* Enhanced Mobile Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+                line-height: 1.2;
+            }
+            
+            .header p {
+                font-size: 1em;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+                padding: 18px 25px;
+                font-size: 1.1em;
+                min-height: 60px;
+                border-radius: 30px;
+            }
+
+            .verse-container {
+                padding: 25px 20px;
+                border-radius: 15px;
+                margin-bottom: 25px;
+            }
+
+            .verse-number {
+                font-size: 1.1em;
+                margin-bottom: 20px;
+            }
+
+            .sanskrit {
+                font-size: 1.2em;
+                line-height: 1.6;
+                padding: 20px 15px;
+                border-radius: 10px;
+                margin-bottom: 20px;
+            }
+
+            .translation {
+                font-size: 1.1em;
+                line-height: 1.6;
+                margin-bottom: 20px;
+                padding: 15px;
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.7);
+            }
+
+            .commentary {
+                padding: 20px 15px;
+                border-radius: 10px;
+                margin-top: 20px;
+            }
+
+            .commentary h3 {
+                font-size: 1.1em;
+                margin-bottom: 12px;
+            }
+
+            .commentary p {
+                font-size: 0.95em;
+                line-height: 1.5;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header p {
+                font-size: 0.9em;
+            }
+
+            .content {
+                padding: 15px 10px;
+            }
+
+            .verse-container {
+                padding: 20px 15px;
+            }
+
+            .sanskrit {
+                font-size: 1.1em;
+                padding: 15px 12px;
+            }
+
+            .translation {
+                font-size: 1em;
+                padding: 12px;
+            }
+
+            .commentary {
+                padding: 15px 12px;
+            }
+
+            .commentary h3 {
+                font-size: 1em;
+            }
+
+            .commentary p {
+                font-size: 0.9em;
+            }
+
+            .btn {
+                padding: 16px 20px;
+                font-size: 1em;
+                min-height: 55px;
+            }
+        }
+
+        /* Touch-friendly enhancements */
+        @media (hover: none) and (pointer: coarse) {
+            .btn {
+                min-height: 60px;
+                padding: 18px 25px;
+            }
+
+            .btn:hover {
+                transform: none;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            }
+
+            .btn:active {
+                transform: scale(0.98);
+                transition: transform 0.1s;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🕉️ Bhagavad Gita</h1>
+            <p>Chapter 6: Dhyana Yoga (The Yoga of Meditation)</p>
+        </div>
+        
+        <div class="content">
+            <div class="controls">
+                <button class="btn btn-primary" onclick="getRandomVerse()">
+                    🎲 Random Verse
+                </button>
+                <button class="btn btn-secondary" onclick="readEnglish()" id="englishBtn">
+                    🔊 Read English
+                </button>
+                <button class="btn btn-success" onclick="readSanskrit()" id="sanskritBtn">
+                    🕉️ Read Sanskrit
+                </button>
+            </div>
+            
+            <div id="verseDisplay"></div>
+        </div>
+    </div>
+
+    <script>
+        const verses = [
+            {
+                verse: 1,
+                sanskrit: "श्रीभगवानुवाच |\nअनाश्रितः कर्मफलं कार्यं कर्म करोति यः |\nस संन्यासी च योगी च न निरग्निर्न चाक्रियः ||",
+                translation: "The Supreme Lord said: One who performs his prescribed duties without depending on the results of action is a true renunciant and yogi, not one who has given up fire sacrifices or abandoned all activities.",
+                commentary: "Shankara explains that true renunciation lies not in the external abandonment of action, but in the internal abandonment of attachment to the fruits of action."
+            },
+            {
+                verse: 2,
+                sanskrit: "यं संन्यासमिति प्राहुर्योगं तं विद्धि पाण्डव |\nन ह्यसंन्यस्तसङ्कल्पो योगी भवति कश्चन ||",
+                translation: "Know that what is called renunciation is the same as yoga, O Pandava, for no one becomes a yogi without renouncing selfish desires.",
+                commentary: "Shankara clarifies that sannyasa and yoga are essentially the same, both requiring abandonment of selfish desires and attachments."
+            },
+            {
+                verse: 3,
+                sanskrit: "आरुरुक्षोर्मुनेर्योगं कर्म कारणमुच्यते |\nयोगारूढस्य तस्यैव शमः कारणमुच्यते ||",
+                translation: "For a sage who wishes to attain yoga, action is said to be the means; for one who has attained yoga, tranquility is said to be the means.",
+                commentary: "Shankara describes two stages: for beginners, action without attachment purifies the mind; for the established, maintaining tranquility becomes primary."
+            },
+            {
+                verse: 4,
+                sanskrit: "यदा हि नेन्द्रियार्थेषु न कर्मस्वनुषज्जते |\nसर्वसङ्कल्पसंन्यासी योगारूढस्तदोच्यते ||",
+                translation: "When one is no longer attached to sense objects or actions, and has renounced all material desires, then one is said to be established in yoga.",
+                commentary: "Yogarudha means complete freedom from attachment, characterized by absence of personal desires and presence of equanimity."
+            },
+            {
+                verse: 5,
+                sanskrit: "उद्धरेदात्मनात्मानं नात्मानमवसादयेत् |\nआत्मैव ह्यात्मनो बन्धुरात्मैव रिपुरात्मनः ||",
+                translation: "One should lift oneself by one's own efforts and not degrade oneself, for the self alone is the friend of the self, and the self alone is the enemy of the self.",
+                commentary: "Shankara emphasizes personal responsibility. The mind can be our greatest ally when disciplined, or our worst enemy when uncontrolled."
+            },
+            {
+                verse: 6,
+                sanskrit: "बन्धुरात्मात्मनस्तस्य येनात्मैवात्मना जितः |\nअनात्मनस्तु शत्रुत्वे वर्तेतात्मैव शत्रुवत् ||",
+                translation: "For one who has conquered the mind, the mind is the best of friends; but for one who has failed to do so, the mind will remain the greatest enemy.",
+                commentary: "Self-conquest means gaining mastery over mind and senses. When achieved, the mind becomes a powerful tool for spiritual progress."
+            },
+            {
+                verse: 7,
+                sanskrit: "जितात्मनः प्रशान्तस्य परमात्मा समाहितः |\nशीतोष्णसुखदुःखेषु तथा मानापमानयोः ||",
+                translation: "For one who has conquered the mind and attained tranquility, the Supreme Self is steadily present in cold and heat, pleasure and pain, honor and dishonor.",
+                commentary: "The self-conquered person experiences constant presence of the Supreme Self, having transcended pairs of opposites."
+            },
+            {
+                verse: 8,
+                sanskrit: "ज्ञानविज्ञानतृप्तात्मा कूटस्थो विजितेन्द्रियः |\nयुक्त इत्युच्यते योगी समलोष्टाश्मकाञ्चनः ||",
+                translation: "One who is satisfied by knowledge and wisdom, who is unchanging and has conquered the senses, and who looks equally upon a clod of earth, a stone, and gold, is said to be a yogi established in union.",
+                commentary: "True satisfaction comes from spiritual knowledge and wisdom. Such a yogi sees underlying unity in all apparent diversity."
+            },
+            {
+                verse: 9,
+                sanskrit: "सुहृन्मित्रार्युदासीनमध्यस्थद्वेष्यबन्धुषु |\nसाधुष्वपि च पापेषु समबुद्धिर्विशिष्यते ||",
+                translation: "One who is impartial towards friends, companions, enemies, neutrals, arbiters, the hateful, relatives, saints and sinners, is considered superior.",
+                commentary: "Shankara explains that the advanced yogi maintains equal vision toward all beings, seeing the same divine essence in everyone."
+            },
+            {
+                verse: 10,
+                sanskrit: "योगी युञ्जीत सततमात्मानं रहसि स्थितः |\nएकाकी यतचित्तात्मा निराशीरपरिग्रहः ||",
+                translation: "A yogi should constantly engage the mind in meditation, remaining in solitude, alone, with mind and body controlled, free from desires and possessions.",
+                commentary: "Constant practice in solitude with controlled mind and body, free from material desires, is essential for spiritual progress."
+            },
+            {
+                verse: 11,
+                sanskrit: "शुचौ देशे प्रतिष्ठाप्य स्थिरमासनमात्मनः |\nनात्युच्छ्रितं नातिनीचं चैलाजिनकुशोत्तरम् ||",
+                translation: "In a clean place, establishing a firm seat for oneself, neither too high nor too low, covered with sacred grass, deerskin and cloth.",
+                commentary: "Shankara describes the physical requirements for meditation: a clean, appropriate place with proper seating arrangement."
+            },
+            {
+                verse: 12,
+                sanskrit: "तत्रैकाग्रं मनः कृत्वा यतचित्तेन्द्रियक्रियः |\nउपविश्यासने युञ्ज्याद्योगमात्मविशुद्धये ||",
+                translation: "Sitting on that seat, making the mind one-pointed and controlling the thoughts and senses, one should practice yoga for self-purification.",
+                commentary: "The practice involves making the mind single-pointed while controlling thoughts and senses for the purpose of inner purification."
+            },
+            {
+                verse: 13,
+                sanskrit: "समं कायशिरोग्रीवं धारयन्नचलं स्थिरः |\nसम्प्रेक्ष्य नासिकाग्रं स्वं दिशश्चानवलोकयन् ||",
+                translation: "Holding the body, head and neck erect and still, gazing at the tip of the nose without looking around in all directions.",
+                commentary: "Proper physical posture is essential - keeping the body straight and steady, with focused gaze to aid concentration."
+            },
+            {
+                verse: 14,
+                sanskrit: "प्रशान्तात्मा विगतभीर्ब्रह्मचारिव्रते स्थितः |\nमनः संयम्य मच्चित्तो युक्त आसीत मत्परः ||",
+                translation: "With a peaceful mind, free from fear, established in the vow of celibacy, controlling the mind and thinking of Me, the yogi should sit united, having Me as the supreme goal.",
+                commentary: "Mental peace, fearlessness, celibacy, and constant remembrance of the Divine are essential for successful meditation practice."
+            },
+            {
+                verse: 15,
+                sanskrit: "युञ्जन्नेवं सदात्मानं योगी नियतमानसः |\nशान्तिं निर्वाणपरमां मत्संस्थामधिगच्छति ||",
+                translation: "Thus constantly uniting the self, the yogi of controlled mind attains peace, the supreme liberation that abides in Me.",
+                commentary: "Through constant practice with a controlled mind, the yogi attains the highest peace and liberation in the Divine."
+            },
+            {
+                verse: 16,
+                sanskrit: "नात्यश्नतस्तु योगोऽस्ति न चैकान्तमनश्नतः |\nन चातिस्वप्नशीलस्य जाग्रतो नैव चार्जुन ||",
+                translation: "Yoga is not for one who eats too much or too little, nor for one who sleeps too much or stays awake too much, O Arjuna.",
+                commentary: "Moderation in eating, sleeping, and waking is essential for yoga practice. Extremes in any direction hinder spiritual progress."
+            },
+            {
+                verse: 17,
+                sanskrit: "युक्ताहारविहारस्य युक्तचेष्टस्य कर्मसु |\nयुक्तस्वप्नावबोधस्य योगो भवति दुःखहा ||",
+                translation: "For one who is moderate in food and recreation, balanced in work, and regulated in sleep and waking, yoga becomes the destroyer of sorrow.",
+                commentary: "Balance and moderation in all activities of life - eating, recreation, work, sleep - makes yoga effective in eliminating suffering."
+            },
+            {
+                verse: 18,
+                sanskrit: "यदा विनियतं चित्तमात्मन्येवावतिष्ठते |\nनिःस्पृहः सर्वकामेभ्यो युक्त इत्युच्यते तदा ||",
+                translation: "When the well-controlled mind rests in the self alone, free from longing for all desires, then one is said to be established in yoga.",
+                commentary: "True yoga is achieved when the mind, completely controlled, rests in the Self and is free from all material desires."
+            },
+            {
+                verse: 19,
+                sanskrit: "यथा दीपो निवातस्थो नेङ्गते सोपमा स्मृता |\nयोगिनो यतचित्तस्य युञ्जतो योगमात्मनः ||",
+                translation: "As a lamp in a windless place does not flicker, so is the comparison given for the yogi of controlled mind practicing meditation on the Self.",
+                commentary: "The steady flame in a windless place illustrates the unwavering concentration of a yogi whose mind is completely controlled."
+            },
+            {
+                verse: 20,
+                sanskrit: "यत्रोपरमते चित्तं निरुद्धं योगसेवया |\nयत्र चैवात्मनात्मानं पश्यन्नात्मनि तुष्यति ||",
+                translation: "When the mind, restrained by the practice of yoga, becomes still, and when seeing the Self by the Self, one is satisfied in the Self alone.",
+                commentary: "In deep meditation, the mind becomes completely still, and the practitioner experiences the Self directly, finding complete satisfaction within."
+            },
+            {
+                verse: 21,
+                sanskrit: "सुखमात्यन्तिकं यत्तद्बुद्धिग्राह्यमतीन्द्रियम् |\nवेत्ति यत्र न चैवायं स्थितश्चलति तत्त्वतः ||",
+                translation: "In which one experiences unlimited bliss that can be grasped by purified intellect beyond the senses, and established in which, one never departs from truth.",
+                commentary: "This state brings infinite bliss that transcends sensory experience and can only be known through purified intelligence."
+            },
+            {
+                verse: 22,
+                sanskrit: "यं लब्ध्वा चापरं लाभं मन्यते नाधिकं ततः |\nयस्मिन्स्थितो न दुःखेन गुरुणापि विचाल्यते ||",
+                translation: "Gaining which, one thinks there is no greater gain, and established in which, one is not shaken even by heavy sorrow.",
+                commentary: "This supreme attainment is so complete that nothing greater can be conceived, and it provides unshakeable stability even in great difficulties."
+            },
+            {
+                verse: 23,
+                sanskrit: "तं विद्याद्दुःखसंयोगवियोगं योगसंज्ञितम् |\nस निश्चयेन योक्तव्यो योगोऽनिर्विण्णचेतसा ||",
+                translation: "Let that be known as yoga - the disconnection from the connection with sorrow. This yoga should be practiced with determination and an undiscouraged mind.",
+                commentary: "True yoga is the severing of the connection with suffering. It requires determined, persistent practice with an undaunted spirit."
+            },
+            {
+                verse: 24,
+                sanskrit: "सङ्कल्पप्रभवान्कामांस्त्यक्त्वा सर्वानशेषतः |\nमनसैवेन्द्रियग्रामं विनियम्य समन्ततः ||",
+                translation: "Abandoning completely all desires born of mental conception, and restraining the group of senses from all sides by the mind alone.",
+                commentary: "Complete abandonment of desires arising from mental imagination and total control of all senses through mental discipline are required."
+            },
+            {
+                verse: 25,
+                sanskrit: "शनैः शनैरुपरमेद्बुद्ध्या धृतिगृहीतया |\nआत्मसंस्थं मनः कृत्वा न किञ्चिदपि चिन्तयेत् ||",
+                translation: "Gradually, step by step, one should withdraw from mental activities with the intellect controlled by patience, and fixing the mind on the Self, one should not think of anything else.",
+                commentary: "Withdrawal from mental activities should be gradual and patient. The mind should be established in the Self without any other thoughts."
+            },
+            {
+                verse: 26,
+                sanskrit: "यतो यतो निश्चरति मनश्चञ्चलमस्थिरम् |\nततस्ततो नियम्यैतदात्मन्येव वशं नयेत् ||",
+                translation: "Wherever the restless and unsteady mind wanders, one should restrain it and bring it back under the control of the Self alone.",
+                commentary: "The naturally restless mind will wander; the practitioner must patiently bring it back to the Self whenever it strays."
+            },
+            {
+                verse: 27,
+                sanskrit: "प्रशान्तमनसं ह्येनं योगिनं सुखमुत्तमम् |\nउपैति शान्तरजसं ब्रह्मभूतमकल्मषम् ||",
+                translation: "Supreme bliss comes to the yogi whose mind is peaceful, whose passion is calmed, who is free from sin and has become one with Brahman.",
+                commentary: "The yogi with a peaceful mind, free from passion and sin, experiences supreme bliss through union with Brahman."
+            },
+            {
+                verse: 28,
+                sanskrit: "युञ्जन्नेवं सदात्मानं योगी विगतकल्मषः |\nसुखेन ब्रह्मसंस्पर्शमत्यन्तं सुखमश्नुते ||",
+                translation: "Thus constantly engaging the self, the yogi, free from sin, easily enjoys the infinite bliss of contact with Brahman.",
+                commentary: "Through constant practice, the purified yogi effortlessly experiences the infinite joy of union with the Divine."
+            },
+            {
+                verse: 29,
+                sanskrit: "सर्वभूतस्थमात्मानं सर्वभूतानि चात्मनि |\nईक्षते योगयुक्तात्मा सर्वत्र समदर्शनः ||",
+                translation: "The yogi whose self is united through yoga sees the Self present in all beings and all beings present in the Self, having equal vision everywhere.",
+                commentary: "The accomplished yogi perceives the same divine Self in all beings and sees all existence as manifestations of that one Self."
+            },
+            {
+                verse: 30,
+                sanskrit: "यो मां पश्यति सर्वत्र सर्वं च मयि पश्यति |\nतस्याहं न प्रणश्यामि स च मे न प्रणश्यति ||",
+                translation: "One who sees Me in everything and everything in Me, I am never lost to such a person, nor is such a person ever lost to Me.",
+                commentary: "The yogi who perceives the Divine everywhere maintains an eternal connection - neither losing sight of God nor being forgotten by God."
+            },
+            {
+                verse: 31,
+                sanskrit: "सर्वभूतस्थितं यो मां भजत्येकत्वमास्थितः |\nसर्वथा वर्तमानोऽपि स योगी मयि वर्तते ||",
+                translation: "The yogi who worships Me dwelling in all beings, established in unity, lives in Me regardless of their mode of living.",
+                commentary: "One who worships the Divine present in all beings, established in the understanding of unity, remains in constant union with God."
+            },
+            {
+                verse: 32,
+                sanskrit: "आत्मौपम्येन सर्वत्र समं पश्यति योऽर्जुन |\nसुखं वा यदि वा दुःखं स योगी परमो मतः ||",
+                translation: "O Arjuna, the yogi who sees equality everywhere by comparing with the self, whether in pleasure or pain, is considered the highest yogi.",
+                commentary: "The supreme yogi is one who, through self-comparison, sees all beings equally and empathizes with their joys and sorrows."
+            },
+            {
+                verse: 33,
+                sanskrit: "अर्जुन उवाच |\nयोऽयं योगस्त्वया प्रोक्तः साम्येन मधुसूदन |\nएतस्याहं न पश्यामि चञ्चलत्वात्स्थितिं स्थिराम् ||",
+                translation: "Arjuna said: O Madhusudana, this yoga of equanimity that You have explained, I do not see how it can have steady foundation due to the restless nature of the mind.",
+                commentary: "Arjuna expresses the common difficulty - the restless nature of the mind makes it seem impossible to maintain steady equanimity."
+            },
+            {
+                verse: 34,
+                sanskrit: "चञ्चलं हि मनः कृष्ण प्रमाथि बलवद्दृढम् |\nतस्याहं निग्रहं मन्ये वायोरिव सुदुष्करम् ||",
+                translation: "The mind is indeed restless, O Krishna, turbulent, strong and obstinate. I think controlling it is as difficult as controlling the wind.",
+                commentary: "Arjuna compares controlling the mind to controlling the wind, expressing the apparent impossibility of mental control."
+            },
+            {
+                verse: 35,
+                sanskrit: "श्रीभगवानुवाच |\nअसंशयं महाबाहो मनो दुर्निग्रहं चलम् |\nअभ्यासेन तु कौन्तेय वैराग्येण च गृह्यते ||",
+                translation: "The Supreme Lord said: Undoubtedly, O mighty-armed one, the mind is difficult to control and restless, but by practice and detachment, O Kaunteya, it can be controlled.",
+                commentary: "Krishna acknowledges the difficulty but provides the solution: consistent practice (abhyasa) combined with detachment (vairagya)."
+            },
+            {
+                verse: 36,
+                sanskrit: "असंयतात्मना योगो दुष्प्राप इति मे मतिः |\nवश्यात्मना तु यतता शक्योऽवाप्तुमुपायतः ||",
+                translation: "For one whose mind is uncontrolled, yoga is difficult to attain, this is My opinion; but for one who has controlled the mind and strives, it is possible to attain through proper means.",
+                commentary: "Those with uncontrolled minds find yoga difficult, but those who control their minds and make proper effort can achieve success."
+            },
+            {
+                verse: 37,
+                sanskrit: "अर्जुन उवाच |\nअयतिः श्रद्धयोपेतो योगाच्चलितमानसः |\nअप्राप्य योगसंसिद्धिं कां गतिं कृष्ण गच्छति ||",
+                translation: "Arjuna said: One who has faith but lacks self-control, whose mind wanders from yoga without attaining perfection in yoga, what destination does such a person reach, O Krishna?",
+                commentary: "Arjuna asks about the fate of sincere but unsuccessful practitioners who have faith but cannot maintain consistent practice."
+            },
+            {
+                verse: 38,
+                sanskrit: "कच्चिन्नोभयविभ्रष्टश्छिन्नाभ्रमिव नश्यति |\nअप्रतिष्ठो महाबाहो विमूढो ब्रह्मणः पथि ||",
+                translation: "Does such a person not perish like a scattered cloud, having fallen from both paths, O mighty-armed one, deluded and without foundation on the path to Brahman?",
+                commentary: "Arjuna worries that the unsuccessful practitioner might lose both worldly success and spiritual attainment, left with nothing."
+            },
+            {
+                verse: 39,
+                sanskrit: "एतन्मे संशयं कृष्ण छेत्तुमर्हस्यशेषतः |\nत्वदन्यः संशयस्यास्य छेत्ता न ह्युपपद्यते ||",
+                translation: "This is my doubt, O Krishna, which You should completely dispel, for there is no one other than You who can dispel this doubt.",
+                commentary: "Arjuna requests Krishna to resolve this fundamental doubt about the fate of sincere but unsuccessful spiritual practitioners."
+            },
+            {
+                verse: 40,
+                sanskrit: "श्रीभगवानुवाच |\nपार्थ नैवेह नामुत्र विनाशस्तस्य विद्यते |\nन हि कल्याणकृत्कश्चिद्दुर्गतिं तात गच्छति ||",
+                translation: "The Supreme Lord said: O Partha, neither in this world nor in the next is there destruction for such a person, for no one who does good, My dear friend, ever comes to an evil end.",
+                commentary: "Krishna assures that no sincere spiritual effort is ever wasted - those who strive for good never meet with evil consequences."
+            },
+            {
+                verse: 41,
+                sanskrit: "प्राप्य पुण्यकृतां लोकानुषित्वा शाश्वतीः समाः |\nशुचीनां श्रीमतां गेहे योगभ्रष्टोऽभिजायते ||",
+                translation: "Attaining the worlds of the virtuous and dwelling there for eternal years, the one fallen from yoga is born in the house of the pure and prosperous.",
+                commentary: "The unsuccessful yogi first enjoys heavenly realms, then takes birth in favorable circumstances that support continued spiritual practice."
+            },
+            {
+                verse: 42,
+                sanskrit: "अथवा योगिनामेव कुले भवति धीमताम् |\nएतद्धि दुर्लभतरं लोके जन्म यदीदृशम् ||",
+                translation: "Or else, such a person is born in a family of wise yogis. Indeed, such a birth is very rare in this world.",
+                commentary: "An even more favorable birth is in a family of enlightened yogis, though such births are extremely rare and precious."
+            },
+            {
+                verse: 43,
+                sanskrit: "तत्र तं बुद्धिसंयोगं लभते पौर्वदेहिकम् |\nयतते च ततो भूयः संसिद्धौ कुरुनन्दन ||",
+                translation: "There, O joy of the Kurus, one regains the wisdom acquired in the previous birth and strives even more diligently for perfection.",
+                commentary: "In the new birth, the spiritual wisdom and tendencies from previous lives are naturally restored, leading to renewed and intensified effort."
+            },
+            {
+                verse: 44,
+                sanskrit: "पूर्वाभ्यासेन तेनैव ह्रियते ह्यवशोऽपि सः |\nजिज्ञासुरपि योगस्य शब्दब्रह्मातिवर्तते ||",
+                translation: "By virtue of that previous practice, such a person is automatically drawn to yoga, even against their will. Even one who merely inquires about yoga transcends the ritualistic path.",
+                commentary: "Past spiritual practice creates irresistible attraction toward yoga. Even casual inquiry about yoga elevates one beyond mere ritual worship."
+            },
+            {
+                verse: 45,
+                sanskrit: "प्रयत्नाद्यतमानस्तु योगी संशुद्धकिल्बिषः |\nअनेकजन्मसंसिद्धस्ततो याति परां गतिम् ||",
+                translation: "The yogi who strives with sincere effort, cleansed of all sins and perfected through many births, then attains the supreme goal.",
+                commentary: "Through persistent effort across multiple lifetimes, the yogi becomes completely purified and finally achieves the ultimate spiritual destination."
+            },
+            {
+                verse: 46,
+                sanskrit: "तपस्विभ्योऽधिको योगी ज्ञानिभ्योऽपि मतोऽधिकः |\nकर्मिभ्यश्चाधिको योगी तस्माद्योगी भवार्जुन ||",
+                translation: "The yogi is superior to ascetics, superior even to those of knowledge, and superior to those engaged in ritualistic activities. Therefore, O Arjuna, be a yogi.",
+                commentary: "Krishna declares the yogi's supremacy over all other spiritual paths - asceticism, intellectual study, and ritual performance - because yoga integrates all approaches."
+            },
+            {
+                verse: 47,
+                sanskrit: "योगिनामपि सर्वेषां मद्गतेनान्तरात्मना |\nश्रद्धावान्भजते यो मां स मे युक्ततमो मतः ||",
+                translation: "Among all yogis, one who worships Me with faith, with inner self absorbed in Me, is considered by Me to be the most united in yoga.",
+                commentary: "The highest yogi is the devotee who combines yogic practice with complete surrender and devotion to the Divine, representing the perfect integration of all spiritual paths."
+            }
+        ];
+
+        let currentVerse = null;
+        let isReading = false;
+
+        function getRandomVerse() {
+            const randomIndex = Math.floor(Math.random() * verses.length);
+            currentVerse = verses[randomIndex];
+            displayVerse(currentVerse);
+        }
+
+        function displayVerse(verse) {
+            const display = document.getElementById('verseDisplay');
+            display.innerHTML = `
+                <div class="verse-container">
+                    <div class="verse-number">Verse ${verse.verse}</div>
+                    <div class="sanskrit">${verse.sanskrit}</div>
+                    <div class="translation">${verse.translation}</div>
+                    <div class="commentary">
+                        <h3>Shankara's Commentary</h3>
+                        <p>${verse.commentary}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function readEnglish() {
+            if (!currentVerse) {
+                alert('Please select a verse first!');
+                return;
+            }
+
+            if (isReading) {
+                speechSynthesis.cancel();
+                resetButtons();
+                return;
+            }
+
+            const text = currentVerse.translation + ". " + currentVerse.commentary;
+            const utterance = new SpeechSynthesisUtterance(text);
+            
+            utterance.rate = 0.8;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            
+            // Try to find an English voice
+            const voices = speechSynthesis.getVoices();
+            const englishVoice = voices.find(voice => 
+                voice.lang.startsWith('en') && voice.name.includes('English')
+            ) || voices.find(voice => voice.lang.startsWith('en'));
+            
+            if (englishVoice) {
+                utterance.voice = englishVoice;
+            }
+
+            utterance.onstart = () => {
+                isReading = true;
+                document.getElementById('englishBtn').classList.add('speaking');
+                document.getElementById('englishBtn').textContent = '⏹️ Stop Reading';
+            };
+
+            utterance.onend = () => {
+                resetButtons();
+            };
+
+            utterance.onerror = () => {
+                resetButtons();
+                alert('Speech synthesis failed. Please try again.');
+            };
+
+            speechSynthesis.speak(utterance);
+        }
+
+        function readSanskrit() {
+            if (!currentVerse) {
+                alert('Please select a verse first!');
+                return;
+            }
+
+            if (isReading) {
+                speechSynthesis.cancel();
+                resetButtons();
+                return;
+            }
+
+            // Clean Sanskrit text - remove pipes and normalize
+            const sanskritText = currentVerse.sanskrit
+                .replace(/\|/g, ' ')
+                .replace(/\n/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+            
+            const utterance = new SpeechSynthesisUtterance(sanskritText);
+            
+            // Optimized settings for Sanskrit
+            utterance.rate = 0.55;  // Slower for better pronunciation
+            utterance.pitch = 1.0;  // Natural pitch
+            utterance.volume = 1;
+            utterance.lang = 'hi-IN';  // Set language to Hindi for better Devanagari support
+            
+            // Enhanced voice selection for Sanskrit/Hindi
+            const voices = speechSynthesis.getVoices();
+            
+            // Priority order for voice selection
+            const voicePriority = [
+                // First choice: Hindi voices
+                voices.find(voice => voice.lang === 'hi-IN' && voice.name.includes('Female')),
+                voices.find(voice => voice.lang === 'hi-IN'),
+                // Second choice: Other Indian voices
+                voices.find(voice => voice.lang.startsWith('hi')),
+                voices.find(voice => voice.lang.includes('IN')),
+                // Third choice: Any voice that might handle Devanagari
+                voices.find(voice => voice.name.includes('Hindi')),
+                voices.find(voice => voice.name.includes('India')),
+                // Fallback: English-India
+                voices.find(voice => voice.lang === 'en-IN'),
+                voices.find(voice => voice.lang.startsWith('en-IN'))
+            ];
+            
+            // Use the first available voice from priority list
+            const selectedVoice = voicePriority.find(voice => voice !== undefined);
+            
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+                console.log('Using voice:', selectedVoice.name, selectedVoice.lang);
+            } else {
+                console.log('No optimal voice found, using default');
+            }
+
+            utterance.onstart = () => {
+                isReading = true;
+                document.getElementById('sanskritBtn').classList.add('speaking');
+                document.getElementById('sanskritBtn').textContent = '⏹️ Stop Sanskrit';
+            };
+
+            utterance.onend = () => {
+                resetButtons();
+            };
+
+            utterance.onerror = (event) => {
+                resetButtons();
+                console.error('Sanskrit speech error:', event);
+                alert('Sanskrit speech synthesis encountered an issue. Your browser may need Hindi language support installed for better pronunciation.');
+            };
+
+            speechSynthesis.speak(utterance);
+        }
+
+        function resetButtons() {
+            isReading = false;
+            document.getElementById('englishBtn').classList.remove('speaking');
+            document.getElementById('sanskritBtn').classList.remove('speaking');
+            document.getElementById('englishBtn').textContent = '🔊 Read English';
+            document.getElementById('sanskritBtn').textContent = '🕉️ Read Sanskrit';
+        }
+
+        // Load voices when available
+        function loadVoices() {
+            speechSynthesis.getVoices();
+        }
+
+        // Handle voices loading
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
+        // Load a random verse on page load
+        window.addEventListener('load', () => {
+            getRandomVerse();
+            loadVoices();
+        });
+
+        // Stop speech when page is about to unload
+        window.addEventListener('beforeunload', () => {
+            speechSynthesis.cancel();
+        });
+    </script>
+</body>
+</html>
