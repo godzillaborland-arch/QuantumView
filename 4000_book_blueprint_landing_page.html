@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Sell 4,000 Books in 6 Months | Free Blueprint</title>
+  <meta name="description" content="Download the free 4,000 Book Blueprint: a practical funnel guide for new authors who want a realistic six-month book sales system." />
+  <style>
+    :root {
+      --navy: #0f172a;
+      --navy-soft: #1e293b;
+      --gold: #f59e0b;
+      --cream: #fff7ed;
+      --paper: #ffffff;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --green: #16a34a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #fff7ed 0%, #ffffff 36%, #f8fafc 100%);
+      color: var(--navy);
+      line-height: 1.55;
+    }
+
+    a { color: inherit; }
+
+    .page {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 56px 0 44px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 42px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.13);
+      color: #92400e;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(42px, 6vw, 70px);
+      line-height: .98;
+      letter-spacing: -0.055em;
+      max-width: 760px;
+    }
+
+    .hero-subhead {
+      margin: 22px 0 0;
+      max-width: 650px;
+      font-size: 20px;
+      color: var(--navy-soft);
+    }
+
+    .hero-note {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 560px;
+    }
+
+    .card {
+      background: rgba(255,255,255,.9);
+      border: 1px solid rgba(226, 232, 240, .9);
+      border-radius: 28px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, .12);
+    }
+
+    .signup-card {
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .signup-card:before {
+      content: "";
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 210px;
+      height: 210px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, .18);
+    }
+
+    .pdf-mock {
+      position: relative;
+      padding: 28px;
+      border-radius: 22px;
+      background: var(--navy);
+      color: white;
+      min-height: 260px;
+      margin-bottom: 26px;
+      overflow: hidden;
+    }
+
+    .pdf-mock:after {
+      content: "";
+      position: absolute;
+      inset: auto -30px -58px auto;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: rgba(245,158,11,.25);
+    }
+
+    .pdf-kicker {
+      font-size: 13px;
+      color: #fcd34d;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+
+    .pdf-title {
+      margin-top: 18px;
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -.04em;
+      max-width: 310px;
+    }
+
+    .pdf-line {
+      width: 96px;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--gold);
+      margin-top: 22px;
+    }
+
+    .form-title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -.03em;
+      margin-bottom: 8px;
+    }
+
+    .form-subtitle {
+      color: var(--muted);
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+
+    form {
+      display: grid;
+      gap: 12px;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(245,158,11,.15);
+    }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 16px 20px;
+      background: var(--gold);
+      color: #111827;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(245,158,11,.28);
+    }
+
+    button:hover { filter: brightness(.98); transform: translateY(-1px); }
+
+    .privacy {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .section {
+      padding: 52px 0;
+    }
+
+    .section-title {
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.05;
+      letter-spacing: -.045em;
+      margin: 0 0 14px;
+    }
+
+    .section-intro {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 760px;
+      margin: 0 0 28px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .benefit {
+      padding: 24px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    .benefit-number {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(245,158,11,.16);
+      color: #92400e;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      margin-bottom: 16px;
+    }
+
+    .benefit h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      letter-spacing: -.025em;
+    }
+
+    .benefit p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .model {
+      padding: 30px;
+      border-radius: 28px;
+      background: var(--navy);
+      color: white;
+      display: grid;
+      gap: 16px;
+    }
+
+    .model-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .model-step {
+      padding: 18px 12px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 16px;
+      text-align: center;
+      background: rgba(255,255,255,.07);
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .month {
+      background: var(--navy);
+      color: white;
+      border-radius: 18px;
+      padding: 18px;
+      font-weight: 900;
+      text-align: center;
+      display: grid;
+      place-items: center;
+    }
+
+    .timeline-content {
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: white;
+    }
+
+    .timeline-content strong { display: block; margin-bottom: 4px; }
+    .timeline-content span { color: var(--muted); }
+
+    .quote {
+      padding: 42px;
+      border-radius: 28px;
+      background: var(--cream);
+      border: 1px solid #fed7aa;
+      font-size: clamp(24px, 3vw, 38px);
+      line-height: 1.12;
+      font-weight: 900;
+      letter-spacing: -.04em;
+      text-align: center;
+    }
+
+    .footer-cta {
+      text-align: center;
+      padding: 60px 0 72px;
+    }
+
+    .footer-cta .card {
+      padding: 42px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .footer-cta h2 {
+      margin: 0 0 12px;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1;
+      letter-spacing: -.05em;
+    }
+
+    .footer-cta p {
+      color: var(--muted);
+      font-size: 18px;
+      margin: 0 auto 24px;
+      max-width: 580px;
+    }
+
+    .mini-form {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .tiny {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; padding-top: 36px; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .model-row { grid-template-columns: 1fr; }
+      .timeline-item { grid-template-columns: 1fr; }
+      .month { text-align: left; place-items: start; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="page hero">
+      <div>
+        <div class="eyebrow">Free Blueprint for New Authors</div>
+        <h1>How to Sell 4,000 Books in 6 Months</h1>
+        <p class="hero-subhead">A practical, no-fluff funnel blueprint based on real author case studies, platform economics, and what actually works today.</p>
+        <p class="hero-note">This is not a motivational guide. It is a breakdown of how book sales actually happen across email, platforms, launch mechanics, and paid traffic.</p>
+      </div>
+
+      <aside class="card signup-card" id="download">
+        <div class="pdf-mock">
+          <div class="pdf-kicker">Free PDF</div>
+          <div class="pdf-title">The 4,000 Book Blueprint</div>
+          <div class="pdf-line"></div>
+        </div>
+
+        <div class="form-title">Download the free blueprint</div>
+        <div class="form-subtitle">Enter your email and get the PDF instantly.</div>
+
+        <!-- Replace action="#" with your MailerLite, Kit, or form provider embed/action URL. -->
+        <form action="#" method="post">
+          <input type="text" name="first_name" placeholder="First name" autocomplete="given-name" />
+          <input type="email" name="email" placeholder="Email address" autocomplete="email" required />
+          <button type="submit">Download the Blueprint</button>
+        </form>
+
+        <div class="privacy">No spam. Unsubscribe anytime.</div>
+      </aside>
+    </section>
+
+    <section class="page section">
+      <h2 class="section-title">Most authors do not have a sales problem. They have a system problem.</h2>
+      <p class="section-intro">A launch spike feels exciting. But without a funnel, it fades. The blueprint shows how to build the sequence that turns attention into subscribers, subscribers into buyers, and buyers into repeat sales.</p>
+      <div class="grid-3">
+        <div class="benefit">
+          <div class="benefit-number">1</div>
+          <h3>The math</h3>
+          <p>Understand why price, acquisition cost, conversion, and reader lifetime value determine whether a book campaign can scale.</p>
+        </div>
+        <div class="benefit">
+          <div class="benefit-number">2</div>
+          <h3>The funnels</h3>
+          <p>See the three funnel types that matter most: lead magnet, launch spike, and scale campaigns.</p>
+        </div>
+        <div class="benefit">
+          <div class="benefit-number">3</div>
+          <h3>The roadmap</h3>
+          <p>Follow a six-month execution plan from foundation to audience-building, conversion proof, launch, and post-launch halo.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page section">
+      <div class="model">
+        <h2 class="section-title" style="color:white;margin-bottom:6px;">The core model</h2>
+        <p style="color:#cbd5e1;margin-top:0;">Each stage does one job. Most authors fail because they try to skip stages.</p>
+        <div class="model-row">
+          <div class="model-step">Traffic</div>
+          <div class="model-step">Leads</div>
+          <div class="model-step">Email</div>
+          <div class="model-step">Buyers</div>
+          <div class="model-step">Repeat Buyers</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page section">
+      <h2 class="section-title">Inside the blueprint</h2>
+      <p class="section-intro">The PDF gives you a practical operating model, not vague encouragement.</p>
+      <div class="grid-3">
+        <div class="benefit">
+          <h3>Why most authors never cross 500 copies</h3>
+          <p>The hidden failure pattern: no list, no runway, no proof, and no repeatable sales path.</p>
+        </div>
+        <div class="benefit">
+          <h3>The 3 funnels that actually work</h3>
+          <p>Lead magnet plus email, preorder plus launch team, and retailer-native scale campaigns.</p>
+        </div>
+        <div class="benefit">
+          <h3>What to avoid</h3>
+          <p>Ads without proof, late ARC recruitment, standalone low-margin books, and vague “build my audience” tactics.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page section">
+      <h2 class="section-title">The six-month roadmap</h2>
+      <p class="section-intro">The blueprint includes a month-by-month execution path based on a May-to-October launch cycle.</p>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="month">May</div>
+          <div class="timeline-content"><strong>Build the foundation</strong><span>Positioning, lead magnet, landing page, email service, analytics, and tracking.</span></div>
+        </div>
+        <div class="timeline-item">
+          <div class="month">June</div>
+          <div class="timeline-content"><strong>Build the audience</strong><span>Organic content, outreach, newsletter swaps, ARC recruitment, and welcome sequence.</span></div>
+        </div>
+        <div class="timeline-item">
+          <div class="month">July</div>
+          <div class="timeline-content"><strong>Prove conversion</strong><span>Small ad tests, email refinement, first preorder pushes, and channel validation.</span></div>
+        </div>
+        <div class="timeline-item">
+          <div class="month">August</div>
+          <div class="timeline-content"><strong>Prepare the spike</strong><span>Launch team cadence, BookBub applications, retargeting, and sales page optimization.</span></div>
+        </div>
+        <div class="timeline-item">
+          <div class="month">September</div>
+          <div class="timeline-content"><strong>Launch and scale</strong><span>Coordinated emails, feature days, Amazon/BookBub scale-up, and bundle tests.</span></div>
+        </div>
+        <div class="timeline-item">
+          <div class="month">October</div>
+          <div class="timeline-content"><strong>Harvest and compound</strong><span>Post-launch halo, retargeting, next offer, pruning losers, and scaling winners.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page section">
+      <div class="quote">Don’t try to sell a book. Build a system that sells books.</div>
+    </section>
+
+    <section class="page footer-cta">
+      <div class="card">
+        <h2>Get the free blueprint</h2>
+        <p>Download the practical funnel guide and see how a new author can make 4,000 book sales possible with the right sequence.</p>
+        <form class="mini-form" action="#" method="post">
+          <input type="email" name="email" placeholder="Email address" autocomplete="email" required />
+          <button type="submit">Download the Blueprint</button>
+        </form>
+        <div class="tiny">Replace the form action with your email platform link before publishing.</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
