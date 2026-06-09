@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Missing Variable — Black Box 01</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d0e12;
+    --panel:#15171e;
+    --panel-2:#1b1e27;
+    --line:#2a2f3b;
+    --blueprint:#3c5a72;
+    --gold:#c9a84c;
+    --gold-bright:#e6c879;
+    --ink:#e9e6dd;
+    --muted:#8b9099;
+    --ok:#6fae7a;
+    --no:#c46a60;
+    --shadow:0 24px 60px rgba(0,0,0,.5);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    font-family:'Spectral',Georgia,serif;
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(201,168,76,.07), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(60,90,114,.10), transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.55;
+    overflow-x:hidden;
+  }
+  /* faint blueprint grid texture */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(120,150,180,.035) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(120,150,180,.035) 1px,transparent 1px);
+    background-size:34px 34px;
+    mask-image:radial-gradient(ellipse at 50% 30%, black, transparent 85%);
+  }
+  .wrap{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:42px 20px 80px}
+
+  /* ---------- Header ---------- */
+  header{text-align:center;margin-bottom:30px}
+  .kicker{
+    font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.42em;
+    text-transform:uppercase;color:var(--gold);opacity:.9;margin-bottom:18px;
+  }
+  h1{
+    font-family:'Fraunces',serif;font-weight:900;font-size:clamp(2.3rem,7vw,4.1rem);
+    line-height:.98;letter-spacing:-.01em;
+  }
+  h1 .em{color:var(--gold-bright);font-style:italic;font-weight:600}
+  .tagline{font-style:italic;color:var(--muted);margin-top:14px;font-size:1.05rem}
+  .stamp{
+    display:inline-block;margin-top:22px;font-family:'JetBrains Mono',monospace;
+    font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:7px 14px;
+  }
+
+  /* ---------- Mode select ---------- */
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:36px}
+  @media(max-width:620px){.modes{grid-template-columns:1fr}}
+  .mode-card{
+    background:linear-gradient(180deg,#2a2f3d,#1d212b);
+    border:1px solid #3c4456;border-radius:14px;padding:30px 26px;cursor:pointer;
+    transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;
+    position:relative;overflow:hidden;text-align:left;
+  }
+  .mode-card::after{
+    content:"";position:absolute;top:0;left:0;width:100%;height:3px;
+    background:linear-gradient(90deg,var(--gold),transparent);opacity:.8;
+  }
+  .mode-card:hover{transform:translateY(-5px);border-color:var(--gold);box-shadow:var(--shadow)}
+  .mode-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.3em;color:var(--gold-bright);text-transform:uppercase}
+  .mode-card h3{font-family:'Fraunces',serif;font-size:1.7rem;font-weight:600;margin:10px 0 8px;color:#f4f2ea}
+  .mode-card p{color:#b4bac4;font-size:.98rem}
+  .mode-icon{font-size:1.05rem;margin-top:16px;color:#7ea7c4;font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
+
+  /* ---------- Generic panel ---------- */
+  .panel{
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    border:1px solid var(--line);border-radius:16px;padding:30px 28px;box-shadow:var(--shadow);
+    animation:rise .45s ease both;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  .back{
+    background:none;border:none;color:var(--muted);font-family:'JetBrains Mono',monospace;
+    font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-bottom:22px;
+  }
+  .back:hover{color:var(--gold)}
+  .hide{display:none!important}
+
+  /* ---------- Quiz ---------- */
+  .q-meta{display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .q-meta .score{color:var(--gold)}
+  .progress{height:5px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:26px}
+  .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-bright));transition:width .5s ease}
+  .scene{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blueprint);margin-bottom:10px}
+  .question{font-family:'Fraunces',serif;font-size:clamp(1.35rem,3.6vw,1.85rem);font-weight:600;line-height:1.25;margin-bottom:24px}
+  .opts{display:flex;flex-direction:column;gap:12px}
+  .opt{
+    text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:15px 18px;color:var(--ink);font-family:'Spectral',serif;font-size:1.02rem;cursor:pointer;
+    transition:border-color .18s ease,background .18s ease,transform .12s ease;display:flex;gap:13px;align-items:flex-start;
+  }
+  .opt .tag{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--gold);flex:0 0 auto;margin-top:2px}
+  .opt:hover:not(:disabled){border-color:var(--gold);transform:translateX(3px)}
+  .opt:disabled{cursor:default}
+  .opt.correct{border-color:var(--ok);background:rgba(111,174,122,.12)}
+  .opt.correct .tag{color:var(--ok)}
+  .opt.wrong{border-color:var(--no);background:rgba(196,106,96,.12)}
+  .opt.wrong .tag{color:var(--no)}
+  .explain{margin-top:22px;border-left:3px solid var(--gold);background:rgba(201,168,76,.06);padding:16px 20px;border-radius:0 8px 8px 0;animation:rise .35s ease both}
+  .explain b{color:var(--gold-bright);font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;display:block;margin-bottom:6px}
+  .explain p{font-size:.98rem;color:var(--ink)}
+  .next{
+    margin-top:22px;background:var(--gold);color:#1a160a;border:none;border-radius:8px;
+    font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    font-size:.78rem;padding:14px 26px;cursor:pointer;transition:background .2s ease,transform .12s ease;
+  }
+  .next:hover{background:var(--gold-bright);transform:translateY(-2px)}
+
+  /* ---------- Result ---------- */
+  .result{text-align:center}
+  .verdict{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+  .big-score{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(3rem,12vw,5.5rem);line-height:1;margin:8px 0 4px}
+  .big-score small{font-size:.32em;color:var(--muted);font-weight:400}
+  .rank{font-family:'Fraunces',serif;font-style:italic;font-size:1.5rem;color:var(--gold-bright);margin-bottom:18px}
+  .reveal{border:1px dashed var(--blueprint);border-radius:12px;padding:24px;margin:24px 0;text-align:left;background:rgba(60,90,114,.06)}
+  .reveal .lbl{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;color:var(--blueprint);margin-bottom:10px}
+  .reveal p{font-size:1.02rem}
+  .reveal em{color:var(--gold-bright)}
+
+  /* ---------- Word search ---------- */
+  .ws-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;margin-bottom:6px}
+  .ws-head h3{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:600}
+  .ws-sub{color:var(--muted);font-size:.95rem;margin-bottom:22px}
+  .ws-layout{display:grid;grid-template-columns:1fr 220px;gap:26px;align-items:start}
+  @media(max-width:680px){.ws-layout{grid-template-columns:1fr}}
+  .grid{
+    display:grid;gap:3px;user-select:none;touch-action:none;
+    background:var(--line);padding:3px;border-radius:10px;
+  }
+  .cell{
+    aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+    background:var(--panel);border-radius:4px;
+    font-family:'JetBrains Mono',monospace;font-weight:500;
+    font-size:clamp(.62rem,2.4vw,1rem);color:var(--ink);cursor:pointer;
+    transition:background .1s ease,color .1s ease;
+  }
+  .cell.sel{background:var(--gold);color:#1a160a}
+  .cell.found{background:rgba(60,90,114,.4);color:var(--gold-bright)}
+  .cell.found.sel{background:var(--gold);color:#1a160a}
+  .words{list-style:none}
+  .words-label{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+  .words li{
+    font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700;letter-spacing:.07em;
+    padding:9px 12px;margin-bottom:7px;color:#f6f4ec;background:rgba(255,255,255,.04);
+    border:1px solid #343b49;border-radius:7px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .words li.done{color:var(--muted);background:transparent;border-color:var(--line);text-decoration:line-through;text-decoration-color:var(--gold)}
+  .words li .mark{color:var(--gold);opacity:0;font-weight:700}
+  .words li.done .mark{opacity:1}
+  .ws-count{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .ws-topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+  .ws-btns{display:flex;gap:8px}
+  .mini-btn{background:transparent;border:1px solid #3c4456;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;padding:8px 12px;border-radius:6px;cursor:pointer;transition:border-color .2s ease,color .2s ease}
+  .mini-btn:hover{border-color:var(--gold);color:var(--gold)}
+  .ws-revealnote{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.04em;color:var(--gold);margin-bottom:14px}
+  .cell.revealed{background:rgba(201,168,76,.22);color:var(--gold-bright);box-shadow:inset 0 0 0 1px var(--gold)}
+  .ws-count b{color:var(--gold)}
+  .ws-win{margin-top:20px;border-left:3px solid var(--ok);background:rgba(111,174,122,.1);padding:16px 20px;border-radius:0 8px 8px 0;animation:rise .4s ease both}
+  .ws-win b{color:var(--ok);font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;display:block;margin-bottom:6px}
+
+  footer{text-align:center;margin-top:46px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase}
+
+  /* ---------- Vault / Subscribe ---------- */
+  .vault{margin-top:56px}
+  .vault-head{text-align:center;margin-bottom:26px}
+  .vault-head .kicker{margin-bottom:10px}
+  .vault-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.5rem,4.5vw,2.2rem);line-height:1.2}
+  .sub-cta{
+    background:linear-gradient(135deg,rgba(201,168,76,.14),rgba(201,168,76,.04));
+    border:1px solid var(--gold);border-radius:14px;padding:28px 26px;text-align:center;
+  }
+  .sub-cta h3{font-family:'Fraunces',serif;font-size:1.45rem;font-weight:600;margin-bottom:8px}
+  .sub-cta p{color:var(--muted);margin-bottom:18px;font-size:.98rem}
+  .btn-gold{
+    display:inline-block;background:var(--gold);color:#1a160a;text-decoration:none;border-radius:8px;
+    font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    font-size:.78rem;padding:14px 28px;transition:background .2s ease,transform .12s ease;border:none;cursor:pointer;
+  }
+  .btn-gold:hover{background:var(--gold-bright);transform:translateY(-2px)}
+  .btn-line{
+    display:inline-block;background:transparent;color:var(--gold);text-decoration:none;border:1px solid var(--gold);
+    border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:500;letter-spacing:.08em;
+    font-size:.8rem;padding:13px 20px;transition:background .2s ease,color .2s ease,transform .12s ease;
+  }
+  .btn-line:hover{background:var(--gold);color:#1a160a;transform:translateY(-2px)}
+  .sources{margin-top:34px;text-align:center}
+  .src-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .sub-embed{margin-top:14px;text-align:center}
+  .sub-embed iframe{
+    border:none;border-radius:10px;background:#fff;display:block;margin:0 auto;
+    width:100%;max-width:480px;height:320px;box-shadow:0 8px 26px rgba(0,0,0,.35);
+  }
+  .embed-fallback{
+    display:inline-block;margin-top:12px;font-family:'JetBrains Mono',monospace;
+    font-size:.72rem;letter-spacing:.06em;color:var(--gold);text-decoration:none;
+    border-bottom:1px solid rgba(201,168,76,.4);
+  }
+  .embed-fallback:hover{color:var(--gold-bright)}
+  .files{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+  @media(max-width:620px){.files{grid-template-columns:1fr}}
+  .file{background:linear-gradient(180deg,#23272f,#191c24);border:1px solid #343b49;border-radius:12px;padding:20px 18px;position:relative;overflow:hidden}
+  .file .fnum{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--muted)}
+  .file .ftitle{font-family:'Fraunces',serif;font-size:1.12rem;font-weight:600;margin:8px 0 12px;min-height:1.4em}
+  .file .redacted{display:inline-block;background:var(--line);color:transparent;border-radius:3px;letter-spacing:.04em;user-select:none}
+  .file .fstatus{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase}
+  .file.open{border-color:var(--gold)}
+  .file.open .fstatus{color:var(--ok)}
+  .file.sealed .fstatus{color:#7ea7c4}
+  .file .seal{position:absolute;top:14px;right:14px;font-size:.85rem;opacity:.55}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===================== HOME ===================== -->
+  <section id="home">
+    <header>
+      <div class="kicker">Black Box 01 · The Self-Driving Mind</div>
+      <h1>The <span class="em">Missing</span> Variable</h1>
+      <p class="tagline">Engineering ancient grace for the modern seeker</p>
+      <div class="stamp">Recording Recovered · Pattern Unconfirmed · Variable: ████████</div>
+    </header>
+
+    <div class="modes">
+      <button class="mode-card" onclick="startQuiz()">
+        <div class="mode-num">The Reconstruction</div>
+        <h3>The Clue Hunt</h3>
+        <p>Work the evidence — Tokyo, the wedding, Chennai 1978 — and see if you can name the variable everyone missed.</p>
+        <div class="mode-icon">⌖ 11 readings</div>
+      </button>
+      <button class="mode-card" onclick="openSearch()">
+        <div class="mode-num">The Schematic</div>
+        <h3>Word Search</h3>
+        <p>Twelve terms are buried in the schematic — names, places, and principles from the story. Drag to recover each one.</p>
+        <div class="mode-icon">▦ 12 terms hidden</div>
+      </button>
+    </div>
+
+    <div class="sources">
+      <div class="vault-head" style="margin-bottom:18px">
+        <div class="kicker">The Source Files</div>
+        <h2>Two short reads hold everything you need to crack it.</h2>
+      </div>
+      <div class="src-row">
+        <a class="src-passport btn-line">📄 The Lost Passport</a>
+        <a class="src-siddha btn-line">📄 The Siddha Purusha</a>
+      </div>
+    </div>
+
+    <div class="vault">
+      <div class="vault-head">
+        <div class="kicker">The Series</div>
+        <h2>More black boxes. New chapters.<br>Declassified first for subscribers.</h2>
+      </div>
+      <div class="sub-cta">
+        <h3>Get the next black box before anyone else</h3>
+        <p>New puzzles as they're built, and chapter previews the moment they're cleared for release.</p>
+        <a class="sub-link btn-gold">Subscribe free on Substack →</a>
+      </div>
+      <div class="files">
+        <div class="file open">
+          <span class="seal">🔓</span>
+          <div class="fnum">Black Box 01</div>
+          <div class="ftitle">The Missing Variable</div>
+          <div class="fstatus">Open · You're playing it</div>
+        </div>
+        <div class="file sealed">
+          <span class="seal">🔒</span>
+          <div class="fnum">Black Box 02</div>
+          <div class="ftitle"><span class="redacted">█████████████</span></div>
+          <div class="fstatus">Sealed · Declassifies Winter 2026</div>
+        </div>
+        <div class="file sealed">
+          <span class="seal">🔒</span>
+          <div class="fnum">Black Box 03</div>
+          <div class="ftitle"><span class="redacted">██████████</span></div>
+          <div class="fstatus">Sealed · Subscribers first</div>
+        </div>
+      </div>
+    </div>
+
+    <footer>The Self-Driving Mind · A Skeptic Encounters Grace</footer>
+  </section>
+
+  <!-- ===================== QUIZ ===================== -->
+  <section id="quiz" class="hide">
+    <button class="back" onclick="goHome()">← Close file</button>
+    <div class="panel">
+      <div class="q-meta">
+        <span id="qIndex">Exhibit 01 / 11</span>
+        <span class="score">Clues recovered: <span id="qScore">0</span></span>
+      </div>
+      <div class="progress"><i id="qBar"></i></div>
+      <div id="qBody"></div>
+    </div>
+  </section>
+
+  <!-- ===================== RESULT ===================== -->
+  <section id="result" class="hide">
+    <button class="back" onclick="goHome()">← Close file</button>
+    <div class="panel result">
+      <div class="verdict">Case Reviewed</div>
+      <div class="big-score"><span id="rScore">0</span><small>/11</small></div>
+      <div class="rank" id="rRank"></div>
+      <div class="reveal">
+        <div class="lbl">The Missing Variable</div>
+        <p>There are two ways to move a mind toward stillness. One is a shepherd driving sheep into a pen — force, vigilance, and the instant you look away they scatter. That's discipline alone: the executive doing everything right while the sheep keep escaping. The other is a bird returning to its nest at dusk — not driven but <em>pulled</em>, drawn home by something it already belongs to. The Yogic tradition calls that pull <em>Pratyak Pravahata</em>, natural inwardness; as Swami Bhajanananda put it, trying to drive the mind inward like a shepherd is not meditation. Under a tree in Chennai in 1978, beside a Royal Enfield, that pull got switched on — through transmission, not instruction — and it never faded. The narrator didn't earn the nest. It was given. <em>That</em> is the missing variable.</p>
+      </div>
+      <button class="next" onclick="startQuiz()">↻ Reopen the file</button>
+      <button class="next" style="background:transparent;color:var(--gold);border:1px solid var(--gold)" onclick="openSearch()">Try the word search →</button>
+      <div class="sources" style="margin-top:26px">
+        <div class="kicker" style="margin-bottom:14px">Read the source files</div>
+        <div class="src-row">
+          <a class="src-passport btn-line">📄 The Lost Passport</a>
+          <a class="src-siddha btn-line">📄 The Siddha Purusha</a>
+        </div>
+      </div>
+      <div class="sub-cta" style="margin-top:24px">
+        <h3>Want the next case?</h3>
+        <p>Subscribe for new games and early chapter previews from the book.</p>
+        <a class="sub-link btn-gold">Subscribe free on Substack →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== WORD SEARCH ===================== -->
+  <section id="search" class="hide">
+    <button class="back" onclick="goHome()">← Close file</button>
+    <div class="panel">
+      <div class="ws-head">
+        <h3>Word Search · The Schematic</h3>
+      </div>
+      <p class="ws-sub">Drag across letters in a straight line — across, down, or diagonally down. Stuck? Tap Reveal answers.</p>
+      <div class="ws-topbar">
+        <div class="ws-count">Recovered <b id="wsFound">0</b> / 12</div>
+        <div class="ws-btns">
+          <button class="mini-btn" onclick="openSearch()">↻ New grid</button>
+          <button class="mini-btn" onclick="revealAll()">◉ Reveal answers</button>
+        </div>
+      </div>
+      <div id="wsRevealNote" class="ws-revealnote hide">Answers revealed. Tap "New grid" for a fresh puzzle.</div>
+      <div class="ws-layout">
+        <div id="grid" class="grid"></div>
+        <div>
+          <div class="words-label">Find these terms</div>
+          <ul class="words" id="wordList"></ul>
+        </div>
+      </div>
+      <div id="wsWin" class="ws-win hide">
+        <b>Schematic Complete</b>
+        <span>Every term recovered. Names (the Quantum skeptic, Feynman), places (Tokyo, Guindy), the ride (Enfield), and the principles the chapter turns on — Dhyana, Samadhi, Grace. The blueprint reads clean.</span>
+        <div style="margin-top:16px"><a class="sub-link btn-gold">Subscribe for more games →</a></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ============================================================
+   ⚙  CONFIG — edit this ONE line, then re-save the file
+   Point it at your Substack, your site, or any signup page.
+   ============================================================ */
+const SUBSCRIBE_URL = "https://selfdrivingmind.substack.com/subscribe"; // ← replace with your subscribe link
+const SOURCE_PASSPORT_URL = "https://selfdrivingmind.substack.com/p/what-a-lost-passport-in-tokyo-taught"; // "Lost Passport"
+const SOURCE_SIDDHA_URL   = "https://selfdrivingmind.substack.com/p/quantum-meets-yogi-1978-an-unearned"; // "Siddha Purusha"
+
+/* ============================================================
+   DATA — quiz exhibits drawn directly from Chapter One
+   ============================================================ */
+const QUESTIONS = [
+  {
+    scene:"Exhibit · Tokyo, September 2023",
+    q:"How did the narrator end up needing his passport in the first place — the thing that set the whole crisis in motion?",
+    options:[
+      "Claiming a tax-free exemption that requires showing your passport at the counter",
+      "Boarding a bullet train to a different city",
+      "Checking into the group's Tokyo hotel",
+      "Renting a car for the final afternoon"
+    ],
+    answer:0,
+    explain:"Japan lets short-term visitors skip the 10% consumption tax, but the store needs your original passport to process it. He handed his over at the counter, dropped it back in the shopping bag with the receipts — and an hour later, at the food court, it was gone."
+  },
+  {
+    scene:"Exhibit · The 60-Minute Race",
+    q:"The embassy gave him a hard cutoff. What was the margin when he actually arrived?",
+    options:[
+      "He missed it and had to wait until Tuesday",
+      "He arrived at 2:28 — two minutes to spare before the 2:30 deadline",
+      "He arrived right at 2:30 on the dot",
+      "He had a full hour of slack"
+    ],
+    answer:1,
+    explain:"\"It's 1:30 now. Get here by 2:30, or come back Tuesday.\" A police kiosk, a stranger with Google Translate, and a taxi got him to the gates at 2:28. He made the flight with the group."
+  },
+  {
+    scene:"Exhibit · The Wife's Reaction",
+    q:"He compares his wife's stunned look to a specific movie moment. Which one?",
+    options:[
+      "The Hangover",
+      "Lost in Translation",
+      "Robert Downey Jr.'s look in Due Date — 'How have you made it this far?'",
+      "Planes, Trains and Automobiles"
+    ],
+    answer:2,
+    explain:"Peter Highman staring at the chaos that is Ethan Tremblay: silent, wide-eyed, no raised voice. Just hushed wonder at how he'd survived to middle age."
+  },
+  {
+    scene:"Exhibit · The Mirror, May 2024",
+    q:"At the wedding, who held up the mirror that made him notice his own composure?",
+    options:[
+      "His meditation teacher",
+      "His wife, again",
+      "Two professional friends — a dentist and a gastrosurgeon",
+      "A stranger from the Tokyo trip"
+    ],
+    answer:2,
+    explain:"\"I would've completely fallen apart. You didn't even seem rattled.\" Coming from seasoned professionals, it landed like a verdict. Their surprise was the mirror that revealed what had been operating all along."
+  },
+  {
+    scene:"Exhibit · The Metaphor",
+    q:"What image does he use for what meditation actually gave him under pressure?",
+    options:[
+      "A suit of armor that blocks all damage",
+      "Shock absorbers — not the absence of the bump, but space around it",
+      "A firewall that stops every threat",
+      "An autopilot that takes over completely"
+    ],
+    answer:1,
+    explain:"Shock absorbers don't stop the car hitting the bump; you still feel the movement. But the chassis doesn't break. Meditation created a buffer — enough room that panic didn't swallow everything whole."
+  },
+  {
+    scene:"Exhibit · The Sacramento Paradox, Nov 2024",
+    q:"What is the paradox that genuinely puzzles him at the Sacramento gathering?",
+    options:[
+      "Everyone there meditates except him",
+      "His highly disciplined, organized wife can't meditate — while he, the improviser, can",
+      "Meditation only works in groups",
+      "Discipline guarantees deep meditation every time"
+    ],
+    answer:1,
+    explain:"His wife is superbly efficient, organized, a master of multitasking — Meine bessere Hälfte. If anyone should win at meditation by sheer discipline, it's her. Yet she can't get into it, and he, who abandons every practice, drops in easily."
+  },
+  {
+    scene:"Exhibit · Chennai, 1978",
+    q:"What was the narrator's nickname in his third year of Electrical Engineering at Guindy?",
+    options:[
+      "\"Feynman\"",
+      "\"Quantum\" — for his obsession with quantum mechanics and pure logic",
+      "\"The Skeptic\"",
+      "\"Delta\""
+    ],
+    answer:1,
+    explain:"He pored over Feynman's Lectures on Physics in the library and explained Feynman diagrams to friends on napkins. He wore his rationalism like armor and dismissed anyone in vibhooti as a relic of a pre-scientific age."
+  },
+  {
+    scene:"Exhibit · The DC Generator",
+    q:"The Yogi dismantled a physics lecture with one line about reference frames. What was it?",
+    options:[
+      "\"If that is true, sir, am I a DC Generator?\"",
+      "\"Then nothing in this room is real.\"",
+      "\"Light has no mass, so neither do I.\"",
+      "\"The observer creates the wave.\""
+    ],
+    answer:0,
+    explain:"Using De Broglie's matter-wave equation, he pointed out that in a frame moving with the object, velocity is zero and the wavelength becomes undefined. A DC generator is constant, wave-free — so was he, in some frames, simply 'a DC Generator'? The class erupted; the lecturer was stumped."
+  },
+  {
+    scene:"Exhibit · The High-Voltage Lab",
+    q:"His skepticism didn't break at the DC-generator line — it finished cracking in the lab. How?",
+    options:[
+      "He solved a stuck Delta Antenna project on the spot with skin-effect theory, tying it to J.C. Bose's work",
+      "He recited scripture from memory to silence the class",
+      "He won a formal debate against the faculty",
+      "He demonstrated a meditation the students could measure"
+    ],
+    answer:0,
+    explain:"Paddy's senior group was going in circles on the Delta Antenna project, trying to satisfy the professor they called the \"Mad Engineer of Mylapore.\" The PhD candidate applied skin-effect theory on the spot and connected it to J.C. Bose's work on electrical activity in plants. That was it. Done. If his engineering logic was that flawless, maybe his spiritual logic wasn't superstition after all."
+  },
+  {
+    scene:"Exhibit · The Transmission",
+    q:"What did the group eventually recognize the PhD candidate to be?",
+    options:[
+      "A visiting professor from abroad",
+      "A Siddha Purusha — a realized soul, for whom samadhi was the default state",
+      "A stage hypnotist",
+      "A government scientist in disguise"
+    ],
+    answer:1,
+    explain:"Only twenty-three or twenty-four, he had the opposite of Arjuna's problem — he struggled to come OUT of meditation to do chores. Around his motorcycle, with no rituals, the 'download' began: the skeptic could suddenly drop into dhyana without effort."
+  },
+  {
+    scene:"Exhibit · Four Decades of Neglect",
+    q:"He abandoned the practice for years — then decades — yet the capacity never faded. How does he describe that?",
+    options:[
+      "He quietly kept a daily practice the whole time",
+      "Like a battery that held its charge through decades of neglect — \"the Wi-Fi password never changed\"",
+      "He had to relearn it from scratch every time",
+      "A second teacher reactivated it years later"
+    ],
+    answer:1,
+    explain:"He practiced, dropped it for years, then decades — \"drove the car to Vegas,\" did everything you're not supposed to do with a practice. By every rule it should have atrophied. It didn't. Like a battery that survived decades of misuse and still held its charge: the Wi-Fi password never changed. That stubborn persistence is what makes the missing variable so strange — and points to something given, not built."
+  }
+];
+
+const RANKS = [
+  {min:11, t:"Lead Investigator — you read every clue clean."},
+  {min:9,  t:"Sharp Eye — the pattern didn't get past you."},
+  {min:6,  t:"On the Trail — the file is starting to make sense."},
+  {min:3,  t:"Fresh Recruit — worth another read of the two pieces."},
+  {min:0,  t:"Just Opened the File — the mystery's still wide open."}
+];
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+const sections = {home:el('home'),quiz:el('quiz'),result:el('result'),search:el('search')};
+function el(id){return document.getElementById(id)}
+function show(name){Object.entries(sections).forEach(([k,v])=>v.classList.toggle('hide',k!==name));window.scrollTo({top:0,behavior:'smooth'})}
+function goHome(){show('home')}
+
+/* ============================================================
+   QUIZ ENGINE
+   ============================================================ */
+let qi=0, score=0, locked=false;
+function startQuiz(){qi=0;score=0;locked=false;show('quiz');renderQ()}
+function renderQ(){
+  locked=false;
+  const item=QUESTIONS[qi];
+  el('qIndex').textContent='Exhibit '+String(qi+1).padStart(2,'0')+' / '+String(QUESTIONS.length).padStart(2,'0');
+  el('qScore').textContent=score;
+  el('qBar').style.width=((qi)/QUESTIONS.length*100)+'%';
+  const tags=['A','B','C','D'];
+  el('qBody').innerHTML=
+    '<div class="scene">'+item.scene+'</div>'+
+    '<div class="question">'+item.q+'</div>'+
+    '<div class="opts">'+
+      item.options.map((o,i)=>'<button class="opt" data-i="'+i+'" onclick="choose('+i+')"><span class="tag">'+tags[i]+'</span><span>'+o+'</span></button>').join('')+
+    '</div>'+
+    '<div id="qExtra"></div>';
+}
+function choose(i){
+  if(locked) return; locked=true;
+  const item=QUESTIONS[qi];
+  const btns=document.querySelectorAll('#qBody .opt');
+  btns.forEach(b=>{b.disabled=true;const bi=+b.dataset.i;
+    if(bi===item.answer) b.classList.add('correct');
+    else if(bi===i) b.classList.add('wrong');
+  });
+  if(i===item.answer){score++;el('qScore').textContent=score;}
+  el('qBar').style.width=((qi+1)/QUESTIONS.length*100)+'%';
+  const last=qi===QUESTIONS.length-1;
+  el('qExtra').innerHTML=
+    '<div class="explain"><b>From the file</b><p>'+item.explain+'</p></div>'+
+    '<button class="next" onclick="nextQ()">'+(last?'See the verdict →':'Next exhibit →')+'</button>';
+}
+function nextQ(){
+  if(qi<QUESTIONS.length-1){qi++;renderQ();window.scrollTo({top:0,behavior:'smooth'});}
+  else finish();
+}
+function finish(){
+  el('rScore').textContent=score;
+  el('rRank').textContent=(RANKS.find(r=>score>=r.min)||RANKS[RANKS.length-1]).t;
+  show('result');
+}
+
+/* ============================================================
+   WORD SEARCH ENGINE
+   ============================================================ */
+const WORDS=[
+  {w:"QUANTUM", c:"The skeptic's nickname"},
+  {w:"VIBHOOTI", c:"Sacred ash on the Yogi's forehead"},
+  {w:"FEYNMAN", c:"His physics obsession"},
+  {w:"ENFIELD", c:"The Yogi's motorcycle"},
+  {w:"GUINDY", c:"The engineering college"},
+  {w:"SAMADHI", c:"The Yogi's default state"},
+  {w:"DHYANA", c:"Effortless meditation"},
+  {w:"ARJUNA", c:"Whose restless mind?"},
+  {w:"PASSPORT", c:"What went missing in Tokyo"},
+  {w:"TOKYO", c:"Where it began, 2023"},
+  {w:"SIDDHA", c:"A realized soul"},
+  {w:"GRACE", c:"The missing variable"}
+];
+const SIZE=14;
+let grid=[], cellEls=[], wordCells={}, foundWords=new Set();
+
+const DIRS=[[0,1],[1,0],[1,1],[1,-1]]; // right, down, down-right, down-left (no reversed/upward)
+
+function buildGrid(){
+  // empty grid
+  grid=Array.from({length:SIZE},()=>Array(SIZE).fill(""));
+  wordCells={};
+  const sorted=[...WORDS].sort((a,b)=>b.w.length-a.w.length);
+  for(const item of sorted){
+    if(!placeWord(item.w)){ // restart entirely if a word won't fit
+      return buildGrid();
+    }
+  }
+  // fill blanks
+  const A="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++)
+    if(!grid[r][c]) grid[r][c]=A[Math.floor(Math.random()*26)];
+}
+function placeWord(word){
+  const tries=400;
+  for(let t=0;t<tries;t++){
+    const dir=DIRS[Math.floor(Math.random()*DIRS.length)];
+    const r0=Math.floor(Math.random()*SIZE);
+    const c0=Math.floor(Math.random()*SIZE);
+    const endR=r0+dir[0]*(word.length-1);
+    const endC=c0+dir[1]*(word.length-1);
+    if(endR<0||endR>=SIZE||endC<0||endC>=SIZE) continue;
+    let ok=true;
+    for(let i=0;i<word.length;i++){
+      const rr=r0+dir[0]*i, cc=c0+dir[1]*i;
+      if(grid[rr][cc] && grid[rr][cc]!==word[i]){ok=false;break;}
+    }
+    if(!ok) continue;
+    const cells=[];
+    for(let i=0;i<word.length;i++){
+      const rr=r0+dir[0]*i, cc=c0+dir[1]*i;
+      grid[rr][cc]=word[i];
+      cells.push(rr+'-'+cc);
+    }
+    wordCells[word]=cells;
+    return true;
+  }
+  return false;
+}
+
+function renderGrid(){
+  const g=el('grid');
+  g.style.gridTemplateColumns='repeat('+SIZE+',1fr)';
+  g.innerHTML='';
+  cellEls=[];
+  for(let r=0;r<SIZE;r++){
+    cellEls[r]=[];
+    for(let c=0;c<SIZE;c++){
+      const d=document.createElement('div');
+      d.className='cell';d.textContent=grid[r][c];
+      d.dataset.r=r;d.dataset.c=c;
+      g.appendChild(d);cellEls[r][c]=d;
+    }
+  }
+  // word list
+  el('wordList').innerHTML=WORDS.map(o=>
+    '<li id="word-'+o.w+'"><span>'+o.w+'</span><span class="mark">✓</span></li>'
+  ).join('');
+  el('wsFound').textContent='0';
+  el('wsWin').classList.add('hide');
+  el('wsRevealNote').classList.add('hide');
+}
+
+/* reveal all answers on the current grid */
+function revealAll(){
+  for(const o of WORDS){
+    (wordCells[o.w]||[]).forEach(k=>{const[r,c]=k.split('-').map(Number);cellEls[r][c].classList.add('revealed');});
+    el('word-'+o.w).classList.add('done');
+  }
+  el('wsFound').textContent=WORDS.length;
+  el('wsRevealNote').classList.remove('hide');
+  el('wsWin').classList.add('hide');
+}
+
+/* selection by pointer drag */
+let dragging=false, startRC=null, curLine=[];
+function setupGridEvents(){
+  const g=el('grid');
+  g.addEventListener('pointerdown',e=>{
+    const cell=e.target.closest('.cell'); if(!cell) return;
+    dragging=true; startRC=[+cell.dataset.r,+cell.dataset.c];
+    curLine=[startRC.join('-')]; paintSel();
+    g.setPointerCapture(e.pointerId);
+  });
+  g.addEventListener('pointermove',e=>{
+    if(!dragging) return;
+    const t=document.elementFromPoint(e.clientX,e.clientY);
+    const cell=t&&t.closest&&t.closest('.cell'); if(!cell) return;
+    const cur=[+cell.dataset.r,+cell.dataset.c];
+    const line=lineBetween(startRC,cur);
+    if(line){curLine=line;paintSel();}
+  });
+  g.addEventListener('pointerup',()=>{ if(dragging){dragging=false;checkSelection();clearSel();} });
+  g.addEventListener('pointercancel',()=>{dragging=false;clearSel();});
+}
+function lineBetween(a,b){
+  const dr=b[0]-a[0], dc=b[1]-a[1];
+  const adr=Math.abs(dr), adc=Math.abs(dc);
+  const straight = dr===0||dc===0||adr===adc;
+  if(!straight) return null;
+  const len=Math.max(adr,adc);
+  const sr=dr===0?0:dr/adr, sc=dc===0?0:dc/adc;
+  const cells=[];
+  for(let i=0;i<=len;i++) cells.push((a[0]+sr*i)+'-'+(a[1]+sc*i));
+  return cells;
+}
+function paintSel(){
+  document.querySelectorAll('.cell.sel').forEach(c=>c.classList.remove('sel'));
+  curLine.forEach(k=>{const[r,c]=k.split('-').map(Number);cellEls[r][c].classList.add('sel')});
+}
+function clearSel(){document.querySelectorAll('.cell.sel').forEach(c=>c.classList.remove('sel'));curLine=[]}
+function checkSelection(){
+  if(curLine.length<3) return;
+  const fwd=curLine.map(k=>{const[r,c]=k.split('-').map(Number);return grid[r][c]}).join('');
+  const rev=fwd.split('').reverse().join('');
+  for(const o of WORDS){
+    if(foundWords.has(o.w)) continue;
+    if(o.w===fwd||o.w===rev){
+      foundWords.add(o.w);
+      curLine.forEach(k=>{const[r,c]=k.split('-').map(Number);cellEls[r][c].classList.add('found')});
+      el('word-'+o.w).classList.add('done');
+      el('wsFound').textContent=foundWords.size;
+      if(foundWords.size===WORDS.length) el('wsWin').classList.remove('hide');
+      return;
+    }
+  }
+}
+function openSearch(){
+  buildGrid();renderGrid();foundWords=new Set();
+  el('wsFound').textContent='0';
+  show('search');
+}
+
+/* init */
+setupGridEvents();
+document.querySelectorAll('.sub-link').forEach(a=>{a.href=SUBSCRIBE_URL;a.target="_blank";a.rel="noopener";});
+document.querySelectorAll('.src-passport').forEach(a=>{a.href=SOURCE_PASSPORT_URL;a.target="_blank";a.rel="noopener";});
+document.querySelectorAll('.src-siddha').forEach(a=>{a.href=SOURCE_SIDDHA_URL;a.target="_blank";a.rel="noopener";});
+goHome();
+</script>
+</body>
+</html>
