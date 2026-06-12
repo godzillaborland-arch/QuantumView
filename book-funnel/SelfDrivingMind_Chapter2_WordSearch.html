@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Self-Driving Mind — Chapter Two Word Search</title>
+<!-- Open Graph / social sharing -->
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="The Self-Driving Mind">
+<meta property="og:url"         content="https://theselfdrivingmind.com/chapter-2-word-search">
+<meta property="og:title"       content="Chapter Two Word Search — The Self-Driving Mind">
+<meta property="og:description" content="Find the hidden words from Chapter 2 of A Skeptic Encounters Grace. How I Came Up With the Analogy.">
+<meta property="og:image"       content="https://raw.githubusercontent.com/godzillaborland-arch/QuantumView/main/book-funnel/og_chapter2_wordsearch.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt"   content="The Self-Driving Mind word search puzzle — Chapter Two">
+
+<!-- Twitter / X Card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@sundar2rajan">
+<meta name="twitter:title"       content="Chapter Two Word Search — The Self-Driving Mind">
+<meta name="twitter:description" content="Find the hidden words from Chapter 2 of A Skeptic Encounters Grace.">
+<meta name="twitter:image"       content="https://raw.githubusercontent.com/godzillaborland-arch/QuantumView/main/book-funnel/og_chapter2_wordsearch.png">
+<meta name="twitter:image:alt"   content="The Self-Driving Mind word search puzzle — Chapter Two">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',sans-serif;
+  background:#0d0b1e;
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:2rem 1rem;
+  position:relative;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 15% 10%,rgba(100,80,200,0.18) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 85% 90%,rgba(201,150,61,0.12) 0%,transparent 55%);
+  pointer-events:none;z-index:0;
+}
+.wrap{
+  position:relative;z-index:1;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(201,150,61,0.25);
+  border-radius:20px;
+  padding:2rem 2rem 1.75rem;
+  width:100%;
+  max-width:680px;
+  backdrop-filter:blur(12px);
+}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid rgba(201,150,61,0.2)}
+.chapter-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(201,150,61,0.15);border:1px solid rgba(201,150,61,0.35);
+  border-radius:50px;padding:5px 16px;margin-bottom:12px;
+}
+.chapter-badge .num{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;color:#C9963D;letter-spacing:2px;text-transform:uppercase}
+.chapter-badge .div{width:1px;height:11px;background:rgba(201,150,61,0.4)}
+.chapter-badge .sub{font-size:10px;color:rgba(201,150,61,0.7);letter-spacing:.5px;font-style:italic}
+.header h1{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#F7F3EC;line-height:1.25;margin-bottom:4px}
+.header h1 em{font-style:italic;color:#C9963D}
+.header .ch-title{font-family:'Playfair Display',serif;font-style:italic;font-size:13px;color:rgba(247,243,236,0.45);margin-bottom:8px}
+.header .hint{font-size:11px;color:rgba(201,150,61,0.6);font-style:italic}
+
+/* BUTTONS */
+.btns{display:flex;gap:10px;margin-bottom:1.5rem;justify-content:center}
+button{
+  padding:9px 22px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
+  border-radius:50px;cursor:pointer;transition:all .2s;letter-spacing:.3px;
+}
+button.primary{background:#C9963D;color:#0d0b1e;border:1.5px solid #C9963D}
+button.primary:hover{background:#daa84e}
+button.secondary{background:transparent;color:#F7F3EC;border:1.5px solid rgba(247,243,236,0.3)}
+button.secondary:hover{border-color:rgba(247,243,236,0.6);background:rgba(247,243,236,0.06)}
+
+/* MAIN LAYOUT — grid left, words right, never wraps */
+.main{
+  display:flex;
+  gap:2rem;
+  align-items:flex-start;
+  flex-wrap:nowrap;
+}
+
+/* GRID */
+.grid-wrap{flex-shrink:0}
+.grid{display:grid;gap:4px}
+.cell{
+  width:35px;height:35px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:15px;font-weight:500;
+  cursor:pointer;border-radius:6px;
+  color:rgba(247,243,236,0.75);
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);
+  transition:all .12s;user-select:none;
+}
+.cell:hover{background:rgba(201,150,61,0.15);border-color:rgba(201,150,61,0.4);color:#F7F3EC}
+.cell.selected{background:rgba(201,150,61,0.3);color:#F7F3EC;border-color:#C9963D}
+.cell.found{background:rgba(29,158,117,0.3);color:#9FE1CB;border-color:rgba(29,158,117,0.6)}
+.cell.revealed{background:rgba(239,159,39,0.25);color:#FAC775;border-color:rgba(239,159,39,0.5)}
+
+/* SIDEBAR */
+.sidebar{flex:1;min-width:0;padding-top:4px}
+.sidebar h3{font-size:10px;font-weight:600;color:#C9963D;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.word-item{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06);
+  font-size:13px;font-weight:500;color:rgba(247,243,236,0.85);letter-spacing:.3px;
+}
+.word-item:last-child{border-bottom:none}
+.word-item.found{color:rgba(247,243,236,0.28);text-decoration:line-through;font-weight:400}
+.word-item.revealed{color:#FAC775}
+.tick{
+  width:20px;height:20px;border-radius:50%;
+  border:1.5px solid rgba(255,255,255,0.15);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:10px;
+}
+.tick.done{background:#1D9E75;border-color:#1D9E75;color:#fff}
+.tick.show{background:#EF9F27;border-color:#EF9F27;color:#fff}
+.score{font-size:11px;color:rgba(247,243,236,0.28);margin-top:14px}
+.msg{margin-top:8px;font-size:12px;font-weight:500;color:#C9963D;min-height:18px}
+
+/* FOOTER */
+.footer{
+  margin-top:1.75rem;padding-top:1rem;
+  border-top:1px solid rgba(201,150,61,0.15);
+  text-align:center;
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:11px;color:rgba(201,150,61,0.35);
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="chapter-badge">
+      <span class="num">Chapter Two</span>
+      <span class="div"></span>
+      <span class="sub">Word Search</span>
+    </div>
+    <h1>The Self-Driving Mind<br><em>A Skeptic Encounters Grace</em></h1>
+    <p class="ch-title">"How I Came Up With the Analogy"</p>
+    <p class="hint">Click the first letter of a word, then its last letter to select</p>
+  </div>
+  <div class="btns">
+    <button class="primary" onclick="newPuzzle()">New Puzzle</button>
+    <button class="secondary" onclick="revealAll()">Reveal Answers</button>
+  </div>
+  <div class="main">
+    <div class="grid-wrap">
+      <div id="grid" class="grid"></div>
+    </div>
+    <div class="sidebar">
+      <h3>Find These Words</h3>
+      <div id="word-list"></div>
+      <div class="score" id="score"></div>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+  <div class="footer">The Self-Driving Mind &nbsp;·&nbsp; Morgan James Publishing &nbsp;·&nbsp; TheSelfDrivingMind.com</div>
+</div>
+<script>
+const WORDS = ['GRACE','TESLA','GURU','FREEWAY','LIFETIME','CAPACITY','BETHESDA','SKEPTIC'];
+const SIZE = 11;
+let grid=[], placements={}, found=new Set(), revealed=false, startCell=null;
+
+function rnd(n){return Math.floor(Math.random()*n)}
+function rndLetter(){return String.fromCharCode(65+rnd(26))}
+const DIRS = [[0,1],[1,0],[1,1],[1,-1]]; // right, down, diagonal — forward only for simplicity
+
+function canPlace(word,r,c,dr,dc){
+  for(let i=0;i<word.length;i++){
+    const nr=r+dr*i, nc=c+dc*i;
+    if(nr<0||nr>=SIZE||nc<0||nc>=SIZE)return false;
+    const ex=grid[nr][nc];
+    if(ex&&ex!==word[i])return false;
+  }
+  return true;
+}
+
+function placeWord(word){
+  const dirs=[...DIRS].sort(()=>Math.random()-.5);
+  for(let attempt=0;attempt<600;attempt++){
+    const r=rnd(SIZE), c=rnd(SIZE);
+    const [dr,dc]=dirs[attempt%dirs.length];
+    if(canPlace(word,r,c,dr,dc)){
+      const cells=[];
+      for(let i=0;i<word.length;i++){
+        grid[r+dr*i][c+dc*i]=word[i];
+        cells.push([r+dr*i,c+dc*i]);
+      }
+      return cells;
+    }
+  }
+  return null;
+}
+
+function newPuzzle(){
+  found=new Set(); revealed=false; startCell=null;
+  grid=Array.from({length:SIZE},()=>Array(SIZE).fill(''));
+  placements={};
+  [...WORDS].sort(()=>Math.random()-.5).forEach(w=>{
+    const c=placeWord(w); if(c)placements[w]=c;
+  });
+  for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++)if(!grid[r][c])grid[r][c]=rndLetter();
+  render(); showMsg('');
+}
+
+function cellId(r,c){return r*SIZE+c}
+
+function getLine(r1,c1,r2,c2){
+  const dr=Math.sign(r2-r1), dc=Math.sign(c2-c1);
+  if(r1===r2&&c1===c2)return[[r1,c1]];
+  if(Math.abs(r2-r1)>0&&Math.abs(c2-c1)>0&&Math.abs(r2-r1)!==Math.abs(c2-c1))return null;
+  const len=Math.max(Math.abs(r2-r1),Math.abs(c2-c1));
+  const cells=[];
+  for(let i=0;i<=len;i++)cells.push([r1+dr*i,c1+dc*i]);
+  return cells;
+}
+
+function cellsToWord(cells){return cells.map(([r,c])=>grid[r][c]).join('')}
+
+function checkSelection(cells){
+  if(!cells||cells.length<2)return;
+  const word=cellsToWord(cells);
+  const rev=word.split('').reverse().join('');
+  for(const w of WORDS){
+    if((word===w||rev===w)&&!found.has(w)){
+      found.add(w); startCell=null; render();
+      showMsg(found.size===Object.keys(placements).length?'✦ All found!':'Found: '+w);
+      return;
+    }
+  }
+  startCell=null; render(); showMsg('');
+}
+
+function showMsg(t){document.getElementById('msg').textContent=t}
+
+function handleClick(r,c){
+  if(revealed)return;
+  if(!startCell){startCell=[r,c];render();}
+  else{
+    if(startCell[0]===r&&startCell[1]===c){startCell=null;render();return;}
+    const line=getLine(startCell[0],startCell[1],r,c);
+    checkSelection(line);
+  }
+}
+
+function getFoundCells(){
+  const s=new Set();
+  found.forEach(w=>{if(placements[w])placements[w].forEach(([r,c])=>s.add(cellId(r,c)));});
+  return s;
+}
+
+function render(){
+  const foundCells=getFoundCells();
+  const revCells=new Set();
+  if(revealed)Object.entries(placements).forEach(([w,cells])=>{
+    if(!found.has(w))cells.forEach(([r,c])=>revCells.add(cellId(r,c)));
+  });
+  const selCells=new Set();
+  if(startCell)selCells.add(cellId(startCell[0],startCell[1]));
+
+  const gEl=document.getElementById('grid');
+  gEl.style.gridTemplateColumns=`repeat(${SIZE},35px)`;
+  gEl.innerHTML='';
+  for(let r=0;r<SIZE;r++){
+    for(let c=0;c<SIZE;c++){
+      const div=document.createElement('div');
+      div.className='cell'; div.textContent=grid[r][c];
+      const id=cellId(r,c);
+      if(foundCells.has(id))div.classList.add('found');
+      else if(revCells.has(id))div.classList.add('revealed');
+      else if(selCells.has(id))div.classList.add('selected');
+      div.onclick=()=>handleClick(r,c);
+      gEl.appendChild(div);
+    }
+  }
+
+  const wl=document.getElementById('word-list');
+  wl.innerHTML='';
+  WORDS.filter(w=>placements[w]).forEach(w=>{
+    const isFound=found.has(w), isRev=revealed&&!isFound;
+    const div=document.createElement('div');
+    div.className='word-item'+(isFound?' found':isRev?' revealed':'');
+    div.innerHTML=`<div class="tick${isFound?' done':isRev?' show':''}">${isFound?'✓':isRev?'!':''}</div>${w}`;
+    wl.appendChild(div);
+  });
+  document.getElementById('score').textContent=`Found ${found.size} of ${Object.keys(placements).length}`;
+}
+
+function revealAll(){revealed=true;startCell=null;render();showMsg('Answers shown in amber');}
+
+newPuzzle();
+</script>
+</body>
+</html>
