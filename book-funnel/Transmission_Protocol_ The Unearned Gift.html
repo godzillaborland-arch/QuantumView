@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Transmission Protocol: The Unearned Gift</title>
+
+<!-- Canonical & Open Graph Meta Tags -->
+<link rel="canonical" href="https://selfdrivingmind.substack.com/p/quantum-meets-yogi-1978-an-unearned?r=6gle0t">
+<meta property="og:url" content="https://selfdrivingmind.substack.com/p/quantum-meets-yogi-1978-an-unearned?r=6gle0t">
+<meta property="og:site_name" content="Self-Driving Mind">
+<meta property="og:title" content="Transmission Protocol: The Unearned Gift">
+<meta property="og:description" content="The 45-year battery that never faded. Discipline vs Grace. What is the missing variable?">
+<meta property="og:type" content="website">
+<meta property="og:image" content="./Screenshot_2026-06-14_133712.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Transmission Protocol: The Unearned Gift">
+<meta name="twitter:description" content="The 45-year battery that never faded. Discipline vs Grace. What is the missing variable?">
+<meta name="twitter:image" content="./Screenshot_2026-06-14_133712.png">
+
+<!-- Libraries -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+    :root {
+        --bg-void: #0a0a0f;
+        --bg-deep: #111118;
+        --primary-glow: #e0e7ff;
+        --accent-emerald: #10b981;
+        --accent-amber: #f59e0b;
+        --accent-rose: #f43f5e;
+        --accent-cyan: #06b6d4;
+        --accent-violet: #8b5cf6;
+        --text-dim: #6b7280;
+        --glass: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg-void);
+        font-family: 'Space Grotesk', sans-serif;
+        color: var(--primary-glow);
+    }
+
+    input, textarea {
+        -webkit-user-select: text;
+        user-select: text;
+    }
+
+    #main-container {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        background: radial-gradient(ellipse at center, #0f0f1e 0%, #050508 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    #grid-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(rgba(139, 92, 246, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    .energy-field {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+        filter: blur(60px);
+        pointer-events: none;
+        animation: pulse-field 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse-field {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.2); opacity: 0.3; }
+    }
+
+    .glass-panel {
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .btn {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(16, 185, 129, 0.2));
+        border: 1px solid rgba(139, 92, 246, 0.4);
+        color: var(--primary-glow);
+        padding: 14px 32px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        border-color: rgba(139, 92, 246, 0.6);
+        box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
+    }
+
+    .btn:active {
+        transform: translateY(0);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(6, 182, 212, 0.3));
+        border-color: rgba(16, 185, 129, 0.5);
+    }
+
+    .btn-primary:hover {
+        box-shadow: 0 10px 40px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .terminal-text {
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--accent-emerald);
+        text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    }
+
+    .glow-text {
+        text-shadow: 0 0 20px currentColor;
+    }
+
+    .act-transition {
+        animation: actPulse 1s ease-out;
+    }
+
+    @keyframes actPulse {
+        0% { opacity: 0; transform: scale(0.95); }
+        50% { transform: scale(1.02); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+
+    .meter-bar {
+        height: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .meter-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent-emerald), var(--accent-cyan));
+        border-radius: 4px;
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 0 20px currentColor;
+    }
+
+    .choice-card {
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .choice-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(139, 92, 246, 0.1), transparent 60%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .choice-card:hover::after {
+        opacity: 1;
+    }
+
+    .choice-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(139, 92, 246, 0.4);
+        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+    }
+
+    .choice-card.selected {
+        border-color: var(--accent-emerald);
+        background: rgba(16, 185, 129, 0.1);
+    }
+
+    .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: var(--accent-cyan);
+        border-radius: 50%;
+        pointer-events: none;
+        box-shadow: 0 0 10px currentColor;
+    }
+
+    .ripple {
+        position: absolute;
+        border: 2px solid var(--accent-violet);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: rippleExpand 1.5s ease-out forwards;
+    }
+
+    @keyframes rippleExpand {
+        from {
+            width: 0;
+            height: 0;
+            opacity: 1;
+        }
+        to {
+            width: 300px;
+            height: 300px;
+            opacity: 0;
+        }
+    }
+
+    .metric-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 16px;
+    }
+
+    .icon-glow {
+        filter: drop-shadow(0 0 8px currentColor);
+    }
+
+    #hud {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        pointer-events: none;
+    }
+
+    .hud-item {
+        pointer-events: all;
+    }
+
+    .battery-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+    }
+
+    .battery-level {
+        width: 40px;
+        height: 20px;
+        border: 2px solid var(--accent-emerald);
+        border-radius: 4px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .battery-level::after {
+        content: '';
+        position: absolute;
+        right: -6px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 10px;
+        background: var(--accent-emerald);
+        border-radius: 0 2px 2px 0;
+    }
+
+    .battery-fill {
+        height: 100%;
+        background: var(--accent-emerald);
+        transition: width 0.5s ease;
+        box-shadow: 0 0 10px var(--accent-emerald);
+    }
+
+    .sound-toggle {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .sound-toggle:hover {
+        border-color: var(--accent-violet);
+        transform: scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+        .btn {
+            padding: 12px 24px;
+            font-size: 14px;
+        }
+        
+        #hud {
+            top: 10px;
+            left: 10px;
+            right: 10px;
+        }
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .animate-in {
+        animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .energy-line {
+        stroke: var(--accent-violet);
+        stroke-width: 2;
+        fill: none;
+        opacity: 0.6;
+        filter: blur(1px);
+    }
+
+    .energy-node {
+        fill: var(--accent-cyan);
+        filter: drop-shadow(0 0 8px var(--accent-cyan));
+    }
+</style>
+</head>
+<body>
+<div id="main-container">
+    <div id="grid-overlay"></div>
+    <div class="energy-field" style="top: 10%; left: 10%;"></div>
+    <div class="energy-field" style="bottom: 10%; right: 10%; animation-delay: -4s;"></div>
+    
+    <!-- SVG Background Effects -->
+    <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
+        <defs>
+            <linearGradient id="energy-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color: #8b5cf6; stop-opacity: 0.3;" />
+                <stop offset="100%" style="stop-color: #10b981; stop-opacity: 0.3;" />
+            </linearGradient>
+            <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
+        </defs>
+        <g id="energy-network"></g>
+    </svg>
+
+    <!-- HUD -->
+    <div id="hud">
+        <div class="hud-item">
+            <div class="battery-indicator">
+                <i class="fas fa-battery-full icon-glow" style="color: var(--accent-emerald);"></i>
+                <div class="battery-level">
+                    <div class="battery-fill" id="battery-fill"></div>
+                </div>
+                <span class="terminal-text text-sm" id="battery-percent">100%</span>
+            </div>
+        </div>
+        <div class="hud-item sound-toggle" id="sound-toggle">
+            <i class="fas fa-volume-up" id="sound-icon"></i>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="start-screen" class="w-full h-full flex items-center justify-center p-4 md:p-8">
+        <div class="glass-panel w-full max-w-4xl p-8 md:p-12 animate-in">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 glow-text" style="color: var(--accent-violet);">
+                    Transmission Protocol
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-400 mb-2">The Unearned Gift</p>
+                <div class="flex items-center justify-center gap-2 text-sm text-gray-500">
+                    <span class="terminal-text">PROTOCOL v2.0</span>
+                    <span>•</span>
+                    <span class="terminal-text">INTERACTIVE INQUIRY</span>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 mb-8 border-l-4" style="border-left-color: var(--accent-emerald);">
+                <h3 class="text-lg font-semibold mb-3 flex items-center gap-2">
+                    <i class="fas fa-info-circle icon-glow" style="color: var(--accent-emerald);"></i>
+                    About This Story
+                </h3>
+                <p class="text-gray-300 leading-relaxed mb-3">
+                    In 1978, a College of Engineering Student at Guindy received something that defied explanation. No practice required. 
+                    No guru needed. No belief demanded. The transmission simply happened—15 minutes that 
+                    would power 45 years of life.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-3">
+                    This is an interactive exploration of that event. You will inhabit the space between 
+                    question and answer, between the yearning for connection and the mystery of Grace.
+                </p>
+                <p class="text-sm text-gray-400 italic">
+                    Author’s note: I didn’t earn this. I abandoned it for decades. This is an inquiry, not a credential.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4 mb-8">
+                <div class="metric-card text-center">
+                    <i class="fas fa-clock text-2xl mb-2 icon-glow" style="color: var(--accent-amber);"></i>
+                    <div class="terminal-text text-2xl font-bold">5 Acts</div>
+                    <div class="text-xs text-gray-500">~10 mins</div>
+                </div>
+                <div class="metric-card text-center">
+                    <i class="fas fa-brain text-2xl mb-2 icon-glow" style="color: var(--accent-cyan);"></i>
+                    <div class="terminal-text text-2xl font-bold">Interactive</div>
+                    <div class="text-xs text-gray-500">Your choices matter</div>
+                </div>
+                <div class="metric-card text-center">
+                    <i class="fas fa-bolt text-2xl mb-2 icon-glow" style="color: var(--accent-emerald);"></i>
+                    <div class="terminal-text text-2xl font-bold">45 Years</div>
+                    <div class="text-xs text-gray-500">Battery lifetime</div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button id="start-btn" class="btn btn-primary">
+                    <i class="fas fa-play mr-2"></i>Begin Transmission
+                </button>
+                <a href="https://selfdrivingmind.substack.com/p/quantum-meets-yogi-1978-an-unearned?r=6gle0t" target="_blank" class="btn">
+                    <i class="fas fa-book mr-2"></i>Read Full Article on Substack
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Act Container -->
+    <div id="act-container" class="w-full h-full flex items-center justify-center p-4 md:p-8 hidden">
+        <div class="glass-panel w-full max-w-5xl p-6 md:p-10 act-transition" id="act-content">
+            <!-- Dynamic content -->
+        </div>
+    </div>
+
+    <!-- End Screen -->
+    <div id="end-screen" class="w-full h-full flex items-center justify-center p-4 md:p-8 hidden">
+        <div class="glass-panel w-full max-w-4xl p-8 md:p-12 animate-in text-center">
+            <div class="mb-8">
+                <i class="fas fa-infinity text-6xl mb-4 icon-glow" style="color: var(--accent-violet);"></i>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4 glow-text">Transmission Complete</h2>
+                <p class="text-xl text-gray-400 mb-6">Your battery is always 100%</p>
+            </div>
+
+            <div class="glass-panel p-6 mb-8 text-left">
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <i class="fas fa-chart-line icon-glow" style="color: var(--accent-emerald);"></i>
+                    Your Inquiry Path
+                </h3>
+                <div id="journey-summary" class="space-y-3 text-gray-300">
+                    <!-- Dynamic summary -->
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 mb-8">
+                <h3 class="text-lg font-semibold mb-4">The Integration Protocol</h3>
+                <div class="grid md:grid-cols-3 gap-4 text-sm">
+                    <div class="metric-card">
+                        <div class="terminal-text text-lg font-bold mb-1">Step 1</div>
+                        <div class="text-gray-400">Notice the battery is always full</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="terminal-text text-lg font-bold mb-1">Step 2</div>
+                        <div class="text-gray-400">Stop chasing the current</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="terminal-text text-lg font-bold mb-1">Step 3</div>
+                        <div class="text-gray-400">Trust the transmission</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button id="restart-btn" class="btn">
+                    <i class="fas fa-redo mr-2"></i>Experience Again
+                </button>
+                <a href="https://selfdrivingmind.substack.com/p/quantum-meets-yogi-1978-an-unearned?r=6gle0t" target="_blank" class="btn btn-primary">
+                    <i class="fas fa-book-open mr-2"></i>Read Full Article on Substack
+                </a>
+                <a href="https://selfdrivingmind.substack.com/subscribe" target="_blank" class="btn">
+                    <i class="fas fa-envelope mr-2"></i>Subscribe to Quantum's Substack
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Audio Engine
+    let audioInitialized = false;
+    let soundEnabled = true;
+    let synths = {};
+
+    async function initAudio() {
+        if (audioInitialized) return;
+        await Tone.start();
+        console.log('Audio context started');
+        
+        // Create synths
+        synths.bell = new Tone.MetalSynth({
+            frequency: 200,
+            envelope: { attack: 0.001, decay: 1.4, release: 0.2 },
+            harmonicity: 5.1,
+            modulationIndex: 32,
+            resonance: 4000,
+            octaves: 1.5
+        }).toDestination();
+
+        synths.chime = new Tone.PluckSynth({
+            attackNoise: 1,
+            dampening: 4000,
+            resonance: 0.7
+        }).toDestination();
+
+        synths.pad = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: "sine" },
+            envelope: { attack: 2, decay: 1, sustain: 0.3, release: 2 }
+        }).toDestination();
+        synths.pad.volume.value = -20;
+
+        synths.noise = new Tone.Noise("pink").toDestination();
+        synths.noise.volume.value = -40;
+
+        synths.click = new Tone.MembraneSynth({
+            pitchDecay: 0.008,
+            octaves: 2,
+            envelope: { attack: 0.0006, decay: 0.5, sustain: 0 }
+        }).toDestination();
+
+        audioInitialized = true;
+    }
+
+    function playSound(type) {
+        if (!soundEnabled || !audioInitialized) return;
+        
+        const now = Tone.now();
+        switch(type) {
+            case 'bell':
+                synths.bell.triggerAttackRelease("C5", "1n", now);
+                break;
+            case 'chime':
+                synths.chime.triggerAttackRelease("E6", "8n", now);
+                break;
+            case 'pad':
+                synths.pad.triggerAttackRelease(["C4", "E4", "G4"], "2n", now);
+                break;
+            case 'click':
+                synths.click.triggerAttackRelease("C2", "8n", now);
+                break;
+            case 'ambient':
+                synths.noise.start();
+                setTimeout(() => synths.noise.stop(), 3000);
+                break;
+        }
+    }
+
+    // State Management
+    let currentAct = 0;
+    let userChoices = {
+        searchPattern: null,
+        resistanceLevel: 50,
+        acceptanceSpeed: 0,
+        integrationDepth: 0
+    };
+    let actStartTime = Date.now();
+
+    // UI Elements
+    const startScreen = document.getElementById('start-screen');
+    const actContainer = document.getElementById('act-container');
+    const endScreen = document.getElementById('end-screen');
+    const actContent = document.getElementById('act-content');
+    const batteryFill = document.getElementById('battery-fill');
+    const batteryPercent = document.getElementById('battery-percent');
+    const soundToggle = document.getElementById('sound-toggle');
+    const soundIcon = document.getElementById('sound-icon');
+
+    // Battery Animation
+    function updateBattery(level = 100) {
+        batteryFill.style.width = level + '%';
+        batteryPercent.textContent = level + '%';
+        if (level > 75) {
+            batteryFill.style.backgroundColor = 'var(--accent-emerald)';
+        } else if (level > 25) {
+            batteryFill.style.backgroundColor = 'var(--accent-amber)';
+        } else {
+            batteryFill.style.backgroundColor = 'var(--accent-rose)';
+        }
+    }
+
+    // Energy Network Visualization
+    function createEnergyNetwork() {
+        const svg = document.getElementById('energy-network');
+        svg.innerHTML = '';
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        // Create nodes
+        const nodes = [];
+        for (let i = 0; i < 8; i++) {
+            nodes.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5
+            });
+        }
+
+        function drawNetwork() {
+            svg.innerHTML = '';
+            
+            // Draw connections
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dx = nodes[i].x - nodes[j].x;
+                    const dy = nodes[i].y - nodes[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 200) {
+                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        line.setAttribute('x1', nodes[i].x);
+                        line.setAttribute('y1', nodes[i].y);
+                        line.setAttribute('x2', nodes[j].x);
+                        line.setAttribute('y2', nodes[j].y);
+                        line.setAttribute('class', 'energy-line');
+                        line.style.opacity = (1 - distance / 200) * 0.3;
+                        svg.appendChild(line);
+                    }
+                }
+            }
+            
+            // Draw nodes
+            nodes.forEach(node => {
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', node.x);
+                circle.setAttribute('cy', node.y);
+                circle.setAttribute('r', 3);
+                circle.setAttribute('class', 'energy-node');
+                svg.appendChild(circle);
+                
+                // Update position
+                node.x += node.vx;
+                node.y += node.vy;
+                
+                if (node.x < 0 || node.x > width) node.vx *= -1;
+                if (node.y < 0 || node.y > height) node.vy *= -1;
+            });
+            
+            requestAnimationFrame(drawNetwork);
+        }
+        
+        drawNetwork();
+    }
+
+    // Particle System
+    function createParticle(x, y) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        particle.style.backgroundColor = `hsl(${Math.random() * 60 + 180}, 70%, 60%)`;
+        document.getElementById('main-container').appendChild(particle);
+        
+        gsap.to(particle, {
+            y: y - 100 - Math.random() * 100,
+            x: x + (Math.random() - 0.5) * 100,
+            opacity: 0,
+            duration: 2 + Math.random(),
+            ease: "power2.out",
+            onComplete: () => particle.remove()
+        });
+    }
+
+    function createRipple(x, y) {
+        const ripple = document.createElement('div');
+        ripple.className = 'ripple';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.style.transform = 'translate(-50%, -50%)';
+        document.getElementById('main-container').appendChild(ripple);
+        setTimeout(() => ripple.remove(), 1500);
+    }
+
+    // Act Definitions
+    const acts = [
+        {
+            id: 1,
+            title: "ACT I: THE CALL",
+            subtitle: "1978 • College of Engineering Student at Guindy • The Yearning",
+            content: `
+                <div class="mb-8">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-2 glow-text" style="color: var(--accent-violet);">THE CALL</h2>
+                    <p class="text-gray-400">The hunger for connection. The search for current.</p>
+                </div>
+
+                <div class="glass-panel p-6 mb-6">
+                    <p class="text-lg leading-relaxed mb-4">
+                        At the time, as a College of Engineering Student at Guindy, not much sunk in—except failure to find purpose. I read voraciously, 
+                        searching Sufi texts, Buddhist precepts, Zoroastrian fires, Bible verses—all 
+                        'showed the way' but nothing I could <em>do</em> to connect.
+                    </p>
+                    <p class="text-lg leading-relaxed text-gray-300">
+                        I didn't know the language for it, but I was hunting for <strong class="terminal-text">the current</strong>—
+                        that felt-sense of being shot through with aliveness, meaning, the hum of existing on purpose.
+                    </p>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                        <i class="fas fa-compass icon-glow" style="color: var(--accent-cyan);"></i>
+                        What was your search pattern then?
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-4" id="search-choices">
+                        <div class="choice-card" data-choice="intellectual">
+                            <h4 class="font-semibold mb-2">The Scholar</h4>
+                            <p class="text-sm text-gray-400">Books, systems, philosophies. Making maps of meaning.</p>
+                        </div>
+                        <div class="choice-card" data-choice="experiential">
+                            <h4 class="font-semibold mb-2">The Seeker</h4>
+                            <p class="text-sm text-gray-400">Experiences, practices, teachers. Trying every door.</p>
+                        </div>
+                        <div class="choice-card" data-choice="skeptical">
+                            <h4 class="font-semibold mb-2">The Skeptic</h4>
+                            <p class="text-sm text-gray-400">Questioning everything. Nothing quite fits.</p>
+                        </div>
+                        <div class="choice-card" data-choice="waiting">
+                            <h4 class="font-semibold mb-2">The Waiter</h4>
+                            <p class="text-sm text-gray-400">Something will find me. I can feel it coming.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <div class="meter-bar mb-2">
+                        <div class="meter-fill" id="resistance-meter" style="width: 100%;"></div>
+                    </div>
+                    <p class="text-sm text-gray-400">Resistance Level: <span class="terminal-text" id="resistance-value">100%</span></p>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button class="btn btn-primary" id="act1-continue" disabled>
+                        Continue the Inquiry <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            `,
+            init: function() {
+                const choices = document.querySelectorAll('#search-choices .choice-card');
+                const continueBtn = document.getElementById('act1-continue');
+                const resistanceMeter = document.getElementById('resistance-meter');
+                const resistanceValue = document.getElementById('resistance-value');
+
+                choices.forEach(choice => {
+                    choice.addEventListener('click', (e) => {
+                        playSound('click');
+                        choices.forEach(c => c.classList.remove('selected'));
+                        choice.classList.add('selected');
+                        userChoices.searchPattern = choice.dataset.choice;
+                        continueBtn.disabled = false;
+                        
+                        // Mouse tracking for glow effect
+                        const rect = choice.getBoundingClientRect();
+                        choice.style.setProperty('--mouse-x', e.clientX - rect.left + 'px');
+                        choice.style.setProperty('--mouse-y', e.clientY - rect.top + 'px');
+                        
+                        // Animate resistance drop
+                        gsap.to({val: 100}, {
+                            val: 75,
+                            duration: 1,
+                            onUpdate: function() {
+                                resistanceMeter.style.width = this.targets()[0].val + '%';
+                                resistanceValue.textContent = Math.round(this.targets()[0].val) + '%';
+                                userChoices.resistanceLevel = this.targets()[0].val;
+                            }
+                        });
+                        
+                        createRipple(e.clientX, e.clientY);
+                        for (let i = 0; i < 5; i++) {
+                            setTimeout(() => createParticle(e.clientX, e.clientY), i * 100);
+                        }
+                    });
+                });
+
+                continueBtn.addEventListener('click', () => {
+                    playSound('bell');
+                    nextAct();
+                });
+            }
+        },
+        {
+            id: 2,
+            title: "ACT II: THE ENCOUNTER",
+            subtitle: "Usha Meeting • The Activator",
+            content: `
+                <div class="mb-8">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-2 glow-text" style="color: var(--accent-emerald);">THE ENCOUNTER</h2>
+                    <p class="text-gray-400">Satsang... a meeting with truth.</p>
+                </div>
+
+                <div class="glass-panel p-6 mb-6">
+                    <p class="text-lg leading-relaxed mb-4">
+                        My older sister found Yoga and enthusiastically drove me 150 miles one Saturday 
+                        morning to meet <strong class="terminal-text">Usha</strong> for Satsang.
+                    </p>
+                    <p class="text-lg leading-relaxed text-gray-300">
+                        No expectation of belief. No injunction to faith. No rituals or special room. 
+                        Just me and Usha on dining room chairs in sunshine from her sliding glass doors.
+                    </p>
+                    <div class="mt-4 p-4 border-l-4" style="border-left-color: var(--accent-amber);">
+                        <p class="italic text-gray-300">
+                            "This has nothing to do with religion, belief, incense, crystals, feng shui, 
+                            photos of gurus, chanting or sacred clothing."
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold mb-4">The Conditions Were Perfect:</h3>
+                    <div class="grid md:grid-cols-2 gap-3">
+                        <div class="flex items-center gap-3 p-3 glass-panel">
+                            <i class="fas fa-check-circle text-xl" style="color: var(--accent-emerald);"></i>
+                            <span>No belief required</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 glass-panel">
+                            <i class="fas fa-check-circle text-xl" style="color: var(--accent-emerald);"></i>
+                            <span>No complex rituals</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 glass-panel">
+                            <i class="fas fa-check-circle text-xl" style="color: var(--accent-emerald);"></i>
+                            <span>No guru worship</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 glass-panel">
+                            <i class="fas fa-check-circle text-xl" style="color: var(--accent-emerald);"></i>
+                            <span>Just simple presence</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Your Skepticism Level:</h3>
+                    <div class="relative">
+                        <input type="range" id="skepticism-slider" min="0" max="100" value="50" 
+                            class="w-full h-2 rounded-lg appearance-none cursor-pointer"
+                            style="background: linear-gradient(to right, var(--accent-rose), var(--accent-amber), var(--accent-emerald));">
+                        <div class="flex justify-between text-xs text-gray-500 mt-2">
+                            <span>Total Doubt</span>
+                            <span>Open Curiosity</span>
+                            <span>Complete Trust</span>
+                        </div>
+                    </div>
+                    <p class="text-center mt-4 text-gray-300">
+                        Current state: <span class="terminal-text text-xl" id="skepticism-value">50%</span>
+                    </p>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button class="btn btn-primary" id="act2-continue">
+                        Show Me Shaktipat <i class="fas fa-bolt ml-2"></i>
+                    </button>
+                </div>
+            `,
+            init: function() {
+                const slider = document.getElementById('skepticism-slider');
+                const value = document.getElementById('skepticism-value');
+                const continueBtn = document.getElementById('act2-continue');
+                
+                slider.addEventListener('input', (e) => {
+                    value.textContent = e.target.value + '%';
+                    userChoices.resistanceLevel = 100 - e.target.value;
+                    
+                    if (e.target.value > 50) {
+                        createParticle(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2);
+                    }
+                });
+
+                continueBtn.addEventListener('click', (e) => {
+                    playSound('chime');
+                    createRipple(window.innerWidth / 2, window.innerHeight / 2);
+                    nextAct();
+                });
+            }
+        },
+        {
+            id: 3,
+            title: "ACT III: THE ACTIVATION",
+            subtitle: "Shaktipat • The Descent of Grace",
+            content: `
+                <div class="mb-8">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-2 glow-text" style="color: var(--accent-amber);">THE ACTIVATION</h2>
+                    <p class="text-gray-400">"Set your intention for the meditation" • "Relax. Enjoy."</p>
+                </div>
+
+                <div class="glass-panel p-6 mb-6 text-center" id="meditation-space">
+                    <div class="mb-6">
+                        <div class="inline-block relative">
+                            <div class="w-32 h-32 rounded-full border-4 border-dashed animate-spin" 
+                                style="border-color: var(--accent-violet); animation-duration: 10s;"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-om text-4xl icon-glow" style="color: var(--accent-violet);"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="text-xl mb-4 terminal-text">"SHOW ME"</p>
+                    <p class="text-gray-400 italic">That was my entire intention. One breath. One thought.</p>
+                </div>
+
+                <div class="mb-6" id="energy-detection" style="display: none;">
+                    <div class="glass-panel p-6 bg-gradient-to-r from-purple-950 to-emerald-950 border-l-4" 
+                        style="border-left-color: var(--accent-violet);">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                            <i class="fas fa-water icon-glow" style="color: var(--accent-cyan);"></i>
+                            The Cricket Field Touch
+                        </h3>
+                        <p class="text-lg leading-relaxed mb-4">
+                            "Shaktipat for me felt as if Usha pressed her finger at the very top of my skull, 
+                            like the way you gently touch the tip of a cricket's antennae."
+                        </p>
+                        <p class="text-lg leading-relaxed text-gray-300">
+                            "Energy moved from the top of my head downward, obliterating all thought, 
+                            all mind-talk, the inner-dialogue drowned by <strong class="terminal-text">OCEAN sounds</strong>, 
+                            <strong class="terminal-text">SEROTONIN smells</strong>, melting heat."
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mb-6" style="display: none;" id="effects-panel">
+                    <h3 class="text-xl font-semibold mb-4">Physiological Markers Detected:</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div class="metric-card text-center">
+                            <i class="fas fa-brain text-2xl mb-2" style="color: var(--accent-cyan);"></i>
+                            <div class="text-sm">Thought Stream</div>
+                            <div class="terminal-text font-bold">NULL</div>
+                        </div>
+                        <div class="metric-card text-center">
+                            <i class="fas fa-wave-square text-2xl mb-2" style="color: var(--accent-cyan);"></i>
+                            <div class="text-sm">Inner Dialogue</div>
+                            <div class="terminal-text font-bold">OCEAN</div>
+                        </div>
+                        <div class="metric-card text-center">
+                            <i class="fas fa-fire text-2xl mb-2" style="color: var(--accent-rose);"></i>
+                            <div class="text-sm">Body State</div>
+                            <div class="terminal-text font-bold">MELT</div>
+                        </div>
+                        <div class="metric-card text-center">
+                            <i class="fas fa-clock text-2xl mb-2" style="color: var(--accent-amber);"></i>
+                            <div class="text-sm">Duration</div>
+                            <div class="terminal-text font-bold">15min</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mb-6">
+                    <button class="btn" id="activate-btn">
+                        <i class="fas fa-fingerprint mr-2"></i>Initiate Shaktipat
+                    </button>
+                </div>
+
+                <div class="text-center" style="display: none;" id="act3-continue-wrapper">
+                    <button class="btn btn-primary" id="act3-continue">
+                        Integrate the Battery <i class="fas fa-battery-full ml-2"></i>
+                    </button>
+                </div>
+            `,
+            init: function() {
+                const activateBtn = document.getElementById('activate-btn');
+                const continueBtn = document.getElementById('act3-continue');
+                const meditationSpace = document.getElementById('meditation-space');
+                const energyDetection = document.getElementById('energy-detection');
+                const effectsPanel = document.getElementById('effects-panel');
+                
+                activateBtn.addEventListener('click', () => {
+                    playSound('pad');
+                    playSound('ambient');
+                    activateBtn.disabled = true;
+                    activateBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Transmitting...';
+                    
+                    // Activation sequence
+                    setTimeout(() => {
+                        createRipple(window.innerWidth / 2, window.innerHeight / 2);
+                        gsap.to(meditationSpace, {
+                            scale: 1.05,
+                            duration: 0.5,
+                            yoyo: true,
+                            repeat: 3,
+                            ease: "power2.inOut"
+                        });
+                    }, 500);
+                    
+                    setTimeout(() => {
+                        energyDetection.style.display = 'block';
+                        gsap.from(energyDetection, { opacity: 0, y: 20, duration: 1 });
+                        playSound('bell');
+                    }, 2000);
+                    
+                    setTimeout(() => {
+                        effectsPanel.style.display = 'block';
+                        gsap.from(effectsPanel, { opacity: 0, y: 20, duration: 1 });
+                        
+                        // Particle explosion
+                        for (let i = 0; i < 20; i++) {
+                            setTimeout(() => {
+                                createParticle(
+                                    Math.random() * window.innerWidth,
+                                    Math.random() * window.innerHeight
+                                );
+                            }, i * 50);
+                        }
+                    }, 3500);
+                    
+                    setTimeout(() => {
+                        document.getElementById('act3-continue-wrapper').style.display = 'block';
+                        gsap.from('#act3-continue-wrapper', { opacity: 0, duration: 1 });
+                        userChoices.acceptanceSpeed = Date.now() - actStartTime;
+                    }, 5000);
+                });
+
+                continueBtn.addEventListener('click', () => {
+                    playSound('chime');
+                    nextAct();
+                });
+            }
+        },
+        {
+            id: 4,
+            title: "ACT IV: THE BATTERY",
+            subtitle: "45 Years • Still 100%",
+            content: `
+                <div class="mb-8">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-2 glow-text" style="color: var(--accent-cyan);">THE BATTERY</h2>
+                    <p class="text-gray-400">The unearned charge that never depleted.</p>
+                </div>
+
+                <div class="glass-panel p-6 mb-6">
+                    <div class="text-center mb-6">
+                        <div class="inline-block relative">
+                            <svg width="200" height="200">
+                                <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
+                                <circle cx="100" cy="100" r="90" fill="none" stroke="var(--accent-emerald)" stroke-width="8"
+                                    stroke-dasharray="565" stroke-dashoffset="0" 
+                                    style="transform: rotate(-90deg); transform-origin: center;"
+                                    class="battery-circle">
+                                    <animate attributeName="stroke-dashoffset" 
+                                        from="565" to="0" dur="2s" fill="freeze" />
+                                </circle>
+                            </svg>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                <div class="text-5xl font-bold terminal-text">100%</div>
+                                <div class="text-sm text-gray-400">45 YEARS</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="text-xl text-center leading-relaxed mb-4">
+                        "That battery charged that day remained at <strong class="terminal-text" style="color: var(--accent-emerald);">100%</strong> 
+                        without diminishing even the smallest percent over the next 45 years."
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="glass-panel p-6">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                            <i class="fas fa-user-ninja icon-glow" style="color: var(--accent-amber);"></i>
+                            The Abandonment
+                        </h3>
+                        <p class="text-gray-300 leading-relaxed mb-3">
+                            I only recalled and halfheartedly practiced for the two weeks afterward. 
+                            Over ensuing years, I'd sometimes start chanting Om Namah Shivaya, but 
+                            "never with that same 'Mu' or deep intention."
+                        </p>
+                        <p class="text-sm text-gray-400 italic">
+                            Months and years would pass between meditation attempts.
+                        </p>
+                    </div>
+                    
+                    <div class="glass-panel p-6">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                            <i class="fas fa-infinity icon-glow" style="color: var(--accent-emerald);"></i>
+                            The Persistence
+                        </h3>
+                        <p class="text-gray-300 leading-relaxed mb-3">
+                            "But I honestly can say now—45 years later—that that battery topped-off 
+                            in El Paso that day, in a suburban tract house, by a College of Engineering Student at Guindy, 
+                            remains at 100% charge."
+                        </p>
+                        <p class="text-sm text-gray-400 italic">
+                            No maintenance required. No discipline needed.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold mb-4">The Dilemma of the Unearned:</h3>
+                    <div class="text-center">
+                        <p class="text-lg text-gray-300 mb-4 italic">
+                            "I can't entitle anyone that this was a great, earned inner treasure that 
+                            great arduous effort brought, as this was non-volitional in key ways."
+                        </p>
+                        <div class="flex justify-center gap-8 mb-6">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold terminal-text" style="color: var(--accent-rose);">0%</div>
+                                <div class="text-sm text-gray-400">Effort Made</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold terminal-text" style="color: var(--accent-emerald);">100%</div>
+                                <div class="text-sm text-gray-400">Grace Received</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold mb-4">How does this land with you?</h3>
+                    <div class="grid md:grid-cols-3 gap-4" id="reaction-choices">
+                        <div class="choice-card" data-reaction="resistance">
+                            <h4 class="font-semibold mb-2">Resistance</h4>
+                            <p class="text-sm text-gray-400">This can't be real. Everything must be earned.</p>
+                        </div>
+                        <div class="choice-card" data-reaction="curiosity">
+                            <h4 class="font-semibold mb-2">Curiosity</h4>
+                            <p class="text-sm text-gray-400">What conditions created this possibility?</p>
+                        </div>
+                        <div class="choice-card" data-reaction="recognition">
+                            <h4 class="font-semibold mb-2">Recognition</h4>
+                            <p class="text-sm text-gray-400">I've felt glimpses of this too...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button class="btn btn-primary" id="act4-continue" disabled>
+                        Approach the Temporal Threshold <i class="fas fa-door-open ml-2"></i>
+                    </button>
+                </div>
+            `,
+            init: function() {
+                const choices = document.querySelectorAll('#reaction-choices .choice-card');
+                const continueBtn = document.getElementById('act4-continue');
+                
+                // Animate battery circle
+                gsap.from('.battery-circle', {
+                    strokeDashoffset: 565,
+                    duration: 2,
+                    ease: "power2.out",
+                    delay: 0.5
+                });
+
+                choices.forEach(choice => {
+                    choice.addEventListener('click', (e) => {
+                        playSound('click');
+                        choices.forEach(c => c.classList.remove('selected'));
+                        choice.classList.add('selected');
+                        userChoices.integrationDepth = choice.dataset.reaction;
+                        continueBtn.disabled = false;
+                        
+                        createRipple(e.clientX, e.clientY);
+                    });
+                });
+
+                continueBtn.addEventListener('click', () => {
+                    playSound('bell');
+                    nextAct();
+                });
+            }
+        },
+        {
+            id: 5,
+            title: "ACT V: THE TEMPORAL THRESHOLD",
+            subtitle: "2024 • The Mere Record",
+            content: `
+                <div class="mb-8">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-2 glow-text" style="color: var(--accent-violet);">THE TEMPORAL THRESHOLD</h2>
+                    <p class="text-gray-400">44 years, 6 months later... the return.</p>
+                </div>
+
+                <div class="glass-panel p-6 mb-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3 flex items-center gap-2">
+                                <i class="fas fa-search icon-glow" style="color: var(--accent-amber);"></i>
+                                The Trigger
+                            </h3>
+                            <p class="text-gray-300 leading-relaxed">
+                                Refactoring reams of writings (using a mere record of my prior thinking)... 
+                                stumbled on piece of Siddha Yoga literature "Be With Yourself".
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3 flex items-center gap-2">
+                                <i class="fas fa-lightbulb icon-glow" style="color: var(--accent-emerald);"></i>
+                                The Recognition
+                            </h3>
+                            <p class="text-gray-300 leading-relaxed">
+                                Finally remembered Usha. Sayadri. Siddha Yoga. "I had Shaktipat. 
+                                What a gift... I had missed the entrance so many years ago."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <div class="glass-panel p-6 bg-gradient-to-r from-purple-950 to-slate-950">
+                        <h3 class="text-xl font-semibold mb-4 text-center">The Core Realization</h3>
+                        <blockquote class="text-lg leading-relaxed text-center italic text-gray-300">
+                            "What is that spontaneous move that doesn't need the whole garden, the temple, 
+                            the journey to India, years of training and preparation? What is the battery 
+                            that doesn't get recharged, but instead is always topped-off?"
+                        </blockquote>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold mb-4 text-center">The Integration Insights:</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4 p-4 glass-panel">
+                            <div class="text-2xl">1️⃣</div>
+                            <div>
+                                <h4 class="font-semibold mb-1">The Black Box</h4>
+                                <p class="text-sm text-gray-400">
+                                    Opening with "can't say I understand" is holding oneself open to something hidden in Awareness.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 glass-panel">
+                            <div class="text-2xl">2️⃣</div>
+                            <div>
+                                <h4 class="font-semibold mb-1">The Perfection Beat</h4>
+                                <p class="text-sm text-gray-400">
+                                    One day desire, mind-haft, one note of innocence—you can be one with it.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 glass-panel">
+                            <div class="text-2xl">3️⃣</div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Biomagnetic Modern Age</h4>
+                                <p class="text-sm text-gray-400">
+                                    In nuclear family containers, institutions don't carry it. We're on our own... together.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <div class="glass-panel p-6 text-center">
+                        <h3 class="text-xl font-semibold mb-4">The Ethics of the Unearned</h3>
+                        <p class="text-lg leading-relaxed mb-4">
+                            "I didn't pay for it except a near widow's mite cash offering then. 
+                            It cost me nothing, had nothing to do with merit. Was a spontaneous 
+                            organic occurring."
+                        </p>
+                        <p class="text-lg leading-relaxed text-gray-300">
+                            "Some might scoff that I speak of something transcendent that I don't 'deserve'. 
+                            OK, I can't refute that. But I know this as direct knowledge—that event has 
+                            dimension and energy and is alive."
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Your Final Inquiry:</h3>
+                    <div class="glass-panel p-6">
+                        <p class="text-lg text-center mb-4">
+                            What is the battery in your life that never depletes?
+                        </p>
+                        <textarea 
+                            id="final-reflection" 
+                            class="w-full p-4 bg-transparent border border-gray-700 rounded-lg text-gray-300 focus:border-purple-500 focus:outline-none resize-none"
+                            rows="3"
+                            placeholder="Name your unearned gift..."></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button class="btn btn-primary" id="complete-btn">
+                        Complete the Transmission <i class="fas fa-check-circle ml-2"></i>
+                    </button>
+                </div>
+            `,
+            init: function() {
+                const completeBtn = document.getElementById('complete-btn');
+                const reflection = document.getElementById('final-reflection');
+                
+                completeBtn.addEventListener('click', () => {
+                    playSound('bell');
+                    userChoices.finalReflection = reflection.value;
+                    
+                    // Cascade particle effect
+                    for (let i = 0; i < 30; i++) {
+                        setTimeout(() => {
+                            createParticle(
+                                window.innerWidth / 2 + (Math.random() - 0.5) * 200,
+                                window.innerHeight / 2 + (Math.random() - 0.5) * 200
+                            );
+                        }, i * 30);
+                    }
+                    
+                    setTimeout(() => {
+                        showEndScreen();
+                    }, 1000);
+                });
+
+                // Auto-save reflection
+                reflection.addEventListener('input', () => {
+                    if (reflection.value.length > 3) {
+                        playSound('click');
+                    }
+                });
+            }
+        }
+    ];
+
+    // Act Navigation
+    function showAct(index) {
+        currentAct = index;
+        actStartTime = Date.now();
+        const act = acts[index];
+        
+        actContent.innerHTML = act.content;
+        startScreen.classList.add('hidden');
+        endScreen.classList.add('hidden');
+        actContainer.classList.remove('hidden');
+        
+        // Add transition effect
+        actContent.classList.remove('act-transition');
+        void actContent.offsetWidth; // Trigger reflow
+        actContent.classList.add('act-transition');
+        
+        act.init();
+        updateBattery(100 - (index * 5)); // Battery slowly decreases through acts
+    }
+
+    function nextAct() {
+        if (currentAct < acts.length - 1) {
+            showAct(currentAct + 1);
+        } else {
+            showEndScreen();
+        }
+    }
+
+    function showEndScreen() {
+        actContainer.classList.add('hidden');
+        endScreen.classList.remove('hidden');
+        updateBattery(100);
+        
+        // Generate journey summary
+        const summary = document.getElementById('journey-summary');
+        const searchTypes = {
+            'intellectual': 'You approached as a Scholar, seeking through knowledge.',
+            'experiential': 'You approached as a Seeker, testing every door.',
+            'skeptical': 'You approached as a Skeptic, questioning the mystery.',
+            'waiting': 'You approached as a Waiter, knowing something would find you.'
+        };
+        
+        const reactionTypes = {
+            'resistance': 'You met the unearned with healthy resistance—everything must be questioned.',
+            'curiosity': 'You met the unearned with curiosity—what creates such possibilities?',
+            'recognition': 'You met the unearned with recognition—you have touched this too.'
+        };
+        
+        summary.innerHTML = `
+            <div class="flex items-start gap-3">
+                <i class="fas fa-compass mt-1" style="color: var(--accent-cyan);"></i>
+                <span>${searchTypes[userChoices.searchPattern] || 'You began the inquiry.'}</span>
+            </div>
+            <div class="flex items-start gap-3">
+                <i class="fas fa-bolt mt-1" style="color: var(--accent-amber);"></i>
+                <span>Your resistance dropped from 100% to ${userChoices.resistanceLevel}% during the encounter.</span>
+            </div>
+            <div class="flex items-start gap-3">
+                <i class="fas fa-heart mt-1" style="color: var(--accent-emerald);"></i>
+                <span>${reactionTypes[userChoices.integrationDepth] || 'You completed the transmission.'}</span>
+            </div>
+            ${userChoices.finalReflection ? `
+            <div class="flex items-start gap-3">
+                <i class="fas fa-star mt-1" style="color: var(--accent-violet);"></i>
+                <span>Your battery: "${userChoices.finalReflection}"</span>
+            </div>
+            ` : ''}
+        `;
+        
+        playSound('pad');
+    }
+
+    // Event Listeners
+    document.getElementById('start-btn').addEventListener('click', async () => {
+        await initAudio();
+        playSound('bell');
+        showAct(0);
+    });
+
+    document.getElementById('restart-btn').addEventListener('click', () => {
+        playSound('click');
+        userChoices = {
+            searchPattern: null,
+            resistanceLevel: 50,
+            acceptanceSpeed: 0,
+            integrationDepth: 0
+        };
+        currentAct = 0;
+        endScreen.classList.add('hidden');
+        startScreen.classList.remove('hidden');
+    });
+
+    soundToggle.addEventListener('click', async () => {
+        if (!audioInitialized) await initAudio();
+        soundEnabled = !soundEnabled;
+        soundIcon.className = soundEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+        if (soundEnabled) playSound('click');
+    });
+
+    // Mouse tracking for interactive effects
+    document.addEventListener('mousemove', (e) => {
+        const cards = document.querySelectorAll('.choice-card');
+        cards.forEach(card => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            card.style.setProperty('--mouse-x', x + 'px');
+            card.style.setProperty('--mouse-y', y + 'px');
+        });
+    });
+
+    // Touch events for mobile
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    document.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        createParticle(touchStartX, touchStartY);
+    });
+
+    document.addEventListener('touchmove', (e) => {
+        if (Math.random() > 0.9) {
+            createParticle(e.touches[0].clientX, e.touches[0].clientY);
+        }
+    });
+
+    // Initialize
+    window.addEventListener('load', () => {
+        createEnergyNetwork();
+        updateBattery(100);
+        
+        // Ambient particle system
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                createParticle(
+                    Math.random() * window.innerWidth,
+                    window.innerHeight
+                );
+            }
+        }, 2000);
+    });
+
+    // Window resize handler
+    window.addEventListener('resize', () => {
+        createEnergyNetwork();
+    });
+
+    console.log('Transmission Protocol v2.0 Initialized');
+    console.log('Battery Status: 100% • Grace Level: Infinite');
+</script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
