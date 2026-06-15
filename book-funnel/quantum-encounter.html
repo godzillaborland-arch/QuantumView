@@ -55,19 +55,41 @@ body{font-family:'Lora',Georgia,serif;background:var(--cream);color:var(--ink);m
 .dot{width:5px;height:5px;background:var(--rust);border-radius:50%;display:inline-block;flex-shrink:0;}
 
 /* HERO */
-.hero{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:340px;margin-bottom:0;}
-.hero-text{padding:3rem 2rem 3rem 0;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border-light);}
+.hero{display:grid;grid-template-columns:1.35fr .65fr;gap:1.25rem;min-height:190px;margin-bottom:0;align-items:center;}
+.hero-text{padding:1rem 0;display:flex;flex-direction:column;justify-content:center;}
 .hero-label{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.22em;color:var(--rust);text-transform:uppercase;font-weight:600;margin-bottom:1rem;}
 .hero h1{font-size:clamp(28px,5vw,50px);font-weight:400;line-height:1.15;color:var(--ink);margin-bottom:.875rem;font-family:'Lora',serif;}
 .hero h1 em{color:var(--rust);font-style:italic;}
 .hero-sub{font-size:14px;color:var(--ink-light);font-family:'Inter',sans-serif;line-height:1.65;margin-bottom:1.75rem;font-weight:300;}
-.hero-cta{display:inline-block;background:var(--rust);color:#fff;font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:11px 24px;border-radius:3px;text-decoration:none;font-weight:600;transition:background .15s;align-self:flex-start;}
+.hero-cta{display:inline-block;background:var(--rust);color:#fff;font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:10px 22px;border-radius:3px;text-decoration:none;font-weight:600;transition:background .15s;align-self:flex-start;}
 .hero-cta:hover{background:var(--rust-light);}
-.hero-image{position:relative;overflow:hidden;background:var(--cream-dark);}
-.hero-image img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
+.hero-quote{border-left:3px solid var(--rust);padding:.75rem 1rem;margin-top:.75rem;margin-bottom:1rem;background:var(--rust-pale);border-radius:0 6px 6px 0;max-width:520px;}
+.hero-quote p{font-size:14px;font-style:italic;color:var(--ink-mid);line-height:1.55;margin-bottom:.35rem;}
+.hero-quote cite{font-family:'Inter',sans-serif;font-size:10px;color:var(--ink-faint);font-style:normal;letter-spacing:.05em;}
+.hero-image{
+  position:relative;
+  overflow:hidden;
+  background:var(--cream-dark);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px;
+  border-radius:8px;
+  max-height:180px;
+  align-self:center;
+}
+.hero-image img{
+  width:100%;
+  height:auto;
+  max-height:165px;
+  object-fit:contain;
+  object-position:center center;
+  display:block;
+  border-radius:6px;
+}
 
 /* DIVIDER */
-.divider{border:none;border-top:1px solid var(--border-light);margin:2.25rem 0;}
+.divider{border:none;border-top:1px solid var(--border-light);margin:1.15rem 0;}
 
 /* PULL QUOTE */
 .pullquote{border-left:3px solid var(--rust);padding:1rem 1.5rem;margin:2rem 0;background:var(--rust-pale);border-radius:0 6px 6px 0;}
@@ -184,8 +206,8 @@ input.ans:focus{outline:none;border-color:var(--rust);}
 @media(max-width:640px){
   .page{padding:0 1rem 3rem;}
   .hero{grid-template-columns:1fr;}
-  .hero-image{height:220px;order:-1;}
-  .hero-text{padding:1.5rem 0;border-right:none;}
+  .hero-image{height:auto;max-height:220px;order:-1;}
+  .hero-text{padding:1.5rem 0;}
   .hero h1{font-size:clamp(28px,9vw,42px);}
   .score-bar{flex-direction:column;align-items:flex-start;gap:8px;}
   .score-bar-right{width:100%;}
@@ -215,6 +237,10 @@ input.ans:focus{outline:none;border-color:var(--rust);}
     <div class="hero-label">Black Box 01 — Open</div>
     <h1>Quantum<br/><em>Encounter</em></h1>
     <p class="hero-sub">An engineer's inquiry into grace — where technology, logic, and Vedanta converge.</p>
+    <div class="hero-quote">
+      <p>"I hadn't earned this. I hadn't practiced for it. It had simply been transmitted — like downloading software I didn't even know I was receiving."</p>
+      <cite>— Sundar Rajan, Quantum Encounter</cite>
+    </div>
     <a class="hero-cta" href="https://selfdrivingmind.substack.com/p/quantum-meets-yogi-1978-an-unearned?r=6gle0t" target="_blank" rel="noopener">Read Full Article →</a>
   </div>
   <div class="hero-image">
@@ -222,16 +248,7 @@ input.ans:focus{outline:none;border-color:var(--rust);}
   </div>
 </div>
 
-<hr class="divider"/>
-
-<div class="pullquote">
-  <p>"I hadn't earned this. I hadn't practiced for it. It had simply been transmitted — like downloading software I didn't even know I was receiving."</p>
-  <cite>— Sundar Rajan, Quantum Encounter</cite>
-</div>
-
-<hr class="divider"/>
-
-<div class="section-label">The Reconstruction — Four Puzzles</div>
+<div class="section-label" style="margin-top:.75rem;">The Reconstruction — Four Puzzles</div>
 
 <div class="games-section">
   <div class="score-bar">
@@ -259,7 +276,7 @@ input.ans:focus{outline:none;border-color:var(--rust);}
 <div class="sub-box">
   <h3>Get the next Black Box before anyone else</h3>
   <p>New puzzles as they're built, and chapter previews the moment they're cleared for release.</p>
-  <a href="https://selfdrivingmind.substack.com/subscribe" target="_blank" rel="noopener">Subscribe Free on Substack →</a>
+  <a href="https://selfdrivingmind.substack.com/subscribe" target="_blank" rel="noopener">Subscribe Free on Substack for the Next Black Box →</a>
 </div>
 
 <div class="section-label">Black Box Archive</div>
