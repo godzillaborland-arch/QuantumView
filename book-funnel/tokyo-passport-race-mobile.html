@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Invisible Buffer — Interactive Chapter Game</title>
+<style>
+  :root{
+    --bg:#07101f; --panel:#0d1930; --panel2:#101f3d; --text:#f3f6fb; --muted:#aab7cf;
+    --gold:#f2b735; --blue:#4fc3ff; --red:#ff5a6e; --green:#7be495; --line:rgba(255,255,255,.14);
+  }
+  *{box-sizing:border-box}
+  .article-banner{width:min(980px,100%);margin:0;padding:12px 14px;background:rgba(255,255,255,.92);color:#162033;border-radius:14px;text-align:center;font-size:14px;line-height:1.35;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+  .article-banner a{color:#0b57d0;font-weight:800;text-decoration:none}.article-banner a:hover{text-decoration:underline}
+  body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:radial-gradient(circle at 50% 0%,#112b5c 0%,var(--bg) 52%,#03060d 100%);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:20px;gap:14px;-webkit-text-size-adjust:100%;touch-action:manipulation}
+  .game{width:min(980px,100%);min-height:680px;background:linear-gradient(180deg,rgba(13,25,48,.96),rgba(5,11,23,.96));border:1px solid var(--line);border-radius:28px;box-shadow:0 30px 80px rgba(0,0,0,.45);overflow:hidden;position:relative}
+  header{padding:22px 26px;border-bottom:1px solid var(--line);display:flex;gap:18px;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03)}
+  .brand{display:flex;align-items:center;gap:14px}.orb{width:42px;height:42px;border-radius:50%;background:radial-gradient(circle,#fff 0%,var(--blue) 35%,#0057d9 70%,transparent 72%);box-shadow:0 0 30px #4fc3ff}
+  h1{font-size:22px;margin:0;letter-spacing:.4px}.sub{font-size:13px;color:var(--muted);margin-top:3px}
+  .stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}.pill{border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted);font-size:13px;background:rgba(255,255,255,.04)}
+  main{padding:30px;display:grid;grid-template-columns:1.15fr .85fr;gap:28px}.full{grid-template-columns:1fr}.card{background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+  .scene-title{font-size:34px;line-height:1.1;margin:0 0 12px}.kicker{color:var(--gold);font-weight:800;text-transform:uppercase;font-size:12px;letter-spacing:1.8px;margin-bottom:12px}.text{font-size:18px;line-height:1.55;color:#e8edf7}.muted{color:var(--muted)}
+  .choices{display:grid;gap:12px;margin-top:24px}.choice{width:100%;border:1px solid rgba(255,255,255,.16);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035));color:var(--text);border-radius:16px;padding:16px 18px;text-align:left;font-size:16px;cursor:pointer;transition:.18s transform,.18s border,.18s background}.choice:hover{transform:translateY(-2px);border-color:rgba(79,195,255,.65);background:rgba(79,195,255,.12)}
+  .visual{min-height:420px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.city{position:absolute;inset:0;background:linear-gradient(180deg,rgba(79,195,255,.08),transparent 50%)}.tower{position:absolute;bottom:0;width:44px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08)}
+  .passport{width:150px;height:205px;background:linear-gradient(145deg,#123d82,#081b3f);border:3px solid #75baff;border-radius:16px;box-shadow:0 0 45px rgba(79,195,255,.28);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transform:rotate(-7deg)}.passport:before{content:'✦';font-size:58px;color:#f2b735}.passport span{font-weight:900;letter-spacing:2px}.passport .stamp{color:#ff3b30;border:2px solid #ff3b30;border-radius:6px;padding:3px 8px;transform:rotate(-10deg);font-weight:900;letter-spacing:2px;background:rgba(255,59,48,.08)}.lost{animation:shake .5s infinite alternate}@keyframes shake{from{transform:rotate(-8deg) translateX(-4px)}to{transform:rotate(-4deg) translateX(4px)}}
+  .timer{font-size:54px;font-weight:900;color:var(--gold);text-shadow:0 0 20px rgba(242,183,53,.25);margin:18px 0}.meter-wrap{height:12px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin:14px 0}.meter{height:100%;width:0%;background:linear-gradient(90deg,var(--red),var(--gold),var(--green));transition:width .8s}.hidden-meter .meter{filter:blur(4px);opacity:.45}.label-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}.log{font-size:14px;color:var(--muted);line-height:1.45;display:grid;gap:8px}.log div{border-left:3px solid rgba(79,195,255,.5);padding-left:10px}.small{font-size:14px}.quote{border-left:4px solid var(--gold);padding-left:18px;font-style:italic;color:#fff}.final-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}.report{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:18px;padding:16px}.big{font-size:46px;font-weight:900;margin:0}.center{text-align:center}.btnbar{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}.primary{background:linear-gradient(135deg,#f2b735,#ffdd7a);color:#111;border:none;font-weight:900}.secondary{background:transparent;color:var(--text)}
+  .shock{width:260px;height:360px;position:relative}.spring{position:absolute;left:112px;top:25px;width:36px;height:235px;background:repeating-linear-gradient(180deg,transparent 0 11px,#f2b735 12px 17px,transparent 18px 28px);border-radius:18px;filter:drop-shadow(0 0 12px rgba(242,183,53,.35));animation:compress 1.6s infinite ease-in-out}.wheel{position:absolute;bottom:35px;left:52px;width:160px;height:160px;border:18px solid #d7e9ff;border-radius:50%;box-shadow:0 0 24px rgba(79,195,255,.2)}.road{position:absolute;bottom:18px;left:0;right:0;border-top:4px dashed rgba(255,255,255,.4)}@keyframes compress{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.72);transform-origin:bottom}}
+  @media(max-width:800px){body{padding:12px}.article-banner{font-size:13px;border-radius:12px}.game{min-height:auto;border-radius:20px;width:100%}header{padding:16px;align-items:flex-start}.orb{width:34px;height:34px;flex:0 0 auto}h1{font-size:19px}.sub{font-size:12px}.stats{display:none}main{grid-template-columns:1fr;padding:14px;gap:14px}.card{border-radius:18px;padding:18px}.scene-title{font-size:27px}.text{font-size:16px;line-height:1.5}.choices{gap:10px;margin-top:18px}.choice{font-size:16px;padding:15px 16px}.visual{min-height:220px;order:-1}.passport{width:115px;height:158px;border-radius:14px}.passport:before{font-size:42px}.timer{font-size:40px;margin:14px 0}.final-grid{grid-template-columns:1fr}.shock{width:200px;height:280px}.spring{left:86px;height:175px}.wheel{left:40px;width:122px;height:122px;border-width:14px}.big{font-size:38px}}
+  @media(max-width:420px){body{padding:8px}.article-banner{font-size:12.5px;padding:10px}.game{border-radius:16px}header{padding:13px}.brand{gap:10px}.orb{display:none}h1{font-size:18px}.sub{font-size:11.5px}main{padding:10px}.card{padding:15px;border-radius:16px}.scene-title{font-size:24px}.kicker{font-size:11px;letter-spacing:1.3px}.text{font-size:15.5px}.choice{font-size:15.5px;padding:14px}.visual{min-height:185px}.timer{font-size:34px}.passport{width:100px;height:138px}.report{padding:14px}}
+  @media(hover:none){.choice:hover{transform:none}}
+</style>
+</head>
+<body>
+<div class="article-banner">
+  Based on the article:
+  <a href="https://selfdrivingmind.substack.com/p/what-a-lost-passport-in-tokyo-taught?r=6gle0t" target="_blank">
+    What a Lost Passport in Tokyo Taught Me About Invisible Change
+  </a>
+</div>
+
+<div class="game" id="game">
+<header>
+  <div class="brand"><div class="orb"></div><div><h1>Tokyo Passport Race</h1><div class="sub">A lost passport reveals the invisible buffer</div></div></div>
+  <div class="stats"><div class="pill" id="phase">Start</div><div class="pill" id="timePill">No timer</div><div class="pill" id="statusPill">Buffer hidden</div></div>
+</header>
+<main id="main"></main>
+</div>
+<script>
+const state={step:0,buffer:0,stress:15,time:60,logs:[],crisis:0,visibleBuffer:false};
+const life=[
+ {title:'Ten Free Minutes',text:'You have ten minutes before the next obligation. Nothing dramatic. Just an ordinary pause.',choices:[['Scroll until the time disappears',-3,6],['Sit quietly and notice the breath',12,-5],['Walk without headphones',7,-2]]},
+ {title:'A Sharp Comment',text:'Someone says something careless. Your mind wants to build a courtroom around it.',choices:[['Replay it for hours',-4,9],['Answer immediately',-2,7],['Feel the sting, then let it pass',11,-6]]},
+ {title:'The Long Commute',text:'Traffic slows. The day has already been noisy. The car becomes a small laboratory.',choices:[['Feed the irritation',-5,8],['Listen to something calming',5,-3],['Drive in silence for a while',10,-5]]},
+ {title:'Inconsistent Practice',text:'You are not a perfect meditator. You miss days. You start again. The work is quiet.',choices:[['Quit because it is imperfect',-6,5],['Return without drama',13,-7],['Do one minute and count it',8,-4]]}
+];
+function render(){
+ document.getElementById('phase').textContent= state.step<life.length?'Life Before Tokyo': state.step<8?'Tokyo Crisis':'Revelation';
+ document.getElementById('timePill').textContent= state.step>=life.length&&state.step<8? state.time+' min left':'No timer';
+ document.getElementById('statusPill').textContent= state.visibleBuffer?'Buffer revealed':'Buffer hidden';
+ if(state.step<life.length) return renderLife(life[state.step]);
+ if(state.step===life.length) return renderTokyoStart();
+ if(state.step<8) return renderCrisis();
+ return renderEnding();
+}
+function layout(left,right){document.getElementById('main').className='';document.getElementById('main').innerHTML=`<section class="card">${left}</section><aside class="card visual">${right}</aside>`}
+function renderLife(s){
+ const choices=s.choices.map((c,i)=>`<button class="choice" onclick="lifeChoice(${i})">${c[0]}</button>`).join('');
+ layout(`<div class="kicker">Background installation</div><h2 class="scene-title">${s.title}</h2><div class="text">${s.text}</div><div class="choices">${choices}</div><p class="muted small">No score is shown. Some capacities are built in the background.</p>`,visualPassport(false));
+}
+function lifeChoice(i){const c=life[state.step].choices[i];state.buffer+=c[1];state.stress=Math.max(0,state.stress+c[2]);state.logs.push(c[0]);state.step++;render()}
+function renderTokyoStart(){
+ layout(`<div class="kicker">Tokyo, final afternoon</div><h2 class="scene-title">The Passport Is Gone</h2><div class="text">At the food court, your wife asks for your passport number for online check-in. You reach into the shopping bag. Nothing. Pockets. Receipts. Corners. Still nothing.</div><div class="timer">60:00</div><div class="choices"><button class="choice primary" onclick="startCrisis()">Begin the passport race</button></div>`,visualPassport(true));
+}
+function startCrisis(){state.step++;render()}
+function renderCrisis(){
+ const calm = state.buffer - state.stress + Math.floor(Math.random()*8);
+ let title,text,choices;
+ if(state.crisis===0){title='First Reaction';text='Panic hits. The flight is tomorrow. The group may leave without you.';choices= calm>15?['Stand up and gather facts','Tell the group you need one minute','Check the last store calmly']:['Freeze for several minutes','Dump every bag onto the table','Snap at the nearest person'];}
+ if(state.crisis===1){title='Language Barrier';text='You find the mall police kiosk. You do not speak Japanese.';choices= calm>18?['Ask a stranger to translate','Use a phone translation app','Point clearly to passport and store receipt']:['Repeat English louder','Leave and search randomly','Call home in panic'];}
+ if(state.crisis===2){title='Embassy Window';text='The officers reach the U.S. Embassy. It is 1:30. You must arrive by 2:30, or wait until Tuesday.';choices= calm>22?['Take taxi immediately','Carry only essentials','Focus on the next action']:['Argue about the deadline','Search the mall one more time','Text everyone repeatedly'];}
+ if(state.crisis===3){title='Taxi Ride';text='Tokyo traffic, embassy deadline, missing passport. Your body is activated. Your mind needs one clean lane.';choices= calm>25?['Breathe and review documents','Let the driver drive','Prepare one sentence for the embassy']:['Refresh maps obsessively','Imagine missing the flight','Call three people at once'];}
+ const buttons=choices.map((x,i)=>`<button class="choice" onclick="crisisChoice(${i})">${x}</button>`).join('');
+ layout(`<div class="kicker">Crisis ${state.crisis+1} of 4</div><h2 class="scene-title">${title}</h2><div class="text">${text}</div><div class="timer">${state.time}:00</div><div class="choices">${buttons}</div>`,visualCity());
+}
+function crisisChoice(i){
+ const calm=state.buffer-state.stress; const good=calm>10+state.crisis*4;
+ let loss= good ? [5,7,6][i%3] : [18,14,16][i%3];
+ state.time=Math.max(0,state.time-loss); state.stress += good ? -3 : 8; state.buffer += good ? 1 : -1; state.crisis++;
+ if(state.crisis>=4){state.step=8}else state.step++;
+ render();
+}
+function renderEnding(){
+ state.visibleBuffer=true; const score=Math.max(0,Math.min(100,state.buffer+45-state.stress+state.time));
+ let ending='The Meltdown',msg='The crisis overwhelms the system. The lesson arrives the hard way: under pressure, capacity matters.';
+ if(score>45){ending='The Survivor';msg='You make it through, but barely. The ride is rough. Still, something held.'}
+ if(score>65){ending='The Operator';msg='You think, move, and recover. Stress is present, but it does not take the steering wheel.'}
+ if(score>82){ending='The Invisible Buffer';msg='Months later, friends say: “I would have completely fallen apart. You didn’t even seem rattled.” Only then do you notice what had been installed.'}
+ document.getElementById('main').className='full';
+ document.getElementById('main').innerHTML=`<section class="card center"><div class="kicker">Revelation</div><h2 class="scene-title">${ending}</h2><p class="text">${msg}</p><div class="meter-wrap"><div class="meter" style="width:${score}%"></div></div><div class="label-row"><span>Buffer Capacity Revealed</span><span>${score}%</span></div><div class="final-grid"><div class="report"><p class="big">✓</p><b>Stress was not removed</b><p class="muted">The bump still happened.</p></div><div class="report"><p class="big">✓</p><b>Space appeared</b><p class="muted">Panic did not occupy the whole mind.</p></div><div class="report"><p class="big">✓</p><b>Change was invisible</b><p class="muted">Others noticed before you did.</p></div></div><div style="display:flex;justify-content:center;margin-top:24px"><div class="shock"><div class="spring"></div><div class="wheel"></div><div class="road"></div></div></div><p class="quote">Meditation does not remove every road shock. It builds suspension.</p><div class="btnbar" style="justify-content:center"><button class="choice primary" onclick="restart()">Play again</button><button class="choice secondary" onclick="reflect()">Create my reflection prompt</button></div><div id="reflection"></div></section>`;
+ document.getElementById('statusPill').textContent='Buffer revealed';
+}
+function reflect(){document.getElementById('reflection').innerHTML='<div class="report" style="margin-top:18px;text-align:left"><b>Your Invisible Buffer Reflection</b><p>Think of one crisis you handled better than your younger self would have. What did others notice? What quiet practice may have built that capacity?</p></div>'}
+function restart(){Object.assign(state,{step:0,buffer:0,stress:15,time:60,logs:[],crisis:0,visibleBuffer:false});render()}
+function visualPassport(lost){return `<div class="city"></div><div class="passport ${lost?'lost':''}"><div style="font-size:34px">✈️</div><span>PASSPORT</span><div class="stamp">LOST</div></div>`}
+function visualCity(){let t='';for(let i=0;i<12;i++){t+=`<div class="tower" style="left:${i*9}%;height:${80+Math.random()*190}px"></div>`} return `<div class="city"></div>${t}<div class="passport lost"><span>2:30</span><div class="muted small">EMBASSY WINDOW</div></div>`}
+render();
+</script>
+</body>
+</html>
