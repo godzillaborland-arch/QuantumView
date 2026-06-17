@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Sensor Calibration - The Self-Driving Mind Game</title>
 
-<!-- Open Graph / Facebook -->
 <meta property="og:title" content="Sensor Calibration - The Self-Driving Mind Game">
 <meta property="og:description" content="Infinite Fuel (Kripa) + Infallible Navigation (Dhyāna) = Certain Arrival. Your only job is vehicle maintenance.">
 <meta property="og:type" content="website">
@@ -14,7 +13,6 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Sensor Calibration game showing Tesla dashboard with Autopilot ENGAGED and sensor status indicators">
 
-<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Sensor Calibration - The Self-Driving Mind Game">
 <meta name="twitter:description" content="Infinite Fuel (Kripa) + Infallible Navigation (Dhyāna) = Certain Arrival. Your only job is vehicle maintenance.">
@@ -261,13 +259,8 @@
 </style>
 </head>
 <body class="min-h-screen p-3 md:p-6 lg:p-8">
-    <!-- Hidden preview image for container:// resolution -->
-    <img id="previewImage" src="container:///mnt/data/sensor_calibration_preview.png" hidden alt="Sensor Calibration Preview">
-    
-    <!-- Screen Flash Overlay for Audio Fallback -->
     <div id="screenFlash" class="screen-flash"></div>
     
-    <!-- iOS Audio Enable Banner -->
     <div id="audioBanner" class="fixed top-0 left-0 right-0 z-[60] bg-gradient-to-r from-cyan-600 to-teal-600 text-white p-4 shadow-lg hidden">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4 flex-wrap">
             <div class="flex items-center gap-3">
@@ -283,7 +276,6 @@
         </div>
     </div>
 
-    <!-- Intro Modal -->
     <div id="introModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
         <div class="glass rounded-2xl max-w-2xl w-full p-6 md:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex items-center gap-3 mb-6">
@@ -293,16 +285,22 @@
                     <i class="fa-solid fa-volume-high text-cyan-400"></i>
                 </button>
             </div>
-            <p class="text-slate-300 mb-6 leading-relaxed text-base">
-                Based on Chapter 3 of <span class="text-cyan-400 font-medium">The Self-Driving Mind</span>
-            </p>
+            
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-slate-300 mb-6 text-base">
+                <p class="leading-relaxed">
+                    Based on Chapter 3 of <span class="text-cyan-400 font-medium">The Self-Driving Mind</span>
+                </p>
+                <a href="https://selfdrivingmind.substack.com/subscribe" target="_blank" class="text-cyan-400 hover:text-cyan-300 transition-colors inline-flex items-center gap-1.5 text-sm font-semibold border border-cyan-500/30 rounded-lg px-3 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 shadow-sm">
+                    <i class="fa-solid fa-envelope text-xs"></i>Subscribe on Substack
+                </a>
+            </div>
             
             <div class="bg-slate-900/50 rounded-xl p-5 md:p-6 mb-6 border border-slate-700">
                 <h2 class="text-lg md:text-xl font-semibold mb-3 text-cyan-400">The Arithmetic of Certainty</h2>
                 <div class="space-y-2 mono text-sm md:text-base">
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-infinity text-teal-400"></i>
-                        <span>∞ Fuel (Kripa) + Infallible Navigation (FSD/Dhyāna)</span>
+                        <span>&infin; Fuel (Kripa) + Infallible Navigation (FSD/Dhyāna)</span>
                     </div>
                     <div class="flex items-center justify-center text-2xl text-cyan-400">=</div>
                     <div class="flex items-center gap-2">
@@ -314,7 +312,7 @@
 
             <div class="space-y-3 text-sm md:text-base text-slate-300 mb-4">
                 <p><strong class="text-white">Your Role:</strong> You are the Maintenance Engineer. The Tesla drives itself via FSD. You only calibrate sensors.</p>
-                <p><strong class="text-white">Core Mechanic:</strong> If ≤1 sensor is compromised, autopilot remains ENGAGED and Tesla advances 1 space/turn automatically.</p>
+                <p><strong class="text-white">Core Mechanic:</strong> If &le;1 sensor is compromised, autopilot remains ENGAGED and Tesla advances 1 space/turn automatically.</p>
                 <p><strong class="text-white">Failure Condition:</strong> If 2+ sensors fail, autopilot DISENGAGES. Disengaged for 3 turns = route terminated.</p>
                 <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-3 mt-4">
                     <p class="text-sm text-cyan-300 font-semibold mb-1"><i class="fa-solid fa-circle-info mr-1"></i>System Status Legend</p>
@@ -323,7 +321,6 @@
                 </div>
             </div>
 
-            <!-- iOS Audio Instructions -->
             <div id="iosAudioHelp" class="hidden bg-orange-900/30 border border-orange-700 rounded-lg p-4 mb-4">
                 <p class="text-sm text-orange-300 font-semibold mb-2"><i class="fa-brands fa-apple mr-2"></i>iPhone/iPad Audio Setup</p>
                 <ul class="text-xs text-slate-300 space-y-1">
@@ -339,9 +336,7 @@
         </div>
     </div>
 
-    <!-- Main Game Container -->
     <div class="max-w-7xl mx-auto">
-        <!-- Header Status Bar -->
         <div class="glass rounded-2xl p-4 md:p-6 mb-4 md:mb-6">
             <div class="flex justify-between items-center mb-3 md:hidden">
                 <div class="flex items-center gap-2">
@@ -354,21 +349,18 @@
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 items-center">
-                <!-- Autopilot Status -->
                 <div id="autopilotStatus" class="autopilot-engaged rounded-xl p-4 text-center touch-btn">
                     <div class="text-xs uppercase tracking-wider opacity-80 mb-1">Autopilot Status</div>
                     <div class="text-xl md:text-2xl font-bold mono" id="autopilotText">ENGAGED</div>
                     <div class="text-xs mt-1" id="disengagedCounter">Safe: 0/3 turns disengaged</div>
                 </div>
 
-                <!-- Turn Counter -->
                 <div class="glass rounded-xl p-4 text-center border border-slate-700 touch-btn">
                     <div class="text-xs uppercase tracking-wider text-slate-400 mb-1">System Cycle</div>
                     <div class="text-2xl md:text-3xl font-bold mono text-cyan-400" id="turnCount">0</div>
                     <div class="text-xs text-slate-500 mt-1">Position: <span id="positionText">0</span>/20</div>
                 </div>
 
-                <!-- Lifetime Charge -->
                 <div class="glass rounded-xl p-4 border border-slate-700 touch-btn">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-xs uppercase tracking-wider text-slate-400">Lifetime Charge</span>
@@ -391,7 +383,6 @@
             </div>
         </div>
 
-        <!-- Track Visualization -->
         <div class="glass rounded-2xl p-4 md:p-6 mb-4 md:mb-6">
             <div class="flex items-center justify-between mb-3 md:mb-4">
                 <h2 class="text-base md:text-lg font-semibold text-slate-200 flex items-center gap-2">
@@ -421,16 +412,13 @@
             </div>
         </div>
 
-        <!-- Sensor Grid & Turbulence -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mb-4 md:mb-6">
-            <!-- Sensors Status -->
-            <div class="lg:col-span-2 glass rounded-2xl p-4 md:p-6">
+            <div class="lg:col-span-2 glass rounded-2xl p-4 md:p-6 relative z-10">
                 <h2 class="text-base md:text-lg font-semibold text-slate-200 mb-3 md:mb-4 flex items-center gap-2">
                     <i class="fa-solid fa-microchip text-cyan-400"></i>
                     Sensor Array Status
                 </h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-                    <!-- Camera -->
                     <div id="sensor-camera" class="sensor-card sensor-clean rounded-xl p-4 transition-all duration-300 has-tooltip relative touch-btn">
                         <div class="flex items-start justify-between mb-2">
                             <i class="fa-solid fa-camera text-xl md:text-2xl"></i>
@@ -438,17 +426,16 @@
                         </div>
                         <div class="font-semibold text-base">Camera</div>
                         <div class="text-sm opacity-80 mt-1">Satya • Visual Processing</div>
-                        <div class="tooltip absolute z-10 w-72 bg-slate-900 border border-cyan-700 rounded-lg p-4 -top-2 left-full ml-2 text-sm shadow-2xl">
+                        <div class="tooltip absolute z-30 w-72 bg-slate-900 border border-cyan-700 rounded-lg p-4 -top-2 left-full ml-2 text-sm shadow-2xl">
                             <div class="font-bold text-cyan-400 mb-2">Satya (Truthfulness)</div>
                             <strong class="text-red-400">Compromised State:</strong><br>
-                            Inner Dishonesty → Self-deception muddies the camera lens. When we lie to ourselves, perception becomes distorted and we misread reality.<br>
+                            Inner Dishonesty &rarr; Self-deception muddies the camera lens. When we lie to ourselves, perception becomes distorted and we misread reality.<br>
                             <strong class="text-emerald-400 mt-2 block">Calibrated State:</strong><br>
                             Engineering Spec: Truthfulness. Commitment to radical honesty clarifies the lens. The camera sensor can accurately process what is actually present.<br>
                             <span class="text-slate-500 mt-2 block italic">Metaphor: Like cleaning mud from a Tesla's front camera for clear object detection.</span>
                         </div>
                     </div>
 
-                    <!-- Chassis -->
                     <div id="sensor-chassis" class="sensor-card sensor-clean rounded-xl p-4 transition-all duration-300 has-tooltip relative touch-btn">
                         <div class="flex items-start justify-between mb-2">
                             <i class="fa-solid fa-car-on text-xl md:text-2xl"></i>
@@ -456,17 +443,16 @@
                         </div>
                         <div class="font-semibold text-base">Chassis</div>
                         <div class="text-sm opacity-80 mt-1">Ahimsa • Structural Integrity</div>
-                        <div class="tooltip absolute z-10 w-72 bg-slate-900 border border-cyan-700 rounded-lg p-4 -top-2 left-full ml-2 text-sm shadow-2xl">
+                        <div class="tooltip absolute z-30 w-72 bg-slate-900 border border-cyan-700 rounded-lg p-4 -top-2 left-full ml-2 text-sm shadow-2xl">
                             <div class="font-bold text-cyan-400 mb-2">Ahimsa (Non-violence)</div>
                             <strong class="text-red-400">Compromised State:</strong><br>
-                            Chronic Contempt → Harboring judgment and resentment twists the chassis out of alignment. The vehicle pulls against its own structure.<br>
+                            Chronic Contempt &rarr; Harboring judgment and resentment twists the chassis out of alignment. The vehicle pulls against its own structure.<br>
                             <strong class="text-emerald-400 mt-2 block">Calibrated State:</strong><br>
                             Engineering Spec: Non-violence. Releasing harm-based thinking restores structural integrity. The chassis runs smooth without internal friction.<br>
                             <span class="text-slate-500 mt-2 block italic">Metaphor: Like wheel alignment - contempt creates drag that wastes energy and causes wear.</span>
                         </div>
                     </div>
 
-                    <!-- Windshield -->
                     <div id="sensor-windshield" class="sensor-card sensor-clean rounded-xl p-4 transition-all duration-300 has-tooltip relative touch-btn">
                         <div class="flex items-start justify-between mb-2">
                             <i class="fa-solid fa-window-maximize text-xl md:text-2xl"></i>
@@ -474,17 +460,16 @@
                         </div>
                         <div class="font-semibold text-base">Windshield</div>
                         <div class="text-sm opacity-80 mt-1">Aparigraha • Forward Visibility</div>
-                        <div class="tooltip absolute z-10 w-72 bg-slate-900 border border-cyan-700 rounded-lg p-4 -top-2 left-full ml-2 text-sm shadow-2xl">
+                        <div class="tooltip absolute z-30 w-72 bg-slate-900 border border-cyan-700 rounded-lg p-4 -top-2 left-full ml-2 text-sm shadow-2xl">
                             <div class="font-bold text-cyan-400 mb-2">Aparigraha (Non-possessiveness)</div>
                             <strong class="text-red-400">Compromised State:</strong><br>
-                            Grasping → Clinging to outcomes, possessions, and identity fogs the windshield. Attachment obscures the path that FSD is trying to navigate.<br>
+                            Grasping &rarr; Clinging to outcomes, possessions, and identity fogs the windshield. Attachment obscures the path that FSD is trying to navigate.<br>
                             <strong class="text-emerald-400 mt-2 block">Calibrated State:</strong><br>
                             Engineering Spec: Non-attachment. Releasing the need to control every outcome clears your view. You trust the navigation.<br>
                             <span class="text-slate-500 mt-2 block italic">Metaphor: Like defrosting a windshield - letting go removes the condensation of craving.</span>
                         </div>
                     </div>
 
-                    <!-- Vital Energy -->
                     <div id="sensor-energy" class="sensor-card sensor-clean rounded-xl p-4 transition-all duration-300 has-tooltip relative touch-btn">
                         <div class="flex items-start justify-between mb-2">
                             <i class="fa-solid fa-bolt text-xl md:text-2xl"></i>
@@ -492,10 +477,10 @@
                         </div>
                         <div class="font-semibold text-base">Vital Energy</div>
                         <div class="text-sm opacity-80 mt-1">Brahmacharya • Power Management</div>
-                        <div class="tooltip absolute z-10 w-72 bg-slate-900 border border-cyan-700 rounded-lg p-4 -top-2 left-full ml-2 text-sm shadow-2xl">
+                        <div class="tooltip absolute z-30 w-72 bg-slate-900 border border-cyan-700 rounded-lg p-4 -top-2 left-full ml-2 text-sm shadow-2xl">
                             <div class="font-bold text-cyan-400 mb-2">Brahmacharya (Energy Conservation)</div>
                             <strong class="text-red-400">Compromised State:</strong><br>
-                            Energy Dispersion → Scattered attention, compulsive habits, and reactive patterns leak vital charge. Battery drains even when parked.<br>
+                            Energy Dispersion &rarr; Scattered attention, compulsive habits, and reactive patterns leak vital charge. Battery drains even when parked.<br>
                             <strong class="text-emerald-400 mt-2 block">Calibrated State:</strong><br>
                             Engineering Spec: Energy Mastery. Channeling attention wisely maintains system stability. Lifetime charge sustained for the full journey.<br>
                             <span class="text-slate-500 mt-2 block italic">Metaphor: Like closing background apps - conserve battery by eliminating parasitic drains.</span>
@@ -504,8 +489,7 @@
                 </div>
             </div>
 
-            <!-- Turbulence Deck -->
-            <div class="glass rounded-2xl p-4 md:p-6">
+            <div class="glass rounded-2xl p-4 md:p-6 relative z-0">
                 <h2 class="text-base md:text-lg font-semibold text-slate-200 mb-3 md:mb-4 flex items-center gap-2">
                     <i class="fa-solid fa-wind text-orange-400"></i>
                     Turbulence Detected
@@ -522,7 +506,6 @@
             </div>
         </div>
 
-        <!-- Engineering Specs Hand -->
         <div class="glass rounded-2xl p-4 md:p-6">
             <div class="flex items-center justify-between mb-3 md:mb-4">
                 <h2 class="text-base md:text-lg font-semibold text-slate-200 flex items-center gap-2">
@@ -532,11 +515,9 @@
                 <div class="text-sm text-slate-400 mono">Cards: <span id="handCount">0</span>/5</div>
             </div>
             <div id="handContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                <!-- Cards inserted here -->
-            </div>
+                </div>
         </div>
 
-        <!-- Game Log -->
         <div class="glass rounded-2xl p-4 mt-4 md:mt-6">
             <h3 class="text-xs md:text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wider flex items-center gap-2">
                 <i class="fa-solid fa-terminal text-xs"></i>
@@ -544,12 +525,11 @@
             </h3>
             <div id="gameLog" class="text-sm md:text-base text-slate-300 space-y-1 max-h-32 overflow-y-auto mono">
                 <div class="text-cyan-400">> Calibration protocol initialized. FSD online.</div>
-                <div class="text-slate-500 text-xs md:text-sm">> Position 0: Initiation | Destination: Self-Realization (20) | Autopilot threshold: ≤1 compromised sensor</div>
+                <div class="text-slate-500 text-xs md:text-sm">> Position 0: Initiation | Destination: Self-Realization (20) | Autopilot threshold: &le;1 compromised sensor</div>
             </div>
         </div>
     </div>
 
-    <!-- Game Over Modal -->
     <div id="gameOverModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
         <div class="glass rounded-2xl max-w-md w-full mx-4 p-6 md:p-8 shadow-2xl text-center">
             <div id="gameOverIcon" class="text-5xl md:text-6xl mb-4"></div>
@@ -915,7 +895,12 @@
         }
         
         document.getElementById('startGame').addEventListener('click', async () => {
-            await soundEngine.init(true);
+            try {
+                await soundEngine.init(true);
+            } catch (audioError) {
+                console.warn('[Audio] Handled ecosystem init restriction cleanly:', audioError);
+            }
+            
             document.getElementById('introModal').classList.add('hidden');
             logMessage("System online. Begin calibration cycle.");
             if (gameState.autopilotEngaged) {
@@ -926,7 +911,9 @@
         document.getElementById('drawTurbulenceBtn').addEventListener('click', async () => {
             // Unlock audio on first game action
             if (!soundEngine.initialized) {
-                await soundEngine.init(true);
+                try {
+                    await soundEngine.init(true);
+                } catch (e) {}
             }
             drawTurbulence();
         });
@@ -1124,7 +1111,7 @@
                     <i class="fa-solid ${turbulence.icon} text-3xl md:text-4xl"></i>
                 </div>
                 <div class="font-bold text-base md:text-lg mb-1">${turbulence.name}</div>
-                <div class="text-sm text-orange-300 mb-2">→ ${target.charAt(0).toUpperCase() + target.slice(1)}</div>
+                <div class="text-sm text-orange-300 mb-2">&rarr; ${target.charAt(0).toUpperCase() + target.slice(1)}</div>
                 <div class="text-xs md:text-sm text-slate-400">${turbulence.desc}</div>
             </div>
         `;
@@ -1304,7 +1291,7 @@
         document.getElementById('drawTurbulenceBtn').disabled = false;
         document.getElementById('gameLog').innerHTML = `
             <div class="text-cyan-400">> System recalibrated. FSD online.</div>
-            <div class="text-slate-500 text-xs md:text-sm">> Position 0: Initiation | Destination: Self-Realization (20) | Autopilot threshold: ≤1 compromised sensor</div>
+            <div class="text-slate-500 text-xs md:text-sm">> Position 0: Initiation | Destination: Self-Realization (20) | Autopilot threshold: &le;1 compromised sensor</div>
         `;
         if (gameState.autopilotEngaged) {
             soundEngine.play('autopilotEngaged');
