@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sensor Calibration - The Self-Driving Mind Game</title>
+
+<meta property="og:title" content="Sensor Calibration - The Self-Driving Mind Game">
+<meta property="og:description" content="Infinite Fuel (Kripa) + Infallible Navigation (Dhyāna) = Certain Arrival. Your only job is vehicle maintenance.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="container:///mnt/data/sensor_calibration_preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Sensor Calibration game showing Tesla dashboard with Autopilot ENGAGED and sensor status indicators">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sensor Calibration - The Self-Driving Mind Game">
+<meta name="twitter:description" content="Infinite Fuel (Kripa) + Infallible Navigation (Dhyāna) = Certain Arrival. Your only job is vehicle maintenance.">
+<meta name="twitter:image" content="container:///mnt/data/sensor_calibration_preview.png">
+<meta name="twitter:image:alt" content="Sensor Calibration game showing Tesla dashboard with Autopilot ENGAGED and sensor status indicators">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    
+    * {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+    }
+    
+    html {
+        touch-action: manipulation;
+        -webkit-text-size-adjust: 100%;
+    }
+    
+    body {
+        font-family: 'Inter', sans-serif;
+        background: #0a0e14;
+        color: #e2e8f0;
+        font-size: 16px;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    input, select, textarea, button {
+        font-size: 16px;
+    }
+    
+    .mono {
+        font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .glass {
+        background: rgba(15, 23, 42, 0.6);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(148, 163, 184, 0.1);
+    }
+    
+    .sensor-clean {
+        background: linear-gradient(135deg, #059669, #10b981);
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    }
+    
+    .sensor-compromised {
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+        -webkit-animation: pulse-red 2s ease-in-out infinite;
+        animation: pulse-red 2s ease-in-out infinite;
+    }
+    
+    @-webkit-keyframes pulse-red {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+    @keyframes pulse-red {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+    
+    .autopilot-engaged {
+        background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+        box-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+    }
+    
+    .autopilot-disengaged {
+        background: linear-gradient(135deg, #f59e0b, #f97316);
+        box-shadow: 0 0 30px rgba(249, 115, 22, 0.5);
+    }
+    
+    .card-hover {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        -webkit-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        min-height: 44px;
+        touch-action: manipulation;
+    }
+    
+    @media (hover: hover) {
+        .card-hover:hover {
+            transform: translateY(-4px);
+            -webkit-transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+    }
+    
+    .card-hover:active {
+        transform: scale(0.98);
+        -webkit-transform: scale(0.98);
+    }
+    
+    .track-segment {
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        -webkit-transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        min-width: 12px;
+    }
+    
+    .tesla-token {
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        -webkit-transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        filter: drop-shadow(0 4px 6px rgba(6, 182, 212, 0.5));
+        -webkit-filter: drop-shadow(0 4px 6px rgba(6, 182, 212, 0.5));
+    }
+    
+    .tooltip {
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s, visibility 0.3s;
+        -webkit-transition: opacity 0.3s, visibility 0.3s;
+        pointer-events: none;
+    }
+    
+    .sensor-card.tooltip-active .tooltip {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+    }
+    
+    @media (hover: hover) {
+        .has-tooltip:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+    
+    .pulse-ring {
+        -webkit-animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    @-webkit-keyframes pulse-ring {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(1.05); }
+    }
+    @keyframes pulse-ring {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(1.05); }
+    }
+    
+    .draw-card-anim {
+        -webkit-animation: drawCard 0.6s ease-out;
+        animation: drawCard 0.6s ease-out;
+    }
+    
+    @-webkit-keyframes drawCard {
+        0% { transform: translateY(-20px) scale(0.8); opacity: 0; }
+        100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    @keyframes drawCard {
+        0% { transform: translateY(-20px) scale(0.8); opacity: 0; }
+        100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .track-label {
+        font-size: 0.65rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+    
+    .touch-btn {
+        min-height: 44px;
+        min-width: 44px;
+        touch-action: manipulation;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+    
+    .track-scroll {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 8px;
+    }
+    
+    .track-scroll::-webkit-scrollbar {
+        height: 6px;
+    }
+    
+    .track-scroll::-webkit-scrollbar-track {
+        background: rgba(30, 41, 59, 0.5);
+        border-radius: 3px;
+    }
+    
+    .track-scroll::-webkit-scrollbar-thumb {
+        background: rgba(6, 182, 212, 0.5);
+        border-radius: 3px;
+    }
+
+    .screen-flash {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0;
+    }
+
+    .flash-engaged {
+        background: rgba(6, 182, 212, 0.3);
+        animation: flash 0.3s ease-out;
+    }
+    .flash-disengage {
+        background: rgba(249, 115, 22, 0.3);
+        animation: flash 0.4s ease-out;
+    }
+    .flash-success {
+        background: rgba(16, 185, 129, 0.2);
+        animation: flash 0.2s ease-out;
+    }
+    .flash-hit {
+        background: rgba(239, 68, 68, 0.2);
+        animation: flash 0.2s ease-out;
+    }
+
+    @keyframes flash {
+        0% { opacity: 0; }
+        50% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+    
+    @media (max-width: 768px) {
+        .tooltip {
+            position: fixed !important;
+            left: 1rem !important;
+            right: 1rem !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            -webkit-transform: translateY(-50%) !important;
+            width: auto !important;
+            max-width: calc(100vw - 2rem) !important;
+            z-index: 100;
+        }
+        
+        .sensor-card:active .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+</style>
+</head>
+<body class="min-h-screen p-3 md:p-6 lg:p-8">
+    <div id="screenFlash" class="screen-flash"></div>
+    
+    <div id="audioBanner" class="fixed top-0 left-0 right-0 z-[60] bg-gradient-to-r from-cyan-600 to-teal-600 text-white p-4 shadow-lg hidden">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4 flex-wrap">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-volume-high text-2xl"></i>
+                <div>
+                    <div class="font-semibold">Enable Game Audio</div>
+                    <div class="text-xs opacity-90">Tap to unlock sound on iPhone/iPad</div>
+                </div>
+            </div>
+            <button id="enableAudioBtn" class="touch-btn bg-white text-cyan-700 font-bold px-6 py-3 rounded-lg hover:bg-slate-100 active:scale-95 transition-all shadow-md">
+                <i class="fa-solid fa-play mr-2"></i>Tap to Enable
+            </button>
+        </div>
+    </div>
+
+    <div id="introModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="glass rounded-2xl max-w-2xl w-full p-6 md:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center gap-3 mb-6">
+                <i class="fa-solid fa-car-side text-cyan-400 text-3xl"></i>
+                <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">Sensor Calibration</h1>
+                <button id="muteToggleIntro" class="ml-auto touch-btn w-10 h-10 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-volume-high text-cyan-400"></i>
+                </button>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-slate-300 mb-6 text-base">
+                <p class="leading-relaxed">
+                    Based on Chapter 3 of <span class="text-cyan-400 font-medium">The Self-Driving Mind</span>
+                </p>
+                <a href="https://selfdrivingmind.substack.com/subscribe" target="_blank" class="text-cyan-400 hover:text-cyan-300 transition-colors inline-flex items-center gap-1.5 text-sm font-semibold border border-cyan-500/30 rounded-lg px-3 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 shadow-sm">
+                    <i class="fa-solid fa-envelope text-xs"></i>Subscribe on Substack
+                </a>
+            </div>
+            
+            <div class="bg-slate-900/50 rounded-xl p-5 md:p-6 mb-6 border border-slate-700">
+                <h2 class="text-lg md:text-xl font-semibold mb-3 text-cyan-400">The Arithmetic of Certainty</h2>
+                <div class="space-y-2 mono text-sm md:text-base">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-infinity text-teal-400"></i>
+                        <span>&infin; Fuel (Kripa) + Infallible Navigation (FSD/Dhyāna)</span>
+                    </div>
+                    <div class="flex items-center justify-center text-2xl text-cyan-400">=</div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-check-double text-emerald-400"></i>
+                        <span class="text-emerald-400 font-semibold">Certain Arrival at Self-Realization</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-3 text-sm md:text-base text-slate-300 mb-4">
+                <p><strong class="text-white">Your Role:</strong> You are the Maintenance Engineer. The Tesla drives itself via FSD. You only calibrate sensors.</p>
+                <p><strong class="text-white">Core Mechanic:</strong> If &le;1 sensor is compromised, autopilot remains ENGAGED and Tesla advances 1 space/turn automatically.</p>
+                <p><strong class="text-white">Failure Condition:</strong> If 2+ sensors fail, autopilot DISENGAGES. Disengaged for 3 turns = route terminated.</p>
+                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-3 mt-4">
+                    <p class="text-sm text-cyan-300 font-semibold mb-1"><i class="fa-solid fa-circle-info mr-1"></i>System Status Legend</p>
+                    <p class="text-sm text-slate-400">Position 0/20 = <strong class="text-white">Initiation</strong> • Position 20/20 = <strong class="text-emerald-400">Self-Realization</strong></p>
+                    <p class="text-sm text-slate-400 mt-1">Autopilot disengages when 2+ sensors are compromised</p>
+                </div>
+            </div>
+
+            <div id="iosAudioHelp" class="hidden bg-orange-900/30 border border-orange-700 rounded-lg p-4 mb-4">
+                <p class="text-sm text-orange-300 font-semibold mb-2"><i class="fa-brands fa-apple mr-2"></i>iPhone/iPad Audio Setup</p>
+                <ul class="text-xs text-slate-300 space-y-1">
+                    <li>• Tap the screen first to enable sound</li>
+                    <li>• Check that Silent Mode switch is off (side of iPhone)</li>
+                    <li>• Ensure volume is up in Control Center</li>
+                </ul>
+            </div>
+
+            <button id="startGame" class="touch-btn w-full bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 active:from-cyan-700 active:to-teal-700 text-white font-semibold py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-cyan-500/50 text-base">
+                Start Calibration Protocol
+            </button>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto">
+        <div class="glass rounded-2xl p-4 md:p-6 mb-4 md:mb-6">
+            <div class="flex justify-between items-center mb-3 md:hidden">
+                <div class="flex items-center gap-2">
+                    <button id="muteToggleMobile" class="touch-btn w-10 h-10 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 flex items-center justify-center transition-all">
+                        <i class="fa-solid fa-volume-high text-cyan-400"></i>
+                    </button>
+                    <div id="audioStatusMobile" class="text-xs mono px-2 py-1 rounded bg-slate-800/50 border border-slate-700">
+                        <i class="fa-solid fa-circle-notch fa-spin text-slate-500"></i> <span class="text-slate-400">Init</span>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 items-center">
+                <div id="autopilotStatus" class="autopilot-engaged rounded-xl p-4 text-center touch-btn">
+                    <div class="text-xs uppercase tracking-wider opacity-80 mb-1">Autopilot Status</div>
+                    <div class="text-xl md:text-2xl font-bold mono" id="autopilotText">ENGAGED</div>
+                    <div class="text-xs mt-1" id="disengagedCounter">Safe: 0/3 turns disengaged</div>
+                </div>
+
+                <div class="glass rounded-xl p-4 text-center border border-slate-700 touch-btn">
+                    <div class="text-xs uppercase tracking-wider text-slate-400 mb-1">System Cycle</div>
+                    <div class="text-2xl md:text-3xl font-bold mono text-cyan-400" id="turnCount">0</div>
+                    <div class="text-xs text-slate-500 mt-1">Position: <span id="positionText">0</span>/20</div>
+                </div>
+
+                <div class="glass rounded-xl p-4 border border-slate-700 touch-btn">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs uppercase tracking-wider text-slate-400">Lifetime Charge</span>
+                        <div class="flex items-center gap-2">
+                            <span class="mono font-bold text-base md:text-lg" id="chargeValue">100</span>
+                            <div class="hidden md:flex items-center gap-2">
+                                <button id="muteToggle" class="touch-btn w-8 h-8 rounded bg-slate-800/50 hover:bg-slate-700/50 items-center justify-center transition-all">
+                                    <i class="fa-solid fa-volume-high text-cyan-400 text-sm"></i>
+                                </button>
+                                <div id="audioStatus" class="text-xs mono px-2 py-1 rounded bg-slate-800/50 border border-slate-700">
+                                    <i class="fa-solid fa-circle-notch fa-spin text-slate-500"></i> <span class="text-slate-400">Init</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden">
+                        <div id="chargeBar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass rounded-2xl p-4 md:p-6 mb-4 md:mb-6">
+            <div class="flex items-center justify-between mb-3 md:mb-4">
+                <h2 class="text-base md:text-lg font-semibold text-slate-200 flex items-center gap-2">
+                    <i class="fa-solid fa-route text-cyan-400"></i>
+                    <span class="hidden sm:inline">Navigation Route to Self-Realization</span>
+                    <span class="sm:hidden">Route</span>
+                </h2>
+                <div class="text-xs text-slate-400 mono">FSD Active</div>
+            </div>
+            <div class="track-scroll">
+                <div class="relative min-w-[500px] md:min-w-full">
+                    <div class="flex items-center justify-between gap-0.5 md:gap-1 mb-2">
+                        <div id="trackContainer" class="flex-1 flex gap-0.5 md:gap-1"></div>
+                    </div>
+                    <div class="flex justify-between mt-1 px-1">
+                        <div class="text-[10px] md:text-xs text-cyan-400 mono font-semibold track-label">
+                            <i class="fa-solid fa-play text-xs mr-1"></i>Initiation
+                        </div>
+                        <div class="text-[10px] md:text-xs text-emerald-400 mono font-semibold track-label">
+                            Self-Realization<i class="fa-solid fa-flag-checkered text-xs ml-1"></i>
+                        </div>
+                    </div>
+                    <div id="teslaToken" class="tesla-token absolute top-0 w-6 md:w-8 h-6 md:h-8 flex items-center justify-center text-cyan-400 text-xl md:text-2xl" style="left: 0%;">
+                        <i class="fa-solid fa-car-side"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mb-4 md:mb-6">
+            <div class="lg:col-span-2 glass rounded-2xl p-4 md:p-6 relative z-10">
+                <h2 class="text-base md:text-lg font-semibold text-slate-200 mb-3 md:mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-microchip text-cyan-400"></i>
+                    Sensor Array Status
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                    <div id="sensor-camera" class="sensor-card sensor-clean rounded-xl p-4 transition-all duration-300 has-tooltip relative touch-btn">
+                        <div class="flex items-start justify-between mb-2">
+                            <i class="fa-solid fa-camera text-xl md:text-2xl"></i>
+                            <span class="text-xs mono opacity-80" id="camera-status">CLEAN</span>
+                        </div>
+                        <div class="font-semibold text-base">Camera</div>
+                        <div class="text-sm opacity-80 mt-1">Satya • Visual Processing</div>
+                        <div class="tooltip absolute z-30 w-72 bg-slate-900 border border-cyan-700 rounded-lg p-4 -top-2 left-full ml-2 text-sm shadow-2xl">
+                            <div class="font-bold text-cyan-400 mb-2">Satya (Truthfulness)</div>
+                            <strong class="text-red-400">Compromised State:</strong><br>
+                            Inner Dishonesty &rarr; Self-deception muddies the camera lens. When we lie to ourselves, perception becomes distorted and we misread reality.<br>
+                            <strong class="text-emerald-400 mt-2 block">Calibrated State:</strong><br>
+                            Engineering Spec: Truthfulness. Commitment to radical honesty clarifies the lens. The camera sensor can accurately process what is actually present.<br>
+                            <span class="text-slate-500 mt-2 block italic">Metaphor: Like cleaning mud from a Tesla's front camera for clear object detection.</span>
+                        </div>
+                    </div>
+
+                    <div id="sensor-chassis" class="sensor-card sensor-clean rounded-xl p-4 transition-all duration-300 has-tooltip relative touch-btn">
+                        <div class="flex items-start justify-between mb-2">
+                            <i class="fa-solid fa-car-on text-xl md:text-2xl"></i>
+                            <span class="text-xs mono opacity-80" id="chassis-status">ALIGNED</span>
+                        </div>
+                        <div class="font-semibold text-base">Chassis</div>
+                        <div class="text-sm opacity-80 mt-1">Ahimsa • Structural Integrity</div>
+                        <div class="tooltip absolute z-30 w-72 bg-slate-900 border border-cyan-700 rounded-lg p-4 -top-2 left-full ml-2 text-sm shadow-2xl">
+                            <div class="font-bold text-cyan-400 mb-2">Ahimsa (Non-violence)</div>
+                            <strong class="text-red-400">Compromised State:</strong><br>
+                            Chronic Contempt &rarr; Harboring judgment and resentment twists the chassis out of alignment. The vehicle pulls against its own structure.<br>
+                            <strong class="text-emerald-400 mt-2 block">Calibrated State:</strong><br>
+                            Engineering Spec: Non-violence. Releasing harm-based thinking restores structural integrity. The chassis runs smooth without internal friction.<br>
+                            <span class="text-slate-500 mt-2 block italic">Metaphor: Like wheel alignment - contempt creates drag that wastes energy and causes wear.</span>
+                        </div>
+                    </div>
+
+                    <div id="sensor-windshield" class="sensor-card sensor-clean rounded-xl p-4 transition-all duration-300 has-tooltip relative touch-btn">
+                        <div class="flex items-start justify-between mb-2">
+                            <i class="fa-solid fa-window-maximize text-xl md:text-2xl"></i>
+                            <span class="text-xs mono opacity-80" id="windshield-status">CLEAR</span>
+                        </div>
+                        <div class="font-semibold text-base">Windshield</div>
+                        <div class="text-sm opacity-80 mt-1">Aparigraha • Forward Visibility</div>
+                        <div class="tooltip absolute z-30 w-72 bg-slate-900 border border-cyan-700 rounded-lg p-4 -top-2 left-full ml-2 text-sm shadow-2xl">
+                            <div class="font-bold text-cyan-400 mb-2">Aparigraha (Non-possessiveness)</div>
+                            <strong class="text-red-400">Compromised State:</strong><br>
+                            Grasping &rarr; Clinging to outcomes, possessions, and identity fogs the windshield. Attachment obscures the path that FSD is trying to navigate.<br>
+                            <strong class="text-emerald-400 mt-2 block">Calibrated State:</strong><br>
+                            Engineering Spec: Non-attachment. Releasing the need to control every outcome clears your view. You trust the navigation.<br>
+                            <span class="text-slate-500 mt-2 block italic">Metaphor: Like defrosting a windshield - letting go removes the condensation of craving.</span>
+                        </div>
+                    </div>
+
+                    <div id="sensor-energy" class="sensor-card sensor-clean rounded-xl p-4 transition-all duration-300 has-tooltip relative touch-btn">
+                        <div class="flex items-start justify-between mb-2">
+                            <i class="fa-solid fa-bolt text-xl md:text-2xl"></i>
+                            <span class="text-xs mono opacity-80" id="energy-status">STABLE</span>
+                        </div>
+                        <div class="font-semibold text-base">Vital Energy</div>
+                        <div class="text-sm opacity-80 mt-1">Brahmacharya • Power Management</div>
+                        <div class="tooltip absolute z-30 w-72 bg-slate-900 border border-cyan-700 rounded-lg p-4 -top-2 left-full ml-2 text-sm shadow-2xl">
+                            <div class="font-bold text-cyan-400 mb-2">Brahmacharya (Energy Conservation)</div>
+                            <strong class="text-red-400">Compromised State:</strong><br>
+                            Energy Dispersion &rarr; Scattered attention, compulsive habits, and reactive patterns leak vital charge. Battery drains even when parked.<br>
+                            <strong class="text-emerald-400 mt-2 block">Calibrated State:</strong><br>
+                            Engineering Spec: Energy Mastery. Channeling attention wisely maintains system stability. Lifetime charge sustained for the full journey.<br>
+                            <span class="text-slate-500 mt-2 block italic">Metaphor: Like closing background apps - conserve battery by eliminating parasitic drains.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass rounded-2xl p-4 md:p-6 relative z-0">
+                <h2 class="text-base md:text-lg font-semibold text-slate-200 mb-3 md:mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-wind text-orange-400"></i>
+                    Turbulence Detected
+                </h2>
+                <div id="turbulenceCard" class="bg-slate-900/50 border border-slate-700 rounded-xl p-4 min-h-[180px] md:min-h-[200px] flex flex-col justify-center">
+                    <div class="text-center text-slate-500">
+                        <i class="fa-solid fa-radar text-3xl md:text-4xl mb-3 opacity-50"></i>
+                        <p class="text-sm md:text-base">Awaiting sensor scan...</p>
+                    </div>
+                </div>
+                <button id="drawTurbulenceBtn" class="touch-btn w-full mt-4 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 active:from-orange-700 active:to-red-700 text-white font-semibold py-4 rounded-xl transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-base">
+                    <i class="fa-solid fa-play mr-2"></i>Draw Turbulence
+                </button>
+            </div>
+        </div>
+
+        <div class="glass rounded-2xl p-4 md:p-6">
+            <div class="flex items-center justify-between mb-3 md:mb-4">
+                <h2 class="text-base md:text-lg font-semibold text-slate-200 flex items-center gap-2">
+                    <i class="fa-solid fa-wrench text-emerald-400"></i>
+                    Engineering Specs (Hand)
+                </h2>
+                <div class="text-sm text-slate-400 mono">Cards: <span id="handCount">0</span>/5</div>
+            </div>
+            <div id="handContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                </div>
+        </div>
+
+        <div class="glass rounded-2xl p-4 mt-4 md:mt-6">
+            <h3 class="text-xs md:text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wider flex items-center gap-2">
+                <i class="fa-solid fa-terminal text-xs"></i>
+                System Log
+            </h3>
+            <div id="gameLog" class="text-sm md:text-base text-slate-300 space-y-1 max-h-32 overflow-y-auto mono">
+                <div class="text-cyan-400">> Calibration protocol initialized. FSD online.</div>
+                <div class="text-slate-500 text-xs md:text-sm">> Position 0: Initiation | Destination: Self-Realization (20) | Autopilot threshold: &le;1 compromised sensor</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameOverModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="glass rounded-2xl max-w-md w-full mx-4 p-6 md:p-8 shadow-2xl text-center">
+            <div id="gameOverIcon" class="text-5xl md:text-6xl mb-4"></div>
+            <h2 id="gameOverTitle" class="text-2xl md:text-3xl font-bold mb-4"></h2>
+            <p id="gameOverText" class="text-slate-300 mb-6 text-sm md:text-base"></p>
+            <button id="restartBtn" class="touch-btn w-full bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 active:from-cyan-700 active:to-teal-700 text-white font-semibold py-4 rounded-xl transition-all duration-300 shadow-lg text-base">
+                Recalibrate System
+            </button>
+        </div>
+    </div>
+
+<script>
+    // Sound System using Web Audio API with iOS fixes
+    class SoundEngine {
+        constructor() {
+            this.audioContext = null;
+            this.muted = false;
+            this.initialized = false;
+            this.masterGain = null;
+            this.audioUnlocked = false;
+            this.visualFallback = false;
+            this.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        }
+
+        async init(userGesture = false) {
+            if (this.initialized) {
+                console.log('[Audio] Already initialized, state:', this.audioContext?.state);
+                return this.audioUnlocked;
+            }
+            
+            try {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                this.masterGain = this.audioContext.createGain();
+                this.masterGain.gain.value = 0.3;
+                this.masterGain.connect(this.audioContext.destination);
+                this.initialized = true;
+                console.log('[Audio] Context created, state:', this.audioContext.state);
+
+                if (userGesture || this.audioContext.state === 'running') {
+                    await this.resume();
+                }
+
+                this.updateStatus();
+                return this.audioUnlocked;
+            } catch (e) {
+                console.error('[Audio] Web Audio API failed:', e);
+                this.visualFallback = true;
+                this.updateStatus();
+                return false;
+            }
+        }
+
+        async resume() {
+            if (!this.audioContext) return false;
+            
+            try {
+                if (this.audioContext.state === 'suspended') {
+                    await this.audioContext.resume();
+                    console.log('[Audio] Context resumed, new state:', this.audioContext.state);
+                }
+                
+                if (this.audioContext.state === 'running') {
+                    this.audioUnlocked = true;
+                    console.log('[Audio] Successfully unlocked');
+                    // Play silent buffer to fully unlock iOS
+                    const buffer = this.audioContext.createBuffer(1, 1, 22050);
+                    const source = this.audioContext.createBufferSource();
+                    source.buffer = buffer;
+                    source.connect(this.masterGain);
+                    source.start(0);
+                } else {
+                    console.warn('[Audio] Context state after resume:', this.audioContext.state);
+                }
+                
+                this.updateStatus();
+                return this.audioUnlocked;
+            } catch (e) {
+                console.error('[Audio] Resume failed:', e);
+                this.visualFallback = true;
+                this.updateStatus();
+                return false;
+            }
+        }
+
+        updateStatus() {
+            const statusEls = [document.getElementById('audioStatus'), document.getElementById('audioStatusMobile')];
+            statusEls.forEach(el => {
+                if (!el) return;
+                if (!this.initialized) {
+                    el.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-slate-500"></i> <span class="text-slate-400">Init</span>';
+                } else if (this.muted) {
+                    el.innerHTML = '<i class="fa-solid fa-volume-xmark text-slate-500"></i> <span class="text-slate-400">Muted</span>';
+                } else if (this.audioUnlocked) {
+                    el.innerHTML = '<i class="fa-solid fa-volume-high text-emerald-400"></i> <span class="text-emerald-400">Ready</span>';
+                } else if (this.visualFallback || this.audioContext?.state !== 'running') {
+                    el.innerHTML = '<i class="fa-solid fa-volume-slash text-orange-400"></i> <span class="text-orange-400">Blocked</span>';
+                }
+            });
+        }
+
+        play(type) {
+            console.log('[Audio] Play requested:', type, 'Unlocked:', this.audioUnlocked, 'Muted:', this.muted);
+            
+            if (this.muted) return;
+            
+            // Attempt resume if suspended
+            if (this.audioContext && this.audioContext.state === 'suspended') {
+                this.resume();
+            }
+
+            if (!this.audioUnlocked || !this.initialized) {
+                console.log('[Audio] Using visual fallback');
+                this.visualFeedback(type);
+                this.hapticFeedback(type);
+                return;
+            }
+
+            const now = this.audioContext.currentTime;
+            const sounds = {
+                autopilotEngaged: () => this._chime(now, [523.25, 659.25, 783.99]),
+                disengage: () => this._buzz(now, 200, 0.3),
+                turbulence: () => this._whoosh(now),
+                repair: () => this._success(now, [659.25, 783.99]),
+                movement: () => this._motor(now),
+                selfRealization: () => this._fanfare(now),
+                gameOver: () => this._lowTone(now, 0.5),
+                test: () => this._chime(now, [440])
+            };
+
+            if (sounds[type]) {
+                try {
+                    sounds[type]();
+                    this.visualFeedback(type);
+                } catch (e) {
+                    console.error('[Audio] Play error:', e);
+                    this.visualFeedback(type);
+                }
+            }
+        }
+
+        visualFeedback(type) {
+            const flashEl = document.getElementById('screenFlash');
+            if (!flashEl) return;
+            
+            flashEl.className = 'screen-flash';
+            void flashEl.offsetWidth; // Trigger reflow
+            
+            const flashMap = {
+                autopilotEngaged: 'flash-engaged',
+                disengage: 'flash-disengage',
+                repair: 'flash-success',
+                movement: 'flash-engaged',
+                turbulence: 'flash-hit',
+                selfRealization: 'flash-success',
+                gameOver: 'flash-disengage',
+                test: 'flash-engaged'
+            };
+            
+            if (flashMap[type]) {
+                flashEl.classList.add(flashMap[type]);
+            }
+        }
+
+        hapticFeedback(type) {
+            if (!navigator.vibrate) return;
+            const patterns = {
+                autopilotEngaged: [50, 50, 50],
+                disengage: [100, 50, 100],
+                repair: [30],
+                movement: [20],
+                turbulence: [50],
+                selfRealization: [50, 100, 50, 100, 200],
+                gameOver: [200, 100, 200],
+                test: [30]
+            };
+            if (patterns[type]) {
+                try {
+                    navigator.vibrate(patterns[type]);
+                } catch (e) {
+                    console.log('[Haptic] Failed:', e);
+                }
+            }
+        }
+
+        toggleMute() {
+            this.muted = !this.muted;
+            if (this.masterGain) {
+                this.masterGain.gain.value = this.muted ? 0 : 0.3;
+            }
+            this.updateMuteUI();
+            this.updateStatus();
+            return this.muted;
+        }
+
+        updateMuteUI() {
+            const icons = document.querySelectorAll('#muteToggle i, #muteToggleMobile i, #muteToggleIntro i');
+            icons.forEach(icon => {
+                icon.className = this.muted ? 'fa-solid fa-volume-xmark text-slate-500' : 'fa-solid fa-volume-high text-cyan-400';
+            });
+        }
+
+        _chime(now, freqs) {
+            freqs.forEach((freq, i) => {
+                const osc = this.audioContext.createOscillator();
+                const gain = this.audioContext.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0, now + i * 0.1);
+                gain.gain.linearRampToValueAtTime(0.4, now + i * 0.1 + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.3);
+                osc.connect(gain);
+                gain.connect(this.masterGain);
+                osc.start(now + i * 0.1);
+                osc.stop(now + i * 0.1 + 0.4);
+            });
+        }
+
+        _buzz(now, freq, duration) {
+            const osc = this.audioContext.createOscillator();
+            const gain = this.audioContext.createGain();
+            osc.type = 'square';
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start(now);
+            osc.stop(now + duration);
+        }
+
+        _whoosh(now) {
+            const bufferSize = this.audioContext.sampleRate * 0.3;
+            const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            const source = this.audioContext.createBufferSource();
+            source.buffer = buffer;
+            const filter = this.audioContext.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(100, now);
+            filter.frequency.exponentialRampToValueAtTime(800, now + 0.3);
+            filter.Q.value = 2;
+            const gain = this.audioContext.createGain();
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            source.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.masterGain);
+            source.start(now);
+        }
+
+        _success(now, freqs) {
+            freqs.forEach((freq, i) => {
+                const osc = this.audioContext.createOscillator();
+                const gain = this.audioContext.createGain();
+                osc.type = 'triangle';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0, now + i * 0.08);
+                gain.gain.linearRampToValueAtTime(0.3, now + i * 0.08 + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.2);
+                osc.connect(gain);
+                gain.connect(this.masterGain);
+                osc.start(now + i * 0.08);
+                osc.stop(now + i * 0.08 + 0.3);
+            });
+        }
+
+        _motor(now) {
+            const osc = this.audioContext.createOscillator();
+            const gain = this.audioContext.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(80, now);
+            osc.frequency.exponentialRampToValueAtTime(120, now + 0.15);
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start(now);
+            osc.stop(now + 0.25);
+        }
+
+        _fanfare(now) {
+            const melody = [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5];
+            melody.forEach((freq, i) => {
+                const osc = this.audioContext.createOscillator();
+                const gain = this.audioContext.createGain();
+                osc.type = i % 2 === 0 ? 'triangle' : 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0, now + i * 0.12);
+                gain.gain.linearRampToValueAtTime(0.4, now + i * 0.12 + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.12 + 0.3);
+                osc.connect(gain);
+                gain.connect(this.masterGain);
+                osc.start(now + i * 0.12);
+                osc.stop(now + i * 0.12 + 0.4);
+            });
+        }
+
+        _lowTone(now, duration) {
+            const osc = this.audioContext.createOscillator();
+            const gain = this.audioContext.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 110;
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.3, now + 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start(now);
+            osc.stop(now + duration);
+        }
+    }
+
+    const soundEngine = new SoundEngine();
+
+    const gameState = {
+        position: 0,
+        charge: 100,
+        turn: 0,
+        disengagedTurns: 0,
+        autopilotEngaged: true,
+        sensors: {
+            camera: true,
+            chassis: true,
+            windshield: true,
+            energy: true
+        },
+        hand: [],
+        gameOver: false,
+        phase: 'draw'
+    };
+
+    const turbulenceDeck = [
+        { name: "Inner Dishonesty", targets: "camera", desc: "Self-deception muddies the lens", icon: "fa-eye-slash" },
+        { name: "Chronic Contempt", targets: "chassis", desc: "Judgment twists the frame", icon: "fa-user-ninja" },
+        { name: "Grasping", targets: "windshield", desc: "Attachment fogs your view", icon: "fa-hand-holding" },
+        { name: "Energy Dispersion", targets: "energy", desc: "Scattered focus drains charge by 15", icon: "fa-battery-quarter" },
+        { name: "System Glitch", targets: "random", desc: "Random sensor fluctuation", icon: "fa-triangle-exclamation" }
+    ];
+
+    const engineeringSpecs = [
+        { name: "Satya", targets: "camera", desc: "Truthfulness cleans the lens", icon: "fa-gem", color: "from-cyan-500 to-blue-500" },
+        { name: "Ahimsa", targets: "chassis", desc: "Non-violence aligns structure", icon: "fa-peace", color: "from-emerald-500 to-teal-500" },
+        { name: "Aparigraha", targets: "windshield", desc: "Non-attachment clears view", icon: "fa-wind", color: "from-purple-500 to-pink-500" },
+        { name: "Brahmacharya", targets: "energy", desc: "Energy mastery prevents drain", icon: "fa-fire-flame-curved", color: "from-amber-500 to-orange-500" },
+        { name: "Diagnostic Sweep", targets: "any", desc: "Repair any 1 sensor", icon: "fa-stethoscope", color: "from-slate-500 to-slate-600" }
+    ];
+
+    function init() {
+        createTrack();
+        drawInitialHand();
+        updateUI();
+        setupTouchHandlers();
+        setupMuteHandlers();
+        setupAudioUnlock();
+        
+        // Check if iOS and show audio banner
+        if (soundEngine.isIOS) {
+            document.getElementById('audioBanner').classList.remove('hidden');
+            document.getElementById('iosAudioHelp').classList.remove('hidden');
+        }
+        
+        document.getElementById('startGame').addEventListener('click', async () => {
+            try {
+                await soundEngine.init(true);
+            } catch (audioError) {
+                console.warn('[Audio] Handled ecosystem init restriction cleanly:', audioError);
+            }
+            
+            document.getElementById('introModal').classList.add('hidden');
+            logMessage("System online. Begin calibration cycle.");
+            if (gameState.autopilotEngaged) {
+                soundEngine.play('autopilotEngaged');
+            }
+        });
+        
+        document.getElementById('drawTurbulenceBtn').addEventListener('click', async () => {
+            // Unlock audio on first game action
+            if (!soundEngine.initialized) {
+                try {
+                    await soundEngine.init(true);
+                } catch (e) {}
+            }
+            drawTurbulence();
+        });
+        
+        document.getElementById('restartBtn').addEventListener('click', restart);
+
+        // Handle visibility change to resume audio
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && soundEngine.audioContext?.state === 'suspended') {
+                soundEngine.resume();
+            }
+        });
+    }
+
+    function setupAudioUnlock() {
+        const enableBtn = document.getElementById('enableAudioBtn');
+        const banner = document.getElementById('audioBanner');
+        
+        enableBtn.addEventListener('click', async () => {
+            console.log('[Audio] Enable button clicked');
+            await soundEngine.init(true);
+            await soundEngine.resume();
+            soundEngine.play('test');
+            
+            setTimeout(() => {
+                banner.classList.add('hidden');
+            }, 500);
+            
+            logMessage(soundEngine.audioUnlocked ? "Audio enabled successfully" : "Audio blocked - using visual feedback");
+        });
+
+        // Also unlock on any user interaction
+        const unlockHandler = async () => {
+            if (!soundEngine.audioUnlocked && !soundEngine.initialized) {
+                await soundEngine.init(true);
+                await soundEngine.resume();
+            }
+        };
+        
+        ['touchstart', 'click'].forEach(evt => {
+            document.addEventListener(evt, unlockHandler, { once: true });
+        });
+    }
+
+    function setupMuteHandlers() {
+        document.getElementById('muteToggle').addEventListener('click', () => soundEngine.toggleMute());
+        document.getElementById('muteToggleMobile').addEventListener('click', () => soundEngine.toggleMute());
+        document.getElementById('muteToggleIntro').addEventListener('click', () => soundEngine.toggleMute());
+    }
+
+    function setupTouchHandlers() {
+        document.querySelectorAll('.sensor-card').forEach(card => {
+            let touchTimeout;
+            
+            card.addEventListener('touchstart', (e) => {
+                if (window.innerWidth <= 768) {
+                    document.querySelectorAll('.sensor-card').forEach(c => c.classList.remove('tooltip-active'));
+                    card.classList.add('tooltip-active');
+                    touchTimeout = setTimeout(() => {
+                        card.classList.remove('tooltip-active');
+                    }, 3000);
+                }
+            });
+            
+            card.addEventListener('touchend', (e) => {
+                if (touchTimeout) clearTimeout(touchTimeout);
+            });
+        });
+        
+        document.addEventListener('touchstart', (e) => {
+            if (!e.target.closest('.sensor-card')) {
+                document.querySelectorAll('.sensor-card').forEach(c => c.classList.remove('tooltip-active'));
+            }
+        });
+    }
+
+    function createTrack() {
+        const container = document.getElementById('trackContainer');
+        for (let i = 0; i < 20; i++) {
+            const segment = document.createElement('div');
+            segment.className = 'track-segment flex-1 h-6 md:h-8 bg-slate-800 rounded border border-slate-700';
+            segment.id = `segment-${i}`;
+            
+            if (i === 0) {
+                segment.classList.add('border-cyan-700');
+            }
+            if (i === 19) {
+                segment.classList.add('bg-gradient-to-r', 'from-slate-800', 'to-emerald-900', 'border-emerald-700');
+            }
+            container.appendChild(segment);
+        }
+    }
+
+    function drawInitialHand() {
+        for (let i = 0; i < 3; i++) {
+            drawCard();
+        }
+    }
+
+    function drawCard() {
+        if (gameState.hand.length >= 5) return;
+        const card = {...engineeringSpecs[Math.floor(Math.random() * engineeringSpecs.length)]};
+        card.id = Date.now() + Math.random();
+        gameState.hand.push(card);
+        renderHand();
+    }
+
+    function renderHand() {
+        const container = document.getElementById('handContainer');
+        container.innerHTML = '';
+        document.getElementById('handCount').textContent = gameState.hand.length;
+        
+        gameState.hand.forEach((card, index) => {
+            const cardEl = document.createElement('div');
+            cardEl.className = 'card-hover bg-slate-800 border border-slate-700 rounded-xl p-3 cursor-pointer draw-card-anim touch-btn';
+            cardEl.setAttribute('role', 'button');
+            cardEl.setAttribute('tabindex', '0');
+            cardEl.innerHTML = `
+                <div class="bg-gradient-to-br ${card.color} rounded-lg p-3 mb-2 text-center">
+                    <i class="fa-solid ${card.icon} text-2xl"></i>
+                </div>
+                <div class="font-semibold text-sm md:text-base mb-1">${card.name}</div>
+                <div class="text-xs md:text-sm text-slate-400">${card.desc}</div>
+            `;
+            
+            const handleUse = () => useCard(index);
+            cardEl.addEventListener('click', handleUse);
+            cardEl.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                handleUse();
+            });
+            
+            container.appendChild(cardEl);
+        });
+    }
+
+    function useCard(index) {
+        if (gameState.phase !== 'maintenance' || gameState.gameOver) return;
+        
+        const card = gameState.hand[index];
+        let target = card.targets;
+        
+        if (target === 'any') {
+            const compromised = Object.keys(gameState.sensors).find(s => !gameState.sensors[s]);
+            if (!compromised) {
+                logMessage("No sensors require repair. Card wasted.");
+            } else {
+                target = compromised;
+            }
+        }
+        
+        let repaired = false;
+        if (target !== 'random' && !gameState.sensors[target]) {
+            gameState.sensors[target] = true;
+            logMessage(`Applied ${card.name}. ${target} sensor calibrated.`);
+            soundEngine.play('repair');
+            repaired = true;
+            checkAutopilot();
+        } else if (target === 'energy' && gameState.sensors[target]) {
+            logMessage(`${card.name} reinforced. Vital energy protected.`);
+            soundEngine.play('repair');
+            repaired = true;
+        } else {
+            logMessage(`${card.name} applied. Sensor already optimal.`);
+        }
+        
+        gameState.hand.splice(index, 1);
+        renderHand();
+        updateUI();
+        
+        setTimeout(() => advanceTurn(), 800);
+    }
+
+    function drawTurbulence() {
+        if (gameState.phase !== 'draw' || gameState.gameOver) return;
+        
+        soundEngine.play('turbulence');
+        gameState.phase = 'maintenance';
+        gameState.turn++;
+        document.getElementById('turnCount').textContent = gameState.turn;
+        document.getElementById('drawTurbulenceBtn').disabled = true;
+        
+        const turbulence = turbulenceDeck[Math.floor(Math.random() * turbulenceDeck.length)];
+        let target = turbulence.targets;
+        
+        if (target === 'random') {
+            const sensors = Object.keys(gameState.sensors);
+            target = sensors[Math.floor(Math.random() * sensors.length)];
+        }
+        
+        const cardEl = document.getElementById('turbulenceCard');
+        cardEl.innerHTML = `
+            <div class="text-center">
+                <div class="bg-gradient-to-br from-orange-500 to-red-500 rounded-xl p-3 md:p-4 mb-3 inline-block">
+                    <i class="fa-solid ${turbulence.icon} text-3xl md:text-4xl"></i>
+                </div>
+                <div class="font-bold text-base md:text-lg mb-1">${turbulence.name}</div>
+                <div class="text-sm text-orange-300 mb-2">&rarr; ${target.charAt(0).toUpperCase() + target.slice(1)}</div>
+                <div class="text-xs md:text-sm text-slate-400">${turbulence.desc}</div>
+            </div>
+        `;
+        
+        if (target === 'energy') {
+            gameState.charge = Math.max(0, gameState.charge - 15);
+            gameState.sensors.energy = false;
+            logMessage(`${turbulence.name} detected. Vital energy compromised. Charge -15.`);
+        } else {
+            gameState.sensors[target] = false;
+            logMessage(`${turbulence.name} detected. ${target} sensor compromised.`);
+        }
+        
+        checkAutopilot();
+        updateUI();
+        
+        if (gameState.hand.length < 5) {
+            setTimeout(() => drawCard(), 500);
+        }
+        
+        logMessage("Maintenance phase: Apply Engineering Spec or skip.");
+    }
+
+    function checkAutopilot() {
+        const compromisedCount = Object.values(gameState.sensors).filter(s => !s).length;
+        const wasEngaged = gameState.autopilotEngaged;
+        gameState.autopilotEngaged = compromisedCount <= 1;
+        
+        if (wasEngaged && !gameState.autopilotEngaged) {
+            logMessage("WARNING: Autopilot DISENGAGED. 2+ sensors compromised.");
+            soundEngine.play('disengage');
+            gameState.disengagedTurns++;
+        } else if (!wasEngaged && gameState.autopilotEngaged) {
+            logMessage("Autopilot RE-ENGAGED. Sensors calibrated.");
+            soundEngine.play('autopilotEngaged');
+        }
+    }
+
+    function advanceTurn() {
+        if (gameState.gameOver) return;
+        
+        if (gameState.autopilotEngaged) {
+            gameState.position++;
+            const positionLabel = gameState.position === 20 ? 'Self-Realization' : gameState.position;
+            logMessage(`FSD navigated forward. Position: ${positionLabel}/20`);
+            soundEngine.play('movement');
+            gameState.disengagedTurns = 0;
+        } else {
+            gameState.disengagedTurns++;
+            logMessage(`Autopilot disengaged. Vehicle stationary. ${gameState.disengagedTurns}/3`);
+        }
+        
+        if (!gameState.sensors.energy) {
+            gameState.charge = Math.max(0, gameState.charge - 5);
+            logMessage("Vital energy unstable. Passive drain -5.");
+        }
+        
+        updateUI();
+        checkWinLose();
+        
+        gameState.phase = 'draw';
+        document.getElementById('drawTurbulenceBtn').disabled = false;
+        document.getElementById('turbulenceCard').innerHTML = `
+            <div class="text-center text-slate-500">
+                <i class="fa-solid fa-radar text-3xl md:text-4xl mb-3 opacity-50"></i>
+                <p class="text-sm md:text-base">Awaiting sensor scan...</p>
+            </div>
+        `;
+    }
+
+    function updateUI() {
+        Object.keys(gameState.sensors).forEach(sensor => {
+            const el = document.getElementById(`sensor-${sensor}`);
+            const statusEl = document.getElementById(`${sensor}-status`);
+            if (gameState.sensors[sensor]) {
+                el.className = 'sensor-card sensor-clean rounded-xl p-4 transition-all duration-300 has-tooltip relative touch-btn';
+                const statusTexts = { camera: 'CLEAN', chassis: 'ALIGNED', windshield: 'CLEAR', energy: 'STABLE' };
+                statusEl.textContent = statusTexts[sensor];
+            } else {
+                el.className = 'sensor-card sensor-compromised rounded-xl p-4 transition-all duration-300 has-tooltip relative touch-btn';
+                statusEl.textContent = 'OFFLINE';
+            }
+        });
+        
+        const apStatus = document.getElementById('autopilotStatus');
+        const apText = document.getElementById('autopilotText');
+        const disengagedCounter = document.getElementById('disengagedCounter');
+        
+        if (gameState.autopilotEngaged) {
+            apStatus.className = 'autopilot-engaged rounded-xl p-4 text-center touch-btn';
+            apText.textContent = 'ENGAGED';
+            disengagedCounter.textContent = 'Safe: FSD Active';
+        } else {
+            apStatus.className = 'autopilot-disengaged rounded-xl p-4 text-center pulse-ring touch-btn';
+            apText.textContent = 'DISENGAGED';
+            disengagedCounter.textContent = `Warning: ${gameState.disengagedTurns}/3 turns`;
+        }
+        
+        document.getElementById('chargeValue').textContent = gameState.charge;
+        const chargeBar = document.getElementById('chargeBar');
+        chargeBar.style.width = `${gameState.charge}%`;
+        if (gameState.charge < 30) {
+            chargeBar.className = 'h-full bg-gradient-to-r from-red-500 to-orange-500 transition-all duration-500';
+        } else if (gameState.charge < 60) {
+            chargeBar.className = 'h-full bg-gradient-to-r from-amber-500 to-yellow-500 transition-all duration-500';
+        } else {
+            chargeBar.className = 'h-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500';
+        }
+        
+        document.getElementById('positionText').textContent = gameState.position;
+        
+        for (let i = 0; i < 20; i++) {
+            const seg = document.getElementById(`segment-${i}`);
+            if (i < gameState.position) {
+                seg.classList.add('bg-gradient-to-r', 'from-cyan-900', 'to-teal-900', 'border-cyan-700');
+                seg.classList.remove('bg-slate-800');
+            }
+        }
+        
+        const token = document.getElementById('teslaToken');
+        const trackContainer = document.getElementById('trackContainer');
+        const trackWidth = trackContainer.offsetWidth;
+        const pos = (gameState.position / 20) * trackWidth;
+        token.style.left = `${pos}px`;
+    }
+
+    function checkWinLose() {
+        if (gameState.position >= 20) {
+            soundEngine.play('selfRealization');
+            endGame(true, "Self-Realization Achieved", "The Tesla arrived. Infinite Fuel + Infallible Navigation = Certain Arrival. Your maintenance was sufficient.");
+        } else if (gameState.charge <= 0) {
+            soundEngine.play('gameOver');
+            endGame(false, "Lifetime Charge Depleted", "Vital energy exhausted. Without Brahmacharya, the vehicle cannot complete the journey.");
+        } else if (gameState.disengagedTurns >= 3) {
+            soundEngine.play('gameOver');
+            endGame(false, "Route Terminated", "Autopilot disengaged for 3 cycles. With 2+ sensors compromised, FSD cannot navigate safely.");
+        }
+    }
+
+    function endGame(won, title, text) {
+        gameState.gameOver = true;
+        const modal = document.getElementById('gameOverModal');
+        const icon = document.getElementById('gameOverIcon');
+        document.getElementById('gameOverTitle').textContent = title;
+        document.getElementById('gameOverText').textContent = text;
+        
+        if (won) {
+            icon.innerHTML = '<i class="fa-solid fa-trophy text-emerald-400"></i>';
+            document.getElementById('gameOverTitle').className = 'text-2xl md:text-3xl font-bold mb-4 text-emerald-400';
+        } else {
+            icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-orange-400"></i>';
+            document.getElementById('gameOverTitle').className = 'text-2xl md:text-3xl font-bold mb-4 text-orange-400';
+        }
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function restart() {
+        gameState.position = 0;
+        gameState.charge = 100;
+        gameState.turn = 0;
+        gameState.disengagedTurns = 0;
+        gameState.autopilotEngaged = true;
+        gameState.sensors = { camera: true, chassis: true, windshield: true, energy: true };
+        gameState.hand = [];
+        gameState.gameOver = false;
+        gameState.phase = 'draw';
+        
+        document.getElementById('gameOverModal').classList.add('hidden');
+        document.getElementById('gameOverModal').classList.remove('flex');
+        document.getElementById('trackContainer').innerHTML = '';
+        
+        createTrack();
+        drawInitialHand();
+        updateUI();
+        document.getElementById('drawTurbulenceBtn').disabled = false;
+        document.getElementById('gameLog').innerHTML = `
+            <div class="text-cyan-400">> System recalibrated. FSD online.</div>
+            <div class="text-slate-500 text-xs md:text-sm">> Position 0: Initiation | Destination: Self-Realization (20) | Autopilot threshold: &le;1 compromised sensor</div>
+        `;
+        if (gameState.autopilotEngaged) {
+            soundEngine.play('autopilotEngaged');
+        }
+    }
+
+    function logMessage(msg) {
+        const log = document.getElementById('gameLog');
+        const entry = document.createElement('div');
+        entry.textContent = `> ${msg}`;
+        log.appendChild(entry);
+        log.scrollTop = log.scrollHeight;
+    }
+
+    init();
+</script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
