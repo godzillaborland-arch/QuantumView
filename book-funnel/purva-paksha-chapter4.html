@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Purva-Paksha — Self-Driving Mind</title>
+<meta name="description" content="Four objections to the Tesla = Dhyāna analogy, answered the way the tradition demands — honored in their strongest form, then met. From Chapter Four of The Self-Driving Mind."/>
+<meta name="author" content="Sundar Rajan"/>
+<meta name="robots" content="index,follow,max-image-preview:large"/>
+<meta name="theme-color" content="#1C1714"/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Purva-Paksha — Self-Driving Mind"/>
+<meta property="og:description" content="Four objections to the Tesla = Dhyāna analogy, answered the way the tradition demands."/>
+<meta property="og:site_name" content="Self-Driving Mind — Sundar Rajan"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+:root{
+  --cream:#F5F0E8;
+  --cream-dark:#EDE6D6;
+  --cream-mid:#E8DFCC;
+  --ink:#1C1714;
+  --ink-mid:#3D3530;
+  --ink-light:#7A6E66;
+  --ink-faint:#B0A89E;
+  --rust:#A84327;
+  --rust-light:#C45235;
+  --rust-pale:#F3E9E5;
+  --gold:#8C6D1F;
+  --gold-light:#C8A84B;
+  --gold-pale:#FBF5E6;
+  --teal:#1D5C55;
+  --teal-pale:#E6F0EF;
+  --border:#D6CFC4;
+  --border-light:#E8E2DA;
+}
+body{font-family:'Lora',Georgia,serif;background:var(--cream);color:var(--ink);min-height:100vh;line-height:1.6;}
+.page{max-width:860px;margin:0 auto;padding:0 1.5rem 5rem;}
+
+/* TOPBAR */
+.topbar{border-bottom:1px solid var(--border);padding:14px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:0;}
+.topbar-brand{font-size:13px;letter-spacing:.12em;color:var(--rust);text-transform:uppercase;font-family:'Inter',sans-serif;font-weight:800;}
+.topbar-sub a{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--rust);border:1.5px solid var(--rust);padding:6px 16px;border-radius:3px;text-decoration:none;transition:background .15s,color .15s;}
+.topbar-sub a:hover{background:var(--rust);color:#fff;}
+
+/* STATUS BAR */
+.statusbar{font-family:'Inter',monospace;font-size:9.5px;color:var(--ink-light);letter-spacing:.11em;text-transform:uppercase;border-bottom:1px solid var(--border-light);padding:8px 0;margin-bottom:0;display:flex;align-items:center;gap:7px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dot{width:5px;height:5px;background:var(--rust);border-radius:50%;display:inline-block;flex-shrink:0;}
+
+/* HERO */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;margin-bottom:0;align-items:center;}
+.hero-text{padding:1.6rem 0 1rem 0;display:flex;flex-direction:column;justify-content:center;}
+.hero-label{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.22em;color:var(--rust);text-transform:uppercase;font-weight:600;margin-bottom:1rem;}
+.hero h1{font-size:clamp(28px,5vw,50px);font-weight:400;line-height:1.15;color:var(--ink);margin-bottom:.875rem;font-family:'Lora',serif;}
+.hero h1 em{color:var(--rust);font-style:italic;}
+.hero-sub{font-size:14px;color:var(--ink-light);font-family:'Inter',sans-serif;line-height:1.65;margin-bottom:1.75rem;font-weight:300;}
+.hero-cta{display:inline-block;background:var(--rust);color:#fff;font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:11px 24px;border-radius:3px;text-decoration:none;font-weight:600;transition:background .15s;align-self:flex-start;}
+.hero-cta:hover{background:var(--rust-light);}
+.hero-quote{
+  border-left:3px solid var(--rust);
+  padding:.7rem 1rem;
+  margin-top:.75rem;
+  margin-bottom:.75rem;
+  background:var(--rust-pale);
+  border-radius:0 6px 6px 0;
+  max-width:375px;
+}
+.hero-quote p{
+  font-size:16px;
+  font-style:italic;
+  color:var(--ink-mid);
+  line-height:1.65;
+  margin-bottom:.5rem;
+}
+.hero-quote cite{
+  font-family:'Inter',sans-serif;
+  font-size:11px;
+  color:var(--ink-faint);
+  font-style:normal;
+  letter-spacing:.05em;
+}
+.hero-image{
+  position:relative;
+  overflow:hidden;
+  background:var(--cream-dark);
+  border-radius:6px;
+  padding:8px;
+  min-height:0;
+  max-height:310px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.hero-image img{
+  width:100%;
+  height:auto;
+  max-height:294px;
+  object-fit:contain;
+  object-position:center center;
+  display:block;
+  border-radius:4px;
+}
+
+/* DIVIDER */
+.divider{border:none;border-top:1px solid var(--border-light);margin:.6rem 0;}
+
+/* PULL QUOTE */
+.pullquote{border-left:3px solid var(--rust);padding:1rem 1.5rem;margin:2rem 0;background:var(--rust-pale);border-radius:0 6px 6px 0;}
+.pullquote p{font-size:16px;font-style:italic;color:var(--ink-mid);line-height:1.65;margin-bottom:.5rem;}
+.pullquote cite{font-family:'Inter',sans-serif;font-size:11px;color:var(--ink-faint);font-style:normal;letter-spacing:.05em;}
+
+/* SECTION LABEL */
+.section-label{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.22em;color:var(--ink-light);text-transform:uppercase;text-align:center;margin-bottom:1.25rem;font-weight:600;}
+
+/* GAME TABS */
+.games-section{margin-bottom:2.5rem;}
+.game-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem;border-bottom:1px solid var(--border-light);padding-bottom:0;}
+.gtab{padding:8px 16px;border:none;border-bottom:2px solid transparent;background:transparent;color:var(--ink-light);font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;letter-spacing:.03em;font-weight:500;transition:all .15s;margin-bottom:-1px;border-radius:0;}
+.gtab.active{color:var(--rust);border-bottom-color:var(--rust);font-weight:700;}
+.gtab:hover:not(.active){color:var(--ink-mid);}
+
+/* SCORE BAR */
+.score-bar{display:flex;align-items:center;gap:0;padding:10px 16px;background:var(--cream-dark);border:1px solid var(--border);border-radius:6px;margin-bottom:1.25rem;font-size:13px;color:var(--ink-mid);font-family:'Inter',sans-serif;justify-content:space-between;}
+.score-bar-left{display:flex;gap:20px;align-items:center;}
+.score-bar b{color:var(--rust);font-weight:600;}
+.score-bar-right{display:flex;gap:8px;}
+.reveal-all-btn{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border:1.5px solid var(--border);border-radius:4px;background:#fff;color:var(--ink-light);cursor:pointer;font-weight:500;transition:all .15s;}
+.reveal-all-btn:hover{border-color:var(--rust);color:var(--rust);}
+
+/* QUESTION CARDS */
+.gpanel{display:none;}
+.gpanel.active{display:block;}
+.q-card{border:1px solid var(--border-light);border-radius:8px;padding:1.125rem 1.25rem;margin-bottom:.875rem;background:#fff;}
+.q-text{font-size:16px;color:var(--ink);margin-bottom:6px;line-height:1.6;font-family:'Lora',serif;}
+.hint{font-size:12px;color:var(--ink-faint);font-style:italic;margin-bottom:8px;font-family:'Inter',sans-serif;}
+input.ans{width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:5px;font-size:14px;background:var(--cream);color:var(--ink);margin-bottom:10px;font-family:'Inter',sans-serif;transition:border-color .15s;}
+input.ans:focus{outline:none;border-color:var(--rust);}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;}
+.gbtn{padding:6px 14px;border:1.5px solid var(--border);border-radius:5px;font-size:12px;cursor:pointer;background:#fff;color:var(--ink-light);font-family:'Inter',sans-serif;font-weight:500;transition:all .15s;letter-spacing:.03em;}
+.gbtn:hover{border-color:var(--ink-mid);color:var(--ink);}
+.gbtn.check{color:var(--rust);border-color:var(--rust);}
+.gbtn.check:hover{background:var(--rust);color:#fff;}
+.fb{font-size:13px;margin-top:8px;padding:7px 12px;border-radius:5px;display:none;font-family:'Inter',sans-serif;}
+.fb.ok{background:#E8F5E9;color:#2E7D32;border:1px solid #C8E6C9;display:block;}
+.fb.no{background:#FFEBEE;color:#C62828;border:1px solid #FFCDD2;display:block;}
+.fb.show{background:var(--cream-dark);color:var(--ink-light);border:1px solid var(--border);display:block;}
+
+/* TRUE/FALSE */
+.tf-opts{display:flex;gap:8px;margin-bottom:10px;}
+.tf-btn{padding:7px 24px;border:1.5px solid var(--border);border-radius:5px;font-size:13px;cursor:pointer;background:#fff;color:var(--ink-light);font-family:'Inter',sans-serif;font-weight:500;transition:all .15s;}
+.tf-btn:hover{border-color:var(--ink-mid);}
+.tf-t{background:#E3F2FD;color:#1565C0;border-color:#BBDEFB;}
+.tf-f{background:#FFF3E0;color:#E65100;border-color:#FFE0B2;}
+
+/* WORD SEARCH */
+.ws-toolbar{display:flex;gap:8px;margin-bottom:.875rem;align-items:center;justify-content:space-between;}
+.ws-toolbar-btns{display:flex;gap:8px;}
+.ws-wrap{overflow-x:auto;margin-bottom:1rem;}
+.ws-grid-el{display:inline-block;width:max-content;border:1px solid var(--border);border-radius:6px;overflow:hidden;background:var(--cream-dark);}
+.ws-row{display:flex;}
+.ws-cell{width:30px;height:30px;display:flex;appearance:none;-webkit-appearance:none;background:transparent;padding:0;align-items:center;justify-content:center;font-size:12px;font-weight:700;cursor:pointer;border:0.5px solid var(--border-light);color:var(--ink);font-family:'Inter',monospace;user-select:none;transition:background .1s;}
+.ws-cell:hover{background:var(--cream-mid);color:var(--ink);}
+.ws-cell.sel{background:#FFF3CD;color:var(--gold);}
+.ws-cell.found{background:#D4EDDA;color:#1A6B3A;}
+.words-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.875rem;}
+.word-tag{padding:3px 10px;border:1.5px solid var(--border);border-radius:4px;font-size:12px;color:var(--ink-mid);font-family:'Inter',sans-serif;font-weight:600;background:#fff;}
+.word-tag.found{text-decoration:line-through;background:#D4EDDA;color:#1A6B3A;border-color:#A8D5B5;}
+.ws-msg{font-size:13px;color:var(--ink-light);min-height:20px;margin-top:4px;font-family:'Inter',sans-serif;}
+.ws-cell.rev-ws{background:#FFF3CD;color:#8C6D1F;}
+.word-tag.rev-tag{background:#FFF3CD;color:#8C6D1F;border-color:#C8A84B;}
+
+/* TIMER */
+.timer-box{display:flex;align-items:center;gap:6px;padding:5px 12px;border:1.5px solid var(--border);border-radius:5px;background:#fff;font-family:'Inter',monospace;font-size:13px;font-weight:600;color:var(--ink-mid);}
+.timer-box.running{border-color:var(--rust);color:var(--rust);}
+.timer-box.done{border-color:#1A6B3A;color:#1A6B3A;background:#D4EDDA;}
+.timer-icon{font-size:11px;}
+.best-time{font-size:11px;color:var(--ink-faint);font-family:'Inter',sans-serif;margin-left:6px;}
+.cw-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:.875rem;flex-wrap:wrap;}
+
+/* CROSSWORD */
+.cw-layout{display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:start;margin-bottom:1rem;}
+.cw-wrap{overflow-x:auto;}
+.cw-grid-el{display:inline-block;}
+.cw-row{display:flex;}
+.cw-cell{width:30px;height:30px;border:1px solid var(--border);background:#fff;position:relative;flex-shrink:0;}
+.cw-cell.blk{background:var(--ink);border-color:var(--ink);}
+.cw-cell input{width:100%;height:100%;border:none;background:transparent;text-align:center;font-size:12px;font-weight:600;outline:none;text-transform:uppercase;color:var(--ink);font-family:'Inter',monospace;}
+.cw-cell input.hit{background:#D4EDDA;color:#1A6B3A;}
+.cw-num{position:absolute;top:1px;left:2px;font-size:7px;color:var(--ink-faint);line-height:1;pointer-events:none;}
+.clues{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.clue-list h3{font-size:11px;font-weight:700;color:var(--rust);text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px;font-family:'Inter',sans-serif;border-bottom:1px solid var(--border-light);padding-bottom:6px;}
+.clue-item{font-size:12px;color:var(--ink-mid);margin-bottom:7px;line-height:1.5;font-family:'Inter',sans-serif;display:flex;align-items:baseline;gap:4px;}
+.clue-item b{color:var(--ink-mid);font-weight:600;min-width:18px;}
+.rev-btn{font-size:10px;padding:1px 8px;border:1px solid var(--border);border-radius:3px;cursor:pointer;background:#fff;color:var(--ink-faint);font-family:'Inter',sans-serif;font-weight:500;transition:all .15s;white-space:nowrap;flex-shrink:0;}
+.rev-btn:hover{border-color:var(--rust);color:var(--rust);}
+@media(max-width:600px){.cw-layout{grid-template-columns:1fr;}.clues{grid-template-columns:1fr;}}
+
+/* SUBSCRIBE BOX */
+.sub-box{border:2px solid var(--rust);border-radius:10px;padding:2.5rem 2rem;text-align:center;background:var(--rust-pale);margin-bottom:2.5rem;}
+.sub-box h3{font-size:22px;font-weight:400;color:var(--ink);margin-bottom:8px;font-family:'Lora',serif;}
+.sub-box p{font-family:'Inter',sans-serif;font-size:14px;color:var(--ink-light);margin-bottom:1.75rem;line-height:1.65;max-width:400px;margin-left:auto;margin-right:auto;}
+.sub-box a{display:inline-block;background:var(--rust);color:#fff;font-family:'Inter',sans-serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:13px 30px;border-radius:4px;text-decoration:none;font-weight:600;transition:background .15s;}
+.sub-box a:hover{background:var(--rust-light);}
+
+/* FOOTER SUBSCRIBE BANNER */
+.footer-sub{background:var(--ink);color:var(--cream);text-align:center;padding:2.5rem 1.5rem;border-radius:8px;margin-bottom:2.5rem;}
+.footer-sub h4{font-size:18px;font-weight:400;font-family:'Lora',serif;margin-bottom:.5rem;}
+.footer-sub p{font-family:'Inter',sans-serif;font-size:13px;color:var(--ink-faint);margin-bottom:1.25rem;}
+.footer-sub a{display:inline-block;background:var(--gold-light);color:var(--ink);font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:11px 28px;border-radius:3px;text-decoration:none;font-weight:700;transition:opacity .15s;}
+.footer-sub a:hover{opacity:.85;}
+
+/* BLACK BOX ARCHIVE */
+.boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:2.5rem;}
+@media(max-width:500px){.boxes{grid-template-columns:1fr;}}
+.bbox{border:1px solid var(--border-light);border-radius:8px;padding:1.125rem;background:#fff;}
+.bbox-label{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.12em;color:var(--ink-faint);text-transform:uppercase;font-weight:500;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.bbox h4{font-size:14px;font-weight:400;color:var(--ink);margin-bottom:5px;font-family:'Lora',serif;}
+.bbox-status{font-family:'Inter',sans-serif;font-size:11px;}
+.s-open{color:var(--teal);font-weight:500;}
+.s-sealed{color:var(--ink-faint);}
+.redacted{display:inline-block;background:var(--cream-mid);height:13px;width:70px;border-radius:2px;vertical-align:middle;}
+
+/* FOOTER */
+.footer{text-align:center;font-family:'Inter',sans-serif;font-size:12px;color:var(--ink-faint);padding-top:1.5rem;border-top:1px solid var(--border-light);}
+.footer a{color:var(--ink-faint);text-decoration:none;transition:color .15s;}
+.footer a:hover{color:var(--rust);}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .page{padding:0 1rem 3rem;}
+  .hero{grid-template-columns:1fr;}
+  .hero-image{height:auto;max-height:none;order:-1;}
+  .hero-text{padding:1.25rem 0;}
+  .hero h1{font-size:clamp(28px,9vw,42px);}
+  .score-bar{flex-direction:column;align-items:flex-start;gap:8px;}
+  .score-bar-left{flex-wrap:wrap;gap:10px;}
+  .score-bar-right{width:100%;}
+  .reveal-all-btn{width:100%;text-align:center;padding:8px 12px;}
+  .game-tabs{gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;padding-bottom:0;}
+  .gtab{font-size:12px;padding:8px 12px;white-space:nowrap;}
+  .ws-toolbar{flex-direction:column;align-items:flex-start;gap:8px;}
+  .ws-toolbar-btns{width:100%;justify-content:flex-start;}
+  .ws-cell{width:24px;height:24px;font-size:10px;}
+  .topbar-brand{font-size:10px;letter-spacing:.04em;}.statusbar{white-space:normal;overflow:visible;text-overflow:clip;}
+  .pullquote{margin:1.25rem 0;}
+  .sub-box{padding:1.75rem 1.25rem;}
+  .boxes{grid-template-columns:1fr;}
+  .footer-sub{padding:1.75rem 1rem;border-radius:6px;}
+  .objection-card{padding:1.125rem 1rem;}
+  .obj-text{font-size:14.5px;}
+  .choice-btn{font-size:13px;padding:.75rem .875rem;}
+  .thumbs-row{gap:.75rem;flex-wrap:wrap;}
+  .thumb-stage{font-size:11px;flex:1 1 90px;}
+  .thumb-icon{font-size:24px;}
+  .score-summary{gap:8px;}
+  .score-card .num{font-size:22px;}
+  .intro-screen h2,.end-screen h2{font-size:21px;}
+  .intro-screen p,.end-screen p{font-size:13px;padding:0 .25rem;}
+  .start-btn-pp{padding:11px 22px;font-size:12px;width:100%;}
+  .next-objection-btn{width:100%;text-align:center;}
+  .rigor-label{font-size:10px;}
+  .pp-dot{width:8px;height:8px;}
+}
+
+@media(max-width:420px){
+  .thumbs-row{gap:.5rem;}
+  .thumb-stage{flex:1 1 80px;font-size:10px;}
+  .thumb-icon{font-size:20px;}
+}
+
+
+.ws-cell.rev-ws{background:#FFF3CD !important;color:#8C6D1F !important;}
+.word-tag.rev-tag{background:#FFF3CD;color:#8C6D1F;border-color:#C8A84B;}
+.cw-cell input.rev{background:#FFF3CD;color:#8C6D1F;}
+
+.objection-card{border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin-bottom:1.25rem;background:#fff;}
+.obj-label{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--rust);font-weight:700;margin-bottom:.5rem;}
+.obj-text{font-size:16px;line-height:1.7;color:var(--ink);margin-bottom:1rem;font-style:italic;}
+.obj-speaker{font-family:'Inter',sans-serif;font-size:12px;color:var(--ink-faint);margin-bottom:1.25rem;}
+.choice-list{display:flex;flex-direction:column;gap:10px;}
+.choice-btn{text-align:left;background:var(--cream);border:1.5px solid var(--border);border-radius:8px;padding:.875rem 1rem;font-family:'Inter',sans-serif;font-size:13.5px;line-height:1.55;color:var(--ink-mid);cursor:pointer;transition:all .15s;}
+.choice-btn:hover{border-color:var(--ink-mid);background:#fff;}
+.choice-btn.correct{background:#D4EDDA;border-color:#1A6B3A;color:#1A6B3A;}
+.choice-btn.wrong{background:#FFEBEE;border-color:#C62828;color:#C62828;}
+.choice-btn:disabled{cursor:default;}
+.rigor-bar-wrap{margin-bottom:1.5rem;}
+.rigor-label{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-light);display:flex;justify-content:space-between;margin-bottom:6px;}
+.rigor-track{height:8px;background:var(--cream-dark);border-radius:99px;overflow:hidden;border:1px solid var(--border);}
+.rigor-fill{height:100%;background:var(--rust);border-radius:99px;transition:width .4s ease;}
+.feedback-box{margin-top:1rem;padding:1rem 1.25rem;border-radius:8px;font-family:'Inter',sans-serif;font-size:13.5px;line-height:1.65;display:none;}
+.feedback-box.show-correct{background:var(--rust-pale);border-left:3px solid var(--rust);display:block;color:var(--ink-mid);}
+.feedback-box.show-wrong{background:var(--cream-dark);border-left:3px solid var(--ink-faint);display:block;color:var(--ink-light);}
+.next-objection-btn{display:none;margin-top:1.25rem;background:var(--rust);color:#fff;font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:10px 22px;border-radius:4px;border:none;cursor:pointer;font-weight:600;}
+.next-objection-btn:hover{background:var(--rust-light);}
+.progress-dots-pp{display:flex;gap:8px;justify-content:center;margin-bottom:1.5rem;}
+.pp-dot{width:9px;height:9px;border-radius:50%;background:var(--cream-dark);border:1px solid var(--border);transition:background .3s;}
+.pp-dot.done{background:#1A6B3A;border-color:#1A6B3A;}
+.pp-dot.active{background:var(--rust);border-color:var(--rust);}
+.intro-screen,.end-screen{text-align:center;padding:1rem 0;}
+.intro-screen h2,.end-screen h2{font-family:'Lora',serif;font-size:26px;font-weight:400;color:var(--ink);margin-bottom:.75rem;}
+.intro-screen p,.end-screen p{font-family:'Inter',sans-serif;font-size:14px;color:var(--ink-light);line-height:1.7;max-width:480px;margin:0 auto 1.5rem;}
+.start-btn-pp{background:var(--rust);color:#fff;font-family:'Inter',sans-serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:13px 30px;border-radius:4px;border:none;cursor:pointer;font-weight:700;}
+.start-btn-pp:hover{background:var(--rust-light);}
+.thumbs-row{display:flex;justify-content:center;gap:1.5rem;margin:1.5rem 0;}
+.thumb-stage{font-size:13px;font-family:'Inter',sans-serif;color:var(--ink-faint);text-align:center;}
+.thumb-icon{font-size:28px;display:block;margin-bottom:4px;}
+.score-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1.5rem 0;}
+.score-card{background:var(--cream-dark);border-radius:8px;padding:1rem;text-align:center;}
+.score-card .num{font-family:'Lora',serif;font-size:26px;color:var(--rust);}
+.score-card .lbl{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-light);margin-top:2px;}
+.tradition-term{font-style:italic;color:var(--rust);}
+.hero-image img{max-height:280px;}
+
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <span class="topbar-brand">Self-Driving Mind &nbsp;/&nbsp; Sundar Rajan</span>
+  <div class="topbar-sub"><a href="https://selfdrivingmind.substack.com/subscribe" target="_blank" rel="noopener">Subscribe Free</a></div>
+</div>
+
+<div class="statusbar">
+  <span class="dot"></span> CHAPTER FOUR &middot; TESLA = DHYĀNA: WHY THE ANALOGY HOLDS &middot; VARIABLE: PURVA-PAKSHA
+</div>
+
+<div class="hero" style="grid-template-columns:1fr;">
+  <div class="hero-text">
+    <p class="hero-label" style="margin-bottom:.5rem;">Blackbox 04 &mdash; The Objections</p>
+    <h1 style="margin-bottom:.5rem;">Purva-Paksha<br/><em>Answer the Objection</em></h1>
+    <div class="pullquote" style="margin:.25rem 0 .75rem;">
+      <p>&ldquo;Classical Vedantic teaching doesn&rsquo;t dismiss the opposing view. It invites it in, examines it carefully, and answers it so thoroughly that the teaching emerges sharper than it was before.&rdquo;</p>
+      <cite>&mdash; Chapter Four</cite>
+    </div>
+    <p class="hero-sub" style="margin-bottom:0;">A friend's skepticism. Four sharpened challenges to the Tesla = Dhyāna analogy. The tradition has a name for taking an objection seriously before answering it &mdash; <span class="tradition-term">purva-paksha</span>, the prior position, stated in its strongest form.</p>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<div class="games-section">
+
+  <div id="screen-intro" class="intro-screen">
+    <h2>Four objections. One friend. A real question.</h2>
+    <p>After the Tesla-Dhyāna analogy came together, the author shared it with a close friend &mdash; a serious Vedanta practitioner who wasn't persuaded. Her skepticism opened a door, and behind it were four sharper objections. Each deserves to be honored in its strongest form before being answered. Read each objection carefully, then choose the response that actually engages it &mdash; not the one that dismisses it, redefines it, or quietly changes the subject.</p>
+    <button class="start-btn-pp" id="start-btn">Begin the purva-paksha &rarr;</button>
+  </div>
+
+  <div id="screen-game" style="display:none;">
+    <div class="progress-dots-pp" id="pp-dots"></div>
+    <div class="rigor-bar-wrap">
+      <div class="rigor-label"><span>Purva-paksha rigor</span><span id="rigor-pct">0%</span></div>
+      <div class="rigor-track"><div class="rigor-fill" id="rigor-fill" style="width:0%;"></div></div>
+    </div>
+    <div class="objection-card">
+      <div class="obj-label" id="obj-label"></div>
+      <div class="obj-text" id="obj-text"></div>
+      <div class="obj-speaker" id="obj-speaker"></div>
+      <div class="choice-list" id="choices"></div>
+      <div class="feedback-box" id="feedback"></div>
+      <button class="next-objection-btn" id="next-btn">Continue &rarr;</button>
+    </div>
+  </div>
+
+  <div id="screen-end" class="end-screen" style="display:none;">
+    <h2>The thumbs up</h2>
+    <div class="thumbs-row">
+      <div class="thumb-stage"><span class="thumb-icon">&#128077;</span>Ha ha — take a bus</div>
+      <div class="thumb-stage"><span class="thumb-icon">&#128077;</span>Warmer, maybe</div>
+      <div class="thumb-stage"><span class="thumb-icon">&#128077;</span>It was a transmission</div>
+    </div>
+    <div class="score-summary">
+      <div class="score-card"><div class="num" id="final-pct">0%</div><div class="lbl">Final rigor</div></div>
+      <div class="score-card"><div class="num">4</div><div class="lbl">Objections faced</div></div>
+    </div>
+    <p id="verdict-text"></p>
+    <p style="font-style:italic;">&ldquo;What remains after honest examination is a sharper claim, truer than the one you started with.&rdquo;</p>
+    <button class="start-btn-pp" id="restart-btn">Face the objections again &rarr;</button>
+  </div>
+
+</div>
+
+<hr class="divider"/>
+
+<div class="sub-box">
+  <h3>Read Chapter Four (Objections to Tesla=Dhyana) in full</h3>
+  <p>The complete purva-paksha &mdash; the Potter's Pot, Silence at Speed, Why Not Waymo, and The Ego Is a Bad Driver, in the author's own words &mdash; is in The Self-Driving Mind.</p>
+  <a href="https://selfdrivingmind.substack.com/p/objections-to-tesla-dhyana" target="_blank" rel="noopener">Read on Substack &rarr;</a>
+</div>
+
+<div class="footer-sub">
+  <h4>Follow the inquiry on Substack</h4>
+  <p>Essays, puzzles, and transmissions at the intersection of engineering and inner science.</p>
+  <a href="https://selfdrivingmind.substack.com/subscribe" target="_blank" rel="noopener">Subscribe Free &rarr;</a>
+</div>
+
+<div class="footer">
+  <p>&copy; 2026 Sundar Rajan &nbsp;&middot;&nbsp;
+    <a href="https://selfdrivingmind.substack.com" target="_blank" rel="noopener">Self-Driving Mind</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://selfdrivingmind.substack.com/subscribe" target="_blank" rel="noopener">Subscribe free</a>
+  </p>
+</div>
+
+</div>
+<script>
+
+var OBJECTIONS = [
+  {
+    label: "Objection one \u2014 The Potter's Pot",
+    speaker: "The traditionalist's concern",
+    text: "Linking a technology company \u2014 its founder, its brand, its complicated public associations \u2014 to something as sacred as the Guru's grace feels like a category violation. The \u015a\u0101stra doesn't speak in the language of Silicon Valley. No CEO is a Guru in any sense the tradition would recognize.",
+    choices: [
+      {text:"You're right \u2014 the comparison is irreverent, so let's drop the company name entirely and never mention it again.", correct:false, fb:"This avoids the question rather than answering it. The objection deserves engagement, not retreat. Dismissal isn't purva-paksha \u2014 it's just surrender."},
+      {text:"A potter's character doesn't taint the sacred water carried in the pot. Strip the branding: what remains is a structural correspondence \u2014 autonomous navigation, infinite charging, silent motion \u2014 that maps onto specific mechanisms in the \u015a\u0101stra. The technology is the clay pot; the wisdom it illuminates is the water.", correct:true, fb:"Correct. The pot's function is independent of the potter's virtue. The metaphor borrows Tesla's structure, not its brand \u2014 a distinction, not an argument."},
+      {text:"Tesla's founder has spoken about consciousness and AI, so there's already a spiritual lineage connecting the company to these ideas.", correct:false, fb:"This actually reinforces the category violation by trying to borrow legitimacy from the founder \u2014 exactly what the objection warns against. The chapter's answer explicitly strips the founder out of the equation."}
+    ]
+  },
+  {
+    label: "Objection two \u2014 Silence at Speed",
+    speaker: "The paradox of acceleration",
+    text: "A Tesla goes fast \u2014 sometimes very fast. The path she has devoted herself to is fundamentally a path toward stillness: chitta vritti nirodhah, the cessation of mental fluctuations. What does a vehicle built for speed have to offer a conversation about stillness?",
+    choices: [
+      {text:"Speed and stillness aren't really opposites if you just relax your definition of stillness to include fast-moving things.", correct:false, fb:"This redefines the terms instead of resolving the tension. The chapter doesn't loosen what stillness means \u2014 it locates the contradiction somewhere more precise."},
+      {text:"The opposition only holds when the fuel source burns. A Tesla moves through silent electron flow, not combustion \u2014 the mechanism stays still even at speed. Likewise, willpower-driven concentration is a combustion practice: it burns finite effort and produces the friction of constant re-ignition. Grace is a different fuel source entirely \u2014 taila-dh\u0101ravat, the unbroken pour of oil.", correct:true, fb:"Correct. The distinction is between the fuel source and the quality of motion. Effortful concentration burns willpower and creates internal friction; grace-powered awareness moves without combustion \u2014 speed and stillness stop being opposites once the engine is electric."},
+      {text:"Tesla owners can simply choose to drive slowly, which resolves the contradiction.", correct:false, fb:"This treats the objection as literal traffic advice rather than engaging the actual structural claim about combustion versus electric motion. It misses the metaphor entirely."}
+    ]
+  },
+  {
+    label: "Objection three \u2014 The Ego Is a Bad Driver",
+    speaker: "The most sophisticated concern",
+    text: "If meditation ultimately becomes something that happens through you rather than something you do \u2014 if grace takes over where effort leaves off \u2014 what becomes of the practitioner's agency? Doesn't autopilot sound like abdication rather than freedom?",
+    choices: [
+      {text:"Full Self-Driving only engages under strict conditions \u2014 calibrated sensors, current maps, sufficient training data, adequate charge. It doesn't reward passivity; it rewards thorough preparation. Dhy\u0101na works the same way: it arrives only after ethical living, sustained practice, and study \u2014 prapatti, surrender, is earned, not defaulted into.", correct:true, fb:"Correct. The FSD analogy answers the agency question precisely: surrender isn't passivity, it's the hard-earned outcome of rigorous preparation. The ego doesn't go missing \u2014 it releases the wheel once the vehicle is actually ready."},
+      {text:"Agency was always an illusion anyway, so there's nothing real being given up when grace takes over.", correct:false, fb:"This dissolves the question rather than answering it \u2014 and contradicts the chapter's own claim that what remains after surrender is \u2018more alert, more present, not more passive,\u2019 not an erased self."},
+      {text:"Autopilot and meditation are unrelated systems, so the comparison doesn't really apply to questions of agency at all.", correct:false, fb:"This sidesteps the objection instead of meeting it. The chapter takes the concern seriously precisely because the comparison does apply \u2014 and answers it on those terms."}
+    ]
+  },
+  {
+    label: "Objection four \u2014 Why Not Waymo?",
+    speaker: "The sharper reader's question",
+    text: "Self-driving cars aren't unique to Tesla. Waymo navigates city streets autonomously too, often with an excellent safety record. If the analogy is really about autonomous vehicles in general, why does it have to be Tesla specifically \u2014 and not Waymo, or any other self-driving system?",
+    choices: [
+      {text:"Waymo and Tesla are basically the same technology wearing different logos, so the choice between them is arbitrary branding and doesn't carry any real meaning.", correct:false, fb:"This erases a distinction the chapter treats as load-bearing. The two systems don't just differ in branding \u2014 they differ in how they come to know the world, which is the entire point being made."},
+      {text:"Waymo's autonomy is hard-coded city by city, block by block \u2014 brilliant, but bounded by what has already been explicitly mapped. Tesla's FSD learns continuously from the lived experience of every mile driven everywhere, building its own understanding of territory no programmer anticipated. That is the precise distinction between technique and grace: technique handles what has been explicitly mapped; grace navigates what could never be pre-mapped, including the final, ego-dissolving territory of dhy\u0101na itself.", correct:true, fb:"Correct. Waymo stands in for technique \u2014 refined, reliable, but bounded by what has already been charted. Tesla's learning system stands in for grace \u2014 it moves through terrain no map could have anticipated, which is exactly the territory the final stage of dhy\u0101na requires."},
+      {text:"Waymo simply isn't as well-known or culturally popular as Tesla, so it doesn't work as well for a book aimed at a general audience.", correct:false, fb:"This treats the choice as a marketing decision rather than a structural one. The chapter's actual reason is mechanical \u2014 how each system learns \u2014 not how famous each brand is."}
+    ]
+  }
+];
+
+var current = 0;
+var rigor = 0;
+var maxRigor = OBJECTIONS.length * 10;
+var answered = {};
+
+function $(id){return document.getElementById(id);}
+
+function startGame(){
+  $("screen-intro").style.display = "none";
+  $("screen-game").style.display = "block";
+  renderObjection();
+}
+
+function renderDots(){
+  var html = "";
+  for(var i=0;i<OBJECTIONS.length;i++){
+    var cls = i < current ? "done" : i === current ? "active" : "";
+    html += '<div class="pp-dot '+cls+'"></div>';
+  }
+  $("pp-dots").innerHTML = html;
+}
+
+function updateRigor(){
+  var pct = Math.round((rigor/maxRigor)*100);
+  $("rigor-fill").style.width = pct + "%";
+  $("rigor-pct").textContent = pct + "%";
+}
+
+function renderObjection(){
+  renderDots();
+  var obj = OBJECTIONS[current];
+  $("obj-label").textContent = obj.label;
+  $("obj-speaker").textContent = obj.speaker;
+  $("obj-text").textContent = obj.text;
+  var choicesEl = $("choices");
+  choicesEl.innerHTML = "";
+  var order = obj.choices.map(function(c,i){return i;});
+  for(var i=0;i<order.length;i++){
+    var idx = order[i];
+    var btn = document.createElement("button");
+    btn.className = "choice-btn";
+    btn.textContent = obj.choices[idx].text;
+    btn.onclick = (function(choiceIdx){
+      return function(){ selectChoice(choiceIdx); };
+    })(idx);
+    choicesEl.appendChild(btn);
+  }
+  $("feedback").className = "feedback-box";
+  $("feedback").style.display = "none";
+  $("next-btn").style.display = "none";
+  updateRigor();
+}
+
+function selectChoice(idx){
+  if(answered[current]) return;
+  answered[current] = true;
+  var obj = OBJECTIONS[current];
+  var buttons = document.querySelectorAll(".choice-btn");
+  buttons.forEach(function(b){ b.disabled = true; });
+
+  var chosen = obj.choices[idx];
+  buttons.forEach(function(b){
+    if(b.textContent === chosen.text){
+      b.classList.add(chosen.correct ? "correct" : "wrong");
+    }
+  });
+  if(!chosen.correct){
+    var correctOne = obj.choices.find(function(c){return c.correct;});
+    buttons.forEach(function(b){
+      if(b.textContent === correctOne.text) b.classList.add("correct");
+    });
+  }
+
+  var fb = $("feedback");
+  fb.textContent = chosen.fb;
+  fb.className = "feedback-box " + (chosen.correct ? "show-correct" : "show-wrong");
+  fb.style.display = "block";
+
+  rigor += chosen.correct ? 10 : 3;
+  updateRigor();
+
+  $("next-btn").style.display = "inline-block";
+}
+
+function nextObjection(){
+  current++;
+  if(current >= OBJECTIONS.length){
+    showEnding();
+  } else {
+    renderObjection();
+  }
+}
+
+function showEnding(){
+  $("screen-game").style.display = "none";
+  $("screen-end").style.display = "block";
+  var pct = Math.round((rigor/maxRigor)*100);
+  $("final-pct").textContent = pct + "%";
+  var correctCount = 0;
+  for(var k in answered){
+    var obj = OBJECTIONS[k];
+  }
+  var verdict;
+  if(pct >= 90){
+    verdict = "You answered with real rigor. The objections didn't weaken the analogy in your hands \u2014 they sharpened it, exactly as purva-paksha is meant to.";
+  } else if(pct >= 60){
+    verdict = "You engaged seriously with most of the objections. A few answers leaned toward dismissal rather than structural engagement \u2014 worth a second pass through the chapter.";
+  } else {
+    verdict = "Several answers sidestepped the objections rather than meeting them. That's the one move purva-paksha doesn't allow \u2014 the tradition asks you to take the strongest version of the opposing view seriously before answering it.";
+  }
+  $("verdict-text").textContent = verdict;
+}
+
+function restartGame(){
+  current = 0;
+  rigor = 0;
+  answered = {};
+  $("screen-end").style.display = "none";
+  $("screen-intro").style.display = "block";
+}
+
+document.getElementById("start-btn").addEventListener("click", startGame);
+document.getElementById("next-btn").addEventListener("click", nextObjection);
+document.getElementById("restart-btn").addEventListener("click", restartGame);
+
+</script>
+</body>
+</html>
