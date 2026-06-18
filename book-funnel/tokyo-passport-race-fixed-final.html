@@ -203,6 +203,16 @@ input.ans:focus{outline:none;border-color:var(--rust);}
 .word-tag{padding:3px 10px;border:1.5px solid var(--border);border-radius:4px;font-size:12px;color:var(--ink-mid);font-family:'Inter',sans-serif;font-weight:600;background:#fff;}
 .word-tag.found{text-decoration:line-through;background:#D4EDDA;color:#1A6B3A;border-color:#A8D5B5;}
 .ws-msg{font-size:13px;color:var(--ink-light);min-height:20px;margin-top:4px;font-family:'Inter',sans-serif;}
+.ws-cell.rev-ws{background:#FFF3CD;color:#8C6D1F;}
+.word-tag.rev-tag{background:#FFF3CD;color:#8C6D1F;border-color:#C8A84B;}
+
+/* TIMER */
+.timer-box{display:flex;align-items:center;gap:6px;padding:5px 12px;border:1.5px solid var(--border);border-radius:5px;background:#fff;font-family:'Inter',monospace;font-size:13px;font-weight:600;color:var(--ink-mid);}
+.timer-box.running{border-color:var(--rust);color:var(--rust);}
+.timer-box.done{border-color:#1A6B3A;color:#1A6B3A;background:#D4EDDA;}
+.timer-icon{font-size:11px;}
+.best-time{font-size:11px;color:var(--ink-faint);font-family:'Inter',sans-serif;margin-left:6px;}
+.cw-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:.875rem;flex-wrap:wrap;}
 
 /* CROSSWORD */
 .cw-layout{display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:start;margin-bottom:1rem;}
@@ -291,7 +301,7 @@ input.ans:focus{outline:none;border-color:var(--rust);}
 </div>
 <div class="hero">
   <div class="hero-text">
-    <p class="hero-label">Black Box 02 &mdash; The Passport</p>
+    <p class="hero-label">Blackbox 01 &mdash; The Passport</p>
     <h1>Tokyo<br/><em>Passport Race</em></h1>
     <p class="hero-sub">60 minutes. No Japanese. A lost passport in a foreign city &mdash; and what years of imperfect meditation had quietly built to handle it.</p>
     <div class="hero-quote">
@@ -383,6 +393,53 @@ var totalCorrect=0,totalRevealed=0;
 var TOTAL=FITB.length+TF.length+WSWORDS.length+6;
 var fitbDone={};
 var tfDone={};
+
+/* ---- TIMER ENGINE ---- */
+var timers={
+  ws:{running:false,stopped:false,start:0,elapsed:0,interval:null},
+  cw:{running:false,stopped:false,start:0,elapsed:0,interval:null}
+};
+var bestTimes={};
+function fmtTime(ms){
+  var totalSec=Math.floor(ms/1000);
+  var m=Math.floor(totalSec/60);
+  var s=totalSec%60;
+  return (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+}
+function tickTimer(key){
+  var t=timers[key];
+  var el=document.getElementById(key+"-timer-text");
+  if(el)el.textContent=fmtTime(Date.now()-t.start+t.elapsed);
+}
+function startTimer(key){
+  var t=timers[key];
+  if(t.running||t.stopped)return;
+  t.running=true;
+  t.start=Date.now();
+  t.interval=setInterval(function(){tickTimer(key);},1000);
+  var box=document.getElementById(key+"-timer");
+  if(box)box.classList.add("running");
+}
+function stopTimer(key,completed){
+  var t=timers[key];
+  if(t.running){
+    t.elapsed+=Date.now()-t.start;
+    clearInterval(t.interval);
+    t.running=false;
+  }
+  if(completed){
+    t.stopped=true;
+    var box=document.getElementById(key+"-timer");
+    if(box){box.classList.remove("running");box.classList.add("done");}
+    var el=document.getElementById(key+"-timer-text");
+    if(el)el.textContent=fmtTime(t.elapsed);
+    if(!bestTimes[key]||t.elapsed<bestTimes[key]){bestTimes[key]=t.elapsed;}
+  }else{
+    t.running=false;t.stopped=false;t.elapsed=0;
+    var box=document.getElementById(key+"-timer");
+    if(box){box.classList.remove("running");box.classList.remove("done");}
+  }
+}
 
 function htmlEsc(s){
   return String(s).replace(/[&<>"']/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","\'":"&#39;"}[ch];});
@@ -533,12 +590,14 @@ function buildWSGrid(){
 }
 function renderWS(){
   buildWSGrid();
+  stopTimer("ws");
   var p=document.getElementById("p-ws");
   var h='<div class="ws-toolbar"><div class="words-list">';
   for(var wi=0;wi<WSWORDS.length;wi++){
     h+='<span class="word-tag" id="wt-'+WSWORDS[wi]+'">'+WSWORDS[wi]+'</span>';
   }
   h+='</div><div class="ws-toolbar-btns">';
+  h+='<div class="timer-box" id="ws-timer"><span class="timer-icon">\u23f1</span><span id="ws-timer-text">00:00</span></div>';
   h+='<button class="gbtn" id="ws-new-btn">New Grid</button>';
   h+='<button class="gbtn" id="ws-rev-btn">Reveal</button>';
   h+='</div></div>';
@@ -552,11 +611,13 @@ function renderWS(){
   }
   h+='</div></div>';
   h+='<div class="ws-msg" id="wsmsg"></div>';
+  if(bestTimes.ws){h+='<div class="best-time">Best time: '+fmtTime(bestTimes.ws)+'</div>';}
   p.innerHTML=h;
   document.getElementById("ws-new-btn").addEventListener("click",renderWS);
   document.getElementById("ws-rev-btn").addEventListener("click",revealWS);
   p.querySelectorAll(".ws-cell").forEach(function(td){
     td.addEventListener("click",function(){
+      if(!timers.ws.running&&!timers.ws.stopped)startTimer("ws");
       wsClick(parseInt(this.dataset.r),parseInt(this.dataset.c));
     });
   });
@@ -578,6 +639,7 @@ function revealWS(){
   }
   var msg=document.getElementById("wsmsg");
   if(msg)msg.textContent="All 12 words revealed!";
+  stopTimer("ws");
 }
 function wsClick(r,c){
   if(!wsSel){
@@ -610,7 +672,7 @@ function wsClick(r,c){
       var msg=document.getElementById("wsmsg");
       if(msg)msg.textContent="Found: "+matched+"!";
       totalCorrect++;upd();
-      if(wsFound.size===WSWORDS.length&&msg)msg.textContent="All 12 words found!";
+      if(wsFound.size===WSWORDS.length&&msg){msg.textContent="All 12 words found!";stopTimer("ws",true);}
     }else{
       for(var i=0;i<cells.length;i++){
         var el=document.querySelector('.ws-cell[data-r="'+cells[i][0]+'"][data-c="'+cells[i][1]+'"]');
@@ -658,8 +720,13 @@ function buildCWGrid(){
 }
 function initCW(){
   buildCWGrid();
+  stopTimer("cw");
   var p=document.getElementById("p-cw");
-  var h='<div class="cw-layout"><div class="cw-wrap"><div class="cw-grid-el">';
+  var h='<div class="cw-toolbar">';
+  h+='<div class="timer-box" id="cw-timer"><span class="timer-icon">\u23f1</span><span id="cw-timer-text">00:00</span></div>';
+  if(bestTimes.cw){h+='<div class="best-time">Best time: '+fmtTime(bestTimes.cw)+'</div>';}
+  h+='</div>';
+  h+='<div class="cw-layout"><div class="cw-wrap"><div class="cw-grid-el">';
   for(var r=0;r<14;r++){
     h+='<div class="cw-row">';
     for(var c=0;c<14;c++){
@@ -689,8 +756,10 @@ function initCW(){
   p.innerHTML=h;
   p.querySelectorAll(".cw-cell input").forEach(function(inp){
     inp.addEventListener("input",function(){
+      if(!timers.cw.running&&!timers.cw.stopped)startTimer("cw");
       this.value=this.value.toUpperCase().slice(-1);
       if(this.value===this.dataset.a){this.classList.add("hit");}else{this.classList.remove("hit");}
+      checkCWComplete();
     });
   });
   p.querySelectorAll(".rev-btn").forEach(function(btn){
@@ -698,6 +767,14 @@ function initCW(){
       revCW(parseInt(this.dataset.n),this.dataset.dir);
     });
   });
+}
+function checkCWComplete(){
+  var inputs=document.querySelectorAll(".cw-cell input");
+  if(inputs.length===0)return;
+  for(var i=0;i<inputs.length;i++){
+    if(inputs[i].value.toUpperCase()!==inputs[i].dataset.a)return;
+  }
+  stopTimer("cw",true);
 }
 function revCW(num,dir){
   var wd=dir==="across"?CW_ACROSS[num]:CW_DOWN[num];
@@ -713,6 +790,7 @@ function revCW(num,dir){
 function revealAllCW(){
   for(var n in CW_ACROSS)revCW(parseInt(n),"across");
   for(var n in CW_DOWN)revCW(parseInt(n),"down");
+  stopTimer("cw");
 }
 
 /* ---- INIT ---- */
