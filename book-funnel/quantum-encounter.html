@@ -264,6 +264,24 @@ input.ans:focus{outline:none;border-color:var(--rust);}
   .footer-sub{padding:1.75rem 1rem;border-radius:6px;}
 }
 </style>
+<!-- Plausible Analytics -->
+<script defer data-domain="godzillaborland-arch.github.io" src="https://plausible.io/js/script.js"></script>
+<script>
+    window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }
+</script>
+<script>
+(function(){
+  var PL_GAME="quantum";
+  window.plz=function(name,extra){var p={game:PL_GAME};if(extra){for(var k in extra)p[k]=extra[k];}window.plausible(name,{props:p});};
+  document.addEventListener("click",function(e){
+    var t=e.target; var a=(t&&t.closest)?t.closest('a[href*="substack.com"]'):null;
+    if(!a)return;
+    var href=a.getAttribute("href")||"";
+    var dest=href.indexOf("/subscribe")>-1?"subscribe":(href.indexOf("/p/")>-1?"article":"home");
+    window.plz("SubstackClick",{dest:dest});
+  },true);
+})();
+</script>
 </head>
 <body>
 <div class="page">
@@ -477,7 +495,7 @@ function wsClick(r,c){
     const word=cells.map(([rr,cc])=>wsGrid[rr][cc]).join('');
     const rev=word.split('').reverse().join('');
     const matched=WSWORDS.find(w=>w===word||w===rev);
-    if(matched&&!wsFound.has(matched)){wsFound.add(matched);cells.forEach(([rr,cc])=>{const el=document.getElementById('wc'+rr+'_'+cc);el.classList.remove('sel');el.classList.add('found');});document.getElementById('wt'+matched).classList.add('found');document.getElementById('wsmsg').textContent='Found: '+matched+'!';sc++;upd();if(wsFound.size===WSWORDS.length){document.getElementById('wsmsg').textContent='All 12 words found!';stopTimer('ws',true);}}
+    if(matched&&!wsFound.has(matched)){wsFound.add(matched);cells.forEach(([rr,cc])=>{const el=document.getElementById('wc'+rr+'_'+cc);el.classList.remove('sel');el.classList.add('found');});document.getElementById('wt'+matched).classList.add('found');document.getElementById('wsmsg').textContent='Found: '+matched+'!';sc++;upd();if(wsFound.size===WSWORDS.length){document.getElementById('wsmsg').textContent='All 12 words found!';stopTimer('ws',true);window.plz&&window.plz('PuzzleCompleted',{puzzle:'wordsearch',mode:'solved'});}}
     else{cells.forEach(([rr,cc])=>document.getElementById('wc'+rr+'_'+cc).classList.remove('sel'));document.getElementById('wsmsg').textContent=word+' — not a match, try again.';}
     wsRst();
   }
@@ -518,10 +536,12 @@ function checkCWComplete(){
     t.stopped=true;
     const box=document.getElementById('cw-timer');if(box){box.classList.remove('running');box.classList.add('done');}
     const el=document.getElementById('cw-timer-text');if(el)el.textContent=fmtTime(t.elapsed);
+    window.plz&&window.plz('PuzzleCompleted',{puzzle:'crossword',mode:'revealed'});
   }else{
     stopTimer('cw',true);
     const b=document.getElementById('cw-best');
     if(b&&bestTimes.cw)b.textContent='Best time: '+fmtTime(bestTimes.cw);
+    window.plz&&window.plz('PuzzleCompleted',{puzzle:'crossword',mode:'solved'});
   }
 }
 function revCW(num,dir){const w=CWA[dir][num];const[sr2,sc2]=CWPOS[dir][num];for(let i=0;i<w.length;i++){let r=dir==='across'?sr2:sr2+i,c=dir==='across'?sc2+i:sc2;const inp=document.getElementById('cwi'+r+'_'+c);if(inp){inp.value=w[i];inp.classList.add('hit');}}sr++;upd();cwRevealUsed=true;checkCWComplete();}
