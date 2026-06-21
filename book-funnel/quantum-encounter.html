@@ -58,7 +58,7 @@ body{font-family:'Lora',Georgia,serif;background:var(--cream);color:var(--ink);m
 /* TOPBAR */
 .topbar{border-bottom:1px solid var(--border);padding:14px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:0;}
 .topbar-brand{font-size:13px;letter-spacing:.12em;color:var(--rust);text-transform:uppercase;font-family:'Inter',sans-serif;font-weight:800;}
-.topbar-sub a{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--rust);border:1.5px solid var(--rust);padding:6px 16px;border-radius:3px;text-decoration:none;transition:background .15s,color .15s;}
+.topbar-sub a{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--rust);border:1.5px solid var(--rust);padding:6px 16px;border-radius:3px;white-space:nowrap;text-decoration:none;transition:background .15s,color .15s;}
 .topbar-sub a:hover{background:var(--rust);color:#fff;}
 
 /* STATUS BAR */
@@ -257,7 +257,10 @@ input.ans:focus{outline:none;border-color:var(--rust);}
   .ws-toolbar{flex-direction:column;align-items:flex-start;gap:8px;}
   .ws-toolbar-btns{width:100%;justify-content:flex-start;}
   .ws-cell{width:24px;height:24px;font-size:10px;}
-  .topbar-brand{font-size:10px;letter-spacing:.04em;}.statusbar{white-space:normal;overflow:visible;text-overflow:clip;}
+  .topbar{gap:10px;}
+  .topbar-brand{font-size:10px;letter-spacing:.04em;min-width:0;}
+  .topbar-sub a{padding:6px 12px;font-size:10px;}
+  .statusbar{white-space:normal;overflow:visible;text-overflow:clip;}
   .pullquote{margin:1.25rem 0;}
   .sub-box{padding:1.75rem 1.25rem;}
   .boxes{grid-template-columns:1fr;}
