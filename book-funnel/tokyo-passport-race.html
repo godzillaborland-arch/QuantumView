@@ -77,7 +77,7 @@ body{font-family:'Lora',Georgia,serif;background:var(--cream);color:var(--ink);m
 /* TOPBAR */
 .topbar{border-bottom:1px solid var(--border);padding:14px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:0;}
 .topbar-brand{font-size:13px;letter-spacing:.12em;color:var(--rust);text-transform:uppercase;font-family:'Inter',sans-serif;font-weight:800;}
-.topbar-sub a{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--rust);border:1.5px solid var(--rust);padding:6px 16px;border-radius:3px;text-decoration:none;transition:background .15s,color .15s;}
+.topbar-sub a{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--rust);border:1.5px solid var(--rust);padding:6px 16px;border-radius:3px;text-decoration:none;transition:background .15s,color .15s;white-space:nowrap;display:inline-block;min-width:132px;text-align:center;}
 .topbar-sub a:hover{background:var(--rust);color:#fff;}
 
 /* STATUS BAR */
@@ -203,6 +203,16 @@ input.ans:focus{outline:none;border-color:var(--rust);}
 .word-tag{padding:3px 10px;border:1.5px solid var(--border);border-radius:4px;font-size:12px;color:var(--ink-mid);font-family:'Inter',sans-serif;font-weight:600;background:#fff;}
 .word-tag.found{text-decoration:line-through;background:#D4EDDA;color:#1A6B3A;border-color:#A8D5B5;}
 .ws-msg{font-size:13px;color:var(--ink-light);min-height:20px;margin-top:4px;font-family:'Inter',sans-serif;}
+.ws-cell.rev-ws{background:#FFF3CD;color:#8C6D1F;}
+.word-tag.rev-tag{background:#FFF3CD;color:#8C6D1F;border-color:#C8A84B;}
+
+/* TIMER */
+.timer-box{display:flex;align-items:center;gap:6px;padding:5px 12px;border:1.5px solid var(--border);border-radius:5px;background:#fff;font-family:'Inter',monospace;font-size:13px;font-weight:600;color:var(--ink-mid);}
+.timer-box.running{border-color:var(--rust);color:var(--rust);}
+.timer-box.done{border-color:#1A6B3A;color:#1A6B3A;background:#D4EDDA;}
+.timer-icon{font-size:11px;}
+.best-time{font-size:11px;color:var(--ink-faint);font-family:'Inter',sans-serif;margin-left:6px;}
+.cw-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:.875rem;flex-wrap:wrap;}
 
 /* CROSSWORD */
 .cw-layout{display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:start;margin-bottom:1rem;}
@@ -278,7 +288,15 @@ input.ans:focus{outline:none;border-color:var(--rust);}
 .ws-cell.rev-ws{background:#FFF3CD !important;color:#8C6D1F !important;}
 .word-tag.rev-tag{background:#FFF3CD;color:#8C6D1F;border-color:#C8A84B;}
 .cw-cell input.rev{background:#FFF3CD;color:#8C6D1F;}
+
+@media(max-width:640px){.topbar-sub a{white-space:nowrap;min-width:128px;padding:6px 12px;}}
 </style>
+<!-- Plausible Analytics -->
+<script defer data-domain="godzillaborland-arch.github.io" src="https://plausible.io/js/script.js"></script>
+<script>
+    window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }
+</script>
+
 </head>
 <body>
 <div class="page">
@@ -291,7 +309,7 @@ input.ans:focus{outline:none;border-color:var(--rust);}
 </div>
 <div class="hero">
   <div class="hero-text">
-    <p class="hero-label">Black Box 02 &mdash; The Passport</p>
+    <p class="hero-label">Blackbox 01 &mdash; The Passport</p>
     <h1>Tokyo<br/><em>Passport Race</em></h1>
     <p class="hero-sub">60 minutes. No Japanese. A lost passport in a foreign city &mdash; and what years of imperfect meditation had quietly built to handle it.</p>
     <div class="hero-quote">
@@ -314,12 +332,8 @@ input.ans:focus{outline:none;border-color:var(--rust);}
 <div class="games-section">
   <div class="score-bar">
     <div class="score-bar-left">
-      Correct: <b id="sc">0</b> &nbsp;&nbsp; Revealed: <b id="sr">0</b> &nbsp;&nbsp; Remaining: <b id="sn">0</b>
-    </div>
-    <div class="score-bar-right">
-      <button class="reveal-all-btn" id="revealAllBtn" type="button">Reveal All Solutions</button>
-    </div>
-  </div>
+      Solved: <b id="sc">0</b> &nbsp;&nbsp; Hints Used: <b id="sr">0</b> &nbsp;&nbsp; Remaining: <b id="sn">0</b>
+    </div></div>
   <div class="game-tabs">
     <button class="gtab active" type="button" data-tab="fitb">Fill in the Blank</button>
     <button class="gtab" type="button" data-tab="tf">True / False</button>
@@ -380,9 +394,56 @@ var WSWORDS=["PASSPORT","EMBASSY","MEDITATION","BUFFER","TOKYO","STRESS","CALM",
 var GS=14;
 var wsGrid=[],wsPlaced={},wsSel=false,wsStart=null,wsFound=new Set(),wsCells=[];
 var totalCorrect=0,totalRevealed=0;
-var TOTAL=FITB.length+TF.length+WSWORDS.length+6;
+var TOTAL=FITB.length+TF.length+WSWORDS.length+11;
 var fitbDone={};
 var tfDone={};
+
+/* ---- TIMER ENGINE ---- */
+var timers={
+  ws:{running:false,stopped:false,start:0,elapsed:0,interval:null},
+  cw:{running:false,stopped:false,start:0,elapsed:0,interval:null}
+};
+var bestTimes={};
+function fmtTime(ms){
+  var totalSec=Math.floor(ms/1000);
+  var m=Math.floor(totalSec/60);
+  var s=totalSec%60;
+  return (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+}
+function tickTimer(key){
+  var t=timers[key];
+  var el=document.getElementById(key+"-timer-text");
+  if(el)el.textContent=fmtTime(Date.now()-t.start+t.elapsed);
+}
+function startTimer(key){
+  var t=timers[key];
+  if(t.running||t.stopped)return;
+  t.running=true;
+  t.start=Date.now();
+  t.interval=setInterval(function(){tickTimer(key);},1000);
+  var box=document.getElementById(key+"-timer");
+  if(box)box.classList.add("running");
+}
+function stopTimer(key,completed){
+  var t=timers[key];
+  if(t.running){
+    t.elapsed+=Date.now()-t.start;
+    clearInterval(t.interval);
+    t.running=false;
+  }
+  if(completed){
+    t.stopped=true;
+    var box=document.getElementById(key+"-timer");
+    if(box){box.classList.remove("running");box.classList.add("done");}
+    var el=document.getElementById(key+"-timer-text");
+    if(el)el.textContent=fmtTime(t.elapsed);
+    if(!bestTimes[key]||t.elapsed<bestTimes[key]){bestTimes[key]=t.elapsed;}
+  }else{
+    t.running=false;t.stopped=false;t.elapsed=0;
+    var box=document.getElementById(key+"-timer");
+    if(box){box.classList.remove("running");box.classList.remove("done");}
+  }
+}
 
 function htmlEsc(s){
   return String(s).replace(/[&<>"']/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","\'":"&#39;"}[ch];});
@@ -533,12 +594,14 @@ function buildWSGrid(){
 }
 function renderWS(){
   buildWSGrid();
+  stopTimer("ws");
   var p=document.getElementById("p-ws");
   var h='<div class="ws-toolbar"><div class="words-list">';
   for(var wi=0;wi<WSWORDS.length;wi++){
     h+='<span class="word-tag" id="wt-'+WSWORDS[wi]+'">'+WSWORDS[wi]+'</span>';
   }
   h+='</div><div class="ws-toolbar-btns">';
+  h+='<div class="timer-box" id="ws-timer"><span class="timer-icon">\u23f1</span><span id="ws-timer-text">00:00</span></div>';
   h+='<button class="gbtn" id="ws-new-btn">New Grid</button>';
   h+='<button class="gbtn" id="ws-rev-btn">Reveal</button>';
   h+='</div></div>';
@@ -552,11 +615,13 @@ function renderWS(){
   }
   h+='</div></div>';
   h+='<div class="ws-msg" id="wsmsg"></div>';
+  if(bestTimes.ws){h+='<div class="best-time">Best time: '+fmtTime(bestTimes.ws)+'</div>';}
   p.innerHTML=h;
   document.getElementById("ws-new-btn").addEventListener("click",renderWS);
   document.getElementById("ws-rev-btn").addEventListener("click",revealWS);
   p.querySelectorAll(".ws-cell").forEach(function(td){
     td.addEventListener("click",function(){
+      if(!timers.ws.running&&!timers.ws.stopped)startTimer("ws");
       wsClick(parseInt(this.dataset.r),parseInt(this.dataset.c));
     });
   });
@@ -578,6 +643,7 @@ function revealWS(){
   }
   var msg=document.getElementById("wsmsg");
   if(msg)msg.textContent="All 12 words revealed!";
+  stopTimer("ws");
 }
 function wsClick(r,c){
   if(!wsSel){
@@ -610,7 +676,7 @@ function wsClick(r,c){
       var msg=document.getElementById("wsmsg");
       if(msg)msg.textContent="Found: "+matched+"!";
       totalCorrect++;upd();
-      if(wsFound.size===WSWORDS.length&&msg)msg.textContent="All 12 words found!";
+      if(wsFound.size===WSWORDS.length&&msg){msg.textContent="All 12 words found!";stopTimer("ws",true);}
     }else{
       for(var i=0;i<cells.length;i++){
         var el=document.querySelector('.ws-cell[data-r="'+cells[i][0]+'"][data-c="'+cells[i][1]+'"]');
@@ -626,7 +692,7 @@ function wsRst(){wsSel=false;wsStart=null;document.querySelectorAll(".ws-cell.se
 
 /* ---- CROSSWORD ---- */
 /* 
-Layout (14 cols x 14 rows):
+Layout (14 cols x 14 rows) — fixed non-conflicting placements:
 ACROSS:
  1. PASSPORT   row0  col0
  4. EMBASSY    row4  col0
@@ -642,12 +708,50 @@ DOWN:
  7. TOKYO      row2  col6
 10. CHANGE     row8  col5
 */
-var CW_ACROSS={1:{word:"PASSPORT",row:0,col:0},4:{word:"EMBASSY",row:4,col:0},6:{word:"BUFFER",row:6,col:0},8:{word:"MIRROR",row:8,col:0},9:{word:"CALM",row:10,col:0},11:{word:"CRISIS",row:12,col:0}};
-var CW_DOWN={1:{word:"PRACTICE",row:0,col:0},2:{word:"STRESS",row:4,col:4},3:{word:"MEDITATION",row:0,col:3},5:{word:"ABSORBER",row:6,col:3},7:{word:"TOKYO",row:2,col:6},10:{word:"CHANGE",row:8,col:5}};
-var CW_CLUES_ACROSS=[{n:1,c:"Lost document triggering the 60-min race (8)"},{n:4,c:"US government building with 2:30 deadline (6)"},{n:6,c:"Meditation builds this \u2014 a shock ___ (6)"},{n:8,c:"What a friend holds up to show your change (6)"},{n:9,c:"What meditation quietly builds (4)"},{n:11,c:"The passport emergency itself (6)"}];
-var CW_CLUES_DOWN=[{n:1,c:"Even imperfect, it accumulates (8)"},{n:2,c:"Present \u2014 but not in control (6)"},{n:3,c:"The daily practice at the heart of it all (9)"},{n:5,c:"Shock ___ \u2014 the key metaphor (8)"},{n:7,c:"City where the crisis happened (5)"},{n:10,c:"Invisible ___ \u2014 the article\u2019s theme (6)"}];
-var NMAP={"0-0":1,"4-0":4,"6-0":6,"8-0":8,"10-0":9,"12-0":11,"4-4":2,"0-3":3,"6-3":5,"2-6":7,"8-5":10};
+var CW_ACROSS={
+  1:{word:"PASSPORT",row:5,col:2},
+  4:{word:"EMBASSY",row:1,col:3},
+  6:{word:"BUFFER",row:3,col:7},
+  8:{word:"MIRROR",row:6,col:5},
+  9:{word:"CRISIS",row:11,col:2},
+  11:{word:"CHANGE",row:13,col:0}
+};
+var CW_DOWN={
+  2:{word:"MEDITATION",row:0,col:3},
+  3:{word:"PRACTICE",row:5,col:2},
+  5:{word:"STRESS",row:5,col:4},
+  7:{word:"ABSORBER",row:2,col:7},
+  10:{word:"TOKYO",row:5,col:9}
+};
+var CW_CLUES_ACROSS=[
+  {n:1,c:"Lost document triggering the 60-min race (8)"},
+  {n:4,c:"US government building with 2:30 deadline (7)"},
+  {n:6,c:"Meditation builds this — a shock ___ (6)"},
+  {n:8,c:"What a friend holds up to show your change (6)"},
+  {n:9,c:"The passport emergency itself (6)"},
+  {n:11,c:"Invisible ___ — the article’s theme (6)"}
+];
+var CW_CLUES_DOWN=[
+  {n:2,c:"The daily practice at the heart of it all (9)"},
+  {n:3,c:"Even imperfect, it accumulates (8)"},
+  {n:5,c:"Present — but not in control (6)"},
+  {n:7,c:"Shock ___ — the key metaphor (8)"},
+  {n:10,c:"City where the crisis happened (5)"}
+];
+var NMAP={
+  "5-2":1,
+  "1-3":4,
+  "3-7":6,
+  "6-5":8,
+  "11-2":9,
+  "13-0":11,
+  "0-3":2,
+  "5-4":5,
+  "2-7":7,
+  "5-9":10
+};
 var cwCells=[];
+var cwSolvedKeys={};
 
 function buildCWGrid(){
   cwCells=[];
@@ -658,8 +762,13 @@ function buildCWGrid(){
 }
 function initCW(){
   buildCWGrid();
+  stopTimer("cw");
   var p=document.getElementById("p-cw");
-  var h='<div class="cw-layout"><div class="cw-wrap"><div class="cw-grid-el">';
+  var h='<div class="cw-toolbar">';
+  h+='<div class="timer-box" id="cw-timer"><span class="timer-icon">\u23f1</span><span id="cw-timer-text">00:00</span></div>';
+  if(bestTimes.cw){h+='<div class="best-time">Best time: '+fmtTime(bestTimes.cw)+'</div>';}
+  h+='</div>';
+  h+='<div class="cw-layout"><div class="cw-wrap"><div class="cw-grid-el">';
   for(var r=0;r<14;r++){
     h+='<div class="cw-row">';
     for(var c=0;c<14;c++){
@@ -689,8 +798,10 @@ function initCW(){
   p.innerHTML=h;
   p.querySelectorAll(".cw-cell input").forEach(function(inp){
     inp.addEventListener("input",function(){
+      if(!timers.cw.running&&!timers.cw.stopped)startTimer("cw");
       this.value=this.value.toUpperCase().slice(-1);
       if(this.value===this.dataset.a){this.classList.add("hit");}else{this.classList.remove("hit");}
+      checkCWComplete();
     });
   });
   p.querySelectorAll(".rev-btn").forEach(function(btn){
@@ -699,6 +810,42 @@ function initCW(){
     });
   });
 }
+function checkCWComplete(){
+  function isWordComplete(wd,dir){
+    for(var i=0;i<wd.word.length;i++){
+      var r=dir==="across"?wd.row:wd.row+i;
+      var c=dir==="across"?wd.col+i:wd.col;
+      var inp=document.getElementById("cwi-"+r+"-"+c);
+      if(!inp || inp.value.toUpperCase()!==wd.word[i])return false;
+    }
+    return true;
+  }
+
+  for(var n in CW_ACROSS){
+    var key="a-"+n;
+    if(!cwSolvedKeys[key] && isWordComplete(CW_ACROSS[n],"across")){
+      cwSolvedKeys[key]=true;
+      totalCorrect++;
+      upd();
+    }
+  }
+
+  for(var d in CW_DOWN){
+    var key2="d-"+d;
+    if(!cwSolvedKeys[key2] && isWordComplete(CW_DOWN[d],"down")){
+      cwSolvedKeys[key2]=true;
+      totalCorrect++;
+      upd();
+    }
+  }
+
+  var inputs=document.querySelectorAll(".cw-cell input");
+  if(inputs.length===0)return;
+  for(var i=0;i<inputs.length;i++){
+    if(inputs[i].value.toUpperCase()!==inputs[i].dataset.a)return;
+  }
+  stopTimer("cw",true);
+}
 function revCW(num,dir){
   var wd=dir==="across"?CW_ACROSS[num]:CW_DOWN[num];
   if(!wd)return;
@@ -706,13 +853,23 @@ function revCW(num,dir){
     var r=dir==="across"?wd.row:wd.row+i;
     var c=dir==="across"?wd.col+i:wd.col;
     var inp=document.getElementById("cwi-"+r+"-"+c);
-    if(inp&&!inp.classList.contains("hit")){inp.value=wd.word[i];inp.classList.add("rev");}
+    if(inp&&!inp.classList.contains("hit")){
+      inp.value=wd.word[i];
+      inp.classList.add("rev");
+    }
   }
-  totalRevealed++;upd();
+
+  var key=(dir==="across"?"a-":"d-")+num;
+  if(!cwSolvedKeys[key]){
+    cwSolvedKeys[key]=true;
+    totalRevealed++;
+    upd();
+  }
 }
 function revealAllCW(){
   for(var n in CW_ACROSS)revCW(parseInt(n),"across");
   for(var n in CW_DOWN)revCW(parseInt(n),"down");
+  stopTimer("cw");
 }
 
 /* ---- INIT ---- */
