@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Quantum Encounter Quiz</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh; padding: 20px; color: #333;
+}
+.container { max-width: 700px; margin: 0 auto; }
+.header { text-align: center; color: #fff; padding: 30px 20px 10px; }
+.header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+.header .meta { font-size: 14px; opacity: 0.9; }
+.progress-bar { background: rgba(255,255,255,0.3); border-radius: 10px; height: 8px; margin: 20px 0 0; overflow: hidden; }
+.progress-fill { background: #fff; height: 100%; width: 0%; transition: width 0.4s ease; border-radius: 10px; }
+
+/* ── TIMER ── */
+.timer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 10px 20px;
+  margin: 14px 0 6px;
+  backdrop-filter: blur(4px);
+}
+.timer-icon { font-size: 20px; }
+.timer-label { color: rgba(255,255,255,0.85); font-size: 13px; font-weight: 500; }
+.timer-display {
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+  min-width: 72px;
+  text-align: center;
+  transition: color 0.3s;
+}
+.timer-display.warning { color: #fde68a; }
+.timer-display.danger  { color: #fca5a5; animation: pulse 0.8s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+.timer-track {
+  flex: 1;
+  max-width: 200px;
+  height: 6px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.timer-fill {
+  height: 100%;
+  background: #fff;
+  border-radius: 6px;
+  transition: width 1s linear, background 0.3s;
+}
+.timer-fill.warning { background: #fde68a; }
+.timer-fill.danger  { background: #fca5a5; }
+
+/* ── QUESTIONS ── */
+.question { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); display: none; margin-top: 16px; }
+.question.active { display: block; }
+.q-header { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 13px; color: #888; }
+.q-number { font-weight: 600; color: #667eea; }
+.q-text { font-size: 18px; font-weight: 600; line-height: 1.5; margin-bottom: 25px; color: #222; }
+.options { display: flex; flex-direction: column; gap: 12px; }
+.option-wrapper { display: flex; flex-direction: column; }
+.option {
+  display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px;
+  border: 2px solid #e8e8e8; border-radius: 12px; background: #fafafa;
+  cursor: pointer; transition: all 0.2s; text-align: left; font-size: 15px; width: 100%;
+}
+.option:hover:not(.disabled) { border-color: #667eea; background: #f5f3ff; }
+.option.selected { border-color: #667eea; background: #ede9fe; }
+.option.correct { border-color: #22c55e; background: #dcfce7; }
+.option.incorrect { border-color: #ef4444; background: #fee2e2; }
+.option.disabled { cursor: default; }
+.option.show-correct { border-color: #22c55e; background: #dcfce7; }
+.opt-label {
+  display: flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 50%; background: #e8e8e8;
+  font-weight: 700; font-size: 14px; flex-shrink: 0;
+}
+.option.selected .opt-label { background: #667eea; color: #fff; }
+.option.correct .opt-label { background: #22c55e; color: #fff; }
+.option.incorrect .opt-label { background: #ef4444; color: #fff; }
+.option.show-correct .opt-label { background: #22c55e; color: #fff; }
+.opt-text { padding-top: 5px; line-height: 1.5; }
+
+.option-feedback {
+  margin: 8px 0 4px 46px; padding: 12px 16px;
+  border-radius: 8px; font-size: 14px; line-height: 1.5;
+}
+.option-feedback.correct-feedback { background: #dcfce7; border-left: 3px solid #22c55e; }
+.option-feedback.incorrect-feedback { background: #fef3f2; border-left: 3px solid #fca5a5; }
+.feedback-status { font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+.feedback-status.correct { color: #166534; }
+.feedback-status.incorrect { color: #991b1b; }
+.feedback-rationale { color: #444; }
+
+.hint-box { margin: 12px 0; border-radius: 10px; overflow: hidden; background: #fffbeb; border: 1px solid #fcd34d; }
+.hint-toggle {
+  width: 100%; padding: 10px 16px; background: transparent; border: none; cursor: pointer;
+  font-size: 14px; font-weight: 600; color: #92400e; text-align: left;
+  display: flex; align-items: center; gap: 8px;
+}
+.hint-toggle:hover { background: #fef3c7; }
+.hint-content {
+  padding: 0 16px; max-height: 0; overflow: hidden;
+  transition: max-height 0.3s, padding 0.3s;
+  font-size: 14px; color: #78350f; line-height: 1.5;
+}
+.hint-box.show .hint-content { padding: 0 16px 12px; max-height: 200px; }
+
+.next-btn {
+  margin-top: 20px; width: 100%; padding: 14px;
+  background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; border: none;
+  border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.next-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.4); }
+.hidden { display: none !important; }
+
+/* ── PROOF OF COMPLETION SCREEN ── */
+.completion-screen {
+  display: none;
+  background: #fff;
+  border-radius: 20px;
+  padding: 44px 36px 40px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  text-align: center;
+  margin-top: 16px;
+}
+.completion-screen.active { display: block; }
+
+.completion-badge {
+  font-size: 64px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+.completion-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+.completion-subtitle {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 28px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.score-block {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 28px 20px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+.score-number {
+  font-size: 62px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.score-label {
+  font-size: 16px;
+  opacity: 0.88;
+  font-weight: 500;
+}
+.score-time {
+  display: inline-block;
+  margin-top: 14px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 6px 18px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.score-time span { opacity: 0.85; margin-right: 4px; }
+
+.cta-box {
+  border: 2.5px solid #667eea;
+  border-radius: 14px;
+  padding: 22px 20px 20px;
+  margin-bottom: 24px;
+  background: #f5f3ff;
+}
+.cta-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.55;
+  margin-bottom: 0;
+}
+.cta-text em {
+  color: #764ba2;
+  font-style: normal;
+}
+
+.subscribe-btn {
+  display: block;
+  width: 100%;
+  padding: 17px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-bottom: 14px;
+}
+.subscribe-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(102,126,234,0.45); }
+
+.restart-link {
+  font-size: 13px;
+  color: #999;
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-decoration: underline;
+  padding: 0;
+}
+.restart-link:hover { color: #667eea; }
+
+.screenshot-reminder {
+  margin-top: 18px;
+  padding: 12px 16px;
+  background: #fff8e1;
+  border: 1px solid #ffd54f;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #7a5c00;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Math */
+.math, .math-block { font-family: "Cambria Math", "Times New Roman", Times, serif; font-style: italic; }
+.math-block { display: block; text-align: center; margin: 10px 0; font-size: 110%; }
+.frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 3px; font-size: 0.9em; }
+.frac-num { border-bottom: 1px solid currentColor; padding: 0 4px 2px; line-height: 1.2; }
+.frac-den { padding: 2px 4px 0; line-height: 1.2; }
+sup, sub { font-size: 0.75em; }
+sup { vertical-align: super; }
+sub { vertical-align: sub; }
+
+@media (max-width: 480px) {
+  .completion-screen { padding: 32px 20px 28px; }
+  .score-number { font-size: 50px; }
+  .timer-track { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>The Quantum Encounter</h1>
+    <div class="meta">15 questions &nbsp;&bull;&nbsp; Test your knowledge</div>
+
+    <!-- TIMER -->
+    <div class="timer-bar">
+      <span class="timer-icon">⏱</span>
+      <span class="timer-label">Time remaining</span>
+      <div class="timer-display" id="timer-display">5:00</div>
+      <div class="timer-track"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+    </div>
+
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div id="quiz-container">
+
+    <!-- Q1 -->
+    <div class="question" data-index="0">
+      <div class="q-header"><span class="q-number">Question 1</span><span class="q-of">/ 15</span></div>
+      <div class="q-text">In the context of the De Broglie matter wave equation <span class="math">&lambda; = <span class="frac"><span class="frac-num">h</span><span class="frac-den">p</span></span></span>, what theoretical paradox did the PhD candidate propose to the physics lecturer?</div>
+      <div class="hint-box"><button class="hint-toggle" onclick="this.parentElement.classList.toggle('show')">💡 Hint</button><div class="hint-content">Consider the mathematical result when the denominator of a fraction becomes zero.</div></div>
+      <div class="options">
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="This confuses the physical setting of the story with the universal principle of De Broglie's equation, which applies to all moving objects regardless of voltage."><span class="opt-label">A</span><span class="opt-text">Matter waves only manifest in high-voltage environments like the labs at Guindy.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">This confuses the physical setting of the story with the universal principle of De Broglie's equation, which applies to all moving objects regardless of voltage.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="true" data-rationale="If the observer's reference frame moves with the object, the relative velocity and momentum become zero, causing the denominator in the wavelength equation to vanish."><span class="opt-label">B</span><span class="opt-text">The wavelength becomes mathematically undefined if the observer moves at the same velocity as the object.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">If the observer's reference frame moves with the object, the relative velocity and momentum become zero, causing the denominator in the wavelength equation to vanish.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="While the author discusses 'athmic involvement,' the specific challenge to the lecturer was rooted in classical reference frame mechanics, not the fluctuation of physical constants."><span class="opt-label">C</span><span class="opt-text">The Planck constant <span class="math">h</span> fluctuates based on the observer's level of conscious involvement.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">While the author discusses 'athmic involvement,' the specific challenge to the lecturer was rooted in classical reference frame mechanics, not the fluctuation of physical constants.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The candidate's question specifically focused on velocity and reference frames rather than the environment of a vacuum or the specific mass of humans."><span class="opt-label">D</span><span class="opt-text">The matter wave equation fails to account for the mass of human beings in a vacuum.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The candidate's question specifically focused on velocity and reference frames rather than the environment of a vacuum or the specific mass of humans.</div></div>
+        </div>
+      </div>
+      <button class="next-btn hidden">Next Question &rarr;</button>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question" data-index="1">
+      <div class="q-header"><span class="q-number">Question 2</span><span class="q-of">/ 15</span></div>
+      <div class="q-text">What is the primary distinction between the &lsquo;Shepherd&rsquo; and the &lsquo;Bird&rsquo; metaphors as they relate to meditation in the source material?</div>
+      <div class="hint-box"><button class="hint-toggle" onclick="this.parentElement.classList.toggle('show')">💡 Hint</button><div class="hint-content">Focus on the difference between being &lsquo;driven&rsquo; by a stick and being &lsquo;pulled&rsquo; toward home.</div></div>
+      <div class="options">
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="Both metaphors describe internal states, but the 'Bird' state was specifically transmitted to the author by an external Siddha Purusha."><span class="opt-label">A</span><span class="opt-text">The Shepherd is an external guide, while the Bird represents an entirely self-taught practice.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">Both metaphors describe internal states, but the 'Bird' state was specifically transmitted to the author by an external Siddha Purusha.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="true" data-rationale="The author contrasts the adversarial struggle of driving the mind (shepherd) with the effortless return to a place where the mind already belongs (bird)."><span class="opt-label">B</span><span class="opt-text">The Shepherd represents forced discipline, while the Bird represents a natural, magnetic attraction to a source.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The author contrasts the adversarial struggle of driving the mind (shepherd) with the effortless return to a place where the mind already belongs (bird).</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The author dismisses ritual earlier in the text; these metaphors specifically describe internal mechanics of mind-control rather than a historical timeline."><span class="opt-label">C</span><span class="opt-text">The Shepherd symbolizes ancient ritual, whereas the Bird symbolizes modern psychological flow states.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The author dismisses ritual earlier in the text; these metaphors specifically describe internal mechanics of mind-control rather than a historical timeline.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The text suggests that the multitasking 'master' (the author's wife) actually struggles with the 'Bird' state because she relies on 'Shepherd-like' discipline."><span class="opt-label">D</span><span class="opt-text">The Bird requires high-level multitasking skills that the Shepherd lacks.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The text suggests that the multitasking 'master' (the author's wife) actually struggles with the 'Bird' state because she relies on 'Shepherd-like' discipline.</div></div>
+        </div>
+      </div>
+      <button class="next-btn hidden">Next Question &rarr;</button>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question" data-index="2">
+      <div class="q-header"><span class="q-number">Question 3</span><span class="q-of">/ 15</span></div>
+      <div class="q-text">The concept of <span class="math">Pratyak Pravahata</span> is used to explain why the author found meditation easy. How does the text define this term?</div>
+      <div class="hint-box"><button class="hint-toggle" onclick="this.parentElement.classList.toggle('show')">💡 Hint</button><div class="hint-content">The term describes a direction of mental flow that mirrors a bird returning to its nest.</div></div>
+      <div class="options">
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="While the author started as a skeptic, this term refers to the spiritual capacity that bypassed his skepticism."><span class="opt-label">A</span><span class="opt-text">Intellectual skepticism.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">While the author started as a skeptic, this term refers to the spiritual capacity that bypassed his skepticism.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="true" data-rationale="The text explicitly defines this Yogic term as a state where the mind is naturally pulled inward without the need for force or struggle."><span class="opt-label">B</span><span class="opt-text">Natural inwardness.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The text explicitly defines this Yogic term as a state where the mind is naturally pulled inward without the need for force or struggle.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="While pranayama is mentioned as a method to settle the consciousness, it is a practice used to access the state of natural inwardness, not the state itself."><span class="opt-label">C</span><span class="opt-text">The mastery of breath regulation.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">While pranayama is mentioned as a method to settle the consciousness, it is a practice used to access the state of natural inwardness, not the state itself.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="This relates to the wave nature discussed in the physics lecture, but Pratyak Pravahata describes a directional movement of the mind."><span class="opt-label">D</span><span class="opt-text">High-frequency oscillation.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">This relates to the wave nature discussed in the physics lecture, but Pratyak Pravahata describes a directional movement of the mind.</div></div>
+        </div>
+      </div>
+      <button class="next-btn hidden">Next Question &rarr;</button>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question" data-index="3">
+      <div class="q-header"><span class="q-number">Question 4</span><span class="q-of">/ 15</span></div>
+      <div class="q-text">How did the PhD candidate resolve the &lsquo;Delta Antenna&rsquo; project crisis for Paddy&rsquo;s senior group?</div>
+      <div class="hint-box"><button class="hint-toggle" onclick="this.parentElement.classList.toggle('show')">💡 Hint</button><div class="hint-content">The solution combined a specific electromagnetic theory with the work of a famous Indian scientist.</div></div>
+      <div class="options">
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The Royal Enfield was his personal transport and part of his 'aura,' not a component used to solve the engineering problem."><span class="opt-label">A</span><span class="opt-text">He used a Royal Enfield engine to generate a constant DC current for the antenna.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The Royal Enfield was his personal transport and part of his 'aura,' not a component used to solve the engineering problem.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="true" data-rationale="The author highlights this specific bridge between specialized electrical engineering theory and biological observations as the moment his skepticism cracked."><span class="opt-label">B</span><span class="opt-text">He applied skin effect theory and linked it to electrical activity in plants studied by J.C. Bose.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The author highlights this specific bridge between specialized electrical engineering theory and biological observations as the moment his skepticism cracked.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The problem was theoretical and related to calculations that 'wouldn't hold' for a notoriously difficult professor."><span class="opt-label">C</span><span class="opt-text">He identified a mechanical fault in the high-voltage lab&rsquo;s grounding system.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The problem was theoretical and related to calculations that 'wouldn't hold' for a notoriously difficult professor.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The De Broglie equation was the subject of the lecture he interrupted, whereas the antenna problem required skin effect theory."><span class="opt-label">D</span><span class="opt-text">He recalculated the De Broglie wavelength for the specific frequency of the antenna.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The De Broglie equation was the subject of the lecture he interrupted, whereas the antenna problem required skin effect theory.</div></div>
+        </div>
+      </div>
+      <button class="next-btn hidden">Next Question &rarr;</button>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question" data-index="4">
+      <div class="q-header"><span class="q-number">Question 5</span><span class="q-of">/ 15</span></div>
+      <div class="q-text">What &lsquo;uncomfortable&rsquo; paradox does the author identify regarding his own spiritual progress over forty-five years?</div>
+      <div class="hint-box"><button class="hint-toggle" onclick="this.parentElement.classList.toggle('show')">💡 Hint</button><div class="hint-content">Compare the author&rsquo;s personal habits with those of his &lsquo;better half&rsquo;.</div></div>
+      <div class="options">
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="There is no evidence he lost skills; rather, he used his engineering mindset to analyze his spiritual experiences later in life."><span class="opt-label">A</span><span class="opt-text">He lost his technical engineering skills as a result of his &lsquo;Siddha&rsquo; transmission.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">There is no evidence he lost skills; rather, he used his engineering mindset to analyze his spiritual experiences later in life.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The author moved from active irritation with religious markings to a realization that spiritual logic could be as precise as engineering."><span class="opt-label">B</span><span class="opt-text">His atheism increased as his ability to meditate deepened.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The author moved from active irritation with religious markings to a realization that spiritual logic could be as precise as engineering.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The text states the opposite: a few rounds of pranayama would settle his consciousness into stillness without effort."><span class="opt-label">C</span><span class="opt-text">The more he practiced pranayama, the more difficult it became to find stillness.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The text states the opposite: a few rounds of pranayama would settle his consciousness into stillness without effort.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="true" data-rationale="The author contrasts his own inconsistent practice with his wife's extreme discipline, noting that he retained an 'unearned' gift she could not access."><span class="opt-label">D</span><span class="opt-text">The undisciplined person succeeded in maintaining the capacity, while the disciplined person struggled.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The author contrasts his own inconsistent practice with his wife's extreme discipline, noting that he retained an 'unearned' gift she could not access.</div></div>
+        </div>
+      </div>
+      <button class="next-btn hidden">Next Question &rarr;</button>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question" data-index="5">
+      <div class="q-header"><span class="q-number">Question 6</span><span class="q-of">/ 15</span></div>
+      <div class="q-text">According to the author&rsquo;s &lsquo;Shock Absorber&rsquo; analogy, what is the actual function of meditation during a crisis like the Tokyo passport incident?</div>
+      <div class="hint-box"><button class="hint-toggle" onclick="this.parentElement.classList.toggle('show')">💡 Hint</button><div class="hint-content">Think about how a car chassis stays intact even when the tires hit a pothole.</div></div>
+      <div class="options">
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The Tokyo incident involved a very tight timeline, but the 'buffer' relates to internal response rather than external time manipulation."><span class="opt-label">A</span><span class="opt-text">Speeding up the passage of time to reach the destination faster.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The Tokyo incident involved a very tight timeline, but the 'buffer' relates to internal response rather than external time manipulation.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The author explicitly states that meditation is 'not the absence of stress' but a buffer that allows one to remain 'unrattled' while still registering the situation."><span class="opt-label">B</span><span class="opt-text">Eliminating the feeling of stress entirely through deep meditative absorption.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The author explicitly states that meditation is 'not the absence of stress' but a buffer that allows one to remain 'unrattled' while still registering the situation.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The 'self-driving' aspect refers to the ease of the process, but the author still had to actively coordinate with police and use translation apps."><span class="opt-label">C</span><span class="opt-text">Automating the physical body so it can act without any mental input.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The 'self-driving' aspect refers to the ease of the process, but the author still had to actively coordinate with police and use translation apps.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="true" data-rationale="The analogy explains that shock absorbers don't remove the bump (the crisis) but protect the chassis (the person) from breaking under the impact."><span class="opt-label">D</span><span class="opt-text">Creating space around the panic to prevent it from overwhelming the capacity to function.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The analogy explains that shock absorbers don't remove the bump (the crisis) but protect the chassis (the person) from breaking under the impact.</div></div>
+        </div>
+      </div>
+      <button class="next-btn hidden">Next Question &rarr;</button>
+    </div>
+
+    <!-- Q7 -->
+    <div class="question" data-index="6">
+      <div class="q-header"><span class="q-number">Question 7</span><span class="q-of">/ 15</span></div>
+      <div class="q-text">Why did the PhD candidate&rsquo;s joke, &lsquo;Am I a DC Generator?&rsquo;, cause the classroom to erupt in laughter?</div>
+      <div class="hint-box"><button class="hint-toggle" onclick="this.parentElement.classList.toggle('show')">💡 Hint</button><div class="hint-content">Consider the difference between a wave-like signal and a constant, unvarying signal.</div></div>
+      <div class="options">
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The 'Mad Engineer' was associated with the antenna lab, whereas the DC generator joke occurred during a separate physics lecture."><span class="opt-label">A</span><span class="opt-text">He was mocking the &lsquo;Mad Engineer of Mylapore&rsquo; who only believed in DC power.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The 'Mad Engineer' was associated with the antenna lab, whereas the DC generator joke occurred during a separate physics lecture.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="true" data-rationale="A DC (Direct Current) generator produces a constant output without the waves/oscillations found in AC, cleverly mocking the logical hole in the matter-wave lecture."><span class="opt-label">B</span><span class="opt-text">It pointed out that if his matter wave collapsed in a certain frame, he would lack any frequency or oscillation.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">A DC (Direct Current) generator produces a constant output without the waves/oscillations found in AC, cleverly mocking the logical hole in the matter-wave lecture.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="While the lectures were described as monotonous, the joke specifically targeted the De Broglie equation's behavior at zero velocity."><span class="opt-label">C</span><span class="opt-text">It was a sarcastic reference to the low energy of the monotonous lecturer.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">While the lectures were described as monotonous, the joke specifically targeted the De Broglie equation's behavior at zero velocity.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="While his 'white and white' clothing was a signature look, the joke's punchline was based on physics theory, not his appearance."><span class="opt-label">D</span><span class="opt-text">He was literally wearing a white outfit that resembled the insulation of a generator.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">While his 'white and white' clothing was a signature look, the joke's punchline was based on physics theory, not his appearance.</div></div>
+        </div>
+      </div>
+      <button class="next-btn hidden">Next Question &rarr;</button>
+    </div>
+
+    <!-- Q8 -->
+    <div class="question" data-index="7">
+      <div class="q-header"><span class="q-number">Question 8</span><span class="q-of">/ 15</span></div>
+      <div class="q-text">Which specific detail about the PhD candidate&rsquo;s appearance initially triggered the author&rsquo;s &lsquo;Quantum&rsquo; contempt?</div>
+      <div class="hint-box"><button class="hint-toggle" onclick="this.parentElement.classList.toggle('show')">💡 Hint</button><div class="hint-content">It was a traditional marking that the skeptical engineering student associated with superstition.</div></div>
+      <div class="options">
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="Though immaculate, his clothing is described as contributing to his 'shining' aura rather than being the source of the author's intellectual irritation."><span class="opt-label">A</span><span class="opt-text">His well-ironed white half-sleeve shirt and white pants.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">Though immaculate, his clothing is described as contributing to his 'shining' aura rather than being the source of the author's intellectual irritation.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The motorcycle is presented as a cool, modern detail that 'completed the picture' rather than a symbol of 'superstition'."><span class="opt-label">B</span><span class="opt-text">The Royal Enfield motorcycle parked behind him.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The motorcycle is presented as a cool, modern detail that 'completed the picture' rather than a symbol of 'superstition'.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The senior student noted the smile, but the author's specific contempt was reserved for the 'religious markings'."><span class="opt-label">C</span><span class="opt-text">The &lsquo;beaming smile&rsquo; he maintained during difficult lectures.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The senior student noted the smile, but the author's specific contempt was reserved for the 'religious markings'.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="true" data-rationale="The author viewed religious markings as a 'billboard for a weak mind' and was ready to mock the candidate based on this display of tradition."><span class="opt-label">D</span><span class="opt-text">The <span class="math">pattai vibhuti</span> ash stripes on his forehead.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The author viewed religious markings as a 'billboard for a weak mind' and was ready to mock the candidate based on this display of tradition.</div></div>
+        </div>
+      </div>
+      <button class="next-btn hidden">Next Question &rarr;</button>
+    </div>
+
+    <!-- Q9 -->
+    <div class="question" data-index="8">
+      <div class="q-header"><span class="q-number">Question 9</span><span class="q-of">/ 15</span></div>
+      <div class="q-text">In the Tokyo timeline, what was the &lsquo;precise moment&rsquo; when the author felt panic was the only logical response?</div>
+      <div class="hint-box"><button class="hint-toggle" onclick="this.parentElement.classList.toggle('show')">💡 Hint</button><div class="hint-content">It involves a combination of a ticking clock and an impending closure.</div></div>
+      <div class="options">
+        <div class="option-wrapper">
+          <button class="option" data-correct="true" data-rationale="The discovery at 1:30 PM with a 2:30 PM deadline before a long weekend created the high-stakes 'now or never' pressure."><span class="opt-label">A</span><span class="opt-text">When he realized the U.S. Embassy would close for a long holiday weekend in exactly sixty minutes.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The discovery at 1:30 PM with a 2:30 PM deadline before a long weekend created the high-stakes 'now or never' pressure.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The language barrier was a hurdle he overcame with a translation app, but the time constraint was the primary source of the 'logical' panic."><span class="opt-label">B</span><span class="opt-text">When he realized he could not speak a single reliable word of Japanese to the mall police.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The language barrier was a hurdle he overcame with a translation app, but the time constraint was the primary source of the 'logical' panic.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The stare happened at the food court when the loss was discovered, but the 'logical panic' intensified once the embassy's holiday schedule was revealed."><span class="opt-label">C</span><span class="opt-text">When his wife gave him the &lsquo;stunned disbelief&rsquo; stare compared to the movie Due Date.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The stare happened at the food court when the loss was discovered, but the 'logical panic' intensified once the embassy's holiday schedule was revealed.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="This was the 'Crisis Discovery' at 1:30 PM, but the text identifies the 60-minute embassy deadline as the point where panic became logical."><span class="opt-label">D</span><span class="opt-text">When he found nothing in the shopping bag after checking every pocket and corner.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">This was the 'Crisis Discovery' at 1:30 PM, but the text identifies the 60-minute embassy deadline as the point where panic became logical.</div></div>
+        </div>
+      </div>
+      <button class="next-btn hidden">Next Question &rarr;</button>
+    </div>
+
+    <!-- Q10 -->
+    <div class="question" data-index="9">
+      <div class="q-header"><span class="q-number">Question 10</span><span class="q-of">/ 15</span></div>
+      <div class="q-text">The author describes the Yogi&rsquo;s meditative state as a &lsquo;Siddha Purusha&rsquo;. What unusual characteristic of this state is mentioned?</div>
+      <div class="hint-box"><button class="hint-toggle" onclick="this.parentElement.classList.toggle('show')">💡 Hint</button><div class="hint-content">Consider which state&mdash;meditative or ordinary&mdash;was the &lsquo;default&rsquo; for the Yogi.</div></div>
+      <div class="options">
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The author uses 'downloading software' as a metaphor for the transmission, but the state itself was innate to the Yogi."><span class="opt-label">A</span><span class="opt-text">He required a specific high-voltage environment to &lsquo;download&rsquo; his spiritual software.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The author uses 'downloading software' as a metaphor for the transmission, but the state itself was innate to the Yogi.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The motorcycle was a feature of his presence, but his meditation occurred 'under the tree' or as a constant state regardless of activity."><span class="opt-label">B</span><span class="opt-text">He could only enter meditation while riding his Royal Enfield at high speeds.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The motorcycle was a feature of his presence, but his meditation occurred 'under the tree' or as a constant state regardless of activity.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The author ('Quantum') was the one obsessed with Feynman diagrams; the Yogi used pure logic and 'presence' rather than diagrams."><span class="opt-label">C</span><span class="opt-text">He used complex Feynman diagrams to explain his spiritual experiences to the students.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The author ('Quantum') was the one obsessed with Feynman diagrams; the Yogi used pure logic and 'presence' rather than diagrams.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="true" data-rationale="For him, profound absorption was his 'natural and abiding state,' making the return to normal reality the part that required effort."><span class="opt-label">D</span><span class="opt-text">He had to make a deliberate effort to return from deep meditation to attend to ordinary tasks.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">For him, profound absorption was his 'natural and abiding state,' making the return to normal reality the part that required effort.</div></div>
+        </div>
+      </div>
+      <button class="next-btn hidden">Next Question &rarr;</button>
+    </div>
+
+    <!-- Q11 -->
+    <div class="question" data-index="10">
+      <div class="q-header"><span class="q-number">Question 11</span><span class="q-of">/ 15</span></div>
+      <div class="q-text">What role did the &lsquo;stranger&rsquo; play in the Tokyo passport incident?</div>
+      <div class="hint-box"><button class="hint-toggle" onclick="this.parentElement.classList.toggle('show')">💡 Hint</button><div class="hint-content">This person acted as a linguistic bridge during the &lsquo;Immediate Coordination&rsquo; phase.</div></div>
+      <div class="options">
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The passport was never found in the food court; the author had to obtain an 'emergency temporary passport' from the embassy."><span class="opt-label">A</span><span class="opt-text">She found the passport in the food court and turned it into the police kiosk.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The passport was never found in the food court; the author had to obtain an 'emergency temporary passport' from the embassy.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The friends from Sacramento were part of the trip, but the author took a taxi to the embassy, and the 'Tesla' mentions occur in a different part of the story."><span class="opt-label">B</span><span class="opt-text">She was a friend from Sacramento who offered to drive him to the embassy in a Tesla.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The friends from Sacramento were part of the trip, but the author took a taxi to the embassy, and the 'Tesla' mentions occur in a different part of the story.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="true" data-rationale="The author's lack of Japanese required a third party to bridge the communication gap at the police kiosk to contact the embassy."><span class="opt-label">C</span><span class="opt-text">She used a translation app on her phone to help the author communicate with the mall police.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The author's lack of Japanese required a third party to bridge the communication gap at the police kiosk to contact the embassy.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The cashier processed the refund, but the author admits he tossed the passport into a bag himself before it vanished."><span class="opt-label">D</span><span class="opt-text">She was the cashier who accidentally kept the passport after the tax-free process.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The cashier processed the refund, but the author admits he tossed the passport into a bag himself before it vanished.</div></div>
+        </div>
+      </div>
+      <button class="next-btn hidden">Next Question &rarr;</button>
+    </div>
+
+    <!-- Q12 -->
+    <div class="question" data-index="11">
+      <div class="q-header"><span class="q-number">Question 12</span><span class="q-of">/ 15</span></div>
+      <div class="q-text">The author compares his inconsistent spiritual practice to &lsquo;driving the car to Vegas&rsquo;. What does this metaphor signify?</div>
+      <div class="hint-box"><button class="hint-toggle" onclick="this.parentElement.classList.toggle('show')">💡 Hint</button><div class="hint-content">It describes the period of neglect and &lsquo;misuse&rsquo; of the asset he was given.</div></div>
+      <div class="options">
+        <div class="option-wrapper">
+          <button class="option" data-correct="true" data-rationale="The author uses this as a metaphor for 'doing everything you're not supposed to do' with a spiritual practice, yet finding the capacity still intact."><span class="opt-label">A</span><span class="opt-text">Engaging in lifestyle choices and neglect that should have theoretically destroyed his spiritual capacity.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The author uses this as a metaphor for 'doing everything you're not supposed to do' with a spiritual practice, yet finding the capacity still intact.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The metaphor describes his own treatment of the gift he received, not the danger of the gift itself."><span class="opt-label">B</span><span class="opt-text">The high-risk nature of attempting to transmit spiritual &lsquo;software&rsquo; to others.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The metaphor describes his own treatment of the gift he received, not the danger of the gift itself.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The text states 'metaphorically speaking,' indicating this was an illustrative example of misuse rather than a literal travel log."><span class="opt-label">C</span><span class="opt-text">A literal road trip he took in 1982 when he stopped practicing pranayama.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The text states 'metaphorically speaking,' indicating this was an illustrative example of misuse rather than a literal travel log.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The 'Vegas' metaphor is linked to his 45-year 'Stress Test' of his spiritual life, not his early engineering successes."><span class="opt-label">D</span><span class="opt-text">The excitement he felt when he first mastered the Delta Antenna calculations.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The 'Vegas' metaphor is linked to his 45-year 'Stress Test' of his spiritual life, not his early engineering successes.</div></div>
+        </div>
+      </div>
+      <button class="next-btn hidden">Next Question &rarr;</button>
+    </div>
+
+    <!-- Q13 -->
+    <div class="question" data-index="12">
+      <div class="q-header"><span class="q-number">Question 13</span><span class="q-of">/ 15</span></div>
+      <div class="q-text">Which of the following best describes the &lsquo;Sacramento Paradox&rsquo; discussed in the text?</div>
+      <div class="hint-box"><button class="hint-toggle" onclick="this.parentElement.classList.toggle('show')">💡 Hint</button><div class="hint-content">It highlights the contrast between professional achievement/discipline and meditative ease.</div></div>
+      <div class="options">
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The 'Wi-Fi password' is a metaphor for the accessibility of the transmission, not a financial cost associated with his friends."><span class="opt-label">A</span><span class="opt-text">The group could afford luxury travel in Japan but could not afford the &lsquo;Wi-Fi password&rsquo; to inner peace.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The 'Wi-Fi password' is a metaphor for the accessibility of the transmission, not a financial cost associated with his friends.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The paradox is that they observed the author was calm and admitted they would have 'completely fallen apart'."><span class="opt-label">B</span><span class="opt-text">The Gastrosurgeon and Dentist were calmer during the passport crisis than the author himself.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The paradox is that they observed the author was calm and admitted they would have 'completely fallen apart'.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="true" data-rationale="The author realized that while his friends were 'accomplished' and 'disciplined' in their careers, they could not access the inner stillness he had received as a gift."><span class="opt-label">C</span><span class="opt-text">Highly successful and disciplined executives found meditation impossible, while the author found it effortless.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The author realized that while his friends were 'accomplished' and 'disciplined' in their careers, they could not access the inner stillness he had received as a gift.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The author notes he can drive his mind into stillness; the paradox is that he can do so despite being less disciplined than his friends."><span class="opt-label">D</span><span class="opt-text">The author&rsquo;s Tesla could drive itself, but he could not drive his own mind into stillness.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The author notes he can drive his mind into stillness; the paradox is that he can do so despite being less disciplined than his friends.</div></div>
+        </div>
+      </div>
+      <button class="next-btn hidden">Next Question &rarr;</button>
+    </div>
+
+    <!-- Q14 -->
+    <div class="question" data-index="13">
+      <div class="q-header"><span class="q-number">Question 14</span><span class="q-of">/ 15</span></div>
+      <div class="q-text">What is the &lsquo;Missing Variable&rsquo; that the author concludes allows him to meditate despite his lack of discipline?</div>
+      <div class="hint-box"><button class="hint-toggle" onclick="this.parentElement.classList.toggle('show')">💡 Hint</button><div class="hint-content">It is something he &lsquo;didn&rsquo;t earn&rsquo; but was &lsquo;given&rsquo; beside a high-voltage lab.</div></div>
+      <div class="options">
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="While he calls her his 'better half,' he explicitly contrasts her failure to meditate with his own success to show that her support isn't the 'variable' for meditation."><span class="opt-label">A</span><span class="opt-text">The hidden support of his wife, who handled all other life &lsquo;multitasking&rsquo;.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">While he calls her his 'better half,' he explicitly contrasts her failure to meditate with his own success to show that her support isn't the 'variable' for meditation.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The author attributes his capacity specifically to the meeting with the Yogi under the tree, not to genetics."><span class="opt-label">B</span><span class="opt-text">A rare genetic predisposition toward <span class="math">Pratyak Pravahata</span>.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The author attributes his capacity specifically to the meeting with the Yogi under the tree, not to genetics.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="While modern tech is a theme of his book, the 'missing variable' that sustained him for 45 years was the 1978 transmission."><span class="opt-label">C</span><span class="opt-text">The influence of modern technology, such as the Tesla&rsquo;s self-driving mode.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">While modern tech is a theme of his book, the 'missing variable' that sustained him for 45 years was the 1978 transmission.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="true" data-rationale="The author argues that technique and discipline weren't the cause; rather, it was the 'unearned' activation provided by the Siddha Purusha in 1978."><span class="opt-label">D</span><span class="opt-text">The transmission from the Yogi that acted like a &lsquo;pre-installed&rsquo; battery or software.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The author argues that technique and discipline weren't the cause; rather, it was the 'unearned' activation provided by the Siddha Purusha in 1978.</div></div>
+        </div>
+      </div>
+      <button class="next-btn hidden">Next Question &rarr;</button>
+    </div>
+
+    <!-- Q15 -->
+    <div class="question" data-index="14">
+      <div class="q-header"><span class="q-number">Question 15</span><span class="q-of">/ 15</span></div>
+      <div class="q-text">In the graph &lsquo;The 45-Year Stress Test,&rsquo; what does the horizontal orange line represent?</div>
+      <div class="hint-box"><button class="hint-toggle" onclick="this.parentElement.classList.toggle('show')">💡 Hint</button><div class="hint-content">It is the constant signal that never faded despite &lsquo;Life Distractions&rsquo;.</div></div>
+      <div class="options">
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="This confuses the physics lecture content with the author's visual representation of his 45-year spiritual experience."><span class="opt-label">A</span><span class="opt-text">The frequency of the matter wave wavelength.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">This confuses the physics lecture content with the author's visual representation of his 45-year spiritual experience.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The 'Quantum' skeptic's defenses 'cracked' in 1978; the line represents the constant capacity that remained after those defenses fell."><span class="opt-label">B</span><span class="opt-text">The baseline stress level of a &lsquo;Quantum&rsquo; skeptic.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The 'Quantum' skeptic's defenses 'cracked' in 1978; the line represents the constant capacity that remained after those defenses fell.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="false" data-rationale="The graph is a 'Telemetry Result' of a spiritual asset, measuring the 'signal' of meditation capacity, not career metrics."><span class="opt-label">C</span><span class="opt-text">The author&rsquo;s engineering career success.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The graph is a 'Telemetry Result' of a spiritual asset, measuring the 'signal' of meditation capacity, not career metrics.</div></div>
+        </div>
+        <div class="option-wrapper">
+          <button class="option" data-correct="true" data-rationale="The graph shows that while 'Stopped Practice' and 'Life Distractions' fluctuated below, the 'Access to Grace' remained a constant, steady signal from 1978 to 2023."><span class="opt-label">D</span><span class="opt-text">Access to Grace.</span></button>
+          <div class="option-feedback hidden"><div class="feedback-status"></div><div class="feedback-rationale">The graph shows that while 'Stopped Practice' and 'Life Distractions' fluctuated below, the 'Access to Grace' remained a constant, steady signal from 1978 to 2023.</div></div>
+        </div>
+      </div>
+      <button class="next-btn hidden">See Results &rarr;</button>
+    </div>
+
+  </div><!-- /#quiz-container -->
+
+  <!-- PROOF OF COMPLETION SCREEN -->
+  <div class="completion-screen" id="completion-screen">
+    <div class="completion-badge" id="completion-badge">🎉</div>
+    <h2 class="completion-title" id="completion-title">Quiz Complete!</h2>
+    <div class="completion-subtitle" id="completion-subtitle">The Quantum Encounter &bull; Proof of Completion</div>
+
+    <div class="score-block">
+      <div class="score-number" id="final-score">0/15</div>
+      <div class="score-label" id="final-label">You got 0 out of 15 correct</div>
+      <div class="score-time">
+        <span>&#9201;</span> Time remaining: <strong id="final-time">0:00</strong>
+      </div>
+    </div>
+
+    <div class="cta-box">
+      <p class="cta-text">
+        <em>Congratulations!</em> Take a screenshot of this exact screen, click &ldquo;Subscribe Free&rdquo; below, and reply to my welcome email with your screenshot to enter this week&rsquo;s <em>$20 Amazon Gift Card drawing!</em>
+      </p>
+    </div>
+
+    <a class="subscribe-btn" href="https://selfdrivingmind.substack.com/subscribe" target="_blank">
+      &#9993;&nbsp; Subscribe Free
+    </a>
+
+    <div class="screenshot-reminder">
+      📸 <strong>Reminder:</strong> Screenshot this screen <em>before</em> clicking Subscribe &mdash; your score and time must be visible!
+    </div>
+
+    <br>
+    <button class="restart-link" onclick="restart()">Retake the quiz</button>
+  </div>
+
+</div><!-- /.container -->
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────
+const TOTAL_SECONDS = 5 * 60; // 5 minutes
+
+// ── STATE ───────────────────────────────────────────────
+let currentQ = 0;
+let correctCount = 0;
+let answered = false;
+let timeLeft = TOTAL_SECONDS;
+let timerInterval = null;
+let quizEnded = false;
+
+const totalQuestions = document.querySelectorAll('.question').length;
+
+// ── TIMER ────────────────────────────────────────────────
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+function updateTimerUI() {
+  const display = document.getElementById('timer-display');
+  const fill = document.getElementById('timer-fill');
+  const pct = (timeLeft / TOTAL_SECONDS) * 100;
+
+  display.textContent = formatTime(timeLeft);
+  fill.style.width = pct + '%';
+
+  display.classList.remove('warning', 'danger');
+  fill.classList.remove('warning', 'danger');
+
+  if (timeLeft <= 60) {
+    display.classList.add('danger');
+    fill.classList.add('danger');
+  } else if (timeLeft <= 120) {
+    display.classList.add('warning');
+    fill.classList.add('warning');
+  }
+}
+
+function startTimer() {
+  updateTimerUI();
+  timerInterval = setInterval(function() {
+    timeLeft--;
+    updateTimerUI();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      if (!quizEnded) {
+        timeExpired();
+      }
+    }
+  }, 1000);
+}
+
+function timeExpired() {
+  quizEnded = true;
+  showCompletion(true);
+}
+
+// ── INIT ─────────────────────────────────────────────────
+function init() {
+  document.querySelectorAll('.question').forEach(function(q, i) {
+    q.classList.toggle('active', i === 0);
+  });
+  updateProgress();
+  document.querySelectorAll('.option').forEach(function(opt) {
+    opt.addEventListener('click', function() { selectOption(opt); });
+  });
+  document.querySelectorAll('.next-btn').forEach(function(btn) {
+    btn.addEventListener('click', nextQuestion);
+  });
+  startTimer();
+}
+
+// ── ANSWER SELECTION ─────────────────────────────────────
+function selectOption(opt) {
+  if (answered || quizEnded) return;
+  answered = true;
+  const q = opt.closest('.question');
+  const options = q.querySelectorAll('.option');
+  const nextBtn = q.querySelector('.next-btn');
+  const isCorrect = opt.dataset.correct === 'true';
+
+  options.forEach(function(o) { o.classList.add('disabled'); });
+  opt.classList.add('selected', isCorrect ? 'correct' : 'incorrect');
+
+  if (!isCorrect) {
+    const correctOpt = Array.from(options).find(function(o) { return o.dataset.correct === 'true'; });
+    if (correctOpt) correctOpt.classList.add('show-correct');
+  }
+
+  if (isCorrect) correctCount++;
+
+  options.forEach(function(o) {
+    const wrapper = o.closest('.option-wrapper');
+    const feedback = wrapper.querySelector('.option-feedback');
+    const isThisCorrect = o.dataset.correct === 'true';
+    const rationale = o.dataset.rationale;
+    if (rationale && rationale.trim()) {
+      feedback.classList.remove('hidden');
+      feedback.classList.add(isThisCorrect ? 'correct-feedback' : 'incorrect-feedback');
+      const statusEl = feedback.querySelector('.feedback-status');
+      statusEl.className = 'feedback-status ' + (isThisCorrect ? 'correct' : 'incorrect');
+      statusEl.innerHTML = isThisCorrect ? '\u2713 Right answer' : '\u2717 Not quite';
+    }
+  });
+
+  nextBtn.classList.remove('hidden');
+  const isLast = currentQ === totalQuestions - 1;
+  if (isLast) nextBtn.textContent = 'See Results \u2192';
+}
+
+// ── NAVIGATION ────────────────────────────────────────────
+function nextQuestion() {
+  answered = false;
+  currentQ++;
+  if (currentQ >= totalQuestions) {
+    clearInterval(timerInterval);
+    quizEnded = true;
+    showCompletion(false);
+    return;
+  }
+  document.querySelectorAll('.question').forEach(function(q, i) {
+    q.classList.toggle('active', i === currentQ);
+  });
+  updateProgress();
+}
+
+function updateProgress() {
+  document.getElementById('progress-fill').style.width = (currentQ / totalQuestions * 100) + '%';
+}
+
+// ── COMPLETION SCREEN ─────────────────────────────────────
+function showCompletion(timedOut) {
+  // Hide all questions
+  document.querySelectorAll('.question').forEach(function(q) {
+    q.classList.remove('active');
+  });
+  document.getElementById('progress-fill').style.width = '100%';
+
+  // Populate fields
+  const timeRemaining = Math.max(0, timeLeft);
+  document.getElementById('final-score').textContent = correctCount + '/' + totalQuestions;
+  document.getElementById('final-label').textContent =
+    'You got ' + correctCount + ' out of ' + totalQuestions + ' correct';
+  document.getElementById('final-time').textContent = formatTime(timeRemaining);
+
+  // Adjust badge/title for timed-out state
+  if (timedOut) {
+    document.getElementById('completion-badge').textContent = '\u23F0';
+    document.getElementById('completion-title').textContent = 'Time\u2019s Up!';
+  } else {
+    const pct = correctCount / totalQuestions;
+    document.getElementById('completion-badge').textContent =
+      pct >= 0.8 ? '\uD83C\uDF1F' : pct >= 0.6 ? '\uD83C\uDFC6' : '\uD83D\uDCAA';
+    document.getElementById('completion-title').textContent = 'Quiz Complete!';
+  }
+
+  document.getElementById('completion-screen').classList.add('active');
+}
+
+// ── RESTART ───────────────────────────────────────────────
+function restart() {
+  clearInterval(timerInterval);
+  currentQ = 0;
+  correctCount = 0;
+  answered = false;
+  quizEnded = false;
+  timeLeft = TOTAL_SECONDS;
+
+  document.getElementById('completion-screen').classList.remove('active');
+
+  document.querySelectorAll('.question').forEach(function(q, i) {
+    q.classList.toggle('active', i === 0);
+    q.querySelectorAll('.option').forEach(function(o) {
+      o.classList.remove('selected', 'correct', 'incorrect', 'disabled', 'show-correct');
+    });
+    q.querySelectorAll('.option-feedback').forEach(function(f) {
+      f.classList.add('hidden');
+      f.classList.remove('correct-feedback', 'incorrect-feedback');
+    });
+    const btn = q.querySelector('.next-btn');
+    btn.classList.add('hidden');
+    btn.textContent = i === totalQuestions - 1 ? 'See Results \u2192' : 'Next Question \u2192';
+  });
+
+  updateProgress();
+  updateTimerUI();
+  startTimer();
+}
+
+init();
+</script>
+</body>
+</html>
