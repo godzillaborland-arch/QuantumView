@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MJ Mastermind Recordings &mdash; Marketing Intelligence</title>
+<meta name="description" content="Comprehensive breakdown of marketing tips, resources, and tactical gems from each Morgan James Mastermind session.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:      #F5F0E8;
+    --cream-dark: #EDE7D9;
+    --ink:        #1A1714;
+    --ink-mid:    #3D3530;
+    --ink-light:  #6B5E56;
+    --rust:       #A84327;
+    --rust-dark:  #8C3520;
+    --rust-pale:  #F0E0DA;
+    --gold:       #C8922A;
+    --divider:    #D6CFC4;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* ── HEADER ─────────────────────────────────────────── */
+  header {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 3.5rem 2rem 3rem;
+    text-align: center;
+  }
+  .header-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 1rem;
+  }
+  header h1 {
+    font-family: 'Lora', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--cream);
+    margin-bottom: 0.9rem;
+  }
+  header h1 em {
+    font-style: italic;
+    color: #D4A98A;
+  }
+  .header-sub {
+    font-size: 0.95rem;
+    color: #A09490;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* ── NAV / SESSION INDEX ─────────────────────────────── */
+  .session-nav {
+    background: var(--cream-dark);
+    border-bottom: 1px solid var(--divider);
+    padding: 2rem 2rem 2.2rem;
+  }
+  .session-nav-inner {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .nav-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 1rem;
+  }
+  .nav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.55rem;
+  }
+  .nav-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--cream);
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+  }
+  .nav-card:hover {
+    border-color: var(--rust);
+    box-shadow: 0 2px 8px rgba(168,67,39,0.12);
+  }
+  .nav-card-date {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .nav-card-hint {
+    font-size: 0.7rem;
+    color: var(--ink-light);
+    margin-top: 0.2rem;
+    line-height: 1.4;
+  }
+
+  /* ── MAIN CONTENT ────────────────────────────────────── */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  /* ── SESSION CARD ────────────────────────────────────── */
+  .session {
+    margin-bottom: 4rem;
+    scroll-margin-top: 1.5rem;
+  }
+  .session-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    border-bottom: 2px solid var(--rust);
+    padding-bottom: 0.65rem;
+    margin-bottom: 1.6rem;
+  }
+  .session-num {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--rust);
+    flex-shrink: 0;
+  }
+  .session-title {
+    font-family: 'Lora', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  /* ── TIPS SECTION ────────────────────────────────────── */
+  .tips-heading {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 1rem;
+  }
+
+  .tip {
+    background: white;
+    border: 1px solid var(--divider);
+    border-left: 3px solid var(--rust);
+    border-radius: 0 6px 6px 0;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.75rem;
+  }
+  .tip-title {
+    font-family: 'Lora', serif;
+    font-size: 0.97rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.35rem;
+  }
+  .tip-body {
+    font-size: 0.9rem;
+    color: var(--ink-mid);
+    line-height: 1.65;
+  }
+
+  /* ── RESOURCES SECTION ───────────────────────────────── */
+  .resources {
+    background: var(--rust-pale);
+    border: 1px solid #DFC0B5;
+    border-radius: 8px;
+    padding: 1.1rem 1.3rem;
+    margin-top: 1.4rem;
+  }
+  .resources-heading {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--rust-dark);
+    margin-bottom: 0.8rem;
+  }
+  .resource-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 1.5rem;
+  }
+  .resource-list li {
+    font-size: 0.85rem;
+    color: var(--ink-mid);
+    line-height: 1.5;
+  }
+  .resource-list li a {
+    color: var(--rust-dark);
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(140,53,32,0.3);
+    transition: border-color 0.15s;
+  }
+  .resource-list li a:hover {
+    border-color: var(--rust-dark);
+  }
+  .resource-list li .label {
+    color: var(--ink-light);
+    font-size: 0.78rem;
+    margin-left: 0.25rem;
+  }
+
+  /* ── DIVIDER ─────────────────────────────────────────── */
+  .session-divider {
+    border: none;
+    border-top: 1px dashed var(--divider);
+    margin: 0 0 4rem;
+  }
+
+  /* ── BACK TO TOP ─────────────────────────────────────── */
+  .back-top {
+    text-align: center;
+    padding: 1rem 0 0;
+  }
+  .back-top a {
+    font-size: 0.78rem;
+    color: var(--ink-light);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--divider);
+    padding-bottom: 1px;
+  }
+  .back-top a:hover { color: var(--rust); border-color: var(--rust); }
+
+  /* ── FOOTER ──────────────────────────────────────────── */
+  footer {
+    background: var(--ink);
+    color: #706660;
+    text-align: center;
+    font-size: 0.78rem;
+    padding: 1.8rem 2rem;
+  }
+
+  @media (max-width: 600px) {
+    .nav-grid { grid-template-columns: repeat(2, 1fr); }
+    .session-header { flex-direction: column; gap: 0.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ HEADER -->
+<header>
+  <p class="header-eyebrow">Morgan James Publishing</p>
+  <h1>Mastermind <em>Recordings</em></h1>
+  <p class="header-sub">A curated breakdown of marketing tips, tactical hidden gems, and key resources from each weekly session.</p>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════ SESSION NAV -->
+<nav class="session-nav" id="top">
+  <div class="session-nav-inner">
+    <p class="nav-label">Jump to a session</p>
+    <div class="nav-grid">
+      <a href="#s1" class="nav-card">
+        <span class="nav-card-date">Jan 6, 2026</span>
+        <span class="nav-card-hint">B&N 300 Rule &amp; Bloom Crew</span>
+      </a>
+      <a href="#s2" class="nav-card">
+        <span class="nav-card-date">Jan 13, 2026</span>
+        <span class="nav-card-hint">Ethical Bribes &amp; QR Codes</span>
+      </a>
+      <a href="#s3" class="nav-card">
+        <span class="nav-card-date">Jan 20, 2026</span>
+        <span class="nav-card-hint">Two Bridges &amp; LinkedIn Hack</span>
+      </a>
+      <a href="#s4" class="nav-card">
+        <span class="nav-card-date">Jan 27, 2026</span>
+        <span class="nav-card-hint">Amazon Reviews &amp; Publicists</span>
+      </a>
+      <a href="#s4b" class="nav-card">
+        <span class="nav-card-date">Feb 3, 2026</span>
+        <span class="nav-card-hint">Book Signings &amp; Bulk Sales</span>
+      </a>
+      <a href="#s5" class="nav-card">
+        <span class="nav-card-date">Apr 21, 2026</span>
+        <span class="nav-card-hint">Audiobooks &amp; Self-Shipping</span>
+      </a>
+      <a href="#s6" class="nav-card">
+        <span class="nav-card-date">May 12, 2026</span>
+        <span class="nav-card-hint">NetGalley &amp; BookBub</span>
+      </a>
+      <a href="#s7" class="nav-card">
+        <span class="nav-card-date">May 26, 2026</span>
+        <span class="nav-card-hint">Bulk Sales &amp; Sponsors</span>
+      </a>
+      <a href="#s8" class="nav-card">
+        <span class="nav-card-date">Jun 2, 2026</span>
+        <span class="nav-card-hint">USA Today &amp; Book Signings</span>
+      </a>
+      <a href="#s9" class="nav-card">
+        <span class="nav-card-date">Jun 9, 2026</span>
+        <span class="nav-card-hint">ClickBank Backend &amp; NotebookLM</span>
+      </a>
+      <a href="#s10" class="nav-card">
+        <span class="nav-card-date">Jun 16, 2026</span>
+        <span class="nav-card-hint">TikTok &amp; Email Lead Magnets</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════ MAIN -->
+<main>
+
+  <!-- ── SESSION 1 ──────────────────────────────────────── -->
+  <section class="session" id="s1">
+    <div class="session-header">
+      <span class="session-num">Session 01</span>
+      <h2 class="session-title">January 6, 2026</h2>
+    </div>
+    <p class="tips-heading">Marketing Tips &amp; Tactical Hidden Gems</p>
+
+    <div class="tip">
+      <p class="tip-title">Retail Economics &amp; The B&amp;N 300 Rule</p>
+      <p class="tip-body">Amazon takes roughly 65% discount, Barnes &amp; Noble ~50%, and indie stores ~40%. Hitting <strong>300 pre-orders on B&amp;N</strong> is the key threshold that influences their decision to physically stock your book in stores.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Retail Phrasing</p>
+      <p class="tip-body">Always push brick-and-mortar publicly. Tell your audience the book is &ldquo;available wherever books are sold&rdquo; and say &ldquo;international bestseller&rdquo; rather than &ldquo;Amazon bestseller.&rdquo; Never direct bulk sales to Amazon&mdash;they may ship 200 books in 200 individual boxes.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Bookmarks &amp; ARCs</p>
+      <p class="tip-body">Print bookmarks with a book thumbnail, short description, and QR code pointing to your pre-order site (limit ~250 for events). Distribute Advance Reader Copies with special stickers to make early readers feel special and build launch momentum.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The &ldquo;Bloom Crew&rdquo; Strategy</p>
+      <p class="tip-body">Build an early waitlist and convert them into a launch crew. Give them a shareable digital kit and ask them shamelessly to request your book at regional libraries.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">AI Copyright Warning</p>
+      <p class="tip-body">You can use Grok or ChatGPT for brainstorming and sentence clarity, but AI-generated content cannot be legally copyrighted. Your book must remain distinctly written by you.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The &ldquo;Five Things&rdquo; Rule</p>
+      <p class="tip-body">Do not get overwhelmed trying every marketing tactic at once. Consistently execute just three to five marketing actions a week&mdash;that alone puts you ahead of the majority of authors.</p>
+    </div>
+
+    <div class="resources">
+      <p class="resources-heading">Resources &amp; Contacts</p>
+      <ul class="resource-list">
+        <li><a href="https://chatwithdavid.com" target="_blank">chatwithdavid.com</a> <span class="label">Strategy meetings with David</span></li>
+        <li><a href="mailto:bookorders@morganjamespublishing.com">bookorders@morganjamespublishing.com</a> <span class="label">Author copy tracking (Andrea)</span></li>
+        <li><a href="https://morganjamesbookorders.com" target="_blank">morganjamesbookorders.com</a> <span class="label">Order author copies</span></li>
+        <li><a href="https://beantownbooks.com" target="_blank">beantownbooks.com</a> <span class="label">Early reported bulk copies</span></li>
+        <li><a href="https://moo.com" target="_blank">moo.com</a> / <a href="https://vistaprint.com" target="_blank">Vistaprint</a> / <a href="https://canva.com" target="_blank">Canva</a> <span class="label">Bookmark printing</span></li>
+        <li><a href="https://facebook.com/groups/morganjames" target="_blank">facebook.com/groups/morganjames</a> <span class="label">Private MJ author group</span></li>
+      </ul>
+    </div>
+  </section>
+  <hr class="session-divider">
+
+  <!-- ── SESSION 2 ──────────────────────────────────────── -->
+  <section class="session" id="s2">
+    <div class="session-header">
+      <span class="session-num">Session 02</span>
+      <h2 class="session-title">January 13, 2026</h2>
+    </div>
+    <p class="tips-heading">Marketing Tips &amp; Tactical Hidden Gems</p>
+
+    <div class="tip">
+      <p class="tip-title">Event Sales &amp; The &ldquo;Ethical Bribe&rdquo;</p>
+      <p class="tip-body">When speaking at events, tell the audience that if they pre-order the final book via Barnes &amp; Noble right there, you will give them a free signed ARC or an immediate digital ebook download.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Discount Codes</p>
+      <p class="tip-body">Authors can use the Morgan James bookstore to offer codes ranging from <strong>MJA5 to MJA50</strong> (5%&ndash;50% off), which include free shipping for orders over $40.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Digital Pre-Order Fulfillment</p>
+      <p class="tip-body">If collecting pre-orders on your own website, use the publisher&rsquo;s ebook landing page link as the &ldquo;Thank You&rdquo; page for automatic digital delivery. Request a version that removes &ldquo;free&rdquo; or the email opt-in if buyers have already paid.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">QR Code Backup</p>
+      <p class="tip-body">Always save your book&rsquo;s QR code image directly to your phone&rsquo;s photo album so you can flash it to podcasters or prospects instantly&mdash;even if you run out of physical postcards.</p>
+    </div>
+
+    <div class="resources">
+      <p class="resources-heading">Resources &amp; Contacts</p>
+      <ul class="resource-list">
+        <li><a href="https://tertullia.com" target="_blank">tertullia.com</a> <span class="label">Website builder for MJ authors &mdash; $7.99/mo</span></li>
+        <li><a href="https://stickermule.com" target="_blank">Sticker Mule</a> <span class="label">Circular ARC stickers</span></li>
+        <li><span>Marketing Resource Guide</span> <span class="label">Available as Box folder PDF link</span></li>
+      </ul>
+    </div>
+  </section>
+  <hr class="session-divider">
+
+  <!-- ── SESSION 3 ──────────────────────────────────────── -->
+  <section class="session" id="s3">
+    <div class="session-header">
+      <span class="session-num">Session 03</span>
+      <h2 class="session-title">January 20, 2026</h2>
+    </div>
+    <p class="tips-heading">Marketing Tips &amp; Tactical Hidden Gems</p>
+
+    <div class="tip">
+      <p class="tip-title">The &ldquo;Two Bridges&rdquo; of Marketing</p>
+      <p class="tip-body">Build the <strong>Authority Bridge</strong> by sharing your publishing journey the moment you decide to write. Once you&rsquo;ve invested the audience early, crossing the <strong>Permissions Bridge</strong> (asking them to pre-order) happens automatically.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Retail Placements &amp; Ebook Promos</p>
+      <p class="tip-body">Drop your ebook price to $0.99, $1.99, or $2.99 during publication week to drive high-volume sales and accidentally hit bestseller lists.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Hudson&rsquo;s Airport Placement</p>
+      <p class="tip-body">You can pay ~$5,000 for Hudson&rsquo;s Airport physical cover-out placement, or simply leverage their free website listing for brand credibility at no cost.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The Blank Book Photo Hack</p>
+      <p class="tip-body">If your physical book isn&rsquo;t printed yet, hold a blank white book in your photos. Use AI or Photoshop to overlay your cover onto it afterward for polished marketing materials.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">LinkedIn Algorithm Hack</p>
+      <p class="tip-body">Simply &ldquo;liking&rdquo; fellow authors&rsquo; posts does not boost the algorithm. You must <em>write a comment</em> on their LinkedIn posts to trigger the algorithmic push.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Avoid Download Codes</p>
+      <p class="tip-body">One-time-use digital download codes are clunky. It&rsquo;s far more efficient to set up an autoresponder that sends the direct landing page link to your readers automatically.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Maximize Cover Reveals</p>
+      <p class="tip-body">A cover reveal with a countdown generates massive early traffic and can even attract potential sponsors for your launch.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Sell Without Selling</p>
+      <p class="tip-body">At workshops, weave your book into a story and attach a free coaching session for anyone who pre-orders on the spot.</p>
+    </div>
+
+    <div class="resources">
+      <p class="resources-heading">Resources &amp; Contacts</p>
+      <ul class="resource-list">
+        <li><a href="https://chatwithdavid.com" target="_blank">chatwithdavid.com</a> <span class="label">Strategy meetings</span></li>
+        <li><a href="https://hudsonsbooksellers.com" target="_blank">hudsonsbooksellers.com</a> <span class="label">Hudson&rsquo;s retail site</span></li>
+        <li><a href="https://getmybook.com" target="_blank">getmybook.com</a> <span class="label">Ebook fulfillment portal</span></li>
+      </ul>
+    </div>
+  </section>
+  <hr class="session-divider">
+
+  <!-- ── SESSION 4 ──────────────────────────────────────── -->
+  <section class="session" id="s4">
+    <div class="session-header">
+      <span class="session-num">Session 04</span>
+      <h2 class="session-title">January 27, 2026</h2>
+    </div>
+    <p class="tips-heading">Marketing Tips &amp; Tactical Hidden Gems</p>
+
+    <div class="tip">
+      <p class="tip-title">Amazon Review Milestones</p>
+      <p class="tip-body"><strong>25 reviews</strong> unlocks better co-op advertising. <strong>50 reviews</strong> unlocks A+ content. At <strong>100 reviews</strong>, Amazon begins spending their own money on keyword advertising for your book.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The Endorsement Hack</p>
+      <p class="tip-body">Pre-write 6&ndash;12 sample endorsements and let the endorser simply pick a number or tweak it slightly. This dramatically increases your success rate by removing the effort barrier.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Hiring a Publicist</p>
+      <p class="tip-body">Hire a publicist only as a &ldquo;designated gorilla&rdquo; with strict boundaries. Without a backend monetization funnel (e.g., a $197 product), you will likely spend more than you earn in royalties.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">PodMatch</p>
+      <p class="tip-body">Use mypodmatch.com to find and book targeted podcast shows directly&mdash;rather than paying a publicist to handle outreach.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Physical vs. Digital Perceived Value</p>
+      <p class="tip-body">Physical books carry significantly more perceived value and authority in funnels than ebooks. Weight matters.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Tax Compliance at Live Events</p>
+      <p class="tip-body">Check with your local CPA regarding your state&rsquo;s specific laws for collecting sales tax when selling author copies at live events.</p>
+    </div>
+
+    <div class="resources">
+      <p class="resources-heading">Resources &amp; Contacts</p>
+      <ul class="resource-list">
+        <li><a href="https://mypodmatch.com" target="_blank">mypodmatch.com</a> <span class="label">Find targeted podcast guest spots</span></li>
+      </ul>
+    </div>
+  </section>
+  <hr class="session-divider">
+
+  <!-- ── SESSION 4B ─────────────────────────────────────── -->
+  <section class="session" id="s4b">
+    <div class="session-header">
+      <span class="session-num">Session 04B</span>
+      <h2 class="session-title">February 3, 2026</h2>
+    </div>
+    <p class="tips-heading">Marketing Tips &amp; Tactical Hidden Gems</p>
+
+    <div class="tip">
+      <p class="tip-title">The Book Signing &ldquo;Crowd&rdquo; Illusion</p>
+      <p class="tip-body">Never sit or stand <em>behind</em> your signing table&mdash;always stand out in front of it to engage people. Bring at least three people who love you to the event and keep two of them standing in line talking to you at all times to create an immediate illusion of high demand.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The &ldquo;Wandering Shill&rdquo; Bookstore Tactic</p>
+      <p class="tip-body">Task a third friend or family member to wander the store carrying an autographed copy of your book. Have them actively talk you up to other shoppers (&ldquo;Oh my gosh, I can&rsquo;t believe this author is here today&mdash;you have to go check them out!&rdquo;) to physically herd traffic over to your line.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Inscription Efficiency Rule</p>
+      <p class="tip-body">Do not try to write custom, ad-libbed messages on the fly at a busy signing&mdash;you will inevitably start writing down the words you are speaking and ruin the book. Memorize a fixed, standard phrase in advance. Write the reader&rsquo;s name, insert your standard phrase, sign it, and explicitly date it. Have readers write their names on a 3&times;5 notepad first to avoid spelling errors.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The Retail &ldquo;Trunk Trick&rdquo;</p>
+      <p class="tip-body">Bookstores under-order event stock constantly. Never go to a signing without a backup case of books hidden in your vehicle trunk. If the store sells out, tell the manager you can supply your own books&mdash;they will facilitate the sales on-site and reimburse you by ordering replacement stock from the publisher later.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The 3-Visit Retail Relationship Strategy</p>
+      <p class="tip-body">Do not walk into a bookstore cold and pitch a signing&mdash;you will be met with an automatic &ldquo;no.&rdquo; Instead, use a three-step pipeline:<br><br>
+      <strong>Visit 1:</strong> Browse the store, buy something small, make friends with a staff member (ideally the Community Relations Manager), and leave.<br>
+      <strong>Visit 2:</strong> Return a week or two later while the connection is warm, repeat the friendly interaction, buy something small, and leave.<br>
+      <strong>Visit 3:</strong> Explain that you are a locally distributed author and pitch the signing as a collaborative event where you are bringing your entire network into their store to buy products.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Media-Driven Signing Bookings</p>
+      <p class="tip-body">Proactively pitch local print, radio, and TV stations <strong>60 days before</strong> a planned event. Secure a short media interview snippet, then leverage that media exposure to prove to the bookstore manager you are bringing guaranteed traffic.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Leveraging Regional Store Managers</p>
+      <p class="tip-body">Once you execute a successful signing at one location, call the store manager in your next target market. Name-drop the manager you just worked with to establish instant internal retail credibility.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Post-Launch Textual Error Corrections</p>
+      <p class="tip-body">The publisher retains massive flexibility for interior text updates post-launch. Submit a support ticket and the publisher will update the digital master files so all future printings are completely corrected.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Custom Audiobook Strategy</p>
+      <p class="tip-body">Audiobooks do not have to be recorded word-for-word if standard prose reading doesn&rsquo;t fit your format. You can record an abbreviated custom audio walkthrough guiding listeners through the concepts, paired with downloadable companion worksheets or PDFs.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Strategic Audio Delay</p>
+      <p class="tip-body">Release your audiobook <strong>3 months after</strong> your print publication date. This keeps early audio sales from cannibalizing the initial print pre-orders needed for physical bookstore shelf placement, while giving you a powerful secondary &ldquo;launch week&rdquo; milestone to promote later.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Pre-Pub Bulk Sales &amp; Bestseller Stacking</p>
+      <p class="tip-body">If an organization or business wants to buy multiple copies before your official publication date, coordinate the purchase through Beantown Books. They will hold the physical reporting data and stack it directly into your launch week numbers to maximize your shot at hitting major bestseller lists.</p>
+    </div>
+
+    <div class="resources">
+      <p class="resources-heading">Resources &amp; Contacts</p>
+      <ul class="resource-list">
+        <li><a href="mailto:audiobooks@morganjamespublishing.com">audiobooks@morganjamespublishing.com</a> <span class="label">Audio specs (Sophia)</span></li>
+        <li><a href="https://morganjamespublishing.com" target="_blank">morganjamespublishing.com</a> <span class="label">Interior text fix tickets via &ldquo;Author Access&rdquo;</span></li>
+        <li><a href="https://futurebooks.com" target="_blank">futurebooks.com</a> <span class="label">Voice cloning &amp; human-managed audio production</span></li>
+        <li><a href="https://beantownbooks.com" target="_blank">beantownbooks.com</a> / <a href="mailto:team@beantownbooks.com">team@beantownbooks.com</a> <span class="label">Bulk order event coordination</span></li>
+        <li><a href="https://pradindustries.com" target="_blank">pradindustries.com</a> <span class="label">Custom rigid boxes &amp; card decks &mdash; contact Peggy Underwood</span></li>
+      </ul>
+    </div>
+  </section>
+  <hr class="session-divider">
+
+  <!-- ── SESSION 5 ──────────────────────────────────────── -->
+  <section class="session" id="s5">
+    <div class="session-header">
+      <span class="session-num">Session 05</span>
+      <h2 class="session-title">April 21, 2026</h2>
+    </div>
+    <p class="tips-heading">Marketing Tips &amp; Tactical Hidden Gems</p>
+
+    <div class="tip">
+      <p class="tip-title">Audiobook Production</p>
+      <p class="tip-body">Always record in your own voice to build listener connection. If impossible, use <strong>Futuri Books</strong>&mdash;a human-managed AI voice clone service for around $2,200.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">PodMatch Proactivity</p>
+      <p class="tip-body">Do not wait for hosts to reach out. Proactively message them and tweak your profile at least once every three months. Repurpose podcast interviews into short video clips for Instagram to prove you are a good guest.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Chamber of Commerce Limo Tour</p>
+      <p class="tip-body">Pitch local Chamber of Commerce branches for speaking gigs, or rent a limo and do a tour across different cities for maximum exposure.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The Self-Shipping Hack</p>
+      <p class="tip-body">Buy a roll of <strong>3M Scotch bubble wrap packaging</strong> instead of envelopes and tape. The material sticks to itself, so you wrap a book, trim, slap on a label, and ship instantly.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Bookstore Signings</p>
+      <p class="tip-body">Never show up without a backup case of your own books&mdash;stores frequently sell out or order late. Request a one-time consignment deal if necessary.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Amazon &ldquo;Browsing&rdquo; Algorithm</p>
+      <p class="tip-body">Amazon categorizes your book based on what the user was browsing <em>before</em> they clicked your link. Request a global metadata refresh if you end up falsely ranked in an unrelated category.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Instant Bestseller Verification</p>
+      <p class="tip-body">If you rank under 100 in <em>any</em> Amazon category, you are officially an Amazon Bestseller. Take a screenshot immediately&mdash;Amazon will not notify you.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Frankfurt Book Fair Warning</p>
+      <p class="tip-body">Skip offers (e.g., $2,000) to feature your book at Frankfurt. It is a rights event for publishers, not a consumer fair&mdash;expect zero consumer sales.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The &ldquo;Free Content&rdquo; Hack</p>
+      <p class="tip-body">Never offer a &ldquo;Free Chapter&rdquo;&mdash;readers assume you&rsquo;ll pressure them to buy. Call it &ldquo;Free Content&rdquo; or a &ldquo;Free Report&rdquo; instead and capture their email with less resistance.</p>
+    </div>
+
+    <div class="resources">
+      <p class="resources-heading">Resources &amp; Contacts</p>
+      <ul class="resource-list">
+        <li><a href="mailto:audiobooks@morganjamespublishing.com">audiobooks@morganjamespublishing.com</a> <span class="label">Audio specs (Sophia)</span></li>
+        <li><a href="https://teambeantownbooks.com" target="_blank">teambeantownbooks.com</a> <span class="label">Early reported sales</span></li>
+        <li><a href="https://bookfunnel.com" target="_blank">bookfunnel.com</a> <span class="label">Distribute PDF &ldquo;free content&rdquo; securely</span></li>
+      </ul>
+    </div>
+  </section>
+  <hr class="session-divider">
+
+  <!-- ── SESSION 6 ──────────────────────────────────────── -->
+  <section class="session" id="s6">
+    <div class="session-header">
+      <span class="session-num">Session 06</span>
+      <h2 class="session-title">May 12, 2026</h2>
+    </div>
+    <p class="tips-heading">Marketing Tips &amp; Tactical Hidden Gems</p>
+
+    <div class="tip">
+      <p class="tip-title">Promotional Platforms Compared</p>
+      <p class="tip-body"><strong>NetGalley</strong> is best for early reviews, influencer buzz, and library awareness. <strong>BookBub</strong> is a massive sales engine ideal for discounted ebooks ($0.99). <strong>Book Movement</strong> is niche and meant for book clubs.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">NetGalley Ecosystem Warning</p>
+      <p class="tip-body">Do not simply upload your book to NetGalley and walk away. Without a larger outreach campaign, it&rsquo;s like &ldquo;putting flyers on a windshield in a rainstorm.&rdquo;</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Hudson&rsquo;s Placement Specifics</p>
+      <p class="tip-body">A negotiated placement exists for ~$4,800: 50+ stores for 30 days, cover-out placement, with guaranteed overnight replenishment.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">MJA Discount Code Nuance</p>
+      <p class="tip-body">Discount codes on morganjamesbooks.com range from MJA5 to MJA40 (max 40% off). The code <strong>MJA100 does not work</strong>.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The Auto-Responder Hack</p>
+      <p class="tip-body">To get the most current links and forms without waiting for a reply, send a blank email to authorsupport@morganjamespublishing.com&mdash;an autoresponder immediately replies with FAQs and critical links.</p>
+    </div>
+
+    <div class="resources">
+      <p class="resources-heading">Resources &amp; Contacts</p>
+      <ul class="resource-list">
+        <li><a href="mailto:authorsupport@morganjamespublishing.com">authorsupport@morganjamespublishing.com</a> <span class="label">Auto-responder with FAQs &amp; links</span></li>
+        <li><a href="https://teambeantownbooks.com" target="_blank">teambeantownbooks.com</a> <span class="label">Pre-pub reported bulk orders</span></li>
+      </ul>
+    </div>
+  </section>
+  <hr class="session-divider">
+
+  <!-- ── SESSION 7 ──────────────────────────────────────── -->
+  <section class="session" id="s7">
+    <div class="session-header">
+      <span class="session-num">Session 07</span>
+      <h2 class="session-title">May 26, 2026</h2>
+    </div>
+    <p class="tips-heading">Marketing Tips &amp; Tactical Hidden Gems</p>
+
+    <div class="tip">
+      <p class="tip-title">Pitching Bulk Sales &amp; Sponsors</p>
+      <p class="tip-body">Pitch event organizers by framing the conversation entirely around what&rsquo;s in it for their audience. Alternatively, pitch the <em>sponsors</em> of the event to buy books to give away at their booths.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">B&amp;N Pre-Order Bribes</p>
+      <p class="tip-body">B&amp;N does not accept discount codes for pre-orders. Manually verify pre-orders (e.g., have them email receipts) and use your MJ landing page to deliver an ebook bribe.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Hudson&rsquo;s Faith Update</p>
+      <p class="tip-body">Hudson&rsquo;s Airport stores recently reversed their policy and are now accepting faith-based books in-store, provided there are no violent images (guns/bombs) on the cover.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The ISBN Search Trick</p>
+      <p class="tip-body">Before your book cover officially populates on retail sites, locate your hidden pre-order links by dropping your <strong>13-digit ISBN</strong> directly into Google or bookstore search engines.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Podcast Weaving</p>
+      <p class="tip-body">Naturally weave your book&rsquo;s lessons into podcast interviews and speeches. By the time you mention the title at the end, the audience is already anticipating it&mdash;removing the clunky sales pitch feeling.</p>
+    </div>
+
+    <div class="resources">
+      <p class="resources-heading">Resources &amp; Contacts</p>
+      <ul class="resource-list">
+        <li><a href="https://teambeantownbooks.com" target="_blank">teambeantownbooks.com</a></li>
+        <li><a href="https://mypodmatch.com" target="_blank">mypodmatch.com</a></li>
+        <li><span>Book Thinkers Event</span> <span class="label">July 11&ndash;12, Boston</span></li>
+      </ul>
+    </div>
+  </section>
+  <hr class="session-divider">
+
+  <!-- ── SESSION 8 ──────────────────────────────────────── -->
+  <section class="session" id="s8">
+    <div class="session-header">
+      <span class="session-num">Session 08</span>
+      <h2 class="session-title">June 2, 2026</h2>
+    </div>
+    <p class="tips-heading">Marketing Tips &amp; Tactical Hidden Gems</p>
+
+    <div class="tip">
+      <p class="tip-title">Bestseller List Mechanics</p>
+      <p class="tip-body">USA Today requires sales across at least 3 different sources (Amazon, B&amp;N, Indies), but weighs indie stores significantly heavier. Pre-pub week is the easiest time to hit it.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Barnes &amp; Noble Bestseller</p>
+      <p class="tip-body">You must manually scroll the top 100 category lists to find your book and screenshot it&mdash;B&amp;N does not display category ranks prominently or notify you.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The Blacklist Warning</p>
+      <p class="tip-body">Barnes &amp; Noble actively blacklists authors (sometimes for up to <strong>5 years</strong>) for promoting Amazon too heavily on public platforms. Never highlight Amazon over B&amp;N in your marketing.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The &ldquo;Memorized Tagline&rdquo; Signing Hack</p>
+      <p class="tip-body">Come up with a short, personalized tagline to write in every book you sign. This lets you write smoothly while talking to readers, preventing you from accidentally inscribing their conversation.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Book Signing Mechanics</p>
+      <p class="tip-body">Use <strong>blue ink</strong> to make the signature pop. Keep backup pens in a baggie. Use a fishbowl or iPad form to capture emails. Have readers write their name on a notepad first to avoid misspelling unique names.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Interior Typo Fixes</p>
+      <p class="tip-body">Post-publication typos or textual errors can be fixed&mdash;submit a ticket and the publisher will update the file for future printings and append the copyright date to indicate the corrected version.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Royalty Delay</p>
+      <p class="tip-body">Royalty payments have a <strong>9-month delay</strong> to account for bookstore returns, which average under 15%.</p>
+    </div>
+
+    <div class="resources">
+      <p class="resources-heading">Resources &amp; Contacts</p>
+      <ul class="resource-list">
+        <li><a href="https://morganjamespublishing.com" target="_blank">morganjamespublishing.com</a> <span class="label">Help tickets via &ldquo;Author Access&rdquo;</span></li>
+      </ul>
+    </div>
+  </section>
+  <hr class="session-divider">
+
+  <!-- ── SESSION 9 ──────────────────────────────────────── -->
+  <section class="session" id="s9">
+    <div class="session-header">
+      <span class="session-num">Session 09</span>
+      <h2 class="session-title">June 9, 2026</h2>
+    </div>
+    <p class="tips-heading">Marketing Tips &amp; Tactical Hidden Gems</p>
+
+    <div class="tip">
+      <p class="tip-title">Amazon Review Targets</p>
+      <p class="tip-body">Target a minimum of <strong>25 reviews</strong> as quickly as possible to signal to Amazon that the product is generating buzz.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The Early Ebook Review Hack</p>
+      <p class="tip-body">You cannot leave an Amazon review until a product is officially for sale. Release the ebook version early (heavily discounted) to allow advanced readers to populate your Amazon page with verified reviews before the physical launch.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Interior Typo Fixes (Pre-Print)</p>
+      <p class="tip-body">If a severe typo is discovered right before print, email Andrea or submit a ticket and the publisher will quickly fix the interior file.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The ClickBank Backend (John &amp; Jim&rsquo;s System)</p>
+      <p class="tip-body">Stop relying solely on royalties. Take a single chapter, transform it into a digital PDF ($17&ndash;$27), and launch it on ClickBank to leverage their massive affiliate network. Use upsells (courses, supplements) to push average cart value over $100.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The &ldquo;Buyers List&rdquo; Metric</p>
+      <p class="tip-body">99% of backend income comes from an email list. A list of <strong>10,000 buyers</strong> (people who spent $17 on your ClickBank offer) is exponentially more powerful than a free prospect list of 1,000,000&mdash;because buyers have proven willingness to spend.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Asset Generation with NotebookLM</p>
+      <p class="tip-body">Use Google&rsquo;s <strong>NotebookLM</strong> to effortlessly generate marketing assets, mind maps, and interactive audio podcasts directly from your manuscript.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Event Sales via Stripe</p>
+      <p class="tip-body">If doing an early book signing with ARCs, allow buyers to purchase immediately via your own Stripe account or Venmo&mdash;capturing the sale right there on the spot.</p>
+    </div>
+
+    <div class="resources">
+      <p class="resources-heading">Resources &amp; Contacts</p>
+      <ul class="resource-list">
+        <li><a href="https://clickbank.com" target="_blank">ClickBank Affiliate Marketplace</a></li>
+      </ul>
+    </div>
+  </section>
+  <hr class="session-divider">
+
+  <!-- ── SESSION 10 ──────────────────────────────────────── -->
+  <section class="session" id="s10">
+    <div class="session-header">
+      <span class="session-num">Session 10</span>
+      <h2 class="session-title">June 16, 2026</h2>
+    </div>
+    <p class="tips-heading">Marketing Tips &amp; Tactical Hidden Gems</p>
+
+    <div class="tip">
+      <p class="tip-title">Social Media Breakdown</p>
+      <p class="tip-body"><strong>TikTok/BookTok</strong> is ideal for fiction and storytelling-heavy memoirs. To succeed, content must be raw, unpolished, and non-AI generated&mdash;posted 3&ndash;4 times a day. <strong>LinkedIn Reels</strong> are best for business authors to establish industry expertise.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Review Contests</p>
+      <p class="tip-body">Submit to <strong>Publisher&rsquo;s Weekly</strong> book review competitions ($30 entry fee). Even if you don&rsquo;t win, you receive heavyweight professional reviews from the judges that you can use in your marketing.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Powell&rsquo;s Books Funnel</p>
+      <p class="tip-body">Strategically funnel <strong>6&ndash;10 pre-orders</strong> directly to Powell&rsquo;s Books (the world&rsquo;s largest indie store) to prompt them to physically stock the book on their shelves.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">Publication Is Not the Finish Line</p>
+      <p class="tip-body">A $7,000 coaching package is far easier to sell than 7,000 individual books. You must build an ecosystem around the book&mdash;do not treat publication as the end of the race.</p>
+    </div>
+
+    <div class="tip">
+      <p class="tip-title">The 5&ndash;7 Day Email Course Lead Magnet</p>
+      <p class="tip-body">Extract the 5&ndash;7 most critical points from your book and turn them into an automated email sequence. Place this lead magnet in your book&rsquo;s front/back matter. By day 7, the reader is perfectly pre-framed to book a high-ticket discovery call.</p>
+    </div>
+
+    <div class="resources">
+      <p class="resources-heading">Resources &amp; Contacts</p>
+      <ul class="resource-list">
+        <li><span>Metadata refresh form</span> <span class="label">Sent via chat</span></li>
+        <li><span>James Ransen</span> <span class="label">Lead magnet ecosystem consulting &mdash; book via Calendly</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="back-top"><a href="#top">&#8593; Back to top</a></div>
+
+</main>
+
+<footer>
+  Morgan James Publishing &mdash; Mastermind Sessions 2026
+</footer>
+
+</body>
+</html>
