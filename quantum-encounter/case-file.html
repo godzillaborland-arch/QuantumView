@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Missing Variable — Black Box 01</title>
+<meta name="description" content="A lost passport in Tokyo, a yogi in 1978, and the one variable that explains it all. Read the source files, then take The Quantum Encounter timed quiz.">
+
+<!-- Open Graph: Facebook, LinkedIn, WhatsApp, Messenger -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Self-Driving Mind">
+<meta property="og:title" content="The Missing Variable — A Playable Case File">
+<meta property="og:description" content="A lost passport in Tokyo, a yogi in 1978, and the one variable that explains it all. Read the source files, then take The Quantum Encounter timed quiz.">
+<meta property="og:url" content="https://godzillaborland-arch.github.io/QuantumView/book-funnel/the-missing-variable-case-file.html">
+<meta property="og:image" content="https://godzillaborland-arch.github.io/QuantumView/book-funnel/preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Missing Variable — a playable case file from The Self-Driving Mind">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Missing Variable — A Playable Case File">
+<meta name="twitter:description" content="A lost passport in Tokyo, a yogi in 1978, and the one variable that explains it all.">
+<meta name="twitter:image" content="https://godzillaborland-arch.github.io/QuantumView/book-funnel/preview.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d0e12;
+    --panel:#15171e;
+    --panel-2:#1b1e27;
+    --line:#2a2f3b;
+    --blueprint:#3c5a72;
+    --gold:#c9a84c;
+    --gold-bright:#e6c879;
+    --ink:#e9e6dd;
+    --muted:#8b9099;
+    --ok:#6fae7a;
+    --no:#c46a60;
+    --shadow:0 24px 60px rgba(0,0,0,.5);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    font-family:'Spectral',Georgia,serif;
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(201,168,76,.07), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(60,90,114,.10), transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.55;
+    overflow-x:hidden;
+  }
+  /* faint blueprint grid texture */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(120,150,180,.035) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(120,150,180,.035) 1px,transparent 1px);
+    background-size:34px 34px;
+    mask-image:radial-gradient(ellipse at 50% 30%, black, transparent 85%);
+  }
+  .wrap{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:42px 20px 80px}
+
+  /* ---------- Header ---------- */
+  header{text-align:center;margin-bottom:30px}
+  .kicker{
+    font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.42em;
+    text-transform:uppercase;color:var(--gold);opacity:.9;margin-bottom:18px;
+  }
+  h1{
+    font-family:'Fraunces',serif;font-weight:900;font-size:clamp(2.3rem,7vw,4.1rem);
+    line-height:.98;letter-spacing:-.01em;
+  }
+  h1 .em{color:var(--gold-bright);font-style:italic;font-weight:600}
+  .tagline{font-style:italic;color:var(--muted);margin-top:14px;font-size:1.05rem}
+  .stamp{
+    display:inline-block;margin-top:22px;font-family:'JetBrains Mono',monospace;
+    font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:7px 14px;
+  }
+
+  /* ---------- Generic panel ---------- */
+  .panel{
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    border:1px solid var(--line);border-radius:16px;padding:30px 28px;box-shadow:var(--shadow);
+    animation:rise .45s ease both;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  .back{
+    background:none;border:none;color:var(--muted);font-family:'JetBrains Mono',monospace;
+    font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-bottom:22px;
+  }
+  .back:hover{color:var(--gold)}
+  .hide{display:none!important}
+
+  footer{text-align:center;margin-top:46px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase}
+
+  /* ---------- Vault / Subscribe ---------- */
+  .vault{margin-top:56px}
+  .vault-head{text-align:center;margin-bottom:26px}
+  .vault-head .kicker{margin-bottom:10px}
+  .vault-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.5rem,4.5vw,2.2rem);line-height:1.2}
+  .sub-cta{
+    background:linear-gradient(135deg,rgba(201,168,76,.14),rgba(201,168,76,.04));
+    border:1px solid var(--gold);border-radius:14px;padding:28px 26px;text-align:center;
+  }
+  .sub-cta h3{font-family:'Fraunces',serif;font-size:1.45rem;font-weight:600;margin-bottom:8px}
+  .sub-cta p{color:var(--muted);margin-bottom:18px;font-size:.98rem}
+  .btn-gold{
+    display:inline-block;background:var(--gold);color:#1a160a;text-decoration:none;border-radius:8px;
+    font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    font-size:.78rem;padding:14px 28px;transition:background .2s ease,transform .12s ease;border:none;cursor:pointer;
+  }
+  .btn-gold:hover{background:var(--gold-bright);transform:translateY(-2px)}
+  .btn-line{
+    display:inline-block;background:transparent;color:var(--gold);text-decoration:none;border:1px solid var(--gold);
+    border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:500;letter-spacing:.08em;
+    font-size:.8rem;padding:13px 20px;transition:background .2s ease,color .2s ease,transform .12s ease;
+  }
+  .btn-line:hover{background:var(--gold);color:#1a160a;transform:translateY(-2px)}
+  .quiz-hero{
+    margin:28px auto 26px;background:linear-gradient(135deg,rgba(230,200,121,.22),rgba(60,90,114,.12));
+    border:2px solid var(--gold);border-radius:18px;padding:28px 26px;text-align:center;box-shadow:var(--shadow);
+    position:relative;overflow:hidden;
+  }
+  .quiz-hero::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(420px 140px at 50% 0%,rgba(230,200,121,.18),transparent 70%);
+  }
+  .quiz-hero>*{position:relative;z-index:1}
+  .quiz-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:10px}
+  .quiz-hero h2{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(1.75rem,5.5vw,3rem);line-height:1.04;margin-bottom:10px;color:#fff8df}
+  .quiz-hero p{max-width:680px;margin:0 auto 18px;color:#d7d2c3;font-size:1.04rem}
+  .quiz-link{
+    display:inline-block;background:var(--gold-bright);color:#171307;text-decoration:none;border-radius:10px;
+    font-family:'JetBrains Mono',monospace;font-weight:900;letter-spacing:.12em;text-transform:uppercase;
+    font-size:.9rem;padding:17px 28px;border:2px solid rgba(255,255,255,.22);
+    box-shadow:0 12px 30px rgba(0,0,0,.35);transition:transform .12s ease,background .2s ease;
+  }
+  .quiz-link:hover{transform:translateY(-3px);background:#f2d891}
+  .quiz-note{margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.08em;color:#f1df9f;text-transform:uppercase}
+  .sources{margin-top:34px;text-align:center}
+  .src-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .sub-embed{margin-top:14px;text-align:center}
+  .sub-embed iframe{
+    border:none;border-radius:10px;background:#fff;display:block;margin:0 auto;
+    width:100%;max-width:480px;height:320px;box-shadow:0 8px 26px rgba(0,0,0,.35);
+  }
+  .embed-fallback{
+    display:inline-block;margin-top:12px;font-family:'JetBrains Mono',monospace;
+    font-size:.72rem;letter-spacing:.06em;color:var(--gold);text-decoration:none;
+    border-bottom:1px solid rgba(201,168,76,.4);
+  }
+  .embed-fallback:hover{color:var(--gold-bright)}
+  .files{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+  @media(max-width:620px){.files{grid-template-columns:1fr}}
+  .file{background:linear-gradient(180deg,#23272f,#191c24);border:1px solid #343b49;border-radius:12px;padding:20px 18px;position:relative;overflow:hidden}
+  .file .fnum{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--muted)}
+  .file .ftitle{font-family:'Fraunces',serif;font-size:1.12rem;font-weight:600;margin:8px 0 12px;min-height:1.4em}
+  .file .redacted{display:inline-block;background:var(--line);color:transparent;border-radius:3px;letter-spacing:.04em;user-select:none}
+  .file .fstatus{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase}
+  .file.open{border-color:var(--gold)}
+  .file.open .fstatus{color:var(--ok)}
+  .file.sealed .fstatus{color:#7ea7c4}
+  .file .seal{position:absolute;top:14px;right:14px;font-size:.85rem;opacity:.55}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===================== HOME ===================== -->
+  <section id="home">
+    <header>
+      <div class="kicker">Black Box 01 · The Self-Driving Mind</div>
+      <h1>The <span class="em">Missing</span> Variable</h1>
+      <p class="tagline">Engineering ancient grace for the modern seeker</p>
+      <div class="stamp">Recording Recovered · Pattern Unconfirmed · Variable: ████████</div>
+    </header>
+
+    <div class="sources" style="margin-top:30px">
+      <div class="vault-head" style="margin-bottom:18px">
+        <div class="kicker">Read the Source Files First</div>
+        <h2>Two short reads hold everything you need for the quiz.</h2>
+      </div>
+      <div class="src-row">
+        <a class="src-passport btn-line">📄 The Lost Passport</a>
+        <a class="src-siddha btn-line">📄 The Siddha Purusha</a>
+      </div>
+    </div>
+
+    <div class="quiz-hero">
+      <div class="quiz-eyebrow">New Timed Quiz · 15 Questions · 5 Minutes</div>
+      <h2>The Quantum Encounter</h2>
+      <p>Ready for the upgraded quiz? Finish the 15-question challenge, capture your proof-of-completion screen, and follow the $20 Amazon Gift Card drawing instructions.</p>
+      <a class="quiz-link" href="The_Quantum_Encounter_v2_simple_quiz_fixed.html">Start the New Quiz →</a>
+      <div class="quiz-note">Countdown timer · score badge · proof screen</div>
+    </div>
+
+    <div class="vault">
+      <div class="vault-head">
+        <div class="kicker">The Series</div>
+        <h2>More black boxes. New chapters.<br>Declassified first for subscribers.</h2>
+      </div>
+      <div class="sub-cta">
+        <h3>Get the next black box before anyone else</h3>
+        <p>New puzzles as they're built, and chapter previews the moment they're cleared for release.</p>
+        <a class="sub-link btn-gold">Subscribe free on Substack →</a>
+      </div>
+      <div class="files">
+        <div class="file open">
+          <span class="seal">🔓</span>
+          <div class="fnum">Black Box 01</div>
+          <div class="ftitle">The Missing Variable</div>
+          <div class="fstatus">Open · You're playing it</div>
+        </div>
+        <div class="file sealed">
+          <span class="seal">🔒</span>
+          <div class="fnum">Black Box 02</div>
+          <div class="ftitle"><span class="redacted">█████████████</span></div>
+          <div class="fstatus">Sealed · Declassifies Winter 2026</div>
+        </div>
+        <div class="file sealed">
+          <span class="seal">🔒</span>
+          <div class="fnum">Black Box 03</div>
+          <div class="ftitle"><span class="redacted">██████████</span></div>
+          <div class="fstatus">Sealed · Subscribers first</div>
+        </div>
+      </div>
+    </div>
+
+    <footer>The Self-Driving Mind · A Skeptic Encounters Grace</footer>
+  </section>
+
+</div>
+
+<script>
+/* ============================================================
+   ⚙  CONFIG
+   ============================================================ */
+const SUBSCRIBE_URL = "https://selfdrivingmind.substack.com/subscribe";
+const SOURCE_PASSPORT_URL = "https://selfdrivingmind.substack.com/p/what-a-lost-passport-in-tokyo-taught";
+const SOURCE_SIDDHA_URL   = "https://selfdrivingmind.substack.com/p/quantum-meets-yogi-1978-an-unearned";
+
+/* init links */
+document.querySelectorAll('.sub-link').forEach(a=>{a.href=SUBSCRIBE_URL;a.target="_blank";a.rel="noopener";});
+document.querySelectorAll('.src-passport').forEach(a=>{a.href=SOURCE_PASSPORT_URL;a.target="_blank";a.rel="noopener";});
+document.querySelectorAll('.src-siddha').forEach(a=>{a.href=SOURCE_SIDDHA_URL;a.target="_blank";a.rel="noopener";});
+</script>
+</body>
+</html>
