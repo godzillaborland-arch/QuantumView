@@ -3,331 +3,266 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Quantum Encounter — The Self-Driving Mind</title>
-<meta name="description" content="A lost passport in Tokyo. A yogi in 1978. One missing variable. Read the source files, then take the 5-minute timed challenge.">
+<title>The Missing Variable — Black Box 01</title>
+<meta name="description" content="A lost passport in Tokyo, a yogi in 1978, and the one variable that explains it all. Read the source files, then take The Quantum Encounter timed quiz.">
 
-<!-- Open Graph -->
+<!-- Open Graph: Facebook, LinkedIn, WhatsApp, Messenger -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="The Self-Driving Mind">
-<meta property="og:title" content="The Quantum Encounter — Can You Find the Missing Variable?">
-<meta property="og:description" content="A lost passport in Tokyo. A yogi in 1978. One missing variable. Read the source files, then take the 5-minute timed challenge.">
-<meta property="og:url" content="https://theselfdrivingmind.com/quantum-encounter">
+<meta property="og:title" content="The Missing Variable — A Playable Case File">
+<meta property="og:description" content="A lost passport in Tokyo, a yogi in 1978, and the one variable that explains it all. Read the source files, then take The Quantum Encounter timed quiz.">
+<meta property="og:url" content="https://godzillaborland-arch.github.io/QuantumView/book-funnel/the-missing-variable-case-file.html">
 <meta property="og:image" content="https://godzillaborland-arch.github.io/QuantumView/book-funnel/preview.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Missing Variable — a playable case file from The Self-Driving Mind">
 
 <!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The Quantum Encounter — Can You Find the Missing Variable?">
-<meta name="twitter:description" content="A lost passport in Tokyo. A yogi in 1978. One missing variable.">
+<meta name="twitter:title" content="The Missing Variable — A Playable Case File">
+<meta name="twitter:description" content="A lost passport in Tokyo, a yogi in 1978, and the one variable that explains it all.">
 <meta name="twitter:image" content="https://godzillaborland-arch.github.io/QuantumView/book-funnel/preview.png">
-
-<!-- JSON-LD -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  "name": "The Quantum Encounter",
-  "description": "An interactive timed quiz tied to The Self-Driving Mind by Sundar Rajan.",
-  "url": "https://theselfdrivingmind.com/quantum-encounter",
-  "publisher": {"@type": "Person", "name": "Sundar Rajan"}
-}
-</script>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#0d0e12;--panel:#15171e;--panel-2:#1b1e27;--line:#2a2f3b;
-  --gold:#c9a84c;--gold-2:#e6c879;--ink:#e9e6dd;--muted:#8b9099;
-  --shadow:0 16px 40px rgba(0,0,0,.5);
-}
-body{
-  font-family:'Spectral',Georgia,serif;color:var(--ink);
-  background:
-    radial-gradient(1100px 560px at 70% -8%, rgba(201,168,76,.09), transparent 65%),
-    radial-gradient(900px 500px at -5% 110%, rgba(60,90,114,.11), transparent 55%),
-    var(--bg);
-  min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden;
-}
-body::before{
-  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:
-    linear-gradient(rgba(120,150,180,.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(120,150,180,.03) 1px,transparent 1px);
-  background-size:36px 36px;
-  mask-image:radial-gradient(ellipse at 50% 25%, black, transparent 82%);
-}
-.wrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:32px 16px 60px}
+  :root{
+    --bg:#0d0e12;
+    --panel:#15171e;
+    --panel-2:#1b1e27;
+    --line:#2a2f3b;
+    --blueprint:#3c5a72;
+    --gold:#c9a84c;
+    --gold-bright:#e6c879;
+    --ink:#e9e6dd;
+    --muted:#8b9099;
+    --ok:#6fae7a;
+    --no:#c46a60;
+    --shadow:0 24px 60px rgba(0,0,0,.5);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    font-family:'Spectral',Georgia,serif;
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(201,168,76,.07), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(60,90,114,.10), transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.55;
+    overflow-x:hidden;
+  }
+  /* faint blueprint grid texture */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(120,150,180,.035) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(120,150,180,.035) 1px,transparent 1px);
+    background-size:34px 34px;
+    mask-image:radial-gradient(ellipse at 50% 30%, black, transparent 85%);
+  }
+  .wrap{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:42px 20px 80px}
 
-/* Kicker */
-.kicker{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.65rem;letter-spacing:.36em;text-transform:uppercase;
-  color:var(--gold);margin-bottom:10px;
-}
+  /* ---------- Header ---------- */
+  header{text-align:center;margin-bottom:30px}
+  .kicker{
+    font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.42em;
+    text-transform:uppercase;color:var(--gold);opacity:.9;margin-bottom:18px;
+  }
+  h1{
+    font-family:'Fraunces',serif;font-weight:900;font-size:clamp(2.3rem,7vw,4.1rem);
+    line-height:.98;letter-spacing:-.01em;
+  }
+  h1 .em{color:var(--gold-bright);font-style:italic;font-weight:600}
+  .tagline{font-style:italic;color:var(--muted);margin-top:14px;font-size:1.05rem}
+  .stamp{
+    display:inline-block;margin-top:22px;font-family:'JetBrains Mono',monospace;
+    font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);
+    border:1px solid var(--line);border-radius:3px;padding:7px 14px;
+  }
 
-/* Hero */
-header{text-align:center;margin-bottom:28px}
-h1{
-  font-family:'Fraunces',serif;font-weight:900;
-  font-size:clamp(2.2rem,7vw,4.2rem);line-height:.96;letter-spacing:-.015em;
-}
-h1 em{color:var(--gold-2);font-style:italic;font-weight:600}
-.tagline{
-  color:var(--muted);font-style:italic;font-size:1rem;
-  margin-top:10px;max-width:520px;margin-left:auto;margin-right:auto;
-}
+  /* ---------- Generic panel ---------- */
+  .panel{
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    border:1px solid var(--line);border-radius:16px;padding:30px 28px;box-shadow:var(--shadow);
+    animation:rise .45s ease both;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  .back{
+    background:none;border:none;color:var(--muted);font-family:'JetBrains Mono',monospace;
+    font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-bottom:22px;
+  }
+  .back:hover{color:var(--gold)}
+  .hide{display:none!important}
 
-/* Rule */
-.rule{display:flex;align-items:center;gap:14px;margin:20px 0}
-.rule::before,.rule::after{content:"";flex:1;height:1px;background:var(--line)}
-.rule span{
-  font-family:'JetBrains Mono',monospace;font-size:.62rem;
-  letter-spacing:.26em;text-transform:uppercase;color:var(--muted);white-space:nowrap;
-}
+  footer{text-align:center;margin-top:46px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase}
 
-/* Evidence cards */
-.brief{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-@media(max-width:560px){.brief{grid-template-columns:1fr}}
-.evidence-card{
-  background:linear-gradient(180deg,var(--panel-2),var(--panel));
-  border:1px solid var(--line);border-radius:12px;padding:16px 16px;
-  position:relative;overflow:hidden;
-  transition:border-color .2s ease,transform .15s ease;
-}
-.evidence-card:hover{border-color:rgba(201,168,76,.5);transform:translateY(-2px)}
-.evidence-card::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(300px 100px at 50% 0%, rgba(201,168,76,.07), transparent 70%);
-}
-.evidence-card>*{position:relative;z-index:1}
-.ev-label{
-  font-family:'JetBrains Mono',monospace;font-size:.6rem;
-  letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;
-}
-.ev-title{
-  font-family:'Fraunces',serif;font-size:1.08rem;font-weight:600;
-  line-height:1.2;margin-bottom:8px;
-}
-.ev-blurb{font-size:.9rem;color:var(--muted);line-height:1.45;margin-bottom:12px}
-.ev-link{
-  display:inline-flex;align-items:center;gap:6px;
-  font-family:'JetBrains Mono',monospace;font-size:.68rem;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--gold);
-  text-decoration:none;border-bottom:1px solid rgba(201,168,76,.35);
-  padding-bottom:2px;transition:color .15s ease,border-color .15s ease;
-}
-.ev-link:hover{color:var(--gold-2);border-color:var(--gold-2)}
-.ev-link svg{width:11px;height:11px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-
-/* Challenge CTA */
-.challenge{
-  background:linear-gradient(135deg,rgba(230,200,121,.18),rgba(60,90,114,.10));
-  border:2px solid var(--gold);border-radius:18px;padding:24px 22px;
-  text-align:center;box-shadow:var(--shadow);
-  position:relative;overflow:hidden;margin-bottom:20px;
-}
-.challenge::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(500px 160px at 50% 0%, rgba(230,200,121,.14), transparent 70%);
-}
-.challenge>*{position:relative;z-index:1}
-.challenge h2{
-  font-family:'Fraunces',serif;font-weight:900;
-  font-size:clamp(1.75rem,5.5vw,3rem);line-height:1;
-  color:#fff8df;margin-bottom:8px;
-}
-.challenge .sub{
-  max-width:580px;margin:0 auto 16px;
-  color:#d4ceba;font-size:.97rem;
-}
-.meta-row{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-bottom:18px}
-.meta-pill{
-  background:rgba(255,255,255,.06);border:1px solid rgba(201,168,76,.3);
-  border-radius:99px;padding:5px 13px;
-  font-family:'JetBrains Mono',monospace;font-size:.64rem;
-  letter-spacing:.12em;text-transform:uppercase;color:#d1c99a;
-}
-
-/* Buttons */
-.btn-gold{
-  display:inline-block;background:var(--gold-2);color:#191305;
-  text-decoration:none;border-radius:10px;border:2px solid rgba(255,255,255,.15);
-  font-family:'JetBrains Mono',monospace;font-weight:900;
-  letter-spacing:.12em;text-transform:uppercase;font-size:.82rem;
-  padding:14px 26px;box-shadow:0 8px 22px rgba(0,0,0,.3);
-  transition:background .18s ease,transform .12s ease;cursor:pointer;
-}
-.btn-gold:hover{background:#f2d891;transform:translateY(-2px)}
-.btn-line{
-  display:inline-block;background:transparent;color:var(--gold);
-  text-decoration:none;border:1px solid var(--gold);border-radius:9px;
-  font-family:'JetBrains Mono',monospace;font-weight:500;
-  letter-spacing:.08em;text-transform:uppercase;font-size:.74rem;
-  padding:12px 18px;transition:background .18s ease,color .18s ease,transform .12s ease;
-}
-.btn-line:hover{background:var(--gold);color:#1a160a;transform:translateY(-2px)}
-.btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-@media(max-width:420px){.btn-gold,.btn-line{width:100%;text-align:center}}
-
-/* Steps — untouched per brief */
-.steps{
-  background:linear-gradient(180deg,var(--panel-2),var(--panel));
-  border:1px solid var(--line);border-radius:16px;
-  padding:28px 28px 24px;margin-bottom:20px;
-}
-.steps h3{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:600;margin-bottom:20px}
-.step-list{display:flex;flex-direction:column;gap:16px}
-.step{display:flex;gap:16px;align-items:flex-start}
-.step-num{
-  font-family:'JetBrains Mono',monospace;font-size:.72rem;
-  letter-spacing:.2em;color:var(--gold);font-weight:700;
-  background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);
-  border-radius:6px;padding:4px 9px;flex-shrink:0;margin-top:2px;
-}
-.step-text{font-size:.98rem;color:var(--muted);line-height:1.5}
-.step-text strong{color:var(--ink)}
-
-/* Prize */
-.prize{
-  border:1px dashed rgba(201,168,76,.55);border-radius:14px;
-  background:rgba(201,168,76,.05);padding:18px 18px;
-  text-align:center;margin-bottom:18px;
-}
-.prize h3{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:600;margin-bottom:6px}
-.prize p{color:var(--muted);font-size:.92rem;max-width:500px;margin:0 auto 14px}
-
-/* About */
-.about{
-  display:flex;align-items:center;gap:16px;
-  background:var(--panel);border:1px solid var(--line);border-radius:12px;
-  padding:16px 18px;margin-bottom:32px;
-}
-@media(max-width:480px){.about{flex-direction:column;text-align:center}}
-.about-badge{
-  width:44px;height:44px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(135deg,var(--gold),#7a5a1c);
-  display:flex;align-items:center;justify-content:center;font-size:1.35rem;
-}
-.about-text{font-size:.9rem;color:var(--muted);line-height:1.45}
-.about-text strong{color:var(--ink);display:block;margin-bottom:2px}
-
-/* Footer */
-footer{
-  text-align:center;color:var(--muted);
-  font-family:'JetBrains Mono',monospace;font-size:.64rem;
-  letter-spacing:.2em;text-transform:uppercase;
-}
-
-/* Animations */
-@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-.brief,.challenge,.steps,.prize,.about{animation:rise .45s ease both}
-.brief{animation-delay:.05s}.challenge{animation-delay:.1s}
-.steps{animation-delay:.15s}.prize{animation-delay:.2s}.about{animation-delay:.25s}
+  /* ---------- Vault / Subscribe ---------- */
+  .vault{margin-top:56px}
+  .vault-head{text-align:center;margin-bottom:26px}
+  .vault-head .kicker{margin-bottom:10px}
+  .vault-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.5rem,4.5vw,2.2rem);line-height:1.2}
+  .sub-cta{
+    background:linear-gradient(135deg,rgba(201,168,76,.14),rgba(201,168,76,.04));
+    border:1px solid var(--gold);border-radius:14px;padding:28px 26px;text-align:center;
+  }
+  .sub-cta h3{font-family:'Fraunces',serif;font-size:1.45rem;font-weight:600;margin-bottom:8px}
+  .sub-cta p{color:var(--muted);margin-bottom:18px;font-size:.98rem}
+  .btn-gold{
+    display:inline-block;background:var(--gold);color:#1a160a;text-decoration:none;border-radius:8px;
+    font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    font-size:.78rem;padding:14px 28px;transition:background .2s ease,transform .12s ease;border:none;cursor:pointer;
+  }
+  .btn-gold:hover{background:var(--gold-bright);transform:translateY(-2px)}
+  .btn-line{
+    display:inline-block;background:transparent;color:var(--gold);text-decoration:none;border:1px solid var(--gold);
+    border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:500;letter-spacing:.08em;
+    font-size:.8rem;padding:13px 20px;transition:background .2s ease,color .2s ease,transform .12s ease;
+  }
+  .btn-line:hover{background:var(--gold);color:#1a160a;transform:translateY(-2px)}
+  .quiz-hero{
+    margin:28px auto 26px;background:linear-gradient(135deg,rgba(230,200,121,.22),rgba(60,90,114,.12));
+    border:2px solid var(--gold);border-radius:18px;padding:28px 26px;text-align:center;box-shadow:var(--shadow);
+    position:relative;overflow:hidden;
+  }
+  .quiz-hero::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(420px 140px at 50% 0%,rgba(230,200,121,.18),transparent 70%);
+  }
+  .quiz-hero>*{position:relative;z-index:1}
+  .quiz-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:10px}
+  .quiz-hero h2{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(1.75rem,5.5vw,3rem);line-height:1.04;margin-bottom:10px;color:#fff8df}
+  .quiz-hero p{max-width:680px;margin:0 auto 18px;color:#d7d2c3;font-size:1.04rem}
+  .quiz-link{
+    display:inline-block;background:var(--gold-bright);color:#171307;text-decoration:none;border-radius:10px;
+    font-family:'JetBrains Mono',monospace;font-weight:900;letter-spacing:.12em;text-transform:uppercase;
+    font-size:.9rem;padding:17px 28px;border:2px solid rgba(255,255,255,.22);
+    box-shadow:0 12px 30px rgba(0,0,0,.35);transition:transform .12s ease,background .2s ease;
+  }
+  .quiz-link:hover{transform:translateY(-3px);background:#f2d891}
+  .quiz-note{margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.08em;color:#f1df9f;text-transform:uppercase}
+  .sources{margin-top:34px;text-align:center}
+  .src-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .sub-embed{margin-top:14px;text-align:center}
+  .sub-embed iframe{
+    border:none;border-radius:10px;background:#fff;display:block;margin:0 auto;
+    width:100%;max-width:480px;height:320px;box-shadow:0 8px 26px rgba(0,0,0,.35);
+  }
+  .embed-fallback{
+    display:inline-block;margin-top:12px;font-family:'JetBrains Mono',monospace;
+    font-size:.72rem;letter-spacing:.06em;color:var(--gold);text-decoration:none;
+    border-bottom:1px solid rgba(201,168,76,.4);
+  }
+  .embed-fallback:hover{color:var(--gold-bright)}
+  .files{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+  @media(max-width:620px){.files{grid-template-columns:1fr}}
+  .file{background:linear-gradient(180deg,#23272f,#191c24);border:1px solid #343b49;border-radius:12px;padding:20px 18px;position:relative;overflow:hidden}
+  .file .fnum{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--muted)}
+  .file .ftitle{font-family:'Fraunces',serif;font-size:1.12rem;font-weight:600;margin:8px 0 12px;min-height:1.4em}
+  .file .redacted{display:inline-block;background:var(--line);color:transparent;border-radius:3px;letter-spacing:.04em;user-select:none}
+  .file .fstatus{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase}
+  .file.open{border-color:var(--gold)}
+  .file.open .fstatus{color:var(--ok)}
+  .file.sealed .fstatus{color:#7ea7c4}
+  .file .seal{position:absolute;top:14px;right:14px;font-size:.85rem;opacity:.55}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <header>
-    <div class="kicker">Black Box 01 · The Self-Driving Mind</div>
-    <h1>The <em>Quantum</em><br>Encounter</h1>
-    <p class="tagline">A 5-minute timed challenge about the hidden variable behind effortless meditation.</p>
-  </header>
+  <!-- ===================== HOME ===================== -->
+  <section id="home">
+    <header>
+      <div class="kicker">Black Box 01 · The Self-Driving Mind</div>
+      <h1>The <span class="em">Missing</span> Variable</h1>
+      <p class="tagline">Engineering ancient grace for the modern seeker</p>
+      <div class="stamp">Recording Recovered · Pattern Unconfirmed · Variable: ████████</div>
+    </header>
 
-  <div class="rule"><span>Read the source files first</span></div>
-
-  <div class="brief">
-    <div class="evidence-card">
-      <div class="ev-label">Source File 01</div>
-      <div class="ev-title">The Lost Passport in Tokyo</div>
-      <p class="ev-blurb">2023. A passport vanishes in a Tokyo food court at 1:30 PM. The U.S. Embassy closes at 2:30. A different kind of mind takes over.</p>
-      <a class="ev-link" id="src-passport" href="#" target="_blank" rel="noopener">
-        Open source file
-        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      </a>
-    </div>
-    <div class="evidence-card">
-      <div class="ev-label">Source File 02</div>
-      <div class="ev-title">The Siddha Purusha</div>
-      <p class="ev-blurb">A skeptical engineering student meets a yogi in a high-voltage lab. Something is transmitted. It persists for 40+ years without practice.</p>
-      <a class="ev-link" id="src-siddha" href="#" target="_blank" rel="noopener">
-        Open source file
-        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      </a>
-    </div>
-  </div>
-
-  <div class="challenge">
-    <div class="kicker">The Timed Challenge</div>
-    <h2>The Quantum Encounter</h2>
-    <p class="sub">Fifteen questions. Five minutes. One missing variable. Can you identify what a skeptical engineer received from a yogi in 1978 — and why it still works?</p>
-    <div class="meta-row">
-      <span class="meta-pill">⏱ 5-minute countdown</span>
-      <span class="meta-pill">15 questions</span>
-      <span class="meta-pill">Proof-of-completion screen</span>
-    </div>
-    <div class="btn-row">
-      <a class="btn-gold" id="cta-quiz" href="#">Start the Encounter →</a>
-      <a class="btn-line" id="cta-casefile" href="#">View Full Case File</a>
-    </div>
-  </div>
-
-  <div class="steps">
-    <h3>How it works</h3>
-    <div class="step-list">
-      <div class="step">
-        <span class="step-num">01</span>
-        <p class="step-text"><strong>Read both source files above.</strong> They're short Substack posts — together about 10 minutes. The quiz is built from them.</p>
+    <div class="sources" id="sources" style="margin-top:30px">
+      <div class="vault-head" style="margin-bottom:18px">
+        <div class="kicker">Read the Source Files First</div>
+        <h2>Two short reads hold everything you need for the quiz.</h2>
       </div>
-      <div class="step">
-        <span class="step-num">02</span>
-        <p class="step-text"><strong>Start the 5-minute timer.</strong> Answer 15 questions. Each answer reveals the rationale from the source text.</p>
-      </div>
-      <div class="step">
-        <span class="step-num">03</span>
-        <p class="step-text"><strong>Screenshot your Proof of Completion</strong> screen when you finish — score badge, time remaining, and all.</p>
-      </div>
-      <div class="step">
-        <span class="step-num">04</span>
-        <p class="step-text"><strong>Enter the weekly $20 Amazon Gift Card drawing</strong> by sharing your screenshot as directed in the Substack post.</p>
+      <div class="src-row">
+        <a class="src-passport btn-line">📄 The Lost Passport</a>
+        <a class="src-siddha btn-line">📄 The Siddha Purusha</a>
       </div>
     </div>
-  </div>
 
-  <div class="prize">
-    <h3>🎁 Weekly $20 Amazon Gift Card Drawing</h3>
-    <p>Complete the quiz, screenshot your Proof of Completion, and follow the sharing instructions in the post. A thank-you for early readers of <em>The Quantum Encounter</em>.</p>
-    <a class="btn-line" id="cta-subscribe" href="#">Subscribe free on Substack →</a>
-  </div>
-
-  <div class="about">
-    <div class="about-badge">🧘</div>
-    <div class="about-text">
-      <strong>Sundar Rajan — The Self-Driving Mind</strong>
-      Published through Morgan James Publishing. The book explores why Tesla = Dhyāna — why the self-driving car is the best modern metaphor for effortless inwardness. The Black Box series is where the evidence gets tested.
+    <div class="quiz-hero" id="quiz-cta">
+      <div class="quiz-eyebrow">New Timed Quiz · 15 Questions · 5 Minutes</div>
+      <h2>The Quantum Encounter</h2>
+      <p>Ready for the upgraded quiz? Finish the 15-question challenge, capture your proof-of-completion screen, and follow the $20 Amazon Gift Card drawing instructions.</p>
+      <a class="quiz-link" href="quiz.html?start=1">⏱ 5-Minute Quiz →</a>
+      <div class="quiz-note">Countdown timer · score badge · proof screen</div>
     </div>
-  </div>
 
-  <footer>The Self-Driving Mind · A Skeptic Encounters Grace · theselfdrivingmind.com</footer>
+    <div class="vault">
+      <div class="vault-head">
+        <div class="kicker">The Series</div>
+        <h2>More black boxes. New chapters.<br>Declassified first for subscribers.</h2>
+      </div>
+      <div class="sub-cta">
+        <h3>Get the next black box before anyone else</h3>
+        <p>New puzzles as they're built, and chapter previews the moment they're cleared for release.</p>
+        <a class="sub-link btn-gold">Subscribe free on Substack →</a>
+      </div>
+      <div class="files">
+        <div class="file open">
+          <span class="seal">🔓</span>
+          <div class="fnum">Black Box 01</div>
+          <div class="ftitle">The Missing Variable</div>
+          <div class="fstatus">Open · You're playing it</div>
+        </div>
+        <div class="file sealed">
+          <span class="seal">🔒</span>
+          <div class="fnum">Black Box 02</div>
+          <div class="ftitle"><span class="redacted">█████████████</span></div>
+          <div class="fstatus">Sealed · Declassifies Winter 2026</div>
+        </div>
+        <div class="file sealed">
+          <span class="seal">🔒</span>
+          <div class="fnum">Black Box 03</div>
+          <div class="ftitle"><span class="redacted">██████████</span></div>
+          <div class="fstatus">Sealed · Subscribers first</div>
+        </div>
+      </div>
+    </div>
+
+    <footer>The Self-Driving Mind · A Skeptic Encounters Grace</footer>
+  </section>
 
 </div>
-<script>
-const QUIZ_URL      = "quiz.html";
-const CASE_FILE_URL = "case-file.html";
-const SUBSCRIBE_URL = "https://selfdrivingmind.substack.com/subscribe";
-const PASSPORT_URL  = "https://selfdrivingmind.substack.com/p/what-a-lost-passport-in-tokyo-taught";
-const SIDDHA_URL    = "https://selfdrivingmind.substack.com/p/quantum-meets-yogi-1978-an-unearned";
 
-document.getElementById("cta-quiz").href      = QUIZ_URL;
-document.getElementById("cta-casefile").href  = CASE_FILE_URL;
-document.getElementById("cta-subscribe").href = SUBSCRIBE_URL;
-document.getElementById("src-passport").href  = PASSPORT_URL;
-document.getElementById("src-siddha").href    = SIDDHA_URL;
+<script>
+/* ============================================================
+   ⚙  CONFIG
+   ============================================================ */
+const SUBSCRIBE_URL = "https://selfdrivingmind.substack.com/subscribe";
+const SOURCE_PASSPORT_URL = "https://selfdrivingmind.substack.com/p/what-a-lost-passport-in-tokyo-taught";
+const SOURCE_SIDDHA_URL   = "https://selfdrivingmind.substack.com/p/quantum-meets-yogi-1978-an-unearned";
+
+/* init links */
+document.querySelectorAll('.sub-link').forEach(a=>{a.href=SUBSCRIBE_URL;a.target="_blank";a.rel="noopener";});
+document.querySelectorAll('.src-passport').forEach(a=>{a.href=SOURCE_PASSPORT_URL;a.target="_blank";a.rel="noopener";});
+document.querySelectorAll('.src-siddha').forEach(a=>{a.href=SOURCE_SIDDHA_URL;a.target="_blank";a.rel="noopener";});
+
+
+/* Mobile helper: gently bring the quiz CTA into view so visitors know where to start. */
+(function(){
+  const isMobile = window.matchMedia('(max-width: 700px)').matches;
+  const hasHash = !!window.location.hash;
+  if(isMobile && !hasHash){
+    setTimeout(()=>{
+      const quizCta = document.getElementById('quiz-cta');
+      if(quizCta) quizCta.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 900);
+  }
+})();
+
 </script>
 </body>
 </html>

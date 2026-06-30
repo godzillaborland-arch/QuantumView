@@ -94,8 +94,8 @@ footer{text-align:center;margin-top:34px;color:var(--muted);font-family:'JetBrai
   <h2 style="font-family:Fraunces,serif;font-size:clamp(1.55rem,4vw,2.25rem);line-height:1.15">Can you identify the missing variable?</h2>
   <p>This simpler version keeps the same Black Box experience, but the questions are more approachable. You have 5 minutes and 15 questions.</p>
   <div class="start-actions">
-    <button class="btn btn-gold" onclick="startQuiz()">Start Encounter →</button>
-    <a class="btn btn-line" href="the-missing-variable-case-file-updated.html" target="_blank" rel="noopener">Read Source Files</a>
+    <button class="btn btn-gold" onclick="startQuiz()">Start Quiz Now →</button>
+    <a class="btn btn-line" href="index.html#sources">Read Source Files</a>
   </div>
 </section>
 
@@ -159,6 +159,16 @@ function finish(timeout){
 }
 function restartQuiz(){startQuiz();}
 function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+
+
+// Optional direct-start entry point: quiz.html?start=1 skips the intro card and starts the timer/quiz.
+document.addEventListener('DOMContentLoaded', function(){
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('start') === '1'){
+    setTimeout(startQuiz, 80);
+  }
+});
+
 </script>
 </body>
 </html>
