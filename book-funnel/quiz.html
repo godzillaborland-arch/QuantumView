@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Quantum Encounter — Interactive Quiz</title>
+<meta name="description" content="A five-minute interactive quiz from The Self-Driving Mind. Read the evidence, take the challenge, and receive a proof of completion.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Self-Driving Mind">
+<meta property="og:title" content="The Quantum Encounter — A 5-Minute Interactive Challenge">
+<meta property="og:description" content="Read the evidence. Take the timed challenge. Complete the quiz for a chance to enter the weekly Amazon Gift Card drawing.">
+<meta property="og:image" content="https://godzillaborland-arch.github.io/QuantumView/book-funnel/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Quantum Encounter — A 5-Minute Interactive Challenge">
+<meta name="twitter:description" content="Read the evidence. Take the timed challenge. Complete the quiz for a chance to enter the weekly Amazon Gift Card drawing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Spectral:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0e12;--panel:#15171e;--panel2:#1b1e27;--line:#2a2f3b;--blue:#3c5a72;
+  --gold:#c9a84c;--gold2:#e6c879;--ink:#e9e6dd;--muted:#9aa0aa;--ok:#6fae7a;--bad:#c46a60;--warn:#f0d66b;
+  --shadow:0 24px 60px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{
+  font-family:'Spectral',Georgia,serif;color:var(--ink);line-height:1.55;background:
+  radial-gradient(900px 520px at 50% -8%, rgba(201,168,76,.12), transparent 60%),
+  radial-gradient(850px 520px at 100% 100%, rgba(60,90,114,.14), transparent 55%),var(--bg);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(120,150,180,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(120,150,180,.035) 1px,transparent 1px);background-size:34px 34px;mask-image:radial-gradient(ellipse at 50% 20%, black, transparent 82%);}
+.wrap{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:30px 18px 80px}
+header{text-align:center;margin-bottom:22px}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+h1{font-family:'Fraunces',serif;font-size:clamp(2.25rem,7vw,4.3rem);line-height:.98;font-weight:900;letter-spacing:-.02em}
+h1 span{color:var(--gold2);font-style:italic;font-weight:600}
+.tagline{font-style:italic;color:var(--muted);font-size:1.04rem;margin-top:12px}
+.timer-shell{margin:20px auto 0;max-width:720px;background:linear-gradient(180deg,#222633,#161922);border:1px solid #3a4254;border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+.timer-row{display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;color:var(--muted)}
+.timer{font-size:1.85rem;font-weight:700;color:#fff;letter-spacing:.04em;line-height:1}
+.timer.warning{color:var(--warn)}.timer.danger{color:#ff6b63;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.timer-track{height:7px;background:#2b3140;border-radius:99px;overflow:hidden;margin-top:12px}
+#timerBar{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width 1s linear, background .25s ease}
+.panel{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:28px;box-shadow:var(--shadow);animation:rise .35s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.start-card{margin-top:24px;text-align:center}
+.start-card p{color:#c3c7cf;font-size:1.06rem;margin:10px auto 20px;max-width:680px}
+.start-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.btn{display:inline-block;border:0;border-radius:10px;padding:15px 24px;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.78rem;cursor:pointer;text-decoration:none;transition:.18s ease}
+.btn-gold{background:var(--gold);color:#1a160a}.btn-gold:hover{background:var(--gold2);transform:translateY(-2px)}
+.btn-line{background:transparent;color:var(--gold);border:1px solid var(--gold)}.btn-line:hover{background:var(--gold);color:#1a160a;transform:translateY(-2px)}
+.quiz-meta{display:flex;justify-content:space-between;align-items:center;gap:14px;font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;flex-wrap:wrap}
+.quiz-meta b{color:var(--gold)}
+.progress{height:5px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:24px}
+#progressBar{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .4s ease}
+.question{font-family:'Fraunces',serif;font-size:clamp(1.35rem,3.8vw,1.9rem);font-weight:600;line-height:1.25;margin-bottom:18px}
+.hint{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.35);border-radius:10px;padding:12px 14px;margin:0 0 18px;color:#d7c68b;font-size:.95rem}
+.options{display:flex;flex-direction:column;gap:12px}
+.opt{text-align:left;background:#151923;border:1px solid #313849;border-radius:11px;padding:15px 16px;color:var(--ink);font-family:'Spectral',Georgia,serif;font-size:1rem;cursor:pointer;display:flex;gap:13px;align-items:flex-start;transition:.15s ease}
+.opt:hover:not(:disabled){border-color:var(--gold);transform:translateX(3px)}
+.opt:disabled{cursor:default}.opt.correct{border-color:var(--ok);background:rgba(111,174,122,.13)}.opt.wrong{border-color:var(--bad);background:rgba(196,106,96,.13)}.opt.show-correct{border-color:var(--ok);background:rgba(111,174,122,.13)}
+.tag{font-family:'JetBrains Mono',monospace;color:var(--gold);font-weight:700;min-width:1.3rem}
+.feedback{margin-top:18px;border-left:3px solid var(--gold);background:rgba(201,168,76,.06);padding:15px 18px;border-radius:0 8px 8px 0}
+.feedback b{display:block;color:var(--gold2);font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px}
+.hidden{display:none!important}
+.result{text-align:center}.badge{font-size:3.2rem;margin-bottom:8px}.verdict{font-family:'JetBrains Mono',monospace;color:var(--gold);letter-spacing:.28em;text-transform:uppercase;font-size:.72rem}
+.big-score{font-family:'Fraunces',serif;font-size:clamp(3.8rem,14vw,6.3rem);font-weight:900;line-height:1;margin:8px 0;color:#fff}.big-score small{font-size:.33em;color:var(--muted);font-weight:400}
+.score-text{font-size:1.12rem;color:#d7d3c7;margin-bottom:14px}.time-left{display:inline-block;border:1px solid #3a4254;border-radius:10px;background:#151923;padding:11px 15px;font-family:'JetBrains Mono',monospace;color:var(--gold2);margin-bottom:18px}
+.screenshot{background:#f5d35a;color:#241c05;border-radius:12px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.82rem;letter-spacing:.03em;margin:20px 0}
+.cta{border:1px dashed var(--gold);background:rgba(201,168,76,.08);border-radius:14px;padding:20px;margin:18px 0;text-align:left}
+.cta h3{font-family:'Fraunces',serif;font-size:1.35rem;color:#fff;margin-bottom:8px}.cta p{color:#d9d2bd}
+.sub-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+footer{text-align:center;margin-top:34px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase}
+@media(max-width:620px){.wrap{padding:22px 14px 60px}.panel{padding:22px 18px}.timer-row{align-items:flex-start}.timer{font-size:1.55rem}.btn{width:100%;text-align:center}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="kicker">Black Box 01 · The Self-Driving Mind</div>
+  <h1>The <span>Quantum</span> Encounter</h1>
+  <p class="tagline">A five-minute challenge about the hidden variable behind effortless meditation.</p>
+  <div class="timer-shell" id="timerShell">
+    <div class="timer-row"><span>Countdown Timer</span><span class="timer" id="timer">5:00</span></div>
+    <div class="timer-track"><i id="timerBar"></i></div>
+  </div>
+</header>
+
+<section id="start" class="panel start-card">
+  <div class="kicker">Read · Think · Answer</div>
+  <h2 style="font-family:Fraunces,serif;font-size:clamp(1.55rem,4vw,2.25rem);line-height:1.15">Can you identify the missing variable?</h2>
+  <p>This simpler version keeps the same Black Box experience, but the questions are more approachable. You have 5 minutes and 15 questions.</p>
+  <div class="start-actions">
+    <button class="btn btn-gold" onclick="startQuiz()">Start Quiz Now →</button>
+    <a class="btn btn-line" href="index.html#sources">Read Source Files</a>
+  </div>
+</section>
+
+<section id="quiz" class="panel hidden">
+  <div class="quiz-meta"><span id="qIndex">Question 1 / 15</span><span>Correct: <b id="scoreNow">0</b></span></div>
+  <div class="progress"><i id="progressBar"></i></div>
+  <div id="qBody"></div>
+</section>
+
+<section id="result" class="panel result hidden">
+  <div class="badge" id="badge">🌟</div>
+  <div class="verdict" id="verdict">Proof of Completion</div>
+  <div class="big-score"><span id="finalScore">0</span><small>/15</small></div>
+  <div class="score-text" id="scoreText">You got 0 out of 15 correct</div>
+  <div class="time-left" id="timeLeft">Time remaining: 5:00</div>
+  <div class="screenshot">⚠️ Screenshot this completion screen before leaving the page.</div>
+  <div class="cta">
+    <h3>🎁 Weekly $20 Amazon Gift Card Drawing</h3>
+    <p><strong>To enter:</strong> complete the quiz, screenshot this Proof of Completion screen, and share/send it as instructed in the post. The drawing is a thank-you for early readers testing <em>The Quantum Encounter</em>.</p>
+  </div>
+  <div class="sub-actions">
+    <a class="btn btn-gold" href="https://selfdrivingmind.substack.com/subscribe" target="_blank" rel="noopener">Subscribe Free →</a>
+    <button class="btn btn-line" onclick="restartQuiz()">Try Again</button>
+  </div>
+</section>
+<footer>The Self-Driving Mind · A Skeptic Encounters Grace</footer>
+</div>
+<script>
+const SUBSCRIBE_URL='https://selfdrivingmind.substack.com/subscribe';
+const QUIZ=[{"question": "What nickname did the author earn at the College of Engineering, Guindy, due to his habit of explaining physics to anyone who would listen?", "hint": "The name reflects the author's obsession with subatomic physics and Feynman's lectures.", "options": [{"label": "A", "text": "Yogi", "isCorrect": false, "rationale": "The Yogi is the PhD candidate the author meets, rather than the author himself."}, {"label": "B", "text": "The Mad Engineer", "isCorrect": false, "rationale": "This was the nickname of a notoriously difficult professor from Mylapore mentioned in the story."}, {"label": "C", "text": "Delta", "isCorrect": false, "rationale": "Delta refers to the antenna project mentioned later in the text, not the author's personal nickname."}, {"label": "D", "text": "Quantum", "isCorrect": true, "rationale": "The author earned this nickname because he spent his time in the library replicating Feynman's diagrams and discussing wave-particle duality."}]}, {"question": "Before meeting the PhD candidate, what was the author's specific intellectual stance toward religious markings like vibhuti?", "hint": "The author associated these markings with a lack of intellectual strength.", "options": [{"label": "A", "text": "It was an irrelevant aesthetic choice.", "isCorrect": false, "rationale": "The author didn't find it irrelevant; he stated that it 'actively irritated' him."}, {"label": "B", "text": "It was a billboard for a weak mind.", "isCorrect": true, "rationale": "As a skeptical engineering student in the 1970s, the author viewed traditional rituals as 'dead weight' and signs of superstition."}, {"label": "C", "text": "It represented a fascinating cultural mystery.", "isCorrect": false, "rationale": "The author was explicitly contemptuous of these markings, not intrigued by them."}, {"label": "D", "text": "It was a symbol of advanced scientific achievement.", "isCorrect": false, "rationale": "The author initially believed science and ritual were mutually exclusive, seeing the latter as a 'crutch'."}]}, {"question": "The PhD candidate challenged a physics lecture on the De Broglie matter wave equation by asking what happens when the observer is in which state?", "hint": "Consider what happens to the measurement of motion when you move at the same speed as the target.", "options": [{"label": "A", "text": "A vacuum devoid of any external interference.", "isCorrect": false, "rationale": "The challenge was about the observer's relative motion, not the environment in which the object moved."}, {"label": "B", "text": "An accelerated frame of general relativity.", "isCorrect": false, "rationale": "The candidate's question was based on standard matter-wave equations and relative velocity, not general relativity."}, {"label": "C", "text": "A state of high-frequency oscillation.", "isCorrect": false, "rationale": "The question specifically focused on static reference frames relative to the moving object to collapse the wave equation."}, {"label": "D", "text": "A reference frame that moves with the object.", "isCorrect": true, "rationale": "By moving with the object, the relative velocity v becomes zero, causing the wavelength λ = h/mv to become undefined."}]}, {"question": "When the PhD candidate jokingly asked, 'Am I a DC Generator?', what scientific concept was he using to stump the lecturer?", "hint": "A DC generator produces a steady, unvarying output without frequency.", "options": [{"label": "A", "text": "The collapse of the matter wave at zero relative velocity.", "isCorrect": true, "rationale": "He argued that if velocity is zero in a specific frame, the object has no frequency or oscillation, making it 'constant' like a direct current."}, {"label": "B", "text": "The thermal noise generated by electrical circuits.", "isCorrect": false, "rationale": "A DC generator produces a constant current, which he used as a metaphor for being 'wave-free,' not for noise."}, {"label": "C", "text": "The conversion of mechanical energy into alternating current.", "isCorrect": false, "rationale": "He specifically chose a DC (Direct Current) generator because it lacks the oscillation characteristic of waves."}, {"label": "D", "text": "The interference patterns of electromagnetic radiation.", "isCorrect": false, "rationale": "The discussion was about matter waves (De Broglie), not the interference of light waves."}]}, {"question": "To solve a problem in the Delta Antenna project, the PhD candidate connected 'skin effect theory' with the work of which scientist?", "hint": "This scientist is famous for his work on both radio waves and the physiology of plants.", "options": [{"label": "A", "text": "Richard Feynman", "isCorrect": false, "rationale": "While the author studied Feynman, it was Bose's work that the PhD candidate used to solve this specific lab problem."}, {"label": "B", "text": "Albert Einstein", "isCorrect": false, "rationale": "The PhD candidate focused on electrical and plant physiology research relevant to antenna theory rather than relativity."}, {"label": "C", "text": "J.C. Bose", "isCorrect": true, "rationale": "He applied J.C. Bose's research on the electrical activity in plants to help solve the students' antenna calculations."}, {"label": "D", "text": "Nikola Tesla", "isCorrect": false, "rationale": "Tesla is mentioned in the book title and modern context, but not as the specific solution for the 1978 antenna project."}]}, {"question": "The author describes the PhD candidate as a 'Siddha Purusha.' According to the text, what characterizes this state?", "hint": "For such a person, being 'in the zone' is the default rather than a goal.", "options": [{"label": "A", "text": "The ability to perform complex rituals with perfect accuracy.", "isCorrect": false, "rationale": "The text emphasizes that the Yogi performed no rituals and used no incense; his state was internal."}, {"label": "B", "text": "Mastery over the laws of thermodynamics in a laboratory.", "isCorrect": false, "rationale": "While he was brilliant at physics, his status as a Siddha Purusha refers to his spiritual realization, not his academic degree."}, {"label": "C", "text": "Deep meditative absorption is a natural and abiding state.", "isCorrect": true, "rationale": "A Siddha Purusha is a realized soul for whom meditation is not an attainment to be reached, but a continuous way of being."}, {"label": "D", "text": "A life defined by strict, forced discipline of the mind.", "isCorrect": false, "rationale": "The text notes that for him, meditative absorption was natural and required effort to 'return' from, rather than force to enter."}]}, {"question": "What metaphor does the author use to describe how he received the ability to meditate from the Yogi in 1978?", "hint": "The author uses a modern computing analogy for an ancient spiritual phenomenon.", "options": [{"label": "A", "text": "Learning a new language through immersion.", "isCorrect": false, "rationale": "The author contrasts this experience with learning a language, which usually fades if not practiced."}, {"label": "B", "text": "Tuning a radio until the static disappears.", "isCorrect": false, "rationale": "While a 'signal' is mentioned later, the initial reception is described as a passive 'unearned gift' or transmission."}, {"label": "C", "text": "Downloading software he didn't know he was receiving.", "isCorrect": true, "rationale": "The author emphasizes that this capacity was 'transmitted' rather than earned through practice or instruction."}, {"label": "D", "text": "Building a brick wall one stone at a time.", "isCorrect": false, "rationale": "Building a wall implies gradual effort and discipline, which the author explicitly states he lacked."}]}, {"question": "In the 'Tokyo Passport Race' of 2023, what was the primary deadline the author faced?", "hint": "The time constraint involved a government building and a multi-day closure.", "options": [{"label": "A", "text": "Reaching the U.S. Embassy by 2:30 PM before a long holiday weekend.", "isCorrect": true, "rationale": "The embassy was closing for a holiday, and failure to arrive on time would have stranded him until Tuesday."}, {"label": "B", "text": "Boarding a bullet train scheduled to depart at 1:30 PM.", "isCorrect": false, "rationale": "The crisis began at 1:30 PM, but the goal was reaching the embassy, not a train."}, {"label": "C", "text": "Completing a tax-free refund process before his flight departed.", "isCorrect": false, "rationale": "The tax-free process is when he lost the passport; the deadline was for the emergency replacement."}, {"label": "D", "text": "Finding his passport before the mall closed for the night.", "isCorrect": false, "rationale": "The mall's closing time was not the critical factor; it was the embassy's holiday schedule."}]}, {"question": "What did the author's dentist and gastrosurgeon friends find most surprising about his behavior during the Tokyo incident?", "hint": "They were comparing his external reaction to how they would have felt internally.", "options": [{"label": "A", "text": "He was able to communicate fluently in Japanese.", "isCorrect": false, "rationale": "The author mentions he does not speak a single reliable word of Japanese and used a translation app."}, {"label": "B", "text": "He successfully convinced the embassy to stay open late.", "isCorrect": false, "rationale": "He did not change the embassy's schedule; he arrived at 2:28 PM, just two minutes before they closed."}, {"label": "C", "text": "He managed to find the passport in a crowded food court.", "isCorrect": false, "rationale": "He never found the original passport; he had to secure an emergency temporary one from the embassy."}, {"label": "D", "text": "He didn't even seem rattled by the crisis.", "isCorrect": true, "rationale": "Despite the high-stakes situation, the author maintained a level of composure that his professional friends found remarkable."}]}, {"question": "How does the author define the 'Sacramento Paradox' regarding meditation?", "hint": "It involves the counterintuitive success of the 'undisciplined' over the 'disciplined'.", "options": [{"label": "A", "text": "Technological leaders are better at meditation than medical professionals.", "isCorrect": false, "rationale": "The text shows that both IT leaders and surgeons at the gathering shared the same struggle with meditation."}, {"label": "B", "text": "The conflict between modern technology like Teslas and ancient spiritual practices.", "isCorrect": false, "rationale": "The author actually suggests technology and meditation are complementary in his book title, not a paradox of struggle."}, {"label": "C", "text": "Highly disciplined people often struggle to meditate, while an inconsistent person may find it easy.", "isCorrect": true, "rationale": "The author contrasts his wife's extreme discipline with his own neglect of practice, yet he retains an easy access to stillness."}, {"label": "D", "text": "The more one tries to meditate in a quiet place, the louder the mind becomes.", "isCorrect": false, "rationale": "While true for some, the 'Sacramento Paradox' specifically refers to the contrast between discipline and the 'unearned gift' of transmission."}]}, {"question": "In the author's metaphor, how does the 'Bird' approach its nest compared to the 'Shepherd' driving sheep?", "hint": "Think about the difference between being 'driven' from behind and being 'drawn' toward something.", "options": [{"label": "A", "text": "The bird must be trained through repetitive daily drills.", "isCorrect": false, "rationale": "Training through drills represents the 'shepherd' model of discipline, which the bird metaphor specifically avoids."}, {"label": "B", "text": "The bird is pulled by a magnetic attraction to home.", "isCorrect": true, "rationale": "The author uses this to illustrate 'natural inwardness,' where the mind isn't forced but naturally wants to return to stillness."}, {"label": "C", "text": "The bird's flight is a result of high-stress survival instincts.", "isCorrect": false, "rationale": "The metaphor emphasizes a lack of struggle and a natural return, rather than a stress-driven action."}, {"label": "D", "text": "The bird only returns when the external environment is perfectly still.", "isCorrect": false, "rationale": "The metaphor suggests an internal 'pull' or 'home' that exists regardless of external conditions."}]}, {"question": "What is the specific Yogic term for the 'natural inwardness' that allows the mind to settle without force?", "hint": "This two-word Sanskrit term describes the mind's tendency to flow back toward its source.", "options": [{"label": "A", "text": "Pranayama", "isCorrect": false, "rationale": "Pranayama is the practice of conscious breath regulation used to settle consciousness, but it is not the term for 'natural inwardness' itself."}, {"label": "B", "text": "Dhyana", "isCorrect": false, "rationale": "Dhyana is the general term for meditation, whereas the text uses the more specific term for the 'pull' of inwardness."}, {"label": "C", "text": "Pratyak Pravahata", "isCorrect": true, "rationale": "The text defines this as a state where a higher center awakens and acts like a magnet, pulling the mind inward."}, {"label": "D", "text": "Vibhuti", "isCorrect": false, "rationale": "Vibhuti refers to the sacred ash markings on the forehead mentioned at the beginning of the story."}]}, {"question": "According to the author, meditation creates a 'buffer' that functions similarly to which part of a vehicle?", "hint": "These components manage the impact of external 'bumps' in the road.", "options": [{"label": "A", "text": "Brake pads", "isCorrect": false, "rationale": "Brake pads stop motion; the author emphasizes that he was still moving and acting during the crisis, just with more space around the panic."}, {"label": "B", "text": "The steering wheel", "isCorrect": false, "rationale": "While meditation provides direction, the 'buffer' metaphor is specifically linked to absorbing the 'shock' of stress."}, {"label": "C", "text": "Shock absorbers", "isCorrect": true, "rationale": "Shock absorbers don't prevent you from hitting bumps, but they ensure the chassis doesn't break and the ride stays smooth."}, {"label": "D", "text": "The battery", "isCorrect": false, "rationale": "The author uses a battery to describe the 'charge' or longevity of the gift, but the 'buffer' refers to the response to stress."}]}, {"question": "The upcoming book mentioned in the text uses which technological analogy to describe the spiritual journey?", "hint": "It compares a modern electric car's autonomous mode to a state of meditative 'rest' while moving.", "options": [{"label": "A", "text": "High-Voltage Enlightenment", "isCorrect": false, "rationale": "High-voltage labs were the setting of the origin story, but not the primary metaphor for the book's title."}, {"label": "B", "text": "Self-driving to the Self (Tesla = Dhyana)", "isCorrect": true, "rationale": "The book title equates the effortless navigation of a self-driving Tesla with the inward journey of meditation."}, {"label": "C", "text": "Quantum Computing the Soul", "isCorrect": false, "rationale": "While the author's nickname is 'Quantum,' the book's specific analogy is with automated driving."}, {"label": "D", "text": "The Wi-Fi Signal of Grace", "isCorrect": false, "rationale": "The 'Wi-Fi password' is a metaphor used in the substack post, but it is not the central title analogy of the book."}]}, {"question": "What does the author suggest is the 'missing variable' that explains why his meditative capacity persisted for 45 years despite neglect?", "hint": "It is something 'given' rather than 'practiced'.", "options": [{"label": "A", "text": "The stress of living in high-pressure cities like Tokyo.", "isCorrect": false, "rationale": "The stress merely revealed the capacity; it did not create or sustain the 'missing variable'."}, {"label": "B", "text": "Spiritual transmission from a realized soul.", "isCorrect": true, "rationale": "The author concludes that the 'unearned gift' received in 1978 acted like a battery that held its charge independent of his own discipline."}, {"label": "C", "text": "The inherent logical nature of the engineering mind.", "isCorrect": false, "rationale": "He notes that other brilliant engineers and IT leaders in Sacramento were unable to meditate, ruling out 'logic' as the sole cause."}, {"label": "D", "text": "A rigorous daily routine of slow Pranayama.", "isCorrect": false, "rationale": "The author explicitly states he was inconsistent and abandoned the practice for decades."}]}];
+const TOTAL_TIME=300;
+let current=0, score=0, locked=false, timeLeft=TOTAL_TIME, timerId=null, started=false;
+const $=id=>document.getElementById(id);
+function fmt(s){const m=Math.floor(s/60), r=s%60; return m+':'+String(r).padStart(2,'0');}
+function show(id){['start','quiz','result'].forEach(x=>$(x).classList.toggle('hidden',x!==id)); window.scrollTo({top:0,behavior:'smooth'});}
+function startQuiz(){current=0;score=0;locked=false;timeLeft=TOTAL_TIME;started=true;show('quiz');renderQ();tick();timerId=setInterval(tick,1000);}
+function tick(){
+  $('timer').textContent=fmt(timeLeft); $('timer').classList.toggle('warning',timeLeft<=120 && timeLeft>60); $('timer').classList.toggle('danger',timeLeft<=60);
+  const pct=Math.max(0,timeLeft/TOTAL_TIME*100); $('timerBar').style.width=pct+'%';
+  $('timerBar').style.background=timeLeft<=60?'linear-gradient(90deg,#ff6b63,#ffb0aa)':timeLeft<=120?'linear-gradient(90deg,#f0d66b,#ffe99a)':'linear-gradient(90deg,var(--gold),var(--gold2))';
+  if(timeLeft<=0){finish(true);return;} timeLeft--;
+}
+function renderQ(){
+  locked=false; const q=QUIZ[current]; const total=QUIZ.length;
+  $('qIndex').textContent='Question '+(current+1)+' / '+total; $('scoreNow').textContent=score; $('progressBar').style.width=(current/total*100)+'%';
+  $('qBody').innerHTML=`<div class="question">${escapeHtml(q.question)}</div><div class="hint">💡 ${escapeHtml(q.hint||'Choose the best answer.')}</div><div class="options">${q.options.map((o,i)=>`<button class="opt" data-i="${i}" onclick="choose(${i})"><span class="tag">${escapeHtml(o.label||String.fromCharCode(65+i))}</span><span>${escapeHtml(o.text)}</span></button>`).join('')}</div><div id="feedback" class="feedback hidden"></div>`;
+}
+function choose(i){
+ if(locked) return; locked=true; const q=QUIZ[current], o=q.options[i], btns=document.querySelectorAll('.opt');
+ btns.forEach((b,idx)=>{b.disabled=true; if(q.options[idx].isCorrect)b.classList.add('show-correct');});
+ if(o.isCorrect){score++; btns[i].classList.add('correct');} else {btns[i].classList.add('wrong');}
+ $('scoreNow').textContent=score; $('progressBar').style.width=((current+1)/QUIZ.length*100)+'%';
+ const fb=$('feedback'); fb.classList.remove('hidden'); fb.innerHTML=`<b>${o.isCorrect?'Correct':'Not quite'}</b><p>${escapeHtml(o.rationale||'')}</p><button class="btn btn-gold" style="margin-top:14px" onclick="nextQ()">${current===QUIZ.length-1?'Finish →':'Next Question →'}</button>`;
+}
+function nextQ(){ if(current<QUIZ.length-1){current++;renderQ();} else finish(false); }
+function finish(timeout){
+ if(timerId){clearInterval(timerId);timerId=null;} started=false; show('result');
+ const total=QUIZ.length; $('finalScore').textContent=score; $('scoreText').textContent='You got '+score+' out of '+total+' correct'; $('timeLeft').textContent='Time remaining: '+fmt(Math.max(0,timeLeft));
+ const pct=score/total; $('badge').textContent=timeout?'⏰':pct>=.8?'🌟':pct>=.6?'🏆':'💪'; $('verdict').textContent=timeout?"Time's Up!":'Proof of Completion';
+ $('progressBar').style.width='100%';
+}
+function restartQuiz(){startQuiz();}
+function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+
+
+// Optional direct-start entry point: quiz.html?start=1 skips the intro card and starts the timer/quiz.
+document.addEventListener('DOMContentLoaded', function(){
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('start') === '1'){
+    setTimeout(startQuiz, 80);
+  }
+});
+
+</script>
+</body>
+</html>
