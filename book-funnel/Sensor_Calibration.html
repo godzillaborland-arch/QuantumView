@@ -359,7 +359,7 @@
                         <i class="fa-solid fa-volume-high text-cyan-400"></i>
                     </button>
                     <div id="audioStatusMobile" class="text-xs mono px-2 py-1 rounded bg-slate-800/50 border border-slate-700">
-                        <i class="fa-solid fa-circle-notch fa-spin text-slate-500"></i> <span class="text-slate-400">Init</span>
+                        <i class="fa-solid fa-volume-low text-cyan-400"></i> <span class="text-cyan-300">Tap Start</span>
                     </div>
                 </div>
             </div>
@@ -386,7 +386,7 @@
                                     <i class="fa-solid fa-volume-high text-cyan-400 text-sm"></i>
                                 </button>
                                 <div id="audioStatus" class="text-xs mono px-2 py-1 rounded bg-slate-800/50 border border-slate-700">
-                                    <i class="fa-solid fa-circle-notch fa-spin text-slate-500"></i> <span class="text-slate-400">Init</span>
+                                    <i class="fa-solid fa-volume-low text-cyan-400"></i> <span class="text-cyan-300">Tap Start</span>
                                 </div>
                             </div>
                         </div>
@@ -570,27 +570,44 @@
         }
 
         async init(userGesture = false) {
-            if (this.initialized) {
-                console.log('[Audio] Already initialized, state:', this.audioContext?.state);
-                return this.audioUnlocked;
+            // On iOS/Safari, audio must be created/resumed inside a real user gesture.
+            // If this is not a user gesture, do not create the AudioContext yet.
+            if (!userGesture && !this.initialized) {
+                this.updateStatus();
+                return false;
             }
-            
-            try {
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                this.masterGain = this.audioContext.createGain();
-                this.masterGain.gain.value = 0.3;
-                this.masterGain.connect(this.audioContext.destination);
-                this.initialized = true;
-                console.log('[Audio] Context created, state:', this.audioContext.state);
+            return await this.unlockFromGesture();
+        }
 
-                if (userGesture || this.audioContext.state === 'running') {
-                    await this.resume();
+        async unlockFromGesture() {
+            try {
+                if (!this.initialized) {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    this.masterGain = this.audioContext.createGain();
+                    this.masterGain.gain.value = this.muted ? 0 : 0.3;
+                    this.masterGain.connect(this.audioContext.destination);
+                    this.initialized = true;
+                    console.log('[Audio] Context created inside user gesture, state:', this.audioContext.state);
                 }
 
+                if (this.audioContext.state === 'suspended') {
+                    await this.audioContext.resume();
+                    console.log('[Audio] Context resumed, state:', this.audioContext.state);
+                }
+
+                // iOS sometimes needs an actual scheduled source node inside the gesture.
+                const buffer = this.audioContext.createBuffer(1, 1, 22050);
+                const source = this.audioContext.createBufferSource();
+                source.buffer = buffer;
+                source.connect(this.masterGain);
+                source.start(0);
+
+                this.audioUnlocked = this.audioContext.state === 'running';
+                this.visualFallback = !this.audioUnlocked;
                 this.updateStatus();
                 return this.audioUnlocked;
             } catch (e) {
-                console.error('[Audio] Web Audio API failed:', e);
+                console.error('[Audio] Unlock failed:', e);
                 this.visualFallback = true;
                 this.updateStatus();
                 return false;
@@ -634,13 +651,13 @@
             statusEls.forEach(el => {
                 if (!el) return;
                 if (!this.initialized) {
-                    el.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-slate-500"></i> <span class="text-slate-400">Init</span>';
+                    el.innerHTML = '<i class="fa-solid fa-volume-low text-cyan-400"></i> <span class="text-cyan-300">Tap Start</span>';
                 } else if (this.muted) {
                     el.innerHTML = '<i class="fa-solid fa-volume-xmark text-slate-500"></i> <span class="text-slate-400">Muted</span>';
                 } else if (this.audioUnlocked) {
                     el.innerHTML = '<i class="fa-solid fa-volume-high text-emerald-400"></i> <span class="text-emerald-400">Ready</span>';
                 } else if (this.visualFallback || this.audioContext?.state !== 'running') {
-                    el.innerHTML = '<i class="fa-solid fa-volume-slash text-orange-400"></i> <span class="text-orange-400">Blocked</span>';
+                    el.innerHTML = '<i class="fa-solid fa-hand-pointer text-orange-400"></i> <span class="text-orange-300">Tap to Enable Sound</span>';
                 }
             });
         }
@@ -918,7 +935,7 @@
         document.getElementById('startGame').addEventListener('click', async () => {
             trackPlausible('Sensor Calibration Started', { box: '03', chapter: '3' });
             try {
-                await soundEngine.init(true);
+                await soundEngine.unlockFromGesture();
             } catch (audioError) {
                 console.warn('[Audio] Handled ecosystem init restriction cleanly:', audioError);
             }
@@ -957,28 +974,17 @@
         
         enableBtn.addEventListener('click', async () => {
             console.log('[Audio] Enable button clicked');
-            await soundEngine.init(true);
-            await soundEngine.resume();
-            soundEngine.play('test');
+            await soundEngine.unlockFromGesture();
+            if (soundEngine.audioUnlocked) soundEngine.play('test');
             
             setTimeout(() => {
                 banner.classList.add('hidden');
             }, 500);
             
-            logMessage(soundEngine.audioUnlocked ? "Audio enabled successfully" : "Audio blocked - using visual feedback");
+            logMessage(soundEngine.audioUnlocked ? "Audio enabled successfully" : "Tap Start or Enable Sound again if Safari is still waiting for permission.");
         });
 
-        // Also unlock on any user interaction
-        const unlockHandler = async () => {
-            if (!soundEngine.audioUnlocked && !soundEngine.initialized) {
-                await soundEngine.init(true);
-                await soundEngine.resume();
-            }
-        };
-        
-        ['touchstart', 'click'].forEach(evt => {
-            document.addEventListener(evt, unlockHandler, { once: true });
-        });
+        // Audio is now unlocked explicitly by the Start button or the Enable Sound button.
     }
 
     function setupMuteHandlers() {
