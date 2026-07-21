@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Voices · The Self-Driving Mind</title>
+
+<meta property="og:title" content="Global Voices · The Self-Driving Mind">
+<meta property="og:description" content="Readers from São Paulo to Sydney on Sundar Rajan's debut.">
+<meta property="og:image" content="https://theselfdrivingmind.com/images/global-voices-preview.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://theselfdrivingmind.com/global-voices.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Self-Driving Mind">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Global Voices · The Self-Driving Mind">
+<meta name="twitter:description" content="Readers from São Paulo to Sydney on Sundar Rajan's debut.">
+<meta name="twitter:image" content="https://theselfdrivingmind.com/images/global-voices-preview.jpg">
+<meta name="description" content="Endorsements for The Self-Driving Mind by Sundar Rajan, mapped on an interactive globe.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --cream:#F5F0E8; --navy:#1E3A5F; --navy-deep:#14273F; --gold:#C9A84C; --gold-deep:#A8862F; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--cream); font-family:'Inter',sans-serif; color:var(--navy);
+         min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:2.5rem 1.25rem 4rem; }
+  .frame { width:100%; max-width:640px; }
+  .kicker { text-align:center; font-size:12px; letter-spacing:0.22em; text-transform:uppercase;
+            color:var(--gold-deep); font-weight:600; }
+  .kicker::before, .kicker::after { content:" ✦ "; color:var(--gold); }
+  h1 { font-family:'Lora',serif; font-weight:500; font-size:clamp(26px,5vw,34px); text-align:center; margin:0.4rem 0 0.2rem; }
+  .sub { text-align:center; font-family:'Lora',serif; font-style:italic; font-size:15px; color:var(--gold-deep); margin-bottom:1rem; }
+  #globe { display:block; width:100%; touch-action:none; cursor:grab; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:1rem 0 1.5rem; }
+  .chips button { font-family:'Inter',sans-serif; font-size:13px; font-weight:500; padding:7px 16px;
+                  border-radius:999px; border:1px solid rgba(30,58,95,0.25); background:transparent;
+                  color:var(--navy); cursor:pointer; transition:all 0.2s ease; }
+  .chips button:hover { border-color:var(--gold); }
+  .chips button.active { background:var(--navy); border-color:var(--navy); color:var(--gold); }
+  .card { background:#FFFDF8; border:1px solid rgba(201,168,76,0.45); border-radius:4px;
+          padding:2rem 2.25rem; box-shadow:0 2px 18px rgba(30,58,95,0.07); position:relative;
+          min-height:210px; opacity:1; transition:opacity 0.35s ease; }
+  .card::before { content:"“"; position:absolute; top:0.35rem; left:1.1rem; font-family:'Lora',serif;
+                  font-size:56px; color:var(--gold); opacity:0.8; }
+  .card .loc { font-size:11px; letter-spacing:0.18em; text-transform:uppercase; font-weight:600;
+               color:var(--gold-deep); text-align:center; margin-bottom:0.9rem; }
+  .card .quote { font-family:'Lora',serif; font-size:16.5px; line-height:1.75; color:var(--navy); margin-bottom:1.1rem; }
+  .card .name { font-family:'Lora',serif; font-size:17px; font-weight:500; color:var(--navy-deep); }
+  .card .title { font-size:13px; font-style:italic; font-family:'Lora',serif; color:rgba(30,58,95,0.7); margin-top:3px; }
+  .cta-row { display:flex; justify-content:center; margin-top:1.75rem; }
+  .cta { font-family:'Inter',sans-serif; font-size:14px; font-weight:600; letter-spacing:0.06em;
+         text-transform:uppercase; text-decoration:none; color:var(--cream); background:var(--navy);
+         border:1px solid var(--navy); border-radius:3px; padding:13px 32px; transition:all 0.2s ease; }
+  .cta:hover { background:var(--navy-deep); color:var(--gold); border-color:var(--gold); }
+  .rule { display:flex; align-items:center; gap:10px; margin:2.25rem auto 0; max-width:340px; color:var(--gold); font-size:12px; }
+  .rule::before, .rule::after { content:""; flex:1; border-top:1px solid rgba(201,168,76,0.5); }
+  .footer { text-align:center; font-size:11px; letter-spacing:0.2em; text-transform:uppercase;
+            color:rgba(30,58,95,0.55); margin-top:0.9rem; }
+  .footer em { font-style:normal; color:var(--gold-deep); }
+</style>
+</head>
+<body>
+<div class="frame">
+  <p class="kicker">Global voices</p>
+  <h1>The Self-Driving Mind</h1>
+  <p class="sub">Readers around the world on Sundar Rajan's debut</p>
+
+  <canvas id="globe" aria-label="Rotating globe with endorsement locations"></canvas>
+
+  <div class="chips" id="chips"></div>
+
+  <div class="card" id="card">
+    <p class="loc" id="card-loc"></p>
+    <p class="quote" id="card-quote"></p>
+    <p class="name" id="card-name"></p>
+    <p class="title" id="card-title"></p>
+  </div>
+
+  <div class="cta-row">
+    <a class="cta" href="https://theselfdrivingmind.com/tesla-dhyana-blog.html#about-book">About the book</a>
+  </div>
+
+  <div class="rule">✦</div>
+  <p class="footer">Global voices · <em>The Self-Driving Mind</em></p>
+</div>
+
+<script>
+(function () {
+  var E = [
+   {name:"Adriana Pagotti D'Angelo", title:"IT Initiatives & Projects Specialist", loc:"São Paulo, Brazil", chip:"Adriana", lat:-23.55, lon:-46.63,
+    quote:"The Self-Driving Mind is more than a book—it is a guide you can return to throughout your life. Sundar Rajan offers a practical and accessible way to understand meditation and cultivate a calmer, more focused mind. His perspective is refreshing, clear, and encouraging. Instead of trying to control the mind, he invites us to observe our thoughts and feelings with greater clarity and ease. I recommend reading this book—and putting its ideas into practice."},
+   {name:"Viridiana", title:"", loc:"Yucatán, Mexico", chip:"Viridiana", lat:20.97, lon:-89.62,
+    quote:"Beautiful, so interesting, and very enriching."},
+   {name:"Dr. Siva", title:"International Security Consultant", loc:"Sydney, Australia", chip:"Dr. Siva", lat:-33.87, lon:151.21,
+    quote:"Lovely writing. It flows like a brook with lilts."},
+   {name:"MeiMei Fox", title:"2x New York Times Bestselling Author & Forbes Contributor", loc:"California, USA", chip:"MeiMei Fox", lat:36.78, lon:-119.42,
+    quote:"Sundar Rajan is a thoughtful writer… [whose] book sits at the intersection of Eastern spiritual wisdom, neuroscience, and modern technology. You can read his lovely Substack post about losing his passport in Tokyo to get a feel for his voice, and his prose is quite lovely."},
+   {name:"Krishnamachari 'Kris' Srikkanth", title:"World Cup 1983 Winner · Former Indian Cricket Captain", loc:"India", chip:"Kris Srikkanth", lat:13.08, lon:80.27,
+    quote:"I've known Sundar Rajan for over thirty years, and he's always been someone who sees things from a different angle. In The Self-Driving Mind, he brings together modern technology and timeless wisdom in an interesting and accessible way. Typical Sundar—inviting us to see the mind differently. I wish him every success with the book."},
+   {name:"Dr. Jeffery D. Long", title:"Carl W. Zeigler Professor of Religion, Philosophy & Asian Studies · Elizabethtown College", loc:"Pennsylvania, USA", chip:"Dr. Long", lat:40.9, lon:-77.8,
+    quote:"In The Self-Driving Mind, Sundar Rajan offers a brilliantly contemporary manual for an ancient human challenge: mastering the restless mind. By using the technical and philosophical parallels of autonomous driving technology as a metaphor for classical Dhyana, Rajan masterfully deconstructs the paradox of meditation—showing that true stillness is not achieved by forced control, but by setting a deep internal direction and surrendering to the flow of awareness. With deep roots in the Vedanta tradition and a sharp technologist's lens, this book bridges ancient insight with modern life in a way that is profoundly practical, deeply encouraging, and radically original."}
+  ];
+
+  var POLY = [
+   [[-168,66],[-140,70],[-125,70],[-110,73],[-95,72],[-80,73],[-70,62],[-55,52],[-65,45],[-75,40],[-76,35],[-81,31],[-81,25],[-90,29],[-97,26],[-97,20],[-105,20],[-110,23],[-114,28],[-124,40],[-125,49],[-135,58],[-153,58],[-166,54]],
+   [[-97,20],[-92,15],[-83,9],[-79,8],[-83,14],[-90,16]],
+   [[-79,9],[-72,12],[-60,9],[-50,0],[-35,-8],[-40,-20],[-48,-28],[-58,-34],[-65,-40],[-70,-52],[-72,-45],[-73,-35],[-71,-20],[-77,-10],[-80,-3]],
+   [[-17,15],[-10,32],[0,36],[10,37],[20,33],[32,31],[43,11],[51,10],[40,-5],[35,-20],[30,-30],[20,-35],[15,-25],[12,-15],[9,4],[-8,4]],
+   [[-10,36],[-9,43],[-2,48],[-5,58],[5,62],[15,68],[25,71],[40,68],[50,60],[40,55],[30,45],[25,40],[15,38],[5,36]],
+   [[40,68],[60,70],[75,73],[100,77],[130,72],[160,70],[178,66],[170,60],[155,50],[140,42],[122,39],[122,30],[108,18],[105,9],[100,7],[98,15],[90,22],[80,15],[77,8],[72,20],[66,25],[57,25],[48,30],[35,36],[30,45],[40,55],[50,60]],
+   [[114,-22],[122,-17],[132,-11],[137,-15],[142,-11],[146,-19],[153,-27],[150,-37],[140,-38],[131,-32],[124,-33],[115,-35]],
+   [[-52,60],[-45,60],[-40,64],[-22,70],[-30,83],[-58,76]]
+  ];
+
+  function inPoly(lon, lat, p) {
+    var c = false;
+    for (var i = 0, j = p.length - 1; i < p.length; j = i++) {
+      var xi = p[i][0], yi = p[i][1], xj = p[j][0], yj = p[j][1];
+      if (((yi > lat) !== (yj > lat)) && (lon < (xj - xi) * (lat - yi) / (yj - yi) + xi)) c = !c;
+    }
+    return c;
+  }
+
+  var dots = [];
+  for (var la = -58; la <= 84; la += 4) {
+    for (var lo = -180; lo < 180; lo += 4) {
+      for (var k = 0; k < POLY.length; k++) {
+        if (inPoly(lo, la, POLY[k])) { dots.push([lo, la]); break; }
+      }
+    }
+  }
+
+  var cv = document.getElementById('globe');
+  var ctx = cv.getContext('2d');
+  var elLoc = document.getElementById('card-loc');
+  var elQuote = document.getElementById('card-quote');
+  var elName = document.getElementById('card-name');
+  var elTitle = document.getElementById('card-title');
+  var card = document.getElementById('card');
+  var chipBox = document.getElementById('chips');
+
+  var D = Math.PI / 180;
+  var lam = 60, phi = 12, tLam = null, tPhi = null, auto = true, sel = 3;
+  var GOLD = '#C9A84C', GOLD_DEEP = '#A8862F', NAVY = '#1E3A5F';
+  var LINE = 'rgba(168,134,47,0.28)', OCEAN = 'rgba(201,168,76,0.08)';
+  var W, H, R, cx, cy;
+
+  function size() {
+    var w = cv.clientWidth || 360;
+    W = w; H = Math.round(w * 0.88);
+    var d = window.devicePixelRatio || 1;
+    cv.width = W * d; cv.height = H * d;
+    cv.style.height = H + 'px';
+    ctx.setTransform(d, 0, 0, d, 0, 0);
+    R = W * 0.38; cx = W / 2; cy = H / 2;
+  }
+
+  function proj(lat, lon) {
+    var f = lat * D, l = lon * D, f0 = phi * D, l0 = lam * D;
+    var cosc = Math.sin(f0) * Math.sin(f) + Math.cos(f0) * Math.cos(f) * Math.cos(l - l0);
+    return {
+      x: cx + R * Math.cos(f) * Math.sin(l - l0),
+      y: cy - R * (Math.cos(f0) * Math.sin(f) - Math.sin(f0) * Math.cos(f) * Math.cos(l - l0)),
+      v: cosc > 0, c: cosc
+    };
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    var halo = ctx.createRadialGradient(cx, cy, R * 0.8, cx, cy, R * 1.35);
+    halo.addColorStop(0, 'rgba(201,168,76,0.12)');
+    halo.addColorStop(1, 'rgba(201,168,76,0)');
+    ctx.fillStyle = halo;
+    ctx.beginPath(); ctx.arc(cx, cy, R * 1.35, 0, 7); ctx.fill();
+
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7);
+    ctx.fillStyle = OCEAN; ctx.fill();
+    ctx.strokeStyle = GOLD; ctx.lineWidth = 1.25; ctx.stroke();
+
+    ctx.lineWidth = 0.6; ctx.strokeStyle = LINE;
+    var i, p, m;
+    for (i = -180; i < 180; i += 30) {
+      ctx.beginPath(); m = false;
+      for (var a = -90; a <= 90; a += 4) {
+        p = proj(a, i);
+        if (p.v) { if (m) ctx.lineTo(p.x, p.y); else ctx.moveTo(p.x, p.y); m = true; } else m = false;
+      }
+      ctx.stroke();
+    }
+    for (i = -60; i <= 60; i += 30) {
+      ctx.beginPath(); m = false;
+      for (var b = -180; b <= 180; b += 4) {
+        p = proj(i, b);
+        if (p.v) { if (m) ctx.lineTo(p.x, p.y); else ctx.moveTo(p.x, p.y); m = true; } else m = false;
+      }
+      ctx.stroke();
+    }
+
+    for (i = 0; i < dots.length; i++) {
+      p = proj(dots[i][1], dots[i][0]);
+      if (p.v) {
+        ctx.globalAlpha = Math.min(1, p.c * 1.6);
+        ctx.fillStyle = GOLD_DEEP;
+        ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(1.2, W * 0.0035), 0, 7); ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    for (i = 0; i < E.length; i++) {
+      p = proj(E[i].lat, E[i].lon);
+      if (!p.v) continue;
+      var r = (i === sel) ? 7 : 5;
+      ctx.beginPath(); ctx.arc(p.x, p.y, r + 4, 0, 7);
+      ctx.strokeStyle = GOLD; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.stroke();
+      ctx.globalAlpha = 1;
+      ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 7);
+      ctx.fillStyle = (i === sel) ? NAVY : GOLD_DEEP; ctx.fill();
+      if (i === sel) {
+        ctx.font = '600 12px Inter, sans-serif';
+        ctx.fillStyle = NAVY; ctx.textAlign = 'center';
+        ctx.fillText(E[i].loc, p.x, p.y - r - 9);
+      }
+    }
+  }
+
+  function shortest(a, b) { var d = (b - a) % 360; if (d > 180) d -= 360; if (d < -180) d += 360; return d; }
+
+  function frame() {
+    if (tLam !== null) {
+      var dl = shortest(lam, tLam), dp = tPhi - phi;
+      if (Math.abs(dl) < 0.4 && Math.abs(dp) < 0.4) { lam = tLam; phi = tPhi; tLam = null; }
+      else { lam += dl * 0.08; phi += dp * 0.08; }
+    } else if (auto) {
+      lam += 0.15;
+    }
+    draw();
+    requestAnimationFrame(frame);
+  }
+
+  var fadeTimer = null, resumeTimer = null;
+
+  function paint(i) {
+    var e = E[i];
+    elLoc.textContent = e.loc;
+    elQuote.textContent = '\u201C' + e.quote + '\u201D';
+    elName.textContent = '\u2014 ' + e.name;
+    elTitle.textContent = e.title;
+    elTitle.style.display = e.title ? 'block' : 'none';
+    var btns = chipBox.children;
+    for (var j = 0; j < btns.length; j++) {
+      btns[j].className = (j === i) ? 'active' : '';
+    }
+  }
+
+  function select(i, animate) {
+    sel = i;
+    if (animate === false) {
+      paint(i);
+    } else {
+      card.style.opacity = '0';
+      clearTimeout(fadeTimer);
+      fadeTimer = setTimeout(function () {
+        paint(i);
+        card.style.opacity = '1';
+      }, 350);
+      tLam = E[i].lon;
+      tPhi = Math.max(-40, Math.min(40, E[i].lat * 0.7));
+      auto = false;
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(function () { auto = true; }, 6000);
+    }
+  }
+
+  for (var n = 0; n < E.length; n++) {
+    (function (idx) {
+      var btn = document.createElement('button');
+      btn.textContent = E[idx].chip;
+      btn.onclick = function () { select(idx); restartTour(); };
+      chipBox.appendChild(btn);
+    })(n);
+  }
+
+  var tour = null;
+  function startTour() {
+    tour = setInterval(function () { select((sel + 1) % E.length); }, 12000);
+  }
+  function restartTour() { clearInterval(tour); startTour(); }
+  function stopTour() { clearInterval(tour); tour = null; }
+
+  var drag = false, px = 0, py = 0, moved = false;
+  cv.addEventListener('pointerdown', function (e) {
+    drag = true; moved = false; px = e.clientX; py = e.clientY;
+    auto = false; tLam = null; cv.style.cursor = 'grabbing';
+    stopTour();
+  });
+  window.addEventListener('pointermove', function (e) {
+    if (!drag) return;
+    var dx = e.clientX - px, dy = e.clientY - py;
+    if (Math.abs(dx) + Math.abs(dy) > 3) moved = true;
+    lam -= dx * 0.4;
+    phi = Math.max(-70, Math.min(70, phi + dy * 0.4));
+    px = e.clientX; py = e.clientY;
+  });
+  window.addEventListener('pointerup', function (e) {
+    if (!drag) return;
+    drag = false; cv.style.cursor = 'grab';
+    setTimeout(function () { if (tLam === null) auto = true; }, 4000);
+    if (!moved) {
+      var r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
+      var best = -1, bd = 500;
+      for (var i = 0; i < E.length; i++) {
+        var p = proj(E[i].lat, E[i].lon);
+        if (!p.v) continue;
+        var d2 = (p.x - mx) * (p.x - mx) + (p.y - my) * (p.y - my);
+        if (d2 < bd) { bd = d2; best = i; }
+      }
+      if (best >= 0) select(best);
+    }
+    restartTour();
+  });
+
+  window.addEventListener('resize', size);
+
+  size();
+  select(3, false);
+  startTour();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
