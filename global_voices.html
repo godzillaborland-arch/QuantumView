@@ -21,55 +21,77 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { --cream:#F5F0E8; --navy:#1E3A5F; --navy-deep:#14273F; --gold:#C9A84C; --gold-deep:#A8862F; }
+  :root {
+    --cream:#F5F0E8; --navy:#12263F; --navy-deep:#0A1728; --navy-mid:#1E3A5F;
+    --gold:#E0B94A; --gold-bright:#F2CE68; --gold-deep:#96762A;
+  }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { background:var(--cream); font-family:'Inter',sans-serif; color:var(--navy);
-         min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:2.5rem 1.25rem 4rem; }
-  .frame { width:100%; max-width:640px; }
-  .kicker { text-align:center; font-size:12px; letter-spacing:0.22em; text-transform:uppercase;
-            color:var(--gold-deep); font-weight:600; }
-  .kicker::before, .kicker::after { content:" ✦ "; color:var(--gold); }
-  h1 { font-family:'Lora',serif; font-weight:500; font-size:clamp(26px,5vw,34px); text-align:center; margin:0.4rem 0 0.2rem; }
-  .sub { text-align:center; font-family:'Lora',serif; font-style:italic; font-size:15px; color:var(--gold-deep); margin-bottom:1rem; }
+         min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:0 0 4rem; }
+  .frame { width:100%; max-width:660px; padding:0 1.25rem; }
+
+  .stage { background:var(--navy-deep); width:100%; padding:2.5rem 1.25rem 2rem;
+           display:flex; flex-direction:column; align-items:center; margin-bottom:2rem; }
+  .stage-inner { width:100%; max-width:660px; }
+  .kicker { text-align:center; font-size:12px; letter-spacing:0.28em; text-transform:uppercase;
+            color:var(--gold); font-weight:700; }
+  .kicker::before, .kicker::after { content:" ✦ "; color:var(--gold-bright); }
+  h1 { font-family:'Lora',serif; font-weight:600; font-size:clamp(30px,6vw,40px); text-align:center;
+       color:#FBF7EF; margin:0.5rem 0 0.3rem; letter-spacing:0.01em; }
+  .sub { text-align:center; font-family:'Lora',serif; font-style:italic; font-size:16px;
+         color:var(--gold); margin-bottom:0.5rem; }
   #globe { display:block; width:100%; touch-action:none; cursor:grab; }
-  .chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:1rem 0 1.5rem; }
-  .chips button { font-family:'Inter',sans-serif; font-size:13px; font-weight:500; padding:7px 16px;
-                  border-radius:999px; border:1px solid rgba(30,58,95,0.25); background:transparent;
+  .hint { text-align:center; font-size:11px; letter-spacing:0.16em; text-transform:uppercase;
+          color:rgba(224,185,74,0.55); margin-top:-0.5rem; }
+
+  .chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:0 0 1.75rem; }
+  .chips button { font-family:'Inter',sans-serif; font-size:13px; font-weight:600; padding:8px 18px;
+                  border-radius:999px; border:1.5px solid rgba(18,38,63,0.30); background:transparent;
                   color:var(--navy); cursor:pointer; transition:all 0.2s ease; }
-  .chips button:hover { border-color:var(--gold); }
-  .chips button.active { background:var(--navy); border-color:var(--navy); color:var(--gold); }
-  .card { background:#FFFDF8; border:1px solid rgba(201,168,76,0.45); border-radius:4px;
-          padding:2rem 2.25rem; box-shadow:0 2px 18px rgba(30,58,95,0.07); position:relative;
-          min-height:210px; opacity:1; transition:opacity 0.35s ease; }
-  .card::before { content:"“"; position:absolute; top:0.35rem; left:1.1rem; font-family:'Lora',serif;
-                  font-size:56px; color:var(--gold); opacity:0.8; }
-  .card .loc { font-size:11px; letter-spacing:0.18em; text-transform:uppercase; font-weight:600;
-               color:var(--gold-deep); text-align:center; margin-bottom:0.9rem; }
-  .card .quote { font-family:'Lora',serif; font-size:16.5px; line-height:1.75; color:var(--navy); margin-bottom:1.1rem; }
-  .card .name { font-family:'Lora',serif; font-size:17px; font-weight:500; color:var(--navy-deep); }
-  .card .title { font-size:13px; font-style:italic; font-family:'Lora',serif; color:rgba(30,58,95,0.7); margin-top:3px; }
-  .cta-row { display:flex; justify-content:center; margin-top:1.75rem; }
-  .cta { font-family:'Inter',sans-serif; font-size:14px; font-weight:600; letter-spacing:0.06em;
-         text-transform:uppercase; text-decoration:none; color:var(--cream); background:var(--navy);
-         border:1px solid var(--navy); border-radius:3px; padding:13px 32px; transition:all 0.2s ease; }
-  .cta:hover { background:var(--navy-deep); color:var(--gold); border-color:var(--gold); }
-  .rule { display:flex; align-items:center; gap:10px; margin:2.25rem auto 0; max-width:340px; color:var(--gold); font-size:12px; }
-  .rule::before, .rule::after { content:""; flex:1; border-top:1px solid rgba(201,168,76,0.5); }
-  .footer { text-align:center; font-size:11px; letter-spacing:0.2em; text-transform:uppercase;
-            color:rgba(30,58,95,0.55); margin-top:0.9rem; }
+  .chips button:hover { border-color:var(--gold-deep); background:rgba(224,185,74,0.12); }
+  .chips button.active { background:var(--navy); border-color:var(--navy); color:var(--gold-bright); }
+
+  .card { background:#FFFDF8; border:1px solid rgba(150,118,42,0.35); border-left:5px solid var(--gold);
+          border-radius:3px; padding:2.25rem 2.25rem 2rem; box-shadow:0 6px 28px rgba(18,38,63,0.13);
+          position:relative; min-height:220px; opacity:1; transition:opacity 0.35s ease; }
+  .card::before { content:"“"; position:absolute; top:0.1rem; left:1.2rem; font-family:'Lora',serif;
+                  font-size:76px; color:var(--gold); opacity:0.35; line-height:1; }
+  .card .loc { font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase; font-weight:700;
+               color:var(--gold-deep); text-align:center; margin-bottom:1.1rem; }
+  .card .quote { font-family:'Lora',serif; font-size:17.5px; line-height:1.8; color:var(--navy);
+                 margin-bottom:1.3rem; position:relative; }
+  .card .name { font-family:'Lora',serif; font-size:19px; font-weight:600; color:var(--navy-deep); }
+  .card .title { font-size:13px; font-style:italic; font-family:'Lora',serif;
+                 color:rgba(18,38,63,0.72); margin-top:4px; }
+
+  .cta-row { display:flex; justify-content:center; margin-top:2rem; }
+  .cta { font-family:'Inter',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.1em;
+         text-transform:uppercase; text-decoration:none; color:var(--gold-bright); background:var(--navy);
+         border:2px solid var(--navy); border-radius:2px; padding:15px 38px; transition:all 0.2s ease; }
+  .cta:hover { background:var(--navy-deep); border-color:var(--gold); color:#FFF; }
+  .rule { display:flex; align-items:center; gap:12px; margin:2.5rem auto 0; max-width:340px;
+          color:var(--gold-deep); font-size:13px; }
+  .rule::before, .rule::after { content:""; flex:1; border-top:1px solid rgba(150,118,42,0.45); }
+  .footer { text-align:center; font-size:11px; letter-spacing:0.22em; text-transform:uppercase;
+            color:rgba(18,38,63,0.65); font-weight:500; margin-top:0.9rem; }
   .footer em { font-style:normal; color:var(--gold-deep); }
 </style>
 </head>
 <body>
+
+<div class="stage">
+  <div class="stage-inner">
+    <p class="kicker">Global voices</p>
+    <h1>The Self-Driving Mind</h1>
+    <p class="sub">Readers around the world on Sundar Rajan's debut</p>
+    <canvas id="globe" aria-label="Rotating globe with endorsement locations"></canvas>
+    <p class="hint">Tap a pin or drag to explore</p>
+  </div>
+</div>
+
 <div class="frame">
-  <p class="kicker">Global voices</p>
-  <h1>The Self-Driving Mind</h1>
-  <p class="sub">Readers around the world on Sundar Rajan's debut</p>
-
-  <canvas id="globe" aria-label="Rotating globe with endorsement locations"></canvas>
-
   <div class="chips" id="chips"></div>
 
   <div class="card" id="card">
@@ -144,13 +166,13 @@
 
   var D = Math.PI / 180;
   var lam = 60, phi = 12, tLam = null, tPhi = null, auto = true, sel = 3;
-  var GOLD = '#C9A84C', GOLD_DEEP = '#A8862F', NAVY = '#1E3A5F';
-  var LINE = 'rgba(168,134,47,0.28)', OCEAN = 'rgba(201,168,76,0.08)';
-  var W, H, R, cx, cy;
+  var GOLD = '#E0B94A', GOLD_BRIGHT = '#F7D97E', CREAM = '#FBF7EF';
+  var LINE = 'rgba(224,185,74,0.30)', OCEAN = 'rgba(30,58,95,0.55)';
+  var W, H, R, cx, cy, pulse = 0;
 
   function size() {
     var w = cv.clientWidth || 360;
-    W = w; H = Math.round(w * 0.88);
+    W = w; H = Math.round(w * 0.86);
     var d = window.devicePixelRatio || 1;
     cv.width = W * d; cv.height = H * d;
     cv.style.height = H + 'px';
@@ -170,17 +192,24 @@
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
-    var halo = ctx.createRadialGradient(cx, cy, R * 0.8, cx, cy, R * 1.35);
-    halo.addColorStop(0, 'rgba(201,168,76,0.12)');
-    halo.addColorStop(1, 'rgba(201,168,76,0)');
+
+    var halo = ctx.createRadialGradient(cx, cy, R * 0.85, cx, cy, R * 1.5);
+    halo.addColorStop(0, 'rgba(224,185,74,0.28)');
+    halo.addColorStop(0.5, 'rgba(224,185,74,0.09)');
+    halo.addColorStop(1, 'rgba(224,185,74,0)');
     ctx.fillStyle = halo;
-    ctx.beginPath(); ctx.arc(cx, cy, R * 1.35, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cy, R * 1.5, 0, 7); ctx.fill();
+
+    var sphere = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.3, R * 0.1, cx, cy, R);
+    sphere.addColorStop(0, 'rgba(42,78,124,0.85)');
+    sphere.addColorStop(1, 'rgba(10,23,40,0.95)');
+    ctx.fillStyle = sphere;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
 
     ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7);
-    ctx.fillStyle = OCEAN; ctx.fill();
-    ctx.strokeStyle = GOLD; ctx.lineWidth = 1.25; ctx.stroke();
+    ctx.strokeStyle = GOLD; ctx.lineWidth = 2; ctx.stroke();
 
-    ctx.lineWidth = 0.6; ctx.strokeStyle = LINE;
+    ctx.lineWidth = 0.7; ctx.strokeStyle = LINE;
     var i, p, m;
     for (i = -180; i < 180; i += 30) {
       ctx.beginPath(); m = false;
@@ -199,29 +228,53 @@
       ctx.stroke();
     }
 
+    ctx.shadowColor = 'rgba(247,217,126,0.7)';
+    ctx.shadowBlur = 4;
     for (i = 0; i < dots.length; i++) {
       p = proj(dots[i][1], dots[i][0]);
       if (p.v) {
-        ctx.globalAlpha = Math.min(1, p.c * 1.6);
-        ctx.fillStyle = GOLD_DEEP;
-        ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(1.2, W * 0.0035), 0, 7); ctx.fill();
+        ctx.globalAlpha = Math.min(1, 0.35 + p.c * 1.4);
+        ctx.fillStyle = GOLD_BRIGHT;
+        ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(1.3, W * 0.004), 0, 7); ctx.fill();
       }
     }
+    ctx.shadowBlur = 0;
     ctx.globalAlpha = 1;
 
     for (i = 0; i < E.length; i++) {
       p = proj(E[i].lat, E[i].lon);
       if (!p.v) continue;
-      var r = (i === sel) ? 7 : 5;
-      ctx.beginPath(); ctx.arc(p.x, p.y, r + 4, 0, 7);
-      ctx.strokeStyle = GOLD; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.stroke();
-      ctx.globalAlpha = 1;
+      var active = (i === sel);
+      var r = active ? 8 : 5.5;
+
+      if (active) {
+        var ring = R * 0.06 + (pulse % 60) / 60 * R * 0.14;
+        ctx.globalAlpha = 0.55 * (1 - (pulse % 60) / 60);
+        ctx.beginPath(); ctx.arc(p.x, p.y, r + ring, 0, 7);
+        ctx.strokeStyle = GOLD_BRIGHT; ctx.lineWidth = 2; ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+
+      ctx.shadowColor = 'rgba(247,217,126,0.9)';
+      ctx.shadowBlur = active ? 16 : 8;
       ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 7);
-      ctx.fillStyle = (i === sel) ? NAVY : GOLD_DEEP; ctx.fill();
-      if (i === sel) {
-        ctx.font = '600 12px Inter, sans-serif';
-        ctx.fillStyle = NAVY; ctx.textAlign = 'center';
-        ctx.fillText(E[i].loc, p.x, p.y - r - 9);
+      ctx.fillStyle = active ? CREAM : GOLD_BRIGHT; ctx.fill();
+      ctx.shadowBlur = 0;
+
+      ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 7);
+      ctx.strokeStyle = GOLD; ctx.lineWidth = 1.5; ctx.stroke();
+
+      if (active) {
+        ctx.font = '700 12.5px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        var label = E[i].loc.toUpperCase();
+        var wdt = ctx.measureText(label).width;
+        ctx.fillStyle = 'rgba(10,23,40,0.85)';
+        ctx.fillRect(p.x - wdt / 2 - 9, p.y - r - 27, wdt + 18, 21);
+        ctx.strokeStyle = GOLD; ctx.lineWidth = 1;
+        ctx.strokeRect(p.x - wdt / 2 - 9, p.y - r - 27, wdt + 18, 21);
+        ctx.fillStyle = GOLD_BRIGHT;
+        ctx.fillText(label, p.x, p.y - r - 12);
       }
     }
   }
@@ -229,6 +282,7 @@
   function shortest(a, b) { var d = (b - a) % 360; if (d > 180) d -= 360; if (d < -180) d += 360; return d; }
 
   function frame() {
+    pulse++;
     if (tLam !== null) {
       var dl = shortest(lam, tLam), dp = tPhi - phi;
       if (Math.abs(dl) < 0.4 && Math.abs(dp) < 0.4) { lam = tLam; phi = tPhi; tLam = null; }
