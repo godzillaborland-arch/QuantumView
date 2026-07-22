@@ -17,6 +17,7 @@
 <meta name="twitter:title" content="Global Voices · The Self-Driving Mind">
 <meta name="twitter:description" content="Readers from São Paulo to Sydney on Sundar Rajan's debut.">
 <meta name="twitter:image" content="https://theselfdrivingmind.com/images/global-voices-preview.png">
+<meta name="twitter:image:alt" content="A glowing globe marking the countries where readers endorsed The Self-Driving Mind.">
 <meta name="description" content="Endorsements for The Self-Driving Mind by Sundar Rajan, mapped on an interactive globe.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -114,16 +115,32 @@
   var E = [
    {name:"Adriana Pagotti D'Angelo", title:"IT Initiatives & Projects Specialist", loc:"São Paulo, Brazil", chip:"Adriana", lat:-23.55, lon:-46.63,
     quote:"The Self-Driving Mind is more than a book—it is a guide you can return to throughout your life. Sundar Rajan offers a practical and accessible way to understand meditation and cultivate a calmer, more focused mind. His perspective is refreshing, clear, and encouraging. Instead of trying to control the mind, he invites us to observe our thoughts and feelings with greater clarity and ease. I recommend reading this book—and putting its ideas into practice."},
-   {name:"Viridiana", title:"", loc:"Yucatán, Mexico", chip:"Viridiana", lat:20.97, lon:-89.62,
+   {name:"Viridiana", title:"Taoist & Energy Consultant", loc:"Yucatán, Mexico", chip:"Viridiana", lat:20.97, lon:-89.62,
     quote:"Beautiful, so interesting, and very enriching."},
    {name:"Dr. Siva", title:"International Security Consultant", loc:"Sydney, Australia", chip:"Dr. Siva", lat:-33.87, lon:151.21,
     quote:"Lovely writing. It flows like a brook with lilts."},
-   {name:"MeiMei Fox", title:"2x New York Times Bestselling Author & Forbes Contributor", loc:"California, USA", chip:"MeiMei Fox", lat:36.78, lon:-119.42,
+   {name:"MeiMei Fox", title:"2x New York Times Bestselling Author & Forbes Contributor", loc:"Hawaii, USA", chip:"MeiMei Fox", lat:21.31, lon:-157.86,
     quote:"Sundar Rajan is a thoughtful writer… [whose] book sits at the intersection of Eastern spiritual wisdom, neuroscience, and modern technology. You can read his lovely Substack post about losing his passport in Tokyo to get a feel for his voice, and his prose is quite lovely."},
    {name:"Krishnamachari 'Kris' Srikkanth", title:"World Cup 1983 Winner · Former Indian Cricket Captain", loc:"India", chip:"Kris Srikkanth", lat:13.08, lon:80.27,
     quote:"I've known Sundar Rajan for over thirty years, and he's always been someone who sees things from a different angle. In The Self-Driving Mind, he brings together modern technology and timeless wisdom in an interesting and accessible way. Typical Sundar—inviting us to see the mind differently. I wish him every success with the book."},
    {name:"Dr. Jeffery D. Long", title:"Carl W. Zeigler Professor of Religion, Philosophy & Asian Studies · Elizabethtown College", loc:"Pennsylvania, USA", chip:"Dr. Long", lat:40.9, lon:-77.8,
-    quote:"In The Self-Driving Mind, Sundar Rajan offers a brilliantly contemporary manual for an ancient human challenge: mastering the restless mind. By using the technical and philosophical parallels of autonomous driving technology as a metaphor for classical Dhyana, Rajan masterfully deconstructs the paradox of meditation—showing that true stillness is not achieved by forced control, but by setting a deep internal direction and surrendering to the flow of awareness. With deep roots in the Vedanta tradition and a sharp technologist's lens, this book bridges ancient insight with modern life in a way that is profoundly practical, deeply encouraging, and radically original."}
+    quote:"In The Self-Driving Mind, Sundar Rajan offers a brilliantly contemporary manual for an ancient human challenge: mastering the restless mind. By using the technical and philosophical parallels of autonomous driving technology as a metaphor for classical Dhyana, Rajan masterfully deconstructs the paradox of meditation—showing that true stillness is not achieved by forced control, but by setting a deep internal direction and surrendering to the flow of awareness. With deep roots in the Vedanta tradition and a sharp technologist's lens, this book bridges ancient insight with modern life in a way that is profoundly practical, deeply encouraging, and radically original."},
+   {name:"Joe P.", title:"Book Editor", loc:"Chicago, USA", chip:"Joe P.", lat:41.88, lon:-87.63,
+    quote:"I've read through your sample chapter, and I definitely think it shows style and skill. It's not often I see a subject that I've never seen before, but yours is definitely new and exciting. I'm curious to see what your theories are."},
+   {name:"Shobha N.", title:"Head of Engineering, AI · Merck", loc:"Germany", chip:"Shobha N.", lat:51.16, lon:10.45,
+    quote:"Nicely written. I can surely spread the word amongst my contacts."},
+   {name:"Ram", title:"After a webinar on Yoga in Advaita", loc:"Ahmedabad, India", chip:"Ram", lat:23.02, lon:72.57,
+    quote:"A very good resonance—the vibe matched really well. It articulated exactly what had been on my mind. A very happy day."},
+   {name:"Gopikrishna M.", title:"Co-Founder, MVPServ · On the Lost Passport essay", loc:"Bay Area, California", chip:"Gopikrishna", lat:37.2, lon:-122.6,
+    quote:"Amazing."},
+   {name:"Alexander Thomson", title:"Senior Cybersecurity Engineer", loc:"Sacramento, California", chip:"A. Thomson", lat:39.2, lon:-121.6,
+    quote:"I like the premise of your book, and it's consistent with my own experience."},
+   {name:"Srinivasan", title:"Retired Intel Executive", loc:"Granite Bay, California", chip:"Srinivasan", lat:41.2, lon:-120.6,
+    quote:"An illuminating historical narrative connecting Srirangam and the Vijayanagara establishment—I highly appreciate the engaging way you have written it."},
+   {name:"Suresh V.", title:"Consulting Member, Cloud Development · Oracle", loc:"Seattle, USA", chip:"Suresh V.", lat:47.61, lon:-122.33,
+    quote:"Listened to the YouTube presentation. Very nice—good presentation."},
+   {name:"V. Subrahmanyan", title:"Advaita Teacher & Speaker", loc:"Bangalore, India", chip:"V. Subrahmanyan", lat:12.97, lon:77.59,
+    quote:"Your post on Devata Sakshatkara is too good."}
   ];
 
   var POLY = [
@@ -339,7 +356,7 @@
 
   var tour = null;
   function startTour() {
-    tour = setInterval(function () { select((sel + 1) % E.length); }, 12000);
+    tour = setInterval(function () { select((sel + 1) % E.length); }, 8000);
   }
   function restartTour() { clearInterval(tour); startTour(); }
   function stopTour() { clearInterval(tour); tour = null; }
