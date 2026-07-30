@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700">
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#152d44"/><stop offset="1" stop-color="#081421"/></linearGradient></defs>
+  <rect width="1200" height="700" fill="url(#sky)"/>
+  <circle cx="920" cy="140" r="70" fill="#d8b75f" opacity=".9"/>
+  <path d="M0 485 L170 330 L275 425 L430 245 L590 440 L730 295 L905 460 L1050 330 L1200 470 V700 H0Z" fill="#132a3f"/>
+  <g fill="#d7c59a">
+    <rect x="400" y="245" width="370" height="265"/>
+    <rect x="450" y="205" width="270" height="70"/>
+    <rect x="500" y="155" width="170" height="65"/>
+    <rect x="550" y="110" width="70" height="55"/>
+  </g>
+  <g fill="#081421">
+    <rect x="550" y="390" width="70" height="120" rx="35 35 0 0"/>
+    <rect x="465" y="315" width="55" height="75" rx="28 28 0 0"/>
+    <rect x="650" y="315" width="55" height="75" rx="28 28 0 0"/>
+  </g>
+  <text x="70" y="620" fill="#f8f4e8" font-family="Arial, sans-serif" font-size="70" font-weight="700">VIJAYANAGARA</text>
+  <text x="74" y="665" fill="#d8b75f" font-family="Arial, sans-serif" font-size="24" letter-spacing="5">THE KINGDOM OF GRACE</text>
+</svg>

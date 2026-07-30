@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700">
+  <rect width="1200" height="700" fill="#081421"/>
+  <g fill="none" stroke="#d8b75f" stroke-width="8" opacity=".9">
+    <ellipse cx="380" cy="315" rx="220" ry="75" transform="rotate(25 380 315)"/>
+    <ellipse cx="380" cy="315" rx="220" ry="75" transform="rotate(-25 380 315)"/>
+    <ellipse cx="380" cy="315" rx="75" ry="220"/>
+  </g>
+  <circle cx="380" cy="315" r="32" fill="#f8f4e8"/>
+  <rect x="690" y="145" width="350" height="280" rx="22" fill="#10263a" stroke="#5d7891" stroke-width="5"/>
+  <text x="735" y="235" fill="#8098aa" font-family="monospace" font-size="30">VARIABLE:</text>
+  <rect x="735" y="275" width="250" height="45" rx="7" fill="#d8b75f"/>
+  <text x="747" y="310" fill="#07131f" font-family="monospace" font-size="31" font-weight="700">████████</text>
+  <text x="70" y="620" fill="#f8f4e8" font-family="Arial, sans-serif" font-size="64" font-weight="700">THE QUANTUM ENCOUNTER</text>
+  <text x="74" y="665" fill="#d8b75f" font-family="Arial, sans-serif" font-size="24" letter-spacing="5">BLACK BOX 01</text>
+</svg>

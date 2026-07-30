@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Play | The Self-Driving Mind</title>
+  <meta name="description" content="Interactive games and story experiences from The Self-Driving Mind by Sundar Rajan.">
+  <style>
+    :root {
+      --ink:#07131f; --ink2:#0d2031; --panel:#10263a; --gold:#d8b75f;
+      --cream:#f8f4e8; --muted:#aebdca; --line:rgba(216,183,95,.28);
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0; color:var(--cream); background:
+      radial-gradient(circle at 80% 5%, rgba(216,183,95,.10), transparent 28rem),
+      linear-gradient(180deg,var(--ink),#091927 60%,#07131f);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+    }
+    a { color:inherit; }
+    .wrap { width:min(1180px, calc(100% - 40px)); margin:auto; }
+    header {
+      position:sticky; top:0; z-index:20; backdrop-filter:blur(14px);
+      background:rgba(7,19,31,.82); border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    nav { min-height:72px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    .brand { text-decoration:none; font-weight:750; letter-spacing:.02em; }
+    .brand span { color:var(--gold); }
+    .navlinks { display:flex; gap:22px; align-items:center; }
+    .navlinks a { text-decoration:none; color:#dce4eb; font-size:.95rem; }
+    .navlinks .active { color:var(--gold); }
+    .hero { padding:100px 0 70px; text-align:center; }
+    .eyebrow { color:var(--gold); text-transform:uppercase; letter-spacing:.22em; font-weight:800; font-size:.78rem; }
+    h1 { font-family: Georgia, 'Times New Roman', serif; font-size:clamp(3rem,8vw,6.8rem); line-height:.92; margin:18px 0 24px; font-weight:500; }
+    .hero p { max-width:760px; margin:0 auto; color:#c5d0d9; font-size:clamp(1rem,2vw,1.25rem); line-height:1.75; }
+    .hero-actions { margin-top:34px; display:flex; justify-content:center; flex-wrap:wrap; gap:14px; }
+    .button {
+      display:inline-flex; align-items:center; justify-content:center; gap:10px; padding:13px 20px;
+      border-radius:999px; background:var(--gold); color:var(--ink); font-weight:800;
+      text-decoration:none; transition:.2s transform,.2s filter;
+    }
+    .button:hover { transform:translateY(-2px); filter:brightness(1.07); }
+    .button.secondary { background:transparent; color:var(--cream); border:1px solid rgba(255,255,255,.22); }
+    .intro-line { height:1px; background:linear-gradient(90deg,transparent,var(--line),transparent); margin-bottom:60px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px; padding-bottom:80px; }
+    .game-card {
+      border:1px solid rgba(255,255,255,.09); border-radius:24px; overflow:hidden;
+      background:linear-gradient(160deg,rgba(18,42,63,.96),rgba(10,25,39,.96));
+      box-shadow:0 20px 60px rgba(0,0,0,.24); transition:.25s transform,.25s border-color;
+    }
+    .game-card:hover { transform:translateY(-5px); border-color:rgba(216,183,95,.5); }
+    .game-card:last-child:nth-child(odd) { grid-column:1 / -1; display:grid; grid-template-columns:1.15fr .85fr; }
+    .game-image { position:relative; display:block; aspect-ratio:12/7; overflow:hidden; background:#07131f; }
+    .game-image img { width:100%; height:100%; object-fit:cover; display:block; transition:.45s transform; }
+    .game-card:hover img { transform:scale(1.025); }
+    .play-mark {
+      position:absolute; right:20px; bottom:20px; width:54px; height:54px; border-radius:50%;
+      display:grid; place-items:center; background:rgba(248,244,232,.94); color:var(--ink);
+      box-shadow:0 8px 25px rgba(0,0,0,.3); padding-left:3px;
+    }
+    .game-copy { padding:28px 30px 32px; }
+    .tag { display:inline-block; padding:7px 10px; border:1px solid var(--line); border-radius:999px; color:var(--gold); font-size:.73rem; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
+    h2 { font-family:Georgia,'Times New Roman',serif; font-size:2.1rem; font-weight:500; margin:16px 0 5px; }
+    .kicker { color:var(--gold)!important; font-weight:750; margin-top:0!important; }
+    .game-copy p { color:#b9c7d2; line-height:1.65; }
+    .game-copy .button { margin-top:10px; }
+    .book-bridge {
+      margin:0 auto 90px; padding:48px; text-align:center; border-radius:28px;
+      background:linear-gradient(135deg,rgba(216,183,95,.13),rgba(16,38,58,.75));
+      border:1px solid var(--line);
+    }
+    .book-bridge h2 { font-size:clamp(2rem,4vw,3.4rem); margin-top:0; }
+    .book-bridge p { max-width:720px; margin:0 auto 25px; color:#c5d0d9; line-height:1.7; }
+    footer { border-top:1px solid rgba(255,255,255,.08); padding:30px 0 45px; color:#91a4b4; font-size:.9rem; }
+    .foot { display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+    @media (max-width:780px) {
+      .navlinks a:not(.active) { display:none; }
+      .hero { padding-top:76px; }
+      .grid { grid-template-columns:1fr; }
+      .game-card:last-child:nth-child(odd) { grid-column:auto; display:block; }
+      .book-bridge { padding:34px 22px; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <nav class="wrap">
+    <a class="brand" href="https://theselfdrivingmind.com/">THE SELF-DRIVING <span>MIND</span></a>
+    <div class="navlinks">
+      <a href="https://theselfdrivingmind.com/">Home</a>
+      <a href="https://theselfdrivingmind.com/tesla-dhyana-blog.html">The Book</a>
+      <a class="active" href="#">Play</a>
+      <a href="https://selfdrivingmind.substack.com/" target="_blank" rel="noopener">Subscribe</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <div class="eyebrow">Interactive Experiences</div>
+    <h1>Don’t Just Read.<br>Enter the Journey.</h1>
+    <p>Five games inspired by <em>The Self-Driving Mind</em>—from calming the monkey mind to navigating a lost passport, calibrating the inner vehicle, and entering the world of Vijayanagara.</p>
+    <div class="hero-actions">
+      <a class="button" href="#games">Choose a Game <span>↓</span></a>
+      <a class="button secondary" href="https://theselfdrivingmind.com/tesla-dhyana-blog.html">Explore the Book</a>
+    </div>
+  </section>
+
+  <div class="wrap intro-line"></div>
+
+  <section id="games" class="grid wrap">
+    
+    <article class="game-card">
+      <a class="game-image" href="https://theselfdrivingmind.com/Monkey_Mind_Game.html" target="_blank" rel="noopener">
+        <img src="monkey-mind.svg" alt="Monkey Mind game preview">
+        <span class="play-mark" aria-hidden="true">▶</span>
+      </a>
+      <div class="game-copy">
+        <div class="tag">Attention Game</div>
+        <h2>Monkey Mind</h2>
+        <p class="kicker">Hold the Center</p>
+        <p>Stay centered while distractions arrive from every direction. A playful test of attention, awareness, and recovery.</p>
+        <a class="button" href="https://theselfdrivingmind.com/Monkey_Mind_Game.html" target="_blank" rel="noopener">Play Game <span>→</span></a>
+      </div>
+    </article>
+    
+
+    <article class="game-card">
+      <a class="game-image" href="https://theselfdrivingmind.com/book-funnel/tokyo-passport-race-fixed-final.html" target="_blank" rel="noopener">
+        <img src="tokyo-passport.svg" alt="Tokyo Passport Race game preview">
+        <span class="play-mark" aria-hidden="true">▶</span>
+      </a>
+      <div class="game-copy">
+        <div class="tag">Story Puzzle</div>
+        <h2>Tokyo Passport Race</h2>
+        <p class="kicker">60 Minutes. One Lost Passport.</p>
+        <p>Reconstruct a real crisis through four puzzles and discover the invisible buffer meditation had quietly built.</p>
+        <a class="button" href="https://theselfdrivingmind.com/book-funnel/tokyo-passport-race-fixed-final.html" target="_blank" rel="noopener">Play Game <span>→</span></a>
+      </div>
+    </article>
+    
+
+    <article class="game-card">
+      <a class="game-image" href="https://theselfdrivingmind.com/quantum-encounter/" target="_blank" rel="noopener">
+        <img src="quantum-encounter.svg" alt="The Quantum Encounter game preview">
+        <span class="play-mark" aria-hidden="true">▶</span>
+      </a>
+      <div class="game-copy">
+        <div class="tag">Timed Quiz</div>
+        <h2>The Quantum Encounter</h2>
+        <p class="kicker">Find the Missing Variable</p>
+        <p>Read two source files, then take a timed 15-question challenge about skepticism, Grace, and the 1978 encounter.</p>
+        <a class="button" href="https://theselfdrivingmind.com/quantum-encounter/" target="_blank" rel="noopener">Play Game <span>→</span></a>
+      </div>
+    </article>
+    
+
+    <article class="game-card">
+      <a class="game-image" href="https://theselfdrivingmind.com/book-funnel/Sensor_Calibration.html" target="_blank" rel="noopener">
+        <img src="sensor-calibration.svg" alt="Sensor Calibration game preview">
+        <span class="play-mark" aria-hidden="true">▶</span>
+      </a>
+      <div class="game-copy">
+        <div class="tag">Strategy Simulation</div>
+        <h2>Sensor Calibration</h2>
+        <p class="kicker">Keep Autopilot Engaged</p>
+        <p>Maintain truthfulness, non-violence, non-attachment, and energy discipline while the Tesla advances toward the destination.</p>
+        <a class="button" href="https://theselfdrivingmind.com/book-funnel/Sensor_Calibration.html" target="_blank" rel="noopener">Play Game <span>→</span></a>
+      </div>
+    </article>
+    
+
+    <article class="game-card">
+      <a class="game-image" href="https://theselfdrivingmind.com/Vijayanagara_v3.html" target="_blank" rel="noopener">
+        <img src="vijayanagara.svg" alt="Vijayanagara game preview">
+        <span class="play-mark" aria-hidden="true">▶</span>
+      </a>
+      <div class="game-copy">
+        <div class="tag">3D Adventure</div>
+        <h2>Vijayanagara</h2>
+        <p class="kicker">Enter a Kingdom Built by Grace</p>
+        <p>Explore an interactive historical world where spiritual transmission, strategy, and the founding of an empire converge.</p>
+        <a class="button" href="https://theselfdrivingmind.com/Vijayanagara_v3.html" target="_blank" rel="noopener">Play Game <span>→</span></a>
+      </div>
+    </article>
+    
+  </section>
+
+  <section class="book-bridge wrap">
+    <div class="eyebrow">The Story Behind the Games</div>
+    <h2>Technology is the metaphor.<br>Grace is the current.</h2>
+    <p>Each experience opens a different doorway into the book’s central question: what changes when the mind no longer has to be forced inward?</p>
+    <a class="button" href="https://theselfdrivingmind.com/tesla-dhyana-blog.html">Discover The Self-Driving Mind →</a>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>© 2026 Sundar Rajan</span>
+    <span>The Self-Driving Mind · A Skeptic Encounters Grace</span>
+  </div>
+</footer>
+</body>
+</html>

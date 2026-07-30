@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700">
+  <rect width="1200" height="700" fill="#081421"/>
+  <path d="M130 450 C300 330, 430 460, 590 335 S900 260,1080 145" fill="none" stroke="#5d7891" stroke-width="34" stroke-linecap="round"/>
+  <path d="M130 450 C300 330, 430 460, 590 335 S900 260,1080 145" fill="none" stroke="#d8b75f" stroke-width="8" stroke-dasharray="24 24"/>
+  <g transform="translate(475 310)">
+    <path d="M0 85 Q20 30 75 25 H205 Q250 32 275 85 L300 105 V155 H20 V105Z" fill="#f8f4e8"/>
+    <circle cx="75" cy="155" r="34" fill="#11263a"/><circle cx="245" cy="155" r="34" fill="#11263a"/>
+    <path d="M84 40 H196 L225 85 H62Z" fill="#6f8da3"/>
+  </g>
+  <g fill="#d8b75f">
+    <circle cx="250" cy="185" r="35"/><circle cx="950" cy="190" r="35"/><circle cx="985" cy="470" r="35"/><circle cx="210" cy="500" r="35"/>
+  </g>
+  <text x="70" y="620" fill="#f8f4e8" font-family="Arial, sans-serif" font-size="64" font-weight="700">SENSOR CALIBRATION</text>
+  <text x="74" y="665" fill="#d8b75f" font-family="Arial, sans-serif" font-size="24" letter-spacing="5">FSD / DHYĀNA SIMULATION</text>
+</svg>

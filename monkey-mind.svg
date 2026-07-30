@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700">
+  <defs><radialGradient id="g" cx="50%" cy="50%"><stop offset="0" stop-color="#2c4563"/><stop offset="1" stop-color="#081421"/></radialGradient></defs>
+  <rect width="1200" height="700" fill="url(#g)"/>
+  <circle cx="600" cy="350" r="110" fill="none" stroke="#d8b75f" stroke-width="12"/>
+  <circle cx="600" cy="350" r="42" fill="#f8f4e8"/>
+  <g fill="#c8d2dc" opacity=".9">
+    <rect x="120" y="130" width="82" height="82" rx="16" transform="rotate(18 161 171)"/>
+    <rect x="980" y="150" width="70" height="70" rx="14" transform="rotate(-14 1015 185)"/>
+    <rect x="160" y="510" width="64" height="64" rx="14" transform="rotate(-22 192 542)"/>
+    <rect x="985" y="500" width="92" height="92" rx="18" transform="rotate(14 1031 546)"/>
+    <rect x="515" y="60" width="58" height="58" rx="12" transform="rotate(12 544 89)"/>
+  </g>
+  <g stroke="#d8b75f" stroke-width="6" opacity=".75">
+    <path d="M230 190 L470 300"/><path d="M965 200 L735 305"/><path d="M240 520 L470 402"/><path d="M965 520 L735 405"/>
+  </g>
+  <text x="70" y="635" fill="#f8f4e8" font-family="Arial, sans-serif" font-size="68" font-weight="700">MONKEY MIND</text>
+  <text x="74" y="674" fill="#d8b75f" font-family="Arial, sans-serif" font-size="24" letter-spacing="6">HOLD THE CENTER</text>
+</svg>
