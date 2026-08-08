@@ -1,1 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meditation Stages Monitor - Based on Patanjali's Yoga Sutras</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
 
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const MeditationStagesApp = () => {
+          const [lever1, setLever1] = useState(50);
+          const [lever2, setLever2] = useState(50);
+          const [lever3, setLever3] = useState(50);
+          const [demoMode, setDemoMode] = useState(true);
+          const [demoStep, setDemoStep] = useState(0);
+          const [demoMessage, setDemoMessage] = useState('');
+
+          // Demo sequence matching Eleven Labs script
+          const demoSequence = [
+            { 
+              l1: 0, l2: 0, l3: 0, 
+              duration: 5000,
+              name: "Scene 1: Starting Point", 
+              desc: "All sliders at zero. The monitor provides a gentle reminder to start your journey." 
+            },
+            { 
+              l1: 30, l2: 40, l3: 25, 
+              duration: 6000,
+              name: "Scene 2: Dharana - Foundation", 
+              desc: "As you engage in focus and concentration, you enter Dharana. Triggered when ANY dimension is below 50%." 
+            },
+            { 
+              l1: 65, l2: 70, l3: 60, 
+              duration: 6000,
+              name: "Scene 3: Dhyana - Sustained Flow", 
+              desc: "When ALL dimensions are 50% or above, you move into Dhyana - flowing, effortless awareness." 
+            },
+            { 
+              l1: 90, l2: 40, l3: 40, 
+              duration: 5000,
+              name: "Scene 4a: Red Dominant State", 
+              desc: "Deep Absorption (90%) - Focused concentration leads the way. A specialized style of deep practice." 
+            },
+            { 
+              l1: 40, l2: 90, l3: 40, 
+              duration: 5000,
+              name: "Scene 4b: Green Dominant State", 
+              desc: "Peaceful State (90%) - Serenity flows through your being. Peace as the prominent quality." 
+            },
+            { 
+              l1: 40, l2: 40, l3: 90, 
+              duration: 5000,
+              name: "Scene 4c: Blue Dominant State", 
+              desc: "Joyful Spirit (90%) - Bliss radiates outward. Joy as the highest quality of practice." 
+            },
+            { 
+              l1: 70, l2: 75, l3: 70, 
+              duration: 6000,
+              name: "Scene 5: Perfect Balance", 
+              desc: "All three within 10 points. Harmonized state indicating integrated development and harmonious practice." 
+            },
+            { 
+              l1: 100, l2: 100, l3: 100, 
+              duration: 7000,
+              name: "Scene 6: Samadhi - Peak State", 
+              desc: "All dimensions at maximum (100%). Complete unity and transcendent consciousness. Sa-ma-dhi!" 
+            },
+            { 
+              l1: 50, l2: 50, l3: 50, 
+              duration: 5000,
+              name: "Closing: Key Takeaways", 
+              desc: "A visual guide for post-meditation reflection. A pointer, not the destination - it helps understand meditation but doesn't replace practice." 
+            }
+          ];
+
+          useEffect(() => {
+            if (demoMode && demoStep < demoSequence.length) {
+              const step = demoSequence[demoStep];
+              
+              // Immediately set the values
+              setLever1(step.l1);
+              setLever2(step.l2);
+              setLever3(step.l3);
+              setDemoMessage(`${step.name}: ${step.desc}`);
+
+              // Schedule next step
+              const timer = setTimeout(() => {
+                if (demoStep < demoSequence.length - 1) {
+                  setDemoStep(demoStep + 1);
+                } else {
+                  // Demo complete
+                  setDemoMode(false);
+                  setDemoStep(0);
+                  setDemoMessage('Demo complete! Now explore on your own.');
+                  setTimeout(() => setDemoMessage(''), 3000);
+                }
+              }, step.duration);
+
+              return () => clearTimeout(timer);
+            }
+          }, [demoMode, demoStep]);
+
+          const startDemo = () => {
+            setDemoMode(true);
+            setDemoStep(0);
+          };
+
+          const stopDemo = () => {
+            setDemoMode(false);
+            setDemoStep(0);
+            setDemoMessage('');
+          };
+
+          // Function to determine result text based on lever positions
+          const getResultText = () => {
+            // Check for all zero - not meditating
+            if (lever1 === 0 && lever2 === 0 && lever3 === 0) {
+              return "😴 Dude, you are not meditating!";
+            }
+            
+            // Check for Samadhi - all at 100%
+            if (lever1 === 100 && lever2 === 100 && lever3 === 100) {
+              return "🕉️ Sa-ma-dhi!!! - Complete absorption in divine consciousness";
+            }
+            
+            // Check for Dharana - any below 50%
+            if (lever1 < 50 || lever2 < 50 || lever3 < 50) {
+              return "🧘‍♂️ Dharana - Beginning concentration and focus";
+            }
+            
+            // Check for Dhyana - all above 50%
+            if (lever1 >= 50 && lever2 >= 50 && lever3 >= 50) {
+              // Check for perfect balance
+              if (Math.abs(lever1 - lever2) < 10 && Math.abs(lever2 - lever3) < 10 && Math.abs(lever1 - lever3) < 10) {
+                return "⚖️ Dhyana - Perfect Balance - Absorption, Peace, and Joy in harmony";
+              }
+              return "✨ Dhyana - Sustained meditation and mindful awareness";
+            }
+            
+            // Individual dominance states
+            if (lever1 > lever2 + 20 && lever1 > lever3 + 20) {
+              return "🎯 Deep Absorption - Focused concentration leads the way";
+            } else if (lever2 > lever1 + 20 && lever2 > lever3 + 20) {
+              return "☮️ Peaceful State - Serenity flows through your being";
+            } else if (lever3 > lever1 + 20 && lever3 > lever2 + 20) {
+              return "😊 Joyful Spirit - Bliss and happiness radiate outward";
+            }
+            
+            return "🧘‍♂️ Dharana - Finding your unique path to awareness";
+          };
+
+          const getStatusColor = () => {
+            if (lever1 === 100 && lever2 === 100 && lever3 === 100) {
+              return "text-yellow-400 animate-pulse";
+            }
+            if (lever1 >= 50 && lever2 >= 50 && lever3 >= 50) {
+              return "text-green-400";
+            }
+            return "text-blue-400";
+          };
+
+          const getProgressText = () => {
+            const average = (lever1 + lever2 + lever3) / 3;
+            if (average >= 75) {
+              return "🌟 Deep practice - consciousness expanding";
+            } else if (average >= 50) {
+              return "⭐ Steady focus - awareness growing";
+            } else if (average >= 25) {
+              return "🌱 Building foundation - mind settling";
+            } else {
+              return "🌸 Beginning journey - breath and presence";
+            }
+          };
+
+          const getAbsorptionText = () => {
+            if (lever1 >= 90) return "🎯 Laser Focus";
+            if (lever1 >= 75) return "🔍 Deep Concentration";
+            if (lever1 >= 60) return "👁️ Steady Attention";
+            if (lever1 >= 40) return "🌊 Gentle Focus";
+            if (lever1 >= 25) return "💭 Mind Wandering";
+            return "🌪️ Scattered";
+          };
+
+          const getPeaceText = () => {
+            if (lever2 >= 90) return "🕊️ Perfect Serenity";
+            if (lever2 >= 75) return "☮️ Deep Calm";
+            if (lever2 >= 60) return "🌸 Gentle Peace";
+            if (lever2 >= 40) return "🌿 Shanti";
+            if (lever2 >= 25) return "⚡ Restless";
+            return "🌊 Turbulent";
+          };
+
+          const getJoyText = () => {
+            if (lever3 >= 90) return "✨ Pure Bliss";
+            if (lever3 >= 75) return "😊 Deep Joy";
+            if (lever3 >= 60) return "🌻 Content";
+            if (lever3 >= 40) return "🙏 Santosha";
+            if (lever3 >= 25) return "😕 Low Mood";
+            return "😞 Heavy Heart";
+          };
+
+          const totalDuration = demoSequence.reduce((sum, step) => sum + step.duration, 0);
+          const formattedDuration = `~${Math.round(totalDuration / 1000)}s`;
+
+          return (
+            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 p-4 sm:p-8">
+              <div className="max-w-4xl mx-auto">
+                <h1 className="text-2xl sm:text-4xl font-bold text-white text-center mb-6 sm:mb-8">
+                  Meditation Stages Monitor
+                  <div className="text-sm sm:text-base font-normal text-white/60 mt-2">
+                    Based on Patanjali's Yoga Sutras
+                  </div>
+                </h1>
+
+                {/* Demo Controls */}
+                <div className="bg-black/30 backdrop-blur-lg rounded-xl p-4 mb-6 border border-white/20">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="flex flex-wrap gap-3 justify-center">
+                      <button
+                        onClick={startDemo}
+                        disabled={demoMode}
+                        className={`px-6 py-2 rounded-lg font-semibold transition-all ${
+                          demoMode 
+                            ? 'bg-gray-600 text-gray-400 cursor-not-allowed' 
+                            : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 shadow-lg hover:shadow-xl'
+                        }`}
+                      >
+                        {demoMode ? '▶️ Demo Running...' : '▶️ Start Demo'}
+                      </button>
+                      {demoMode && (
+                        <button
+                          onClick={stopDemo}
+                          className="px-6 py-2 rounded-lg font-semibold bg-red-500 text-white hover:bg-red-600 transition-all shadow-lg"
+                        >
+                          ⏹️ Stop Demo
+                        </button>
+                      )}
+                      <a
+                        href="https://medium.com/@sundar2rajan/building-the-meditation-states-monitor-from-inner-yardstick-to-interactive-app-adca28e41481"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-6 py-2 rounded-lg font-semibold bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl"
+                      >
+                        📖 Read Story
+                      </a>
+                    </div>
+                    {demoMode && (
+                      <div className="text-white/70 text-sm">
+                        Scene {demoStep + 1} of {demoSequence.length} • {formattedDuration} total
+                      </div>
+                    )}
+                  </div>
+                  {demoMessage && (
+                    <div className="mt-4 p-4 bg-white/10 rounded-lg border border-white/30 shadow-lg">
+                      <p className="text-white text-sm sm:text-base font-medium leading-relaxed">{demoMessage}</p>
+                    </div>
+                  )}
+                  {!demoMode && !demoMessage && (
+                    <div className="mt-4 p-3 bg-purple-500/20 rounded-lg border border-purple-400/30">
+                      <p className="text-white/80 text-sm text-center">
+                        🎬 Click "Start Demo" for a guided tour through all meditation stages ({formattedDuration})
+                      </p>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Result Display */}
+                <div className="bg-black/30 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-8 mb-6 sm:mb-8 border border-white/20">
+                  <h2 className="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4 text-center">Meditation Stage</h2>
+                  <div className={`text-lg sm:text-2xl font-bold text-center px-2 ${getStatusColor()}`}>
+                    {getResultText()}
+                  </div>
+                  <div className="mt-3 sm:mt-4 grid grid-cols-3 gap-2 sm:gap-4 text-center">
+                    <div className="text-white">
+                      <div className="text-xs sm:text-sm opacity-70">Absorption</div>
+                      <div className="text-lg sm:text-xl font-bold text-red-400">{lever1}%</div>
+                    </div>
+                    <div className="text-white">
+                      <div className="text-xs sm:text-sm opacity-70">Peace</div>
+                      <div className="text-lg sm:text-xl font-bold text-green-400">{lever2}%</div>
+                    </div>
+                    <div className="text-white">
+                      <div className="text-xs sm:text-sm opacity-70">Joy</div>
+                      <div className="text-lg sm:text-xl font-bold text-blue-400">{lever3}%</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Levers */}
+                <div className="grid grid-cols-3 gap-4 sm:gap-8">
+                  {/* Lever 1 - Absorption */}
+                  <div className="flex flex-col items-center">
+                    <h3 className="text-sm sm:text-xl font-semibold text-red-400 mb-2 sm:mb-4 text-center">Absorption</h3>
+                    <div className="relative h-48 sm:h-80 w-8 sm:w-12 bg-gray-800 rounded-full border border-red-400/50 sm:border-2 shadow-lg">
+                      <div 
+                        className="absolute bottom-0 w-full bg-gradient-to-t from-red-600 to-red-400 rounded-full transition-all duration-300 ease-out"
+                        style={{ height: `${lever1}%` }}
+                      />
+                      <div 
+                        className="absolute w-10 h-4 sm:w-16 sm:h-6 bg-red-500 rounded-lg border border-red-300 sm:border-2 cursor-pointer transition-all duration-300 hover:bg-red-400 shadow-lg"
+                        style={{ 
+                          bottom: `${lever1}%`, 
+                          left: '50%',
+                          transform: 'translateY(50%) translateX(-50%)'
+                        }}
+                      />
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={lever1}
+                      onChange={(e) => setLever1(parseInt(e.target.value))}
+                      disabled={demoMode}
+                      className="mt-2 sm:mt-4 w-16 sm:w-24 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{
+                        background: `linear-gradient(to right, #ef4444 0%, #ef4444 ${lever1}%, #374151 ${lever1}%, #374151 100%)`
+                      }}
+                    />
+                    <div className="mt-2 text-xs text-red-300 text-center font-medium">
+                      {getAbsorptionText()}
+                    </div>
+                  </div>
+
+                  {/* Lever 2 - Peace */}
+                  <div className="flex flex-col items-center">
+                    <h3 className="text-sm sm:text-xl font-semibold text-green-400 mb-2 sm:mb-4 text-center">Peace</h3>
+                    <div className="relative h-48 sm:h-80 w-8 sm:w-12 bg-gray-800 rounded-full border border-green-400/50 sm:border-2 shadow-lg">
+                      <div 
+                        className="absolute bottom-0 w-full bg-gradient-to-t from-green-600 to-green-400 rounded-full transition-all duration-300 ease-out"
+                        style={{ height: `${lever2}%` }}
+                      />
+                      <div 
+                        className="absolute w-10 h-4 sm:w-16 sm:h-6 bg-green-500 rounded-lg border border-green-300 sm:border-2 cursor-pointer transition-all duration-300 hover:bg-green-400 shadow-lg"
+                        style={{ 
+                          bottom: `${lever2}%`, 
+                          left: '50%',
+                          transform: 'translateY(50%) translateX(-50%)'
+                        }}
+                      />
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={lever2}
+                      onChange={(e) => setLever2(parseInt(e.target.value))}
+                      disabled={demoMode}
+                      className="mt-2 sm:mt-4 w-16 sm:w-24 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{
+                        background: `linear-gradient(to right, #22c55e 0%, #22c55e ${lever2}%, #374151 ${lever2}%, #374151 100%)`
+                      }}
+                    />
+                    <div className="mt-2 text-xs text-green-300 text-center font-medium">
+                      {getPeaceText()}
+                    </div>
+                  </div>
+
+                  {/* Lever 3 - Joy */}
+                  <div className="flex flex-col items-center">
+                    <h3 className="text-sm sm:text-xl font-semibold text-blue-400 mb-2 sm:mb-4 text-center">Joy</h3>
+                    <div className="relative h-48 sm:h-80 w-8 sm:w-12 bg-gray-800 rounded-full border border-blue-400/50 sm:border-2 shadow-lg">
+                      <div 
+                        className="absolute bottom-0 w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-full transition-all duration-300 ease-out"
+                        style={{ height: `${lever3}%` }}
+                      />
+                      <div 
+                        className="absolute w-10 h-4 sm:w-16 sm:h-6 bg-blue-500 rounded-lg border border-blue-300 sm:border-2 cursor-pointer transition-all duration-300 hover:bg-blue-400 shadow-lg"
+                        style={{ 
+                          bottom: `${lever3}%`, 
+                          left: '50%',
+                          transform: 'translateY(50%) translateX(-50%)'
+                        }}
+                      />
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={lever3}
+                      onChange={(e) => setLever3(parseInt(e.target.value))}
+                      disabled={demoMode}
+                      className="mt-2 sm:mt-4 w-16 sm:w-24 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{
+                        background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${lever3}%, #374151 ${lever3}%, #374151 100%)`
+                      }}
+                    />
+                    <div className="mt-2 text-xs text-blue-300 text-center font-medium">
+                      {getJoyText()}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Progress Text */}
+                <div className="text-center mt-4 sm:mt-6">
+                  <div className="text-sm sm:text-base text-white/80 font-medium">
+                    {getProgressText()}
+                  </div>
+                </div>
+
+                {/* Instructions */}
+                <div className="mt-6 sm:mt-8 text-center text-white/70 px-2">
+                  <p className="text-sm sm:text-base">
+                    {demoMode 
+                      ? '🎬 Demo mode active - watch the journey through classical meditation stages!' 
+                      : 'Adjust Absorption, Peace, and Joy to explore different meditation stages'}
+                  </p>
+                  <p className="text-xs sm:text-sm mt-2">
+                    Three dimensions visualize your practice: Absorption (Red), Peace (Green), Joy (Blue)
+                  </p>
+                  <div className="mt-4 text-xs text-white/50">
+                    A visual guide for post-meditation reflection • Based on Patanjali's Yoga Sutras
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        // Render the app with React 18
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<MeditationStagesApp />);
+    </script>
+
+    <!-- Plausible Analytics -->
+    <script defer data-domain="godzillaborland-arch.github.io" src="https://plausible.io/js/script.js"></script>
+    <script>
+        window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }
+    </script>
+</body>
+</html>
