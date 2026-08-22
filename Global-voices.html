@@ -121,6 +121,8 @@
 <script>
 (function () {
   var E = [
+   {name:"Dr. Niveditha Preet", title:"Co-Author, The Life of Tolka", loc:"Toronto, Canada", chip:"Dr. Preet", lat:43.65, lon:-79.38,
+    quote:"The Self-Driving Mind succeeds in building a remarkable bridge between Silicon Valley technology and classical Advaita Vedanta. The Tesla analogy is original, compelling, and one of the manuscript's greatest strengths. Sundar Rajan presents profound contemplative ideas in a way that is both intellectually engaging and accessible to modern readers."},
    {name:"Adriana Pagotti D'Angelo", title:"IT Initiatives & Projects Specialist", loc:"São Paulo, Brazil", chip:"Adriana", lat:-23.55, lon:-46.63,
     quote:"The Self-Driving Mind is more than a book—it is a guide you can return to throughout your life. Sundar Rajan offers a practical and accessible way to understand meditation and cultivate a calmer, more focused mind. His perspective is refreshing, clear, and encouraging. Instead of trying to control the mind, he invites us to observe our thoughts and feelings with greater clarity and ease. I recommend reading this book—and putting its ideas into practice."},
    {name:"Viridiana", title:"Taoist & Energy Consultant", loc:"Yucatán, Mexico", chip:"Viridiana", lat:20.97, lon:-89.62,
@@ -198,7 +200,7 @@
   var chipBox = document.getElementById('chips');
 
   var D = Math.PI / 180;
-  var lam = 60, phi = 12, tLam = null, tPhi = null, auto = true, sel = 3;
+  var lam = 60, phi = 12, tLam = null, tPhi = null, auto = true, sel = 0;
   var GOLD = '#E0B94A', GOLD_BRIGHT = '#F7D97E', CREAM = '#FBF7EF';
   var LINE = 'rgba(224,185,74,0.30)', OCEAN = 'rgba(30,58,95,0.55)';
   var W, H, R, cx, cy, pulse = 0;
@@ -412,7 +414,7 @@
   window.addEventListener('resize', size);
 
   size();
-  select(3, false);
+  select(0, false);
   startTour();
   requestAnimationFrame(frame);
 })();
