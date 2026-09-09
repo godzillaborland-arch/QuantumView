@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="t d">
+<title id="t">The Namperumal Escape</title><desc id="d">A dark temple corridor, a devotee carrying Sri Namperumal and a small flame, with guards in the distance.</desc>
+<defs><radialGradient id="glow" cx="50%" cy="58%" r="45%"><stop offset="0" stop-color="#f2c46d" stop-opacity=".56"/><stop offset=".45" stop-color="#d8b75f" stop-opacity=".16"/><stop offset="1" stop-color="#07131f" stop-opacity="0"/></radialGradient><linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#10263a"/><stop offset="1" stop-color="#07131f"/></linearGradient></defs>
+<rect width="1200" height="700" fill="#07131f"/><rect y="70" width="1200" height="560" fill="url(#wall)"/>
+<g opacity=".52" fill="#172f45"><rect x="80" y="70" width="78" height="560"/><rect x="265" y="70" width="62" height="560"/><rect x="870" y="70" width="62" height="560"/><rect x="1040" y="70" width="78" height="560"/></g>
+<path d="M0 630 L1200 630 L1200 700 L0 700Z" fill="#091927"/><ellipse cx="500" cy="410" rx="320" ry="255" fill="url(#glow)"/>
+<!-- devotee --> <circle cx="500" cy="403" r="28" fill="#c98f62"/><path d="M466 443 Q500 420 534 443 L548 570 L452 570Z" fill="#f1eee2"/><path d="M472 456 L420 514" stroke="#c98f62" stroke-width="20" stroke-linecap="round"/><path d="M528 456 L580 514" stroke="#c98f62" stroke-width="20" stroke-linecap="round"/>
+<!-- deity carried --> <rect x="448" y="300" width="104" height="90" rx="15" fill="#b89a62" stroke="#d8b75f" stroke-width="6"/><circle cx="500" cy="336" r="20" fill="#f1c46d"/><path d="M470 370 Q500 346 530 370" fill="none" stroke="#f8f4e8" stroke-width="7"/>
+<!-- flame --> <path d="M590 510 C570 482 595 462 605 438 C628 469 638 491 620 513 C612 523 599 523 590 510Z" fill="#f2c46d"/><circle cx="606" cy="491" r="52" fill="url(#glow)"/>
+<!-- guards --> <g fill="#263d50"><circle cx="815" cy="370" r="22"/><rect x="793" y="392" width="44" height="105" rx="12"/><circle cx="1000" cy="300" r="22"/><rect x="978" y="322" width="44" height="105" rx="12"/></g><g stroke="#d8b75f" stroke-width="4" opacity=".5"><path d="M815 380 L700 455 L700 305Z" fill="#d8b75f" fill-opacity=".06"/><path d="M1000 310 L880 380 L880 240Z" fill="#d8b75f" fill-opacity=".06"/></g>
+<text x="70" y="610" fill="#f8f4e8" font-family="Georgia,serif" font-size="52">THE NAMPERUMAL ESCAPE</text><text x="73" y="655" fill="#d8b75f" font-family="Arial,sans-serif" font-size="24" letter-spacing="4">CARRY THE DEITY · GUARD THE FLAME</text>
+</svg>
