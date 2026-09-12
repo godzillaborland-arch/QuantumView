@@ -8,7 +8,7 @@
   <!-- Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- Core Libraries -->
   <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
@@ -57,6 +57,141 @@
       border: none;
       background: none;
       cursor: pointer;
+    }
+
+    /* --- Tutorial Styles --- */
+    #vij-tutorial {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: radial-gradient(circle at 50% 28%, rgba(198,113,57,.25), rgba(4,5,6,.95) 64%);
+      color: #f0e2c4;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    #vij-tutorial * { box-sizing: border-box; }
+    #vij-tutorial .vt-card {
+      width: min(720px, 100%);
+      padding: 30px 32px 24px;
+      border-radius: 24px;
+      background: rgba(9,11,13,.95);
+      border: 1px solid rgba(198,113,57,.6);
+      box-shadow: 0 24px 80px rgba(0,0,0,.65);
+      animation: vijTutRise .32s ease both;
+    }
+    #vij-tutorial .vt-eyebrow { font-size: 11px; letter-spacing: .2em; color: #96a08f; text-transform: uppercase; }
+    #vij-tutorial .vt-step { margin-top: 8px; font-size: 11px; letter-spacing: .15em; color: #c8d6ae; text-transform: uppercase; }
+    #vij-tutorial h2 {
+      margin: 8px 0 10px;
+      font-family: 'Caprasimo', Georgia, serif;
+      font-weight: 400;
+      font-size: 34px;
+      line-height: 1.12;
+      color: #e8a45c;
+    }
+    #vij-tutorial p { margin: 9px 0; font-size: 15px; line-height: 1.68; color: #d9ceb7; }
+    #vij-tutorial strong { color: #f3c078; }
+    #vij-tutorial .vt-visual {
+      min-height: 104px;
+      margin: 18px 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    #vij-tutorial .vt-chip {
+      min-width: 130px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      text-align: center;
+      border: 1px solid rgba(198,113,57,.48);
+      background: rgba(34,27,19,.74);
+      color: #f0e2c4;
+      font-size: 12px;
+      line-height: 1.45;
+      letter-spacing: .03em;
+    }
+    #vij-tutorial .vt-chip small { display: block; margin-top: 3px; color: #9e9582; font-size: 10px; letter-spacing: .02em; }
+    #vij-tutorial .vt-chip.gold { border-color: rgba(243,192,120,.68); box-shadow: 0 0 28px rgba(198,113,57,.14); }
+    #vij-tutorial .vt-chip.red { border-color: rgba(255,73,55,.68); box-shadow: 0 0 28px rgba(255,73,55,.12); }
+    #vij-tutorial .vt-chip.green { border-color: rgba(122,138,94,.72); box-shadow: 0 0 28px rgba(122,138,94,.12); }
+    #vij-tutorial .vt-chip.silver { border-color: rgba(200,214,174,.55); }
+    #vij-tutorial .vt-key {
+      display: inline-block;
+      min-width: 30px;
+      padding: 6px 8px;
+      margin: 2px;
+      border-radius: 6px;
+      border: 1px solid #806b48;
+      background: #191611;
+      color: #f3c078;
+      box-shadow: inset 0 -2px 0 rgba(255,255,255,.05);
+      font: 700 12px ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-align: center;
+    }
+    #vij-tutorial .vt-route {
+      position: relative;
+      width: min(510px, 82vw);
+      height: 78px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(122,138,94,.5);
+      background: linear-gradient(135deg, rgba(91,72,49,.34), rgba(18,22,19,.72));
+    }
+    #vij-tutorial .vt-route:before, #vij-tutorial .vt-route:after {
+      content: "";
+      position: absolute;
+      height: 10px;
+      width: 68%;
+      background: #6a5740;
+      box-shadow: 0 4px 12px rgba(0,0,0,.35);
+    }
+    #vij-tutorial .vt-route:before { left: 0; top: 18px; }
+    #vij-tutorial .vt-route:after { right: 0; bottom: 18px; }
+    #vij-tutorial .vt-arrow { position: absolute; left: 48%; top: 18px; font-size: 36px; color: #c8d6ae; }
+    #vij-tutorial .vt-note { font-size: 12px; color: #9f9683; }
+    #vij-tutorial .vt-progress { display: flex; justify-content: center; gap: 7px; margin: 14px 0 16px; }
+    #vij-tutorial .vt-dot { width: 7px; height: 7px; border-radius: 50%; border: 1px solid #806b48; background: transparent; }
+    #vij-tutorial .vt-dot.on { background: #e8a45c; border-color: #e8a45c; }
+    #vij-tutorial .vt-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    #vij-tutorial button {
+      appearance: none;
+      cursor: pointer;
+      padding: 11px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(198,113,57,.72);
+      background: #c67139;
+      color: #1a1207;
+      font: 700 12px/1 system-ui, -apple-system, sans-serif;
+      letter-spacing: .1em;
+    }
+    #vij-tutorial button.secondary {
+      background: rgba(9,11,13,.9);
+      color: #d7c9aa;
+      border-color: rgba(255,255,255,.2);
+    }
+    #vij-tutorial button:hover { filter: brightness(1.08); }
+    #vij-tutorial button:focus-visible { outline: 2px solid #f3c078; outline-offset: 3px; }
+    @keyframes vijTutRise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @media (max-width: 700px) {
+      #vij-tutorial { padding: 14px; }
+      #vij-tutorial .vt-card { padding: 22px 18px 18px; border-radius: 20px; }
+      #vij-tutorial h2 { font-size: 27px; }
+      #vij-tutorial p { font-size: 14px; line-height: 1.55; }
+      #vij-tutorial .vt-visual { min-height: 82px; margin: 12px 0 8px; gap: 8px; }
+      #vij-tutorial .vt-chip { min-width: 108px; padding: 10px; font-size: 11px; }
+    }
+    @media (max-height: 650px) {
+      #vij-tutorial { align-items: flex-start; overflow: auto; }
+      #vij-tutorial .vt-card { margin: auto 0; padding-top: 18px; padding-bottom: 16px; }
+      #vij-tutorial h2 { font-size: 25px; }
+      #vij-tutorial p { margin: 6px 0; font-size: 13px; line-height: 1.5; }
+      #vij-tutorial .vt-visual { min-height: 60px; margin: 8px 0; }
+      #vij-tutorial .vt-progress { margin: 8px 0 10px; }
     }
   </style>
 </head>
@@ -134,6 +269,35 @@
       Guardian:  { visionOpen: 292, visionCup: 140, alertRate: 1.85, drainOpen: 0.62, drainCup: 0.25, guardSpeed: 172, memPenalty: 34, name: 'Guardian' }
     };
 
+    const TUTORIAL_SCREENS = [
+      {
+        title: "Carry Sri Namperumal to Safety",
+        body: '<p>Srirangam is under attack. You are a temple custodian carrying <strong>Sri Namperumal</strong> — the processional form of Sri Ranganatha — toward the south gate.</p><p>Cross the courtyards, protect the ceremonial flame, keep the chain of custody intact, and reach the forest.</p>',
+        visual: '<div class="vt-chip gold">SRI NAMPERUMAL<small>Carry the sacred image</small></div><div style="font-size:26px;color:#e8a45c">→</div><div class="vt-chip green">SOUTH GATE<small>Reach the forest beyond</small></div>'
+      },
+      {
+        title: "Move Through the Temple",
+        body: '<p><strong>Desktop:</strong> use WASD or the arrow keys. <strong>Phone/tablet:</strong> use the joystick.</p><p>The route zig-zags through alternating courtyards and stone barriers. Follow each opening rather than trying to move straight ahead.</p>',
+        visual: '<div><span class="vt-key">W</span><br><span class="vt-key">A</span><span class="vt-key">S</span><span class="vt-key">D</span></div><div style="font-size:20px;color:#8f8674">or</div><div><span class="vt-key">↑</span><br><span class="vt-key">←</span><span class="vt-key">↓</span><span class="vt-key">→</span></div>'
+      },
+      {
+        title: "Open the Flame — or Cup It",
+        body: '<p>An <strong>open flame</strong> lights a larger area and lets you move normally, but patrols can detect it from farther away.</p><p>Near a guard, <strong>cup the flame</strong>: hold <strong>SHIFT</strong>, press <strong>C</strong> to lock/unlock it, or hold <strong>CUP FLAME</strong> on mobile. You become much harder to detect — but you move slowly.</p>',
+        visual: '<div class="vt-chip gold">🔥 FLAME OPEN<small>More light · more visible</small></div><div style="font-size:24px;color:#8f8674">⇄</div><div class="vt-chip green">◐ FLAME CUPPED<small>Less visible · slower</small></div><div class="vt-chip red">● PATROLS<small>Watch their direction</small></div>'
+      },
+      {
+        title: "Protect Flame & Memory",
+        body: '<p><strong>FLAME</strong> drains as you move. Touch one of the four glowing lamp shrines to feed it.</p><p><strong>MEMORY</strong> measures the continuity of custody. If a patrol catches the procession, Memory falls and the flame is damaged. Each lamp shrine also saves a <strong>checkpoint</strong>, so you can resume from remembered ground.</p>',
+        visual: '<div class="vt-chip gold">🔥 FLAME<small>Lamp shrines restore it</small></div><div class="vt-chip silver">◇ MEMORY<small>Avoid repeated detection</small></div><div class="vt-chip green">↺ CHECKPOINT<small>Saved at each lamp shrine</small></div>'
+      },
+      {
+        title: "Reach the Forest — Choose Your Challenge",
+        body: '<p>Follow the objectives through the final courtyard and pass through the central opening at the south gate.</p><p>On the next screen choose your challenge: <strong>Pilgrim</strong> is forgiving, <strong>Custodian</strong> is the intended balance, and <strong>Guardian</strong> is unforgiving.</p>',
+        visual: '<div class="vt-route"><div class="vt-arrow">↑</div></div><div class="vt-chip">PILGRIM<small>Forgiving</small></div><div class="vt-chip gold">CUSTODIAN<small>Balanced</small></div><div class="vt-chip red">GUARDIAN<small>Unforgiving</small></div>',
+        note: 'Lamp shrines create checkpoints. If a run breaks, you can resume from the latest shrine on the level-selection screen.'
+      }
+    ];
+
     const TAU = Math.PI * 2;
     const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
     const rand = (a, b) => a + Math.random() * (b - a);
@@ -146,6 +310,9 @@
 
       // React UI States
       const [phase, setPhase] = useState('intro');
+      const [showTutorial, setShowTutorial] = useState(true);
+      const [tutorialIndex, setTutorialIndex] = useState(0);
+
       const [flame, setFlame] = useState(100);
       const [memory, setMemory] = useState(100);
       const [stealth, setStealth] = useState(false);
@@ -1095,6 +1262,32 @@
         };
       }, []);
 
+      // Keyboard navigation for tutorial
+      useEffect(() => {
+        if (!showTutorial) return;
+        const handleTutKeys = (e) => {
+          if (e.key === 'ArrowRight' || e.key === 'Enter') {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            if (tutorialIndex === TUTORIAL_SCREENS.length - 1) {
+              setShowTutorial(false);
+            } else {
+              setTutorialIndex(i => i + 1);
+            }
+          } else if (e.key === 'ArrowLeft' && tutorialIndex > 0) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            setTutorialIndex(i => i - 1);
+          } else if (e.key === 'Escape') {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            setShowTutorial(false);
+          }
+        };
+        window.addEventListener('keydown', handleTutKeys, true);
+        return () => window.removeEventListener('keydown', handleTutKeys, true);
+      }, [showTutorial, tutorialIndex]);
+
       // Touch handlers
       const joyPid = useRef(null);
       const joyTrack = (clientX, clientY) => {
@@ -1108,6 +1301,9 @@
         eng.current.joy = { x: dx / m, y: dy / m };
         setNubPos({ x: Math.round(dx), y: Math.round(dy) });
       };
+
+      const currTut = TUTORIAL_SCREENS[tutorialIndex];
+      const isFinalTut = tutorialIndex === TUTORIAL_SCREENS.length - 1;
 
       return (
         <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
@@ -1154,6 +1350,22 @@
 
             {/* Top Right: Source Link & Sound Controls */}
             <div style={{ position: 'absolute', right: 16, top: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <button
+                onClick={() => { setShowTutorial(true); setTutorialIndex(0); }}
+                style={{
+                  pointerEvents: 'auto',
+                  padding: '8px 14px',
+                  borderRadius: 999,
+                  fontSize: 10,
+                  letterSpacing: '0.12em',
+                  color: '#e8a45c',
+                  background: 'rgba(9,11,13,0.85)',
+                  border: '1px solid rgba(198,113,57,0.5)',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+                }}
+              >
+                HOW TO PLAY
+              </button>
               <a
                 href="https://selfdrivingmind.substack.com/p/they-stole-the-god-first-then-came?r=6gle0t"
                 target="_blank"
@@ -1277,6 +1489,44 @@
                     <button onClick={() => beginStage(eng.current.checkpoint.diff || 'Custodian', true)} style={{ padding: '13px 24px', borderRadius: 999, fontSize: 13, color: '#f0e2c4', border: '1px solid rgba(255,255,255,0.22)' }}>
                       RESUME FROM {checkpointLabel}
                     </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ChatGPT 5-Step Tutorial Modal Overlay */}
+          {showTutorial && (
+            <div id="vij-tutorial" role="dialog" aria-modal="true" aria-label="Stage 1 tutorial">
+              <div className="vt-card">
+                <div className="vt-eyebrow">Vijayanagara · The Exiled God</div>
+                <div className="vt-step">Tutorial {tutorialIndex + 1} of {TUTORIAL_SCREENS.length}</div>
+                <h2>{currTut.title}</h2>
+                <div dangerouslySetInnerHTML={{ __html: currTut.body }} />
+                <div className="vt-visual" dangerouslySetInnerHTML={{ __html: currTut.visual }} />
+                {currTut.note && <p className="vt-note">{currTut.note}</p>}
+                
+                <div className="vt-progress">
+                  {TUTORIAL_SCREENS.map((_, i) => (
+                    <span key={i} className={`vt-dot ${i === tutorialIndex ? 'on' : ''}`} />
+                  ))}
+                </div>
+
+                <div className="vt-actions">
+                  {tutorialIndex > 0 && (
+                    <button type="button" className="secondary" onClick={() => setTutorialIndex(i => i - 1)}>BACK</button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (isFinalTut) setShowTutorial(false);
+                      else setTutorialIndex(i => i + 1);
+                    }}
+                  >
+                    {isFinalTut ? 'CHOOSE LEVEL & BEGIN' : 'NEXT'}
+                  </button>
+                  {!isFinalTut && (
+                    <button type="button" className="secondary" onClick={() => setShowTutorial(false)}>SKIP TUTORIAL</button>
                   )}
                 </div>
               </div>
