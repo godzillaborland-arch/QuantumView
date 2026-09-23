@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sensor Calibration - The Self-Driving Mind Game</title>
+<meta property="og:title" content="Sensor Calibration - The Self-Driving Mind Game">
+<meta property="og:description" content="Infinite Fuel (Kripa) + Infallible Navigation (Dhyāna) = Certain Arrival. Your only job is vehicle maintenance.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sensor Calibration - The Self-Driving Mind Game">
+<meta name="twitter:description" content="Infinite Fuel (Kripa) + Infallible Navigation (Dhyāna) = Certain Arrival. Your only job is vehicle maintenance.">
+
+<script defer data-domain="godzillaborland-arch.github.io" src="https://plausible.io/js/script.js"></script>
+<script>
+  window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };
+  function trackPlausible(eventName, props) {
+    try { if (window.plausible) window.plausible(eventName, { props: props || {} }); }
+    catch (e) { console.warn('[Analytics] Plausible tracking skipped:', e); }
+  }
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{touch-action:manipulation;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:'Inter',system-ui,sans-serif;background:#0a0e14;color:#e2e8f0;font-size:16px;line-height:1.5;padding:clamp(12px,3vw,32px);overflow-x:hidden}
+a{color:#22d3ee;text-decoration:none}a:hover{color:#67e8f9}
+button{font:inherit;color:inherit}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+.text-cyan-400{color:#22d3ee}.text-cyan-300{color:#67e8f9}.text-slate-500{color:#64748b}.text-slate-400{color:#94a3b8}.text-emerald-400{color:#34d399}.text-orange-400{color:#fb923c}.text-orange-300{color:#fdba74}
+.wrap{max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.panel{background:rgba(15,23,42,.62);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(148,163,184,.14);border-radius:16px;padding:clamp(14px,2vw,24px)}
+.h{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600;margin:0 0 14px;color:#e2e8f0}
+.h .aside{margin-left:auto;font-size:13px;font-weight:400;color:#94a3b8}
+.label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8}
+.status-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;align-items:stretch}
+.tile{border-radius:12px;padding:16px;border:1px solid rgba(148,163,184,.14);background:rgba(15,23,42,.5);display:flex;flex-direction:column;justify-content:center;gap:4px}
+.tile.center{text-align:center}
+.ap-engaged{background:linear-gradient(135deg,#0e7490,#0891b2);border-color:rgba(34,211,238,.4);box-shadow:0 0 28px rgba(6,182,212,.35)}
+.ap-disengaged{background:linear-gradient(135deg,#b45309,#c2410c);border-color:rgba(251,146,60,.5);box-shadow:0 0 28px rgba(249,115,22,.4);animation:pulse 2s ease-in-out infinite}
+.ap-engaged .label,.ap-disengaged .label{color:rgba(255,255,255,.8)}
+.big{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:clamp(20px,2.4vw,26px)}
+.bar{height:12px;border-radius:999px;background:#1e293b;overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:999px;transition:width .5s}
+.icon-btn{width:40px;height:40px;border-radius:10px;background:rgba(30,41,59,.6);border:1px solid #334155;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.audio-status{font-size:12px;padding:4px 8px;border-radius:6px;background:rgba(30,41,59,.6);border:1px solid #334155;white-space:nowrap}
+.track-scroll{overflow-x:auto;padding-bottom:6px}
+.track-wrap{position:relative;min-width:520px;padding-top:34px}
+.track{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:4px}
+.seg{height:28px;border-radius:6px;background:#1e293b;border:1px solid #334155;transition:background .5s,border-color .5s}
+.seg.done{background:linear-gradient(90deg,#164e63,#134e4a);border-color:#0e7490}
+.seg.goal{background:linear-gradient(90deg,#1e293b,#064e3b);border-color:#047857}
+.token{position:absolute;top:2px;width:32px;height:28px;display:flex;align-items:center;justify-content:center;color:#22d3ee;font-size:24px;transition:left .8s cubic-bezier(.4,0,.2,1);filter:drop-shadow(0 4px 6px rgba(6,182,212,.5))}
+.track-ends{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.main{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px;align-items:start}
+.col{display:flex;flex-direction:column;gap:16px;min-width:0}
+@media(max-width:1000px){.main{grid-template-columns:minmax(0,1fr)}}
+.sensors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media(max-width:760px){.sensors{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.sensor{position:relative;border-radius:10px;padding:10px 12px;cursor:pointer;border:0;text-align:left;color:#fff;min-height:0;display:flex;flex-direction:column;gap:0;transition:transform .2s,box-shadow .3s}
+.sensor:active{transform:scale(.98)}
+.sensor.clean{background:linear-gradient(135deg,#047857,#059669);box-shadow:0 0 18px rgba(16,185,129,.25)}
+.sensor.offline{background:repeating-linear-gradient(135deg,#b91c1c 0 14px,#991b1b 14px 28px);box-shadow:0 0 20px rgba(239,68,68,.4)}
+.sensor.cultivated{box-shadow:0 0 0 3px #fbbf24,0 0 26px rgba(251,191,36,.35)}
+.sensor.selected{outline:2px solid #e2e8f0;outline-offset:3px}
+.sensor.pickable{outline:2px dashed #22d3ee;outline-offset:3px;animation:pulse 1.4s ease-in-out infinite}
+.sensor.unpickable{opacity:.45}
+.s-top{display:flex;justify-content:space-between;align-items:center;font-size:16px;margin-bottom:4px}
+.s-state{font-size:10px;letter-spacing:.06em;display:inline-flex;gap:4px;align-items:center;padding:1px 6px;border-radius:6px;background:rgba(0,0,0,.25)}
+.s-name{font-weight:600;font-size:14px}
+.s-sub{font-size:12px;opacity:.85}
+.s-cult{position:absolute;right:8px;bottom:8px;font-size:9px;font-weight:700;letter-spacing:.08em;color:#1c1405;background:#fbbf24;padding:3px 8px;border-radius:999px;display:inline-flex;gap:5px;align-items:center}
+.teaching{margin-top:10px;border:1px solid rgba(148,163,184,.18);border-radius:10px;padding:10px 12px;background:rgba(2,6,23,.55);font-size:13px;line-height:1.45;color:#cbd5e1;display:flex;flex-direction:column;gap:4px}
+.teaching .t-title{font-weight:700;color:#22d3ee;font-size:13px}
+.teaching .t-k{font-weight:700}
+.teaching .t-meta{color:#64748b;font-style:italic}
+.side{display:flex;flex-direction:column;gap:12px}
+.preview{border:1px dashed #475569;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.preview.still{border-color:#818cf8;background:rgba(99,102,241,.08)}
+.pv-item{display:flex;align-items:center;gap:10px;font-size:14px}
+.pv-item i{width:18px;text-align:center;color:#fb923c}
+.pv-item b{font-weight:600}
+.pv-item span{color:#fdba74;margin-left:auto;font-size:13px}
+.current{background:rgba(2,6,23,.5);border:1px solid #334155;border-radius:12px;padding:16px;min-height:96px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.turb{display:flex;gap:12px;align-items:center;animation:rise .5s ease-out}
+.turb .art{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,#f97316,#ef4444);display:flex;align-items:center;justify-content:center;font-size:22px;flex:none}
+.turb.held .art{background:linear-gradient(135deg,#d97706,#fbbf24)}
+.turb.passed .art{background:linear-gradient(135deg,#4f46e5,#818cf8)}
+.turb .t-name{font-weight:700}
+.turb .t-target{font-size:13px;color:#fdba74}
+.turb.held .t-target{color:#fcd34d}
+.turb.passed .t-target{color:#c7d2fe}
+.turb .t-desc{font-size:13px;color:#94a3b8}
+.empty{text-align:center;color:#64748b;display:flex;flex-direction:column;align-items:center;gap:8px}
+.empty i{font-size:32px;opacity:.5}
+.latest{font-size:15px;line-height:1.5;padding:12px 14px;border-radius:10px;background:rgba(30,41,59,.55);border-left:3px solid #22d3ee;min-height:48px}
+.latest.bad{border-left-color:#ef4444}.latest.good{border-left-color:#10b981}.latest.warn{border-left-color:#f97316}.latest.calm{border-left-color:#818cf8}
+.btn{min-height:48px;border-radius:12px;font-weight:600;font-size:15px;border:0;color:#fff;cursor:pointer;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 16px;transition:filter .2s,opacity .2s}
+.btn:hover:not(:disabled){filter:brightness(1.1)}
+.btn:disabled{opacity:.38;cursor:not-allowed}
+.btn-draw{background:linear-gradient(90deg,#f97316,#ef4444)}
+.btn-primary{background:linear-gradient(90deg,#06b6d4,#14b8a6)}
+.btn-dhyana{background:rgba(99,102,241,.18);border:1px solid #818cf8;color:#e0e7ff}
+.btn-ghost{background:transparent;border:1px solid #475569;color:#cbd5e1}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.phase-hint{font-size:13px;color:#94a3b8;text-align:center}
+.hand{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:12px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:4px;transition:transform .25s,border-color .2s,opacity .2s;animation:rise .5s ease-out}
+@media(hover:hover){.card:hover:not(:disabled){transform:translateY(-4px);border-color:#64748b}}
+.card:disabled{cursor:default}
+.card.idle{opacity:.7}
+.card.dead{opacity:.35}
+.card.armed{outline:2px solid #22d3ee;outline-offset:2px}
+.card .art{border-radius:8px;padding:12px;text-align:center;font-size:22px;margin-bottom:6px}
+.card .c-name{font-weight:600}
+.card .c-desc{font-size:13px;color:#94a3b8}
+.card .c-eff{margin-top:auto;padding-top:6px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.eff-correct{color:#34d399}.eff-cultivate{color:#fbbf24}.eff-any{color:#22d3ee}.eff-none{color:#64748b}
+.log{max-height:220px;overflow-y:auto;font-size:13px;display:flex;flex-direction:column;gap:3px;color:#cbd5e1}
+.log .good{color:#6ee7b7}.log .bad{color:#fca5a5}.log .warn{color:#fdba74}.log .calm{color:#c7d2fe}.log .dim{color:#64748b}.log .sys{color:#22d3ee}
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.8);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);padding:16px}
+.modal.hidden{display:none}
+.modal-card{background:rgba(15,23,42,.92);border:1px solid rgba(148,163,184,.18);border-radius:18px;width:100%;max-width:680px;max-height:92vh;overflow-y:auto;padding:clamp(20px,4vw,32px);box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.intro-title{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.intro-title h1{margin:0;font-size:clamp(24px,4vw,32px);font-weight:700;color:#22d3ee}
+.formula{background:rgba(2,6,23,.55);border:1px solid #334155;border-radius:12px;padding:18px 20px;margin:0 0 18px;display:flex;flex-direction:column;gap:8px;font-size:15px}
+.formula h2{margin:0 0 4px;font-size:18px;color:#22d3ee}
+.rules{display:flex;flex-direction:column;gap:10px;font-size:15px;color:#cbd5e1;margin-bottom:18px}
+.rules p{margin:0}.rules strong{color:#fff}
+.sub-link{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;border:1px solid rgba(34,211,238,.3);border-radius:8px;padding:4px 12px;background:rgba(34,211,238,.08)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0}
+.stat{background:rgba(2,6,23,.5);border:1px solid #334155;border-radius:10px;padding:10px;text-align:center}
+.stat b{display:block;font-family:'JetBrains Mono',monospace;font-size:22px}
+.stat small{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8}
+.closing{font-style:italic;color:#fcd34d;margin:0 0 18px}
+.banner{position:fixed;top:0;left:0;right:0;z-index:60;background:linear-gradient(90deg,#0891b2,#0d9488);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.banner.hidden,.hidden{display:none}
+.banner button{background:#fff;color:#0e7490;font-weight:700;border:0;border-radius:10px;padding:10px 18px;cursor:pointer;min-height:44px}
+.ios-help{background:rgba(124,45,18,.3);border:1px solid #c2410c;border-radius:10px;padding:14px;margin-bottom:16px;font-size:13px}
+.screen-flash{position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:0}
+.flash-engaged{background:rgba(6,182,212,.3);animation:flash .3s ease-out}
+.flash-disengage{background:rgba(249,115,22,.3);animation:flash .4s ease-out}
+.flash-success{background:rgba(16,185,129,.2);animation:flash .2s ease-out}
+.flash-hit{background:rgba(239,68,68,.2);animation:flash .2s ease-out}
+@keyframes flash{0%{opacity:0}50%{opacity:1}100%{opacity:0}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.72}}
+@keyframes rise{from{transform:translateY(-14px) scale(.92);opacity:0}to{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+:focus-visible{outline:2px solid #67e8f9;outline-offset:3px}
+.demo-btn{position:fixed;right:12px;bottom:12px;z-index:70;font:600 11px 'JetBrains Mono',monospace;letter-spacing:.06em;color:#0a0e14;background:#67e8f9;border:0;border-radius:999px;padding:6px 12px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.5)}
+.demo-btn.on{background:#fbbf24}
+.demo-btn.hidden{display:none}
+body{padding:clamp(8px,2vw,20px)}
+.wrap{gap:12px}
+.panel{padding:clamp(12px,1.6vw,18px)}
+.h{margin-bottom:10px;font-size:15px}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(10,14,20,.94);display:flex;flex-direction:column;gap:10px}
+.status-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.tile{padding:10px 12px;gap:2px}
+.big{font-size:clamp(16px,2vw,22px)}
+.route-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.route-head .aside{font-size:12px;color:#94a3b8}
+.track-scroll{overflow:visible;padding:0}
+.track-wrap{min-width:0;padding-top:28px}
+.track{gap:3px}
+.seg{height:18px;border-radius:4px}
+.token{width:28px;height:24px;font-size:20px;top:0}
+.track-ends{margin-top:4px;font-size:10px}
+.main{gap:12px}.col{gap:12px}.side{gap:10px}
+.latest{font-size:14px;padding:10px 12px;min-height:0}
+.logpanel summary{list-style:none}.logpanel summary::-webkit-details-marker{display:none}
+.log{max-height:160px}
+.card{padding:10px}.card .art{padding:8px;font-size:18px;margin-bottom:4px}
+.hand{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+@media(max-width:1000px){
+  .main{display:flex;flex-direction:column;align-items:stretch}
+  .col{display:contents}
+  .p-sensors{order:1}.p-side{order:2}.p-hand{order:3}
+}
+@media(max-height:760px),(max-width:1000px){
+  .tile{padding:6px 10px;flex-direction:row;align-items:center;justify-content:center;gap:8px;text-align:left}
+  .tile.center{text-align:left}
+  .tile .label{font-size:10px}
+  .tile .big{font-size:16px}
+  #apSub{font-size:11px!important}
+  .tile:nth-child(3){flex-direction:column;align-items:stretch;gap:4px}
+  #audioStatus{display:none}
+  .topbar{gap:6px}
+  .track-wrap{padding-top:22px}
+  .seg{height:12px}
+}
+@media(max-width:640px){
+  .h .aside{display:none}
+  .tile{padding:8px}
+  .tile .label{font-size:9px}
+  #apSub,#audioStatus,#muteToggle{display:none}
+  .tile .big{font-size:15px}
+  .tile:nth-child(2) div:last-child{font-size:11px}
+  .status-row{gap:6px}
+  .topbar{gap:6px;padding:8px 10px;border-radius:12px}
+  .route-head{display:none}
+  .track-wrap{padding-top:22px}
+  .seg{height:12px}
+  .token{font-size:16px;width:22px;height:20px}
+  .track-ends{font-size:9px}
+  .sensor{padding:8px 10px}
+  .s-sub{display:none}
+  .teaching{font-size:12px}
+  .t-meta{display:none}
+  .hand{display:flex;overflow-x:auto;gap:8px;padding-bottom:4px;scroll-snap-type:x mandatory}
+  .hand .card{flex:0 0 140px;scroll-snap-align:start}
+  .card .c-desc{display:none}
+  .current{min-height:0;padding:12px}
+  .turb .art{width:40px;height:40px;font-size:18px}
+  .preview{padding:8px 10px}
+}
+</style>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#0a0e14"><svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="400" fill="#0a0e14"/><circle cx="200" cy="200" r="80" fill="none" stroke="#22d3ee" stroke-width="18"/><circle cx="200" cy="200" r="22" fill="#10b981"/></svg></template>
+<div id="screenFlash" class="screen-flash"></div>
+<button id="demoBtn" class="demo-btn hidden" type="button">▶ DEMO</button>
+
+<div id="audioBanner" class="banner hidden">
+  <div style="display:flex;align-items:center;gap:12px"><i class="fa-solid fa-volume-high" style="font-size:22px"></i><div><div style="font-weight:600">Enable Game Audio</div><div style="font-size:12px;opacity:.9">Tap to unlock sound on iPhone/iPad</div></div></div>
+  <button id="enableAudioBtn"><i class="fa-solid fa-play"></i> Tap to Enable</button>
+</div>
+
+<div id="introModal" class="modal">
+  <div class="modal-card">
+    <div class="intro-title">
+      <i class="fa-solid fa-car-side" style="color:#22d3ee;font-size:28px"></i>
+      <h1>Sensor Calibration</h1>
+      <button id="muteToggleIntro" class="icon-btn" style="margin-left:auto" aria-label="Toggle sound"><i class="fa-solid fa-volume-high text-cyan-400"></i></button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;color:#cbd5e1">
+      <p style="margin:0">Based on Chapter 3 of <span style="color:#22d3ee;font-weight:500">The Self-Driving Mind</span></p>
+      <a href="https://selfdrivingmind.substack.com/subscribe" target="_blank" rel="noopener" class="sub-link"><i class="fa-solid fa-envelope" style="font-size:12px"></i>Subscribe on Substack</a>
+    </div>
+    <div class="formula mono">
+      <h2 style="font-family:Inter,sans-serif">The Arithmetic of Certainty</h2>
+      <div><i class="fa-solid fa-infinity" style="color:#2dd4bf"></i> &infin; Fuel (Kripa) + Infallible Navigation (Dhyāna)</div>
+      <div style="text-align:center;font-size:22px;color:#22d3ee">=</div>
+      <div style="color:#34d399;font-weight:600"><i class="fa-solid fa-check-double"></i> Certain Arrival at Self-Realization</div>
+    </div>
+    <div class="rules">
+      <p><strong>Your role:</strong> You are the Maintenance Engineer. The vehicle drives itself on Self-Drive. You only tend its four sensors.</p>
+      <p><strong>Each cycle:</strong> Draw turbulence, then play one Engineering Spec or continue without one. <strong style="color:#34d399">Correct</strong> a sensor that has gone offline, or <strong style="color:#fbbf24">Cultivate</strong> a healthy one so the next turbulence against it passes.</p>
+      <p><strong>Self-Drive:</strong> With 1 or fewer sensors offline, Self-Drive stays engaged and the vehicle advances one space per cycle. With 2 or more offline it disengages. Three stationary cycles in a row ends the route.</p>
+      <p><strong>The road ahead:</strong> The next turbulence is always visible. From cycle 8, two arrive each cycle. <strong style="color:#c7d2fe">Dhyāna</strong> (three times per journey) lets the next turbulence pass in stillness.</p>
+      <p><strong>Lifetime Charge:</strong> Energy lapses drain it. A cycle with all four sensors clear restores 5 through Kripa.</p>
+    </div>
+    <div id="iosAudioHelp" class="ios-help hidden">
+      <div style="color:#fdba74;font-weight:600;margin-bottom:6px"><i class="fa-brands fa-apple"></i> iPhone/iPad Audio Setup</div>
+      <div>• Tap the screen first to enable sound</div><div>• Check that Silent Mode switch is off (side of iPhone)</div><div>• Ensure volume is up in Control Center</div>
+    </div>
+    <button id="startGame" class="btn btn-primary">▶ Start the Simulation</button>
+  </div>
+</div>
+
+<div class="wrap" id="root">
+  <div class="panel topbar">
+    <div class="status-row">
+      <div id="apTile" class="tile center ap-engaged">
+        <div class="label">Self-Drive</div>
+        <div class="big" id="apText">ENGAGED</div>
+        <div style="font-size:13px" id="apSub">Vehicle advancing</div>
+      </div>
+      <div class="tile center" id="cycleTile">
+        <div class="label">Cycle</div>
+        <div class="big" style="color:#22d3ee" id="turnCount">0</div>
+        <div style="font-size:13px;color:#94a3b8">Position <span id="positionText">0</span>/20</div>
+      </div>
+      <div class="tile" style="gap:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="label">Lifetime Charge</span>
+          <span class="mono" style="font-weight:700;font-size:18px;margin-left:auto" id="chargeValue">100</span>
+          <button id="muteToggle" class="icon-btn" aria-label="Toggle sound"><i class="fa-solid fa-volume-high text-cyan-400"></i></button>
+        </div>
+        <div class="bar"><i id="chargeBar" style="width:100%"></i></div>
+        <div id="audioStatus" class="audio-status mono" style="align-self:flex-start"><i class="fa-solid fa-volume-low text-cyan-400"></i> <span class="text-cyan-300">Tap Start</span></div>
+        <span id="audioStatusMobile" class="hidden"></span><span id="muteToggleMobile" class="hidden"><i></i></span>
+      </div>
+    </div>
+    <div class="route-head"><span class="label" style="display:flex;gap:6px;align-items:center"><i class="fa-solid fa-route text-cyan-400"></i>Route to Self-Realization</span><span class="aside mono" id="routeAside">Self-Drive active</span></div>
+    <div class="track-scroll"><div class="track-wrap">
+      <div id="track" class="track"></div>
+      <div id="token" class="token" style="left:0"><i class="fa-solid fa-car-side"></i></div>
+      <div class="track-ends mono"><span style="color:#22d3ee"><i class="fa-solid fa-play"></i> Initiation</span><span style="color:#34d399">Self-Realization <i class="fa-solid fa-flag-checkered"></i></span></div>
+    </div></div>
+  </div>
+
+  <div class="main">
+    <div class="col">
+    <div class="panel p-sensors">
+      <h2 class="h"><i class="fa-solid fa-microchip text-cyan-400"></i>Sensor Array<span class="aside">Tap a sensor to read its teaching</span></h2>
+      <div id="sensors" class="sensors"></div>
+      <div id="teaching" class="teaching"></div>
+    </div>
+  <div class="panel p-hand">
+    <h2 class="h"><i class="fa-solid fa-wrench text-emerald-400"></i>Engineering Specs<span class="aside mono">Hand <span id="handCount">0</span>/5</span></h2>
+    <div id="hand" class="hand"></div>
+  </div>
+    </div>
+    <div class="panel side p-side">
+      <h2 class="h" style="margin:0"><i class="fa-solid fa-wind text-orange-400"></i>Turbulence</h2>
+      <div id="preview" class="preview"></div>
+      <div id="current" class="current"></div>
+      <div id="latest" class="latest">Draw the first turbulence to begin.</div>
+      <button id="drawBtn" class="btn btn-draw"><i class="fa-solid fa-play"></i>Draw Turbulence</button>
+      <div class="btn-row">
+        <button id="dhyanaBtn" class="btn btn-dhyana"><i class="fa-solid fa-spa"></i><span id="dhyanaLabel">Dhyāna · 3</span></button>
+        <button id="continueBtn" class="btn btn-ghost">Skip card <i class="fa-solid fa-forward"></i></button>
+      </div>
+      <div id="phaseHint" class="phase-hint"></div>
+    </div>
+  </div>
+
+
+  <details class="panel logpanel">
+    <summary class="label" style="display:flex;gap:8px;align-items:center;cursor:pointer"><i class="fa-solid fa-terminal"></i>Journey Log<span style="margin-left:auto;text-transform:none;letter-spacing:0">tap to open</span></summary>
+    <div id="gameLog" class="log mono" style="margin-top:10px"></div>
+  </details>
+</div>
+
+<div id="gameOverModal" class="modal hidden">
+  <div class="modal-card" style="max-width:520px;text-align:center">
+    <div id="goIcon" style="font-size:52px;margin-bottom:10px"></div>
+    <h2 id="goTitle" style="margin:0 0 12px;font-size:clamp(24px,4vw,30px)"></h2>
+    <p id="goText" style="margin:0 0 14px;color:#cbd5e1"></p>
+    <p id="goClosing" class="closing"></p>
+    <div id="goStats" class="stats"></div>
+    <button id="restartBtn" class="btn btn-primary">Recalibrate System</button>
+  </div>
+</div>
+
+<script>
+class SoundEngine {
+        constructor() {
+            this.audioContext = null;
+            this.muted = false;
+            this.initialized = false;
+            this.masterGain = null;
+            this.audioUnlocked = false;
+            this.visualFallback = false;
+            this.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        }
+
+        async init(userGesture = false) {
+            // On iOS/Safari, audio must be created/resumed inside a real user gesture.
+            // If this is not a user gesture, do not create the AudioContext yet.
+            if (!userGesture && !this.initialized) {
+                this.updateStatus();
+                return false;
+            }
+            return await this.unlockFromGesture();
+        }
+
+        async unlockFromGesture() {
+            try {
+                if (!this.initialized) {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    this.masterGain = this.audioContext.createGain();
+                    this.masterGain.gain.value = this.muted ? 0 : 0.3;
+                    this.masterGain.connect(this.audioContext.destination);
+                    this.initialized = true;
+                    console.log('[Audio] Context created inside user gesture, state:', this.audioContext.state);
+                }
+
+                if (this.audioContext.state === 'suspended') {
+                    await this.audioContext.resume();
+                    console.log('[Audio] Context resumed, state:', this.audioContext.state);
+                }
+
+                // iOS sometimes needs an actual scheduled source node inside the gesture.
+                const buffer = this.audioContext.createBuffer(1, 1, 22050);
+                const source = this.audioContext.createBufferSource();
+                source.buffer = buffer;
+                source.connect(this.masterGain);
+                source.start(0);
+
+                this.audioUnlocked = this.audioContext.state === 'running';
+                this.visualFallback = !this.audioUnlocked;
+                this.updateStatus();
+                return this.audioUnlocked;
+            } catch (e) {
+                console.error('[Audio] Unlock failed:', e);
+                this.visualFallback = true;
+                this.updateStatus();
+                return false;
+            }
+        }
+
+        async resume() {
+            if (!this.audioContext) return false;
+            
+            try {
+                if (this.audioContext.state === 'suspended') {
+                    await this.audioContext.resume();
+                    console.log('[Audio] Context resumed, new state:', this.audioContext.state);
+                }
+                
+                if (this.audioContext.state === 'running') {
+                    this.audioUnlocked = true;
+                    console.log('[Audio] Successfully unlocked');
+                    // Play silent buffer to fully unlock iOS
+                    const buffer = this.audioContext.createBuffer(1, 1, 22050);
+                    const source = this.audioContext.createBufferSource();
+                    source.buffer = buffer;
+                    source.connect(this.masterGain);
+                    source.start(0);
+                } else {
+                    console.warn('[Audio] Context state after resume:', this.audioContext.state);
+                }
+                
+                this.updateStatus();
+                return this.audioUnlocked;
+            } catch (e) {
+                console.error('[Audio] Resume failed:', e);
+                this.visualFallback = true;
+                this.updateStatus();
+                return false;
+            }
+        }
+
+        updateStatus() {
+            const statusEls = [document.getElementById('audioStatus'), document.getElementById('audioStatusMobile')];
+            statusEls.forEach(el => {
+                if (!el) return;
+                if (!this.initialized) {
+                    el.innerHTML = '<i class="fa-solid fa-volume-low text-cyan-400"></i> <span class="text-cyan-300">Tap Start</span>';
+                } else if (this.muted) {
+                    el.innerHTML = '<i class="fa-solid fa-volume-xmark text-slate-500"></i> <span class="text-slate-400">Muted</span>';
+                } else if (this.audioUnlocked) {
+                    el.innerHTML = '<i class="fa-solid fa-volume-high text-emerald-400"></i> <span class="text-emerald-400">Ready</span>';
+                } else if (this.visualFallback || this.audioContext?.state !== 'running') {
+                    el.innerHTML = '<i class="fa-solid fa-hand-pointer text-orange-400"></i> <span class="text-orange-300">Tap to Enable Sound</span>';
+                }
+            });
+        }
+
+        play(type) {
+            console.log('[Audio] Play requested:', type, 'Unlocked:', this.audioUnlocked, 'Muted:', this.muted);
+            
+            if (this.muted) return;
+            
+            // Attempt resume if suspended
+            if (this.audioContext && this.audioContext.state === 'suspended') {
+                this.resume();
+            }
+
+            if (!this.audioUnlocked || !this.initialized) {
+                console.log('[Audio] Using visual fallback');
+                this.visualFeedback(type);
+                this.hapticFeedback(type);
+                return;
+            }
+
+            const now = this.audioContext.currentTime;
+            const sounds = {
+                autopilotEngaged: () => this._chime(now, [523.25, 659.25, 783.99]),
+                disengage: () => this._buzz(now, 200, 0.3),
+                turbulence: () => this._whoosh(now),
+                repair: () => this._success(now, [659.25, 783.99]),
+                movement: () => this._motor(now),
+                selfRealization: () => this._fanfare(now),
+                gameOver: () => this._lowTone(now, 0.5),
+                test: () => this._chime(now, [440])
+            };
+
+            if (sounds[type]) {
+                try {
+                    sounds[type]();
+                    this.visualFeedback(type);
+                } catch (e) {
+                    console.error('[Audio] Play error:', e);
+                    this.visualFeedback(type);
+                }
+            }
+        }
+
+        visualFeedback(type) {
+            const flashEl = document.getElementById('screenFlash');
+            if (!flashEl) return;
+            
+            flashEl.className = 'screen-flash';
+            void flashEl.offsetWidth; // Trigger reflow
+            
+            const flashMap = {
+                autopilotEngaged: 'flash-engaged',
+                disengage: 'flash-disengage',
+                repair: 'flash-success',
+                movement: 'flash-engaged',
+                turbulence: 'flash-hit',
+                selfRealization: 'flash-success',
+                gameOver: 'flash-disengage',
+                test: 'flash-engaged'
+            };
+            
+            if (flashMap[type]) {
+                flashEl.classList.add(flashMap[type]);
+            }
+        }
+
+        hapticFeedback(type) {
+            if (!navigator.vibrate) return;
+            const patterns = {
+                autopilotEngaged: [50, 50, 50],
+                disengage: [100, 50, 100],
+                repair: [30],
+                movement: [20],
+                turbulence: [50],
+                selfRealization: [50, 100, 50, 100, 200],
+                gameOver: [200, 100, 200],
+                test: [30]
+            };
+            if (patterns[type]) {
+                try {
+                    navigator.vibrate(patterns[type]);
+                } catch (e) {
+                    console.log('[Haptic] Failed:', e);
+                }
+            }
+        }
+
+        toggleMute() {
+            this.muted = !this.muted;
+            if (this.masterGain) {
+                this.masterGain.gain.value = this.muted ? 0 : 0.3;
+            }
+            this.updateMuteUI();
+            this.updateStatus();
+            return this.muted;
+        }
+
+        updateMuteUI() {
+            const icons = document.querySelectorAll('#muteToggle i, #muteToggleMobile i, #muteToggleIntro i');
+            icons.forEach(icon => {
+                icon.className = this.muted ? 'fa-solid fa-volume-xmark text-slate-500' : 'fa-solid fa-volume-high text-cyan-400';
+            });
+        }
+
+        _chime(now, freqs) {
+            freqs.forEach((freq, i) => {
+                const osc = this.audioContext.createOscillator();
+                const gain = this.audioContext.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0, now + i * 0.1);
+                gain.gain.linearRampToValueAtTime(0.4, now + i * 0.1 + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.3);
+                osc.connect(gain);
+                gain.connect(this.masterGain);
+                osc.start(now + i * 0.1);
+                osc.stop(now + i * 0.1 + 0.4);
+            });
+        }
+
+        _buzz(now, freq, duration) {
+            const osc = this.audioContext.createOscillator();
+            const gain = this.audioContext.createGain();
+            osc.type = 'square';
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start(now);
+            osc.stop(now + duration);
+        }
+
+        _whoosh(now) {
+            const bufferSize = this.audioContext.sampleRate * 0.3;
+            const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            const source = this.audioContext.createBufferSource();
+            source.buffer = buffer;
+            const filter = this.audioContext.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(100, now);
+            filter.frequency.exponentialRampToValueAtTime(800, now + 0.3);
+            filter.Q.value = 2;
+            const gain = this.audioContext.createGain();
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            source.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.masterGain);
+            source.start(now);
+        }
+
+        _success(now, freqs) {
+            freqs.forEach((freq, i) => {
+                const osc = this.audioContext.createOscillator();
+                const gain = this.audioContext.createGain();
+                osc.type = 'triangle';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0, now + i * 0.08);
+                gain.gain.linearRampToValueAtTime(0.3, now + i * 0.08 + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.2);
+                osc.connect(gain);
+                gain.connect(this.masterGain);
+                osc.start(now + i * 0.08);
+                osc.stop(now + i * 0.08 + 0.3);
+            });
+        }
+
+        _motor(now) {
+            const osc = this.audioContext.createOscillator();
+            const gain = this.audioContext.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(80, now);
+            osc.frequency.exponentialRampToValueAtTime(120, now + 0.15);
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start(now);
+            osc.stop(now + 0.25);
+        }
+
+        _fanfare(now) {
+            const melody = [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5];
+            melody.forEach((freq, i) => {
+                const osc = this.audioContext.createOscillator();
+                const gain = this.audioContext.createGain();
+                osc.type = i % 2 === 0 ? 'triangle' : 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0, now + i * 0.12);
+                gain.gain.linearRampToValueAtTime(0.4, now + i * 0.12 + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.12 + 0.3);
+                osc.connect(gain);
+                gain.connect(this.masterGain);
+                osc.start(now + i * 0.12);
+                osc.stop(now + i * 0.12 + 0.4);
+            });
+        }
+
+        _lowTone(now, duration) {
+            const osc = this.audioContext.createOscillator();
+            const gain = this.audioContext.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 110;
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.3, now + 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start(now);
+            osc.stop(now + duration);
+        }
+    }
+
+    
+const soundEngine = new SoundEngine();
+
+const SENSORS = {
+  camera: { label:'Camera', sub:'Satya · Visual Processing', icon:'fa-camera', ok:'CLEAN', virtue:'Satya', full:'Satya (Truthfulness)',
+    lapse:'Inner Dishonesty → Self-deception muddies the camera lens. When we lie to ourselves, perception becomes distorted and we misread reality.',
+    spec:'Engineering Spec: Truthfulness. Commitment to radical honesty clarifies the lens. The camera sensor can accurately process what is actually present.',
+    meta:"Metaphor: Like cleaning mud from a vehicle's front camera for clear object detection." },
+  chassis: { label:'Chassis', sub:'Ahimsa · Structural Integrity', icon:'fa-car-on', ok:'ALIGNED', virtue:'Ahimsa', full:'Ahimsa (Non-violence)',
+    lapse:'Chronic Contempt → Harboring judgment and resentment twists the chassis out of alignment. The vehicle pulls against its own structure.',
+    spec:'Engineering Spec: Non-violence. Releasing harm-based thinking restores structural integrity. The chassis runs smooth without internal friction.',
+    meta:'Metaphor: Like wheel alignment - contempt creates drag that wastes energy and causes wear.' },
+  windshield: { label:'Windshield', sub:'Aparigraha · Forward Visibility', icon:'fa-window-maximize', ok:'CLEAR', virtue:'Aparigraha', full:'Aparigraha (Non-possessiveness)',
+    lapse:'Grasping → Clinging to outcomes, possessions, and identity fogs the windshield. Attachment obscures the path that Self-Drive is trying to navigate.',
+    spec:'Engineering Spec: Non-attachment. Releasing the need to control every outcome clears your view. You trust the navigation.',
+    meta:'Metaphor: Like defrosting a windshield - letting go removes the condensation of craving.' },
+  energy: { label:'Vital Energy', sub:'Brahmacharya · Power Management', icon:'fa-bolt', ok:'STABLE', virtue:'Brahmacharya', full:'Brahmacharya (Energy Conservation)',
+    lapse:'Energy Dispersion → Scattered attention, compulsive habits, and reactive patterns leak vital charge. Battery drains even when parked.',
+    spec:'Engineering Spec: Energy Mastery. Channeling attention wisely maintains system stability. Lifetime charge sustained for the full journey.',
+    meta:'Metaphor: Like closing background apps - conserve battery by eliminating parasitic drains.' }
+};
+const ORDER = ['camera','chassis','windshield','energy'];
+const TURBULENCE = [
+  { name:'Inner Dishonesty', target:'camera', desc:'Self-deception muddies the lens', icon:'fa-eye-slash' },
+  { name:'Chronic Contempt', target:'chassis', desc:'Judgment twists the frame', icon:'fa-face-angry' },
+  { name:'Grasping', target:'windshield', desc:'Attachment fogs your view', icon:'fa-hand-holding' },
+  { name:'Energy Dispersion', target:'energy', desc:'Scattered focus drains charge', icon:'fa-battery-quarter' },
+  { name:'System Glitch', target:'random', desc:'A random sensor fluctuates', icon:'fa-triangle-exclamation' }
+];
+const SPECS = [
+  { name:'Satya', target:'camera', desc:'Truthfulness cleans the lens', icon:'fa-gem', bg:'linear-gradient(135deg,#06b6d4,#3b82f6)' },
+  { name:'Ahimsa', target:'chassis', desc:'Non-violence aligns structure', icon:'fa-peace', bg:'linear-gradient(135deg,#10b981,#14b8a6)' },
+  { name:'Aparigraha', target:'windshield', desc:'Non-attachment clears view', icon:'fa-wind', bg:'linear-gradient(135deg,#a855f7,#ec4899)' },
+  { name:'Brahmacharya', target:'energy', desc:'Energy mastery steadies the charge', icon:'fa-fire-flame-curved', bg:'linear-gradient(135deg,#f59e0b,#f97316)' },
+  { name:'Svādhyāya', target:'any', desc:'Self-study finds what most needs tending', icon:'fa-book-open', bg:'linear-gradient(135deg,#64748b,#475569)' }
+];
+const GOAL = 20, HAND_MAX = 5;
+const HIT_ENERGY = 12, HIT_DEEPEN = 8, DRAIN = 4, KRIPA = 5;
+const perTurn = t => (!demo.on && t >= 8) ? 2 : 1;
+const $ = id => document.getElementById(id);
+let S;
+
+function freshState() {
+  const sensors = {}, cult = {};
+  ORDER.forEach(k => { sensors[k] = 'clean'; cult[k] = false; });
+  return { position:0, charge:100, turn:0, disengagedTurns:0, engaged:true, sensors, cult, hand:[], upcoming:[], current:[],
+    phase:'draw', gameOver:false, dhyana:3, stillness:false, pick:null, selected:'camera', latest:'Draw the first turbulence to begin.', latestCls:'',
+    stats:{ corrected:0, cultivated:0, sustained:0, dhyana:0 } };
+}
+function genTurb(n) {
+  const out = [];
+  for (let i = 0; i < n; i++) {
+    let allowed = ORDER;
+    if (demo.on) {
+      allowed = ORDER.filter(k => S.sensors[k] !== 'offline' && !(k === 'energy' && S.charge < 50));
+      if (!allowed.length) allowed = ORDER.filter(k => S.sensors[k] !== 'offline');
+    }
+    const pool = TURBULENCE.filter(x => x.target === 'random' || allowed.indexOf(x.target) >= 0);
+    const t = Object.assign({}, pool[Math.floor(Math.random() * pool.length)]);
+    if (t.target === 'random') t.target = allowed[Math.floor(Math.random() * allowed.length)];
+    out.push(t);
+  }
+  return out;
+}
+function drawCard() {
+  if (S.hand.length >= HAND_MAX) return;
+  const c = Object.assign({}, SPECS[Math.floor(Math.random() * SPECS.length)]);
+  c.id = Math.random();
+  S.hand.push(c);
+}
+function effectOn(k) { if (S.sensors[k] === 'offline') return 'correct'; if (!S.cult[k]) return 'cultivate'; return null; }
+function svTarget() {
+  const off = ORDER.filter(k => S.sensors[k] === 'offline');
+  if (off.length) return off.indexOf('energy') >= 0 ? 'energy' : off[0];
+  const next = S.upcoming.map(u => u.target).find(k => !S.cult[k]);
+  return next || ORDER.find(k => !S.cult[k]) || null;
+}
+function resolveTarget(c) { return c.target === 'any' ? svTarget() : c.target; }
+function cardEffect(c) { const k = resolveTarget(c); return k ? effectOn(k) : null; }
+function offlineCount() { return ORDER.filter(k => S.sensors[k] === 'offline').length; }
+
+function log(msg, cls) {
+  const el = document.createElement('div');
+  el.className = cls || '';
+  el.textContent = '> ' + msg;
+  $('gameLog').appendChild(el);
+  $('gameLog').scrollTop = $('gameLog').scrollHeight;
+}
+function say(msg, cls) { S.latest = msg; S.latestCls = cls || ''; log(msg, cls); }
+
+function newGame() {
+  S = freshState();
+  for (let i = 0; i < 3; i++) drawCard();
+  S.upcoming = genTurb(perTurn(1));
+  $('gameLog').innerHTML = '';
+  log('Calibration protocol initialized. Self-Drive online.', 'sys');
+  log('Position 0: Initiation | Destination: Self-Realization (20) | Self-Drive holds with 1 or fewer sensors offline', 'dim');
+  render();
+}
+
+function drawTurbulence() {
+  if (S.phase !== 'draw' || S.gameOver) return;
+  trackPlausible('Sensor Calibration Turbulence Drawn', { box:'03', chapter:'3', turn:String(S.turn + 1) });
+  soundEngine.play('turbulence');
+  S.turn++;
+  S.current = S.upcoming;
+  if (S.turn === 8 && !demo.on) log('The road roughens. From now on, two turbulences arrive each cycle.', 'warn');
+  if (S.stillness) {
+    S.stillness = false;
+    S.current.forEach(t => { t.passed = true; });
+    S.selected = S.current[0].target;
+    say('In stillness, ' + S.current.map(t => t.name).join(' and ') + ' passes without touching the vehicle.', 'calm');
+  } else {
+    S.current.forEach(applyHit);
+  }
+  S.upcoming = genTurb(perTurn(S.turn + 1));
+  checkAutopilot();
+  drawCard();
+  S.phase = 'tend';
+  render();
+  checkWinLose();
+}
+
+function applyHit(t) {
+  const k = t.target, s = SENSORS[k];
+  S.selected = k;
+  if (S.cult[k]) {
+    S.cult[k] = false; S.stats.sustained++; t.held = true;
+    say(t.name + ' meets cultivated ' + s.virtue + '. The practice holds and the ' + s.label.toLowerCase() + ' is untouched.', 'good');
+  } else if (S.sensors[k] === 'offline') {
+    S.charge = Math.max(0, S.charge - HIT_DEEPEN);
+    say(t.name + ' deepens a lapse already present in the ' + s.label.toLowerCase() + '. Charge −' + HIT_DEEPEN + '.', 'bad');
+  } else {
+    S.sensors[k] = 'offline';
+    if (k === 'energy') { S.charge = Math.max(0, S.charge - HIT_ENERGY); say(t.name + '. Vital energy offline. Charge −' + HIT_ENERGY + '.', 'bad'); }
+    else say(t.name + '. ' + s.label + ' sensor offline.', 'bad');
+  }
+}
+
+function useCard(i) {
+  if (S.phase !== 'tend' || S.gameOver) return;
+  const c = S.hand[i];
+  if (!c || !cardEffect(c)) return;
+  applyCard(i, resolveTarget(c));
+}
+function sensorClick(k) {
+  if (S.pick !== null && S.phase === 'tend') { if (effectOn(k)) applyCard(S.pick, k); return; }
+  S.selected = k;
+  render();
+}
+function applyCard(i, k) {
+  const c = S.hand[i], s = SENSORS[k], eff = effectOn(k);
+  if (!c || !eff) return;
+  trackPlausible('Sensor Calibration Card Used', { box:'03', chapter:'3', card:c.name, effect:eff, turn:String(S.turn), position:String(S.position) });
+  if (eff === 'correct') {
+    S.sensors[k] = 'clean'; S.stats.corrected++;
+    say('Corrected. ' + c.name + ' brings the ' + s.label.toLowerCase() + ' back online.', 'good');
+  } else {
+    S.cult[k] = true; S.stats.cultivated++;
+    say('Cultivated. ' + c.name + ' steadies the ' + s.label.toLowerCase() + '. The next turbulence against it will pass.', 'good');
+  }
+  soundEngine.play('repair');
+  S.hand.splice(i, 1);
+  S.pick = null; S.selected = k; S.phase = 'resolving';
+  checkAutopilot();
+  render();
+  setTimeout(endTurn, 700);
+}
+function continueTurn() {
+  if (S.phase !== 'tend' || S.gameOver) return;
+  S.pick = null; S.phase = 'resolving';
+  log('Continuing without a card.', 'dim');
+  endTurn();
+}
+function useDhyana() {
+  if (S.phase !== 'draw' || S.dhyana <= 0 || S.stillness || S.gameOver) return;
+  S.dhyana--; S.stats.dhyana++; S.stillness = true;
+  soundEngine.play('autopilotEngaged');
+  say('Dhyāna. You sit in stillness. The next turbulence will pass.', 'calm');
+  render();
+}
+
+function endTurn() {
+  if (S.gameOver) return;
+  if (S.engaged) {
+    S.position++; S.disengagedTurns = 0;
+    soundEngine.play('movement');
+    log('Self-Drive moves forward. Position ' + (S.position >= GOAL ? 'Self-Realization' : S.position) + '/' + GOAL + '.');
+  } else {
+    S.disengagedTurns++;
+    log('Self-Drive disengaged. The vehicle is stationary. ' + S.disengagedTurns + '/3.', 'warn');
+  }
+  if (S.sensors.energy === 'offline') {
+    S.charge = Math.max(0, S.charge - DRAIN);
+    log('Vital energy unstable. Passive drain −' + DRAIN + '.', 'bad');
+  } else if (offlineCount() === 0 && S.charge < 100) {
+    S.charge = Math.min(100, S.charge + KRIPA);
+    log('All four sensors clear. Kripa restores ' + KRIPA + ' charge.', 'good');
+  }
+  S.phase = 'draw'; S.current = [];
+  render();
+  checkWinLose();
+}
+
+function checkAutopilot() {
+  const was = S.engaged;
+  S.engaged = offlineCount() <= 1;
+  if (was && !S.engaged) {
+    trackPlausible('Sensor Calibration Autopilot Disengaged', { box:'03', chapter:'3', turn:String(S.turn), position:String(S.position) });
+    log('Self-Drive DISENGAGED. Two or more sensors offline.', 'warn');
+    soundEngine.play('disengage');
+  } else if (!was && S.engaged) {
+    trackPlausible('Sensor Calibration Autopilot Reengaged', { box:'03', chapter:'3', turn:String(S.turn), position:String(S.position) });
+    log('Self-Drive re-engaged.', 'good');
+    soundEngine.play('autopilotEngaged');
+  }
+}
+
+function checkWinLose() {
+  if (S.gameOver) return;
+  if (S.position >= GOAL) {
+    soundEngine.play('selfRealization');
+    endGame(true, 'Self-Realization Achieved', 'The vehicle arrived. Infinite Fuel + Infallible Navigation = Certain Arrival. Your maintenance was sufficient.');
+  } else if (S.charge <= 0) {
+    soundEngine.play('gameOver');
+    endGame(false, 'Lifetime Charge Depleted', 'Vital energy exhausted. Without Brahmacharya, the vehicle cannot complete the journey.');
+  } else if (S.disengagedTurns >= 3) {
+    soundEngine.play('gameOver');
+    endGame(false, 'Route Terminated', 'Self-Drive disengaged for 3 cycles. With 2 or more sensors offline, the vehicle cannot navigate safely.');
+  }
+}
+
+function endGame(won, title, text) {
+  trackPlausible('Sensor Calibration Completed', { box:'03', chapter:'3', result: won ? 'won' : 'lost', title, turns:String(S.turn), position:String(S.position), charge:String(S.charge) });
+  S.gameOver = true; S.phase = 'over';
+  render();
+  const st = S.stats;
+  $('goIcon').innerHTML = won ? '<i class="fa-solid fa-trophy" style="color:#34d399"></i>' : '<i class="fa-solid fa-triangle-exclamation" style="color:#fb923c"></i>';
+  $('goTitle').textContent = title;
+  $('goTitle').style.color = won ? '#34d399' : '#fb923c';
+  $('goText').textContent = text;
+  let closing = '';
+  if (won) closing = st.cultivated + st.sustained > st.corrected ? 'Practice, not correction, carried you home.' : 'Each lapse was met and corrected. The vehicle arrived.';
+  else closing = st.cultivated === 0 ? 'Next time, cultivate before the turbulence arrives.' : 'The practice was begun. The road is still there.';
+  $('goClosing').textContent = closing;
+  const items = [[S.turn,'Cycles'],[st.corrected,'Corrected'],[st.cultivated,'Cultivated'],[st.sustained,'Turbulence held'],[st.dhyana + '/3','Dhyāna'],[S.charge,'Charge']];
+  $('goStats').innerHTML = items.map(x => '<div class="stat"><b>' + x[0] + '</b><small>' + x[1] + '</small></div>').join('');
+  $('gameOverModal').classList.remove('hidden');
+}
+
+function buildStatic() {
+  const track = $('track');
+  for (let i = 0; i < GOAL; i++) { const seg = document.createElement('div'); seg.className = 'seg'; seg.id = 'seg-' + i; track.appendChild(seg); }
+  const box = $('sensors');
+  ORDER.forEach(k => {
+    const b = document.createElement('button');
+    b.id = 'sensor-' + k; b.type = 'button';
+    b.addEventListener('click', () => sensorClick(k));
+    box.appendChild(b);
+  });
+}
+
+function render() {
+  const off = offlineCount();
+  $('apTile').className = 'tile center ' + (S.engaged ? 'ap-engaged' : 'ap-disengaged');
+  $('apText').textContent = S.engaged ? 'ENGAGED' : 'DISENGAGED';
+  $('apSub').textContent = S.engaged ? (off === 1 ? 'Advancing · 1 sensor offline' : 'Vehicle advancing') : 'Stationary ' + S.disengagedTurns + '/3 cycles';
+  $('routeAside').textContent = S.engaged ? 'Self-Drive active' : 'Self-Drive disengaged';
+  $('turnCount').textContent = S.turn;
+  $('positionText').textContent = S.position;
+  $('chargeValue').textContent = S.charge;
+  const bar = $('chargeBar');
+  bar.style.width = S.charge + '%';
+  bar.style.background = S.charge < 30 ? 'linear-gradient(90deg,#ef4444,#f97316)' : S.charge < 60 ? 'linear-gradient(90deg,#f59e0b,#eab308)' : 'linear-gradient(90deg,#10b981,#14b8a6)';
+
+  for (let i = 0; i < GOAL; i++) $('seg-' + i).className = 'seg' + (i < S.position ? ' done' : i === GOAL - 1 ? ' goal' : '');
+  const p = Math.min(S.position, GOAL) / GOAL;
+  $('token').style.left = 'calc(' + (p * 100) + '% - ' + (p * $('token').offsetWidth) + 'px)';
+
+  ORDER.forEach(k => {
+    const s = SENSORS[k], el = $('sensor-' + k), isOff = S.sensors[k] === 'offline';
+    let cls = 'sensor ' + (isOff ? 'offline' : 'clean');
+    if (S.cult[k]) cls += ' cultivated';
+    if (S.pick !== null) cls += effectOn(k) ? ' pickable' : ' unpickable';
+    else if (S.selected === k) cls += ' selected';
+    el.className = cls;
+    el.setAttribute('aria-label', s.label + ': ' + (isOff ? 'offline' : s.ok.toLowerCase()) + (S.cult[k] ? ', cultivated' : ''));
+    el.innerHTML = '<div class="s-top"><i class="fa-solid ' + s.icon + '"></i><span class="s-state mono">' +
+      (isOff ? '<i class="fa-solid fa-triangle-exclamation" style="font-size:11px"></i>OFFLINE' : '<i class="fa-solid fa-check" style="font-size:11px"></i>' + s.ok) +
+      '</span></div><div class="s-name">' + s.label + '</div><div class="s-sub">' + s.sub + '</div>' +
+      (S.cult[k] ? '<div class="s-cult"><i class="fa-solid fa-seedling"></i>CULTIVATED</div>' : '');
+  });
+
+  const t = SENSORS[S.selected], tOff = S.sensors[S.selected] === 'offline';
+  $('teaching').innerHTML = '<div class="t-title">' + t.full + '</div>' +
+    (tOff ? '<div><span class="t-k" style="color:#f87171">Compromised:</span> ' + t.lapse + '</div>' : '<div><span class="t-k" style="color:#34d399">Calibrated:</span> ' + t.spec + '</div>') +
+    '<div class="t-meta">' + t.meta + '</div>';
+
+  const pv = $('preview');
+  pv.className = 'preview' + (S.stillness ? ' still' : '');
+  pv.innerHTML = '<div class="label">' + (S.stillness ? 'Next · will pass in stillness' : 'On the horizon') + '</div>' +
+    S.upcoming.map(u => '<div class="pv-item"><i class="fa-solid ' + u.icon + '"></i><b>' + u.name + '</b><span>→ ' + SENSORS[u.target].label + (S.cult[u.target] ? ' (cultivated)' : '') + '</span></div>').join('');
+
+  const cur = $('current');
+  if (!S.current.length) {
+    cur.innerHTML = '<div class="empty"><i class="fa-solid fa-satellite-dish"></i><div>' + (S.gameOver ? 'Journey complete.' : 'Awaiting sensor scan…') + '</div></div>';
+  } else {
+    cur.innerHTML = S.current.map(c => {
+      const state = c.passed ? ' passed' : c.held ? ' held' : '';
+      const tgt = c.passed ? 'Passed in stillness' : c.held ? 'Held by ' + SENSORS[c.target].virtue : '→ ' + SENSORS[c.target].label;
+      return '<div class="turb' + state + '"><div class="art"><i class="fa-solid ' + c.icon + '"></i></div><div><div class="t-name">' + c.name + '</div><div class="t-target">' + tgt + '</div><div class="t-desc">' + c.desc + '</div></div></div>';
+    }).join('');
+  }
+  const lt = $('latest');
+  lt.className = 'latest ' + S.latestCls;
+  lt.textContent = S.latest;
+
+  $('drawBtn').disabled = S.phase !== 'draw';
+  $('dhyanaBtn').disabled = S.phase !== 'draw' || S.dhyana <= 0 || S.stillness;
+  $('dhyanaLabel').textContent = 'Dhyāna · ' + S.dhyana;
+  $('continueBtn').disabled = S.phase !== 'tend';
+  $('phaseHint').textContent = S.phase === 'draw' ? (S.stillness ? 'Stillness held. Draw when ready.' : 'Draw turbulence, or sit in Dhyāna first.') :
+    S.phase === 'tend' ? (S.pick !== null ? 'Choose a highlighted sensor, or tap Svādhyāya again to cancel.' : 'Play one spec, or skip to end the cycle without one.') :
+    S.phase === 'resolving' ? 'Self-Drive resolving…' : '';
+
+  $('handCount').textContent = S.hand.length;
+  const hand = $('hand');
+  hand.innerHTML = '';
+  S.hand.forEach((c, i) => {
+    const eff = cardEffect(c);
+    const b = document.createElement('button');
+    b.type = 'button';
+    let cls = 'card';
+    if (!eff) cls += ' dead'; else if (S.phase !== 'tend') cls += ' idle';
+    if (S.pick === i) cls += ' armed';
+    b.className = cls;
+    b.disabled = S.phase !== 'tend' || !eff;
+    const rt = resolveTarget(c);
+    const effTxt = eff === 'correct' ? 'Correct ' + SENSORS[rt].label : eff === 'cultivate' ? 'Cultivate ' + SENSORS[rt].label : 'Already cultivated';
+    b.innerHTML = '<div class="art" style="background:' + c.bg + '"><i class="fa-solid ' + c.icon + '"></i></div><div class="c-name">' + c.name + '</div><div class="c-desc">' + c.desc + '</div><div class="c-eff eff-' + (eff || 'none') + '">' + effTxt + '</div>';
+    b.addEventListener('click', () => useCard(i));
+    hand.appendChild(b);
+  });
+}
+
+function init() {
+  buildStatic();
+  newGame();
+  document.querySelectorAll('a[href*="selfdrivingmind.substack.com/subscribe"]').forEach(link => {
+    link.addEventListener('click', () => trackPlausible('Subscribe Click', { box:'03', chapter:'3', source:'Sensor Calibration' }));
+  });
+  if (soundEngine.isIOS) { $('audioBanner').classList.remove('hidden'); $('iosAudioHelp').classList.remove('hidden'); }
+  $('startGame').addEventListener('click', async () => {
+    trackPlausible('Sensor Calibration Started', { box:'03', chapter:'3' });
+    try { await soundEngine.unlockFromGesture(); } catch (e) { console.warn('[Audio]', e); }
+    $('introModal').classList.add('hidden');
+    log('System online. Begin calibration cycle.', 'sys');
+    soundEngine.play('autopilotEngaged');
+  });
+  $('drawBtn').addEventListener('click', async () => {
+    if (!soundEngine.initialized) { try { await soundEngine.init(true); } catch (e) {} }
+    drawTurbulence();
+  });
+  $('dhyanaBtn').addEventListener('click', useDhyana);
+  $('continueBtn').addEventListener('click', continueTurn);
+  $('restartBtn').addEventListener('click', () => {
+    trackPlausible('Sensor Calibration Restarted', { box:'03', chapter:'3' });
+    $('gameOverModal').classList.add('hidden');
+    newGame();
+    soundEngine.play('autopilotEngaged');
+  });
+  $('enableAudioBtn').addEventListener('click', async () => {
+    await soundEngine.unlockFromGesture();
+    if (soundEngine.audioUnlocked) soundEngine.play('test');
+    setTimeout(() => $('audioBanner').classList.add('hidden'), 500);
+    log(soundEngine.audioUnlocked ? 'Audio enabled successfully' : 'Tap Start or Enable Sound again if Safari is still waiting for permission.', 'dim');
+  });
+  ['muteToggle','muteToggleIntro'].forEach(id => $(id).addEventListener('click', () => soundEngine.toggleMute()));
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && soundEngine.audioContext && soundEngine.audioContext.state === 'suspended') soundEngine.resume();
+  });
+}
+const demo = { on:false, timer:null };
+function demoPickCard() {
+  let best = -1, score = 0;
+  S.hand.forEach((c, i) => {
+    const k = resolveTarget(c), e = k && effectOn(k);
+    if (!e) return;
+    let sc = e === 'correct' ? (k === 'energy' ? 5 : 4) : (S.upcoming.some(u => u.target === k) ? 3 : 1);
+    if (c.target === 'any') sc -= 0.5;
+    if (sc > score) { score = sc; best = i; }
+  });
+  return best;
+}
+function demoEnsureCard() {
+  const need = ORDER.find(k => S.sensors[k] === 'offline') || S.upcoming.map(u => u.target).find(k => !S.cult[k]);
+  if (!need) return;
+  if (S.hand.some(c => resolveTarget(c) === need && effectOn(need))) return;
+  const spec = Object.assign({}, SPECS.find(x => x.target === need), { id: Math.random() });
+  const dead = S.hand.findIndex(c => !cardEffect(c));
+  if (S.hand.length < HAND_MAX) S.hand.push(spec);
+  else S.hand[dead >= 0 ? dead : 0] = spec;
+  render();
+}
+function demoStep() {
+  if (!demo.on) return;
+  if (S.gameOver) {
+    if (S.position >= GOAL) { demo.on = false; $('demoBtn').textContent = '▶ DEMO'; $('demoBtn').classList.remove('on'); log('Demo complete. Self-Realization reached.', 'sys'); return; }
+    demo.timer = setTimeout(() => { if (!demo.on) return; $('gameOverModal').classList.add('hidden'); newGame(); log('Demo: new journey.', 'sys'); demoStep(); }, 4500);
+    return;
+  }
+  if (S.phase === 'draw') {
+    if (S.dhyana > 0 && !S.stillness && [5, 11, 16].indexOf(S.turn + 1) >= 0) useDhyana();
+    else drawTurbulence();
+  } else if (S.phase === 'tend') {
+    demoEnsureCard();
+    const i = demoPickCard();
+    if (i >= 0) useCard(i); else continueTurn();
+  }
+  demo.timer = setTimeout(demoStep, 1300);
+}
+function setDemo(on) {
+  demo.on = on;
+  clearTimeout(demo.timer);
+  $('demoBtn').textContent = on ? '■ STOP DEMO' : '▶ DEMO';
+  $('demoBtn').classList.toggle('on', on);
+  if (on) {
+    $('introModal').classList.add('hidden');
+    $('gameOverModal').classList.add('hidden');
+    newGame();
+    log('Demo running. The engineer plays on its own.', 'sys');
+    demo.timer = setTimeout(demoStep, 900);
+  } else log('Demo stopped. Your turn.', 'sys');
+}
+function revealDemo() { $('demoBtn').classList.remove('hidden'); }
+(function setupDemoUnlock() {
+  let buf = '';
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && demo.on) { setDemo(false); return; }
+    if (e.key.length !== 1) return;
+    buf = (buf + e.key.toLowerCase()).slice(-4);
+    if (buf === 'demo') revealDemo();
+  });
+  let lp = null;
+  const tile = $('cycleTile');
+  tile.addEventListener('pointerdown', () => { lp = setTimeout(revealDemo, 1500); });
+  ['pointerup','pointerleave','pointercancel'].forEach(ev => tile.addEventListener(ev, () => clearTimeout(lp)));
+  $('demoBtn').addEventListener('click', () => setDemo(!demo.on));
+})();
+init();
+</script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
