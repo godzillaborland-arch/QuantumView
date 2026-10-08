@@ -16,6 +16,8 @@
 @media(max-width:720px){.top{grid-template-columns:1fr 1fr;gap:10px;left:13px;right:13px}.gauges{grid-row:2;grid-column:1/3;justify-content:center;gap:7px}.gauge{width:105px;padding:9px}.gaugeHead span,.gaugeHead b{font-size:18px}.track{margin:6px 0}.tools{grid-column:2;grid-row:1}.tools button{font-size:9px;padding:6px 8px}#phaseName{font-size:16px}#clock{font-size:20px}.brand{font-size:8px}#autoBanner{top:200px;font-size:9px;white-space:nowrap}#flightData{right:13px;top:41%;min-width:95px;padding:8px 11px}.dataRow strong{font-size:16px}.dataRow small{font-size:8px}#reticle{width:94px;top:43%}#message{top:61%;font-size:10px;width:min(390px,90%)}.token{padding:10px 8px;min-height:104px}.token b{font-size:10px}.token small{font-size:9px}.token .state{font-size:9px}.tokens{gap:6px}.hint{font-size:9px}.briefing{gap:7px}.briefing div{padding:9px}.briefing small{font-size:10px}.comparison{grid-template-columns:1fr}#joystick{width:86px;height:86px;left:16px;bottom:170px}#stick{left:27px;top:27px}}
 @media(max-height:500px) and (orientation:landscape){.top{grid-template-columns:1fr auto 1fr;gap:10px}.gauges{grid-column:2;grid-row:1}.tools{grid-column:3;grid-row:1}.gauge{width:88px;padding:7px}.gauge small{font-size:8px}#phaseName{font-size:14px}#autoBanner{top:102px}#bottom{bottom:7px}.token{min-height:67px;padding:7px 10px}.token small{margin:3px 0}.hint{margin-top:5px}#joystick{bottom:110px;width:80px;height:80px}#stick{left:24px;top:24px}#message{top:62%;font-size:10px}#flightData{top:30%}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.flightSelector{border:1px solid var(--line);border-radius:12px;padding:15px;margin:22px 0}.flightSelector legend{color:var(--gold);padding:0 7px;font-size:12px}.flightChoices{display:grid;grid-template-columns:1fr 1fr;gap:12px}.flightChoice{display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid var(--line);border-radius:8px;cursor:pointer}.flightChoice:has(input:checked){border-color:var(--cyan);background:rgba(0,217,255,.07)}.flightChoice input{margin-top:5px}.flightChoice b{display:block;font-size:13px}.flightChoice small{color:var(--muted);font-size:11px}.continueTrack{height:4px;background:#294252;margin-top:6px;overflow:hidden}#continueFill{height:100%;background:var(--peace);transform-origin:left}.thoughtLegend{display:flex;gap:18px;font-size:11px;margin:14px 0}.goldThought{color:var(--gold)}.crimsonThought{color:#e45d78}#announcement{border-left:3px solid var(--gold);padding:12px 16px;background:rgba(212,165,116,.08)}.singleReport{max-width:690px;margin:22px auto}.singleReport canvas{height:180px}#reportPhase{margin-bottom:18px}#reportReserve{color:var(--peace)}@media(max-width:500px){.flightChoices{grid-template-columns:1fr}.flightSelector{padding:12px}}
+#contactNotice{position:absolute;left:50%;top:53%;transform:translateX(-50%);width:min(510px,90%);padding:10px 16px;text-align:center;background:rgba(27,16,25,.96);border:1px solid #e45d78;border-radius:9px;font-size:13px;color:#fff0ea;font-variant-numeric:tabular-nums}#contactNotice.protected{background:rgba(8,35,36,.96);border-color:var(--peace);color:#a4f2d8}
 </style>
 </head>
 <body>
@@ -32,7 +34,8 @@
  </header>
  <div id="autoBanner" hidden>FSD / AUTONOMOUS GLIDE — HANDS OFF</div>
  <div id="reticle"><svg viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="43" stroke="#00d9ff" stroke-opacity=".5"/><circle cx="60" cy="60" r="25" stroke="#00d9ff" stroke-opacity=".25" stroke-dasharray="2 6"/><path d="M60 9v12M60 99v12M9 60h12M99 60h12M52 60h16M60 52v16" stroke="#9dd4e2"/><path id="vectorLine" d="M60 60L60 60" stroke="#d4a574"/><circle id="vectorDot" cx="60" cy="60" r="4" stroke="#d4a574"/></svg><div id="reticleLabel">RECOVERABLE</div></div>
- <aside id="flightData"><div class="dataRow"><small>ALTITUDE / SIM m</small><strong id="altitude">128</strong></div><div class="dataRow"><small>AIRSPEED / SIM</small><strong id="airspeed">22.0</strong></div><div class="dataRow"><small>CONTROL MODE</small><strong id="mode">MANUAL</strong></div></aside>
+ <aside id="flightData"><div class="dataRow"><small>ALTITUDE / SIM m</small><strong id="altitude">128</strong></div><div class="dataRow"><small>AIRSPEED / SIM</small><strong id="airspeed">22.0</strong></div><div class="dataRow"><small>CONTROL MODE</small><strong id="mode">MANUAL</strong></div><div class="dataRow"><small id="continueLabel">CONTINUE / RESERVE</small><strong id="continueValue">100%</strong><div class="continueTrack"><div id="continueFill"></div></div></div></aside>
+ <div id="contactNotice" hidden role="status" aria-live="polite"></div>
  <div id="message" role="status" aria-live="polite">Gentle banking. The gauges give data, not grades.</div>
  <footer id="bottom"><div class="tokens">
   <button id="token1" class="token"><span class="key">[1]</span><b>₹500 Stakes</b><small>This Is Important · focus lock for 4s</small><span id="state1" class="state">READY</span></button>
@@ -43,19 +46,20 @@
 <div id="joystick" hidden aria-label="Drag to steer"><div id="stick"></div></div>
 <section id="intro" class="overlay" aria-labelledby="introTitle"><div class="card">
  <div class="eyebrow">Inspired by The Self-Driving Mind · Sundar Rajan</div><h1 id="introTitle">The APB Compass:<br>Flight of the Mind</h1><p class="lead">Attention is the heading. Peace is the trim. Letting go opens the sky.</p>
- <p>Fly for two minutes: first <b>The Good Spell</b>, then <b>Holding the Line Through Turbulence</b>. Navigate passing thought clouds, use your tactical commitments, and discover when hands-off glide becomes available.</p>
+ <p>Choose the conditions for one two-minute flight. Navigate passing thought clouds, use your tactical commitments, and discover when hands-off glide becomes available.</p>
+ <fieldset class="flightSelector"><legend>Choose your weather</legend><div class="flightChoices"><label class="flightChoice"><input type="radio" name="flightWeather" value="good" checked><span><b>The Good Spell</b><small>Gentle tailwinds. Fewer thoughts, mostly gold.</small></span></label><label class="flightChoice"><input type="radio" name="flightWeather" value="hard"><span><b>The Hard Grind</b><small>Crosswinds. More thoughts and more crimson urgency.</small></span></label></div></fieldset>
+ <div class="thoughtLegend"><span class="goldThought">Gold contact: −12 Continue</span><span class="crimsonThought">Crimson contact: −22 Continue</span></div>
+ <p class="fine">Continue starts at 100. Unprotected thought collisions drain it; protected encounters do not. At zero, this flight ends immediately with an announcement and its telemetry. There is no automatic switch between weather modes.</p>
  <div class="briefing"><div><b>[1] ₹500 Stakes</b><small>Make it important. Absorption snaps to 100% and gust response softens for 4 seconds. Recharge: 12 seconds.</small></div><div><b>[2] 10-Minute Contract</b><small>Stay with the sitting. A 10-second shield lets thoughts bounce away. Recharge: 22 seconds.</small></div><div><b>[3] Let Go / FSD</b><small>Unlock at A & P above 70%. Release the controls, rise above the clutter, and allow Bliss to unfold.</small></div></div>
  <p class="fine">Steer with arrows, WASD, or touch/drag. The stakes are a metaphor—no payment occurs. The “10-Minute Contract” is represented by a compressed 10-second shield. Instruments are simulated conditions, not measurements of your meditation.</p>
  <div class="options"><label><input id="optAudio" type="checkbox" checked> Procedural sound</label><label><input id="optMotion" type="checkbox"> Reduced motion</label></div><button id="begin" class="primary" disabled>Preparing the skyway…</button>
 </div></section>
 <section id="paused" class="overlay" hidden aria-labelledby="pauseTitle"><div class="card"><div class="eyebrow">A moment of space</div><h2 id="pauseTitle">Flight paused.</h2><p>The session clock, weather, and telemetry wait with you.</p><button id="resume" class="primary">Resume flight</button></div></section>
 <section id="report" class="overlay" hidden aria-labelledby="reportTitle"><div class="card">
- <div class="eyebrow">Session complete · Data, not grades</div><h2 id="reportTitle">APB Flight Telemetry</h2><p class="lead">Ease and steadiness under strain tell different parts of the story.</p>
- <div class="comparison">
-  <article class="reportCard"><div class="eyebrow">First 60 seconds</div><h3>The Good Spell</h3><div class="reportMeters"><div style="--c:var(--cyan)"><strong id="goodA">—</strong><small>Absorption</small></div><div style="--c:var(--peace)"><strong id="goodP">—</strong><small>Peace</small></div><div style="--c:var(--gold)"><strong id="goodB">—</strong><small>Bliss</small></div></div><canvas id="chartGood" role="img" aria-label="Good Spell telemetry"></canvas><p>Effortless stillness becomes tangible when conditions align.</p><div id="goodDetail" class="fine"></div></article>
-  <article class="reportCard"><div class="eyebrow">Next 60 seconds</div><h3>Holding the Line Through Turbulence</h3><div class="reportMeters"><div style="--c:var(--cyan)"><strong id="hardA">—</strong><small>Absorption</small></div><div style="--c:var(--peace)"><strong id="hardP">—</strong><small>Peace</small></div><div style="--c:var(--gold)"><strong id="hardB">—</strong><small>Bliss</small></div></div><canvas id="chartHard" role="img" aria-label="Turbulent flight telemetry"></canvas><p>Returning while the mind is on fire makes the capacity your own. Lower readings never erase a return.</p><div id="hardDetail" class="fine"></div></article>
- </div><div class="legend"><span style="--c:var(--cyan)">A / Absorption</span><span style="--c:var(--peace)">P / Peace</span><span style="--c:var(--gold)">B / Bliss</span><span style="--c:#a2bbc9">Stability · dashed</span></div>
- <p id="sessionDetail" class="fine"></p><p class="fine">Percentages are recorded phase averages. Thought contact is a simulated disturbance, not a verdict about meditation. The timer defines this flight exercise.</p>
+ <div id="endingTag" class="eyebrow">Flight ended · Data, not grades</div><h2 id="reportTitle">APB Flight Telemetry</h2><p id="announcement" class="lead" role="status" aria-live="polite"></p>
+ <article class="reportCard singleReport"><div class="eyebrow">Selected weather</div><h3 id="reportPhase">The Good Spell</h3><div class="reportMeters"><div style="--c:var(--cyan)"><strong id="sessionA">—</strong><small>Absorption</small></div><div style="--c:var(--peace)"><strong id="sessionP">—</strong><small>Peace</small></div><div style="--c:var(--gold)"><strong id="sessionB">—</strong><small>Bliss</small></div></div><canvas id="chartSession" role="img" aria-label="Selected flight telemetry"></canvas><p id="sessionInsight"></p><div id="sessionDetail" class="fine"></div><p>Continue remaining: <strong id="reportReserve">—</strong></p></article>
+ <div class="legend"><span style="--c:var(--cyan)">A / Absorption</span><span style="--c:var(--peace)">P / Peace</span><span style="--c:var(--gold)">B / Bliss</span><span style="--c:#a2bbc9">Stability · dashed</span></div>
+ <p id="encounterDetail" class="fine"></p><p class="fine">Percentages are recorded session averages. Gold and crimson marks show thought encounters; cyan marks show tactical actions. Continue is a game reserve, not a measure of your worth or meditation. Ending early preserves the complete telemetry observed so far.</p>
  <label for="reflection">What did you try to control, and what became easier when you let go?</label><textarea id="reflection" placeholder="A quiet reflection. Nothing is sent or saved automatically."></textarea>
  <div class="actions"><button id="copy" class="primary">Copy Telemetry & Reflection</button><button id="again">Fly Again</button></div><p id="copyStatus" class="fine" role="status" aria-live="polite"></p><textarea id="fallbackCopy" readonly hidden aria-label="Telemetry text for manual copying"></textarea>
  <p class="fine">Continue exploring <a href="https://selfdrivingmind.substack.com/" target="_blank" rel="noopener noreferrer">Sundar Rajan’s The Self-Driving Mind</a>.</p>
@@ -161,7 +165,7 @@ class GliderFlightController{
 class APBInstrumentModel{
  constructor(){this.reset();}
  reset(){this.a=.35;this.p=.55;this.b=.20;this.continuity=.6;}
- hit(){this.p=clamp(this.p-.24);}
+ hit(category="gold"){this.p=clamp(this.p-(category==="crimson"?.32:.20));}
  update(dt,flight,weather,tactics,time){
   this.continuity=damp(this.continuity,flight.stability,.2,dt);
   const storm=weather.storm;
@@ -227,11 +231,12 @@ class AtmosphericWeatherEngine{
 class ThoughtObstacleField{
  constructor(scene,cloudTexture,onEncounter){
   this.scene=scene;this.onEncounter=onEncounter;this.pool=[];this.random=randomFactory(409);
-  this.texts=["Check Email","Portfolio Down 20%","Did I Lock the Door?","Am I Enlightened Yet?","Urgent Deadline","Unresolved Argument"];
-  this.textures=this.texts.map(text=>{
+  this.catalog={gold:["can't sit still","did payment clear?","how much lost?","should've said that","deadline panic","run the numbers","what's next?","minutes left?","doing this wrong","unread text","comparison","lane drift","road noise","blind spot","drowsy"],crimson:["get up now","fix this now","check screen","stop thinking!","total waste","what if it fails?","not my fault","make it stop!"]};
+  this.entries=Object.entries(this.catalog).flatMap(([category,texts])=>texts.map(text=>({category,text})));
+  this.textures=this.entries.map(({text,category})=>{
    const c=document.createElement("canvas");c.width=1024;c.height=192;const x=c.getContext("2d");
    const gradient=x.createRadialGradient(512,96,0,512,96,490);gradient.addColorStop(0,"rgba(7,24,40,.98)");gradient.addColorStop(.8,"rgba(16,40,57,.88)");gradient.addColorStop(1,"rgba(14,32,47,0)");x.fillStyle=gradient;x.fillRect(0,0,1024,192);
-   x.fillStyle="#d4a574";x.font="18px system-ui";x.textAlign="center";x.fillText("PASSING THOUGHT",512,48);x.fillStyle="#ecf7ff";x.font="500 46px system-ui";x.fillText(text,512,115);return new THREE.CanvasTexture(c);
+   x.fillStyle=category==="crimson"?"#e45d78":"#d4a574";x.font="18px system-ui";x.textAlign="center";x.fillText(category==="crimson"?"CRIMSON / URGENCY":"GOLD / MENTAL WEATHER",512,48);x.font="500 46px system-ui";x.fillText(text,512,115);return new THREE.CanvasTexture(c);
   });
   for(let i=0;i<12;i++){
    const group=new THREE.Group();const cloud=new THREE.Sprite(new THREE.SpriteMaterial({map:cloudTexture,color:0xa3aabd,transparent:true,opacity:.36,depthWrite:false}));cloud.scale.set(12,5,1);group.add(cloud);
@@ -239,29 +244,41 @@ class ThoughtObstacleField{
   }
   this.reset();
  }
- reset(){this.random=randomFactory(409);this.spawnClock=2;this.count=0;for(const o of this.pool){o.active=false;o.group.visible=false;}}
- spawn(){
+ reset(){this.random=randomFactory(409);this.spawnClock=2;this.count=0;this.categoryIndex={gold:0,crimson:0};for(const o of this.pool){o.active=false;o.group.visible=false;}}
+ spawn(mode="good"){
   const o=this.pool.find(p=>!p.active);if(!o)return;
-  o.index=this.count%this.texts.length;o.label.material.map=this.textures[o.index];o.label.material.needsUpdate=true;
-  o.label.material.opacity=1;o.label.material.color.setHex(0xffffff);o.cloud.material.opacity=.36;o.cloud.material.color.setHex(0xa3aabd);o.group.scale.setScalar(1);
+  const category=this.count===0?"gold":this.random()<(mode==="hard"?.40:.12)?"crimson":"gold";
+  const text=this.catalog[category][this.categoryIndex[category]++%this.catalog[category].length];
+  o.index=this.entries.findIndex(e=>e.category===category&&e.text===text);o.category=category;o.text=text;
+  o.label.material.map=this.textures[o.index];o.label.material.needsUpdate=true;
+  o.label.material.opacity=1;o.label.material.color.setHex(0xffffff);o.cloud.material.opacity=.4;o.cloud.material.color.setHex(category==="crimson"?0xb63d5c:0xd4a574);o.group.scale.setScalar(1);
   const first=this.count===0;o.group.position.set(first?0:(this.random()-.5)*12,first?-1:-3+this.random()*7,-110);
   o.baseY=o.group.position.y;o.phase=this.random()*6.28;o.active=true;o.resolved=false;o.vx=0;o.age=0;o.group.visible=true;this.count++;
  }
  update(dt,flight,tactics,phase,time){
-  this.spawnClock-=dt;if(this.spawnClock<=0){this.spawn();this.spawnClock=phase==="hard"?3.4:7;}
+  this.spawnClock-=dt;if(this.spawnClock<=0){this.spawn(phase);this.spawnClock=phase==="hard"?2.8:7.2;}
   for(const o of this.pool){
-   if(!o.active)continue;o.age+=dt;o.group.position.z+=flight.speed*dt;
+   if(!o.active)continue;const previous={x:o.group.position.x,y:o.group.position.y,z:o.group.position.z};o.age+=dt;o.group.position.z+=flight.speed*dt;
    o.group.position.x+=o.vx*dt;o.group.position.y=o.baseY+Math.sin(time*.45+o.phase)*.24;
    const x=o.group.position.x-flight.x,y=o.group.position.y-(flight.y-1),z=o.group.position.z;
-   // A thought is a broad text-cloud volume. Resolve each encounter once.
-   if(!o.resolved&&z>-1.8&&z<1.8&&Math.abs(x)<4.2&&Math.abs(y)<.9){
+   // Sweep relative motion through an ellipsoid covering the visible cloud
+   // and glider wing span. Banking increases the vertical wing extent.
+   const roll=flight.roll||0,rx=5.4+2.85*Math.abs(Math.cos(roll)),ry=2.3+2.85*Math.abs(Math.sin(roll)),rz=3.1;
+   const oldFlight=flight.previous||{x:flight.x,y:flight.y};
+   const ax=(previous.x-oldFlight.x)/rx,ay=(previous.y-(oldFlight.y-1))/ry,az=previous.z/rz;
+   const bx=x/rx,by=y/ry,bz=z/rz,dx=bx-ax,dy=by-ay,dz=bz-az;
+   const length=dx*dx+dy*dy+dz*dz;
+   const u=length>1e-12?clamp(-(ax*dx+ay*dy+az*dz)/length):0;
+   const closestX=ax+u*dx,closestY=ay+u*dy,closestZ=az+u*dz;
+   const touching=closestX*closestX+closestY*closestY+closestZ*closestZ<=1;
+   if(!o.resolved&&touching){
     o.resolved=true;
-    if(tactics.shield>0||flight.auto){o.vx=(x>=0?1:-1)*8;o.cloud.material.color.setHex(0x79dbc1);this.onEncounter("shield",this.texts[o.index],x>=0?1:-1);}
-    else{this.onEncounter("hit",this.texts[o.index],x>=0?-1:1);o.label.material.color.setHex(0xdca082);}
+    if(tactics.shield>0||flight.auto){o.vx=(x>=0?1:-1)*8;o.cloud.material.color.setHex(0x79dbc1);this.onEncounter("shield",o.text,x>=0?1:-1,o.category);}
+    else{this.onEncounter("hit",o.text,x>=0?-1:1,o.category);o.label.material.color.setHex(0xdca082);}
    }
-   if(!o.resolved&&z>2){o.resolved=true;this.onEncounter("dodged",this.texts[o.index],0);}
+   if(!o.resolved&&z>rz){o.resolved=true;this.onEncounter("dodged",o.text,0,o.category);}
    if(o.resolved&&z>0){o.label.material.opacity=clamp(1-z/20);o.cloud.material.opacity=.36*clamp(1-z/20);}
-   if(z>24){o.active=false;o.group.visible=false;o.label.material.color.setHex(0xffffff);o.cloud.material.color.setHex(0xa3aabd);}
+   if(z>24){o.active=false;o.group.visible=false;}
   }
  }
 }
@@ -313,32 +330,38 @@ class ProceduralAudioEngine{
 
 class ScenarioDirector{
  constructor(){this.reset();}
- reset(){this.time=0;this.running=false;this.samples={good:[],hard:[]};this.events={good:[],hard:[]};this.held={good:0,hard:0};this.autoSeconds=0;this.sampleClock=0;this.onPhase=()=>{};this.onComplete=()=>{};}
- get phase(){return this.time<60?"good":"hard";}
- record(kind,text){if(this.running)this.events[this.phase].push({t:this.time%60,kind,text});}
- sample(flight,apb,phase=this.phase,local=this.time%60){const a=this.samples[phase],s={t:local,a:apb.a,p:apb.p,b:apb.b,stability:flight.stability};if(a.length&&Math.abs(a[a.length-1].t-local)<.001)a[a.length-1]=s;else a.push(s);}
+ reset(mode="good"){this.mode=mode==="hard"?"hard":"good";this.time=0;this.running=false;this.samples=[];this.events=[];this.held=0;this.reserve=100;this.reason=null;this.lastThought="";this.autoSeconds=0;this.sampleClock=0;this.onComplete=()=>{};}
+ get phase(){return this.mode;}
+ record(kind,text,category=null){if(this.running)this.events.push({t:this.time,kind,text,category});}
+ sample(flight,apb){const a=this.samples,s={t:this.time,a:apb.a,p:apb.p,b:apb.b,stability:flight.stability,reserve:this.reserve};if(a.length&&Math.abs(a[a.length-1].t-this.time)<.001)a[a.length-1]=s;else a.push(s);}
  start(flight,apb){this.running=true;this.sample(flight,apb);}
+ contact(category,text,flight,apb){
+  if(!this.running)return;
+  this.reserve=Math.max(0,this.reserve-(category==="crimson"?22:12));this.lastThought=text;
+  if(this.reserve===0)this.finish("depleted",flight,apb);
+ }
+ finish(reason,flight,apb){if(!this.running)return;this.reason=reason;this.sample(flight,apb);this.running=false;this.onComplete(reason);}
  update(dt,flight,apb){
-  if(!this.running)return;const previousPhase=this.phase,boundary=previousPhase==="good"?60:DURATION,step=Math.min(dt,boundary-this.time);this.time=Math.min(boundary,this.time+step);if(boundary-this.time<1e-7)this.time=boundary;
-  if(flight.stability>=.5)this.held[previousPhase]+=step;if(flight.auto)this.autoSeconds+=step;
+  if(!this.running)return;const step=Math.min(dt,DURATION-this.time);this.time=Math.min(DURATION,this.time+step);if(DURATION-this.time<1e-7)this.time=DURATION;
+  if(flight.stability>=.5)this.held+=step;if(flight.auto)this.autoSeconds+=step;
   this.sampleClock+=step;
-  const changed=this.phase!==previousPhase;
-  if(changed){this.sample(flight,apb,"good",60);this.sample(flight,apb,"hard",0);this.onPhase("hard");this.sampleClock=0;}
-  else if(this.sampleClock>=.5){this.sampleClock-=.5;this.sample(flight,apb,previousPhase,this.time>=120?60:this.time%60);}
-  if(this.time>=DURATION-1e-7){this.time=DURATION;this.sample(flight,apb,"hard",60);this.running=false;this.onComplete();}
+  if(this.sampleClock>=.5){this.sampleClock-=.5;this.sample(flight,apb);}
+  if(this.time>=DURATION)this.finish("completed",flight,apb);
  }
 }
 
 let renderer,scene,camera;
 try{renderer=new THREE.WebGLRenderer({canvas:$("world"),antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.6));renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(58,innerWidth/innerHeight,.1,550);camera.position.set(0,3,11);}catch(e){fail("WebGL could not initialize. Enable hardware acceleration or try another browser.");return;}
 const weather=new AtmosphericWeatherEngine(scene),flight=new GliderFlightController(scene),apb=new APBInstrumentModel(),tactics=new TacticalActionController(),audio=new ProceduralAudioEngine(),director=new ScenarioDirector(),input=new InputController($("world"),$("joystick")),trails=new WindTrails(scene);
-let paused=false,contextLost=false,last=performance.now(),accumulator=0,uiClock=0,audioClock=0,messageUntil=0,lastMessage="",reportBase="";
+let paused=false,contextLost=false,last=performance.now(),accumulator=0,uiClock=0,audioClock=0,messageUntil=0,lastMessage="",reportBase="",contactUntil=0;
 const cameraGoal=new THREE.Vector3(),look=new THREE.Vector3();
 function say(text,seconds=0){if(text!==lastMessage){lastMessage=text;$("message").textContent=text;}messageUntil=director.time+seconds;}
-const thoughts=new ThoughtObstacleField(scene,weather.cloudTexture,(kind,text,direction)=>{
- director.record(kind,text);
- if(kind==="hit"){flight.impact(direction);apb.hit();audio.impact();say(`Thought contact: ${text}. A disturbance, not a grade.`,4);}
- else if(kind==="shield"){say(flight.auto?"The thoughts continue below. Let the glide carry you.":"Contract held. The thought passes without a penalty.",3);}
+function contactNotice(text,protectedContact=false){$("contactNotice").textContent=text;$("contactNotice").classList.toggle("protected",protectedContact);$("contactNotice").hidden=false;contactUntil=director.time+4;}
+const thoughts=new ThoughtObstacleField(scene,weather.cloudTexture,(kind,text,direction,category)=>{
+ if(!director.running)return;
+ director.record(kind,text,category);
+ if(kind==="hit"){const before=director.reserve;flight.impact(direction);apb.hit(category);audio.impact();director.contact(category,text,flight,apb);contactNotice(`${category.toUpperCase()} HIT · Continue ${before}% → ${director.reserve}% (−${before-director.reserve})`);say(`Thought contact: ${text}. Continue decreased.`,4);updateHUD();}
+ else if(kind==="shield"){contactNotice(flight.auto?"PROTECTED · Autonomous glide · No Continue loss":"PROTECTED · Contract shield active · No Continue loss",true);say(flight.auto?"The thoughts continue below. Let the glide carry you.":"Contract held. The thought passes without a penalty.",3);}
 });
 function syncSettings(){$("sound").textContent=`Sound: ${settings.audio?"on":"off"}`;$("sound").setAttribute("aria-pressed",String(settings.audio));$("motion").textContent=`Motion: ${settings.reduced?"reduced":"full"}`;$("motion").setAttribute("aria-pressed",String(settings.reduced));}
 function showControls(){input.enabled=director.running&&!paused;$("joystick").hidden=!input.enabled||flight.auto;}
@@ -359,14 +382,14 @@ $("pause").onclick=pause;$("resume").onclick=resume;
 window.addEventListener("blur",pause);document.addEventListener("visibilitychange",()=>{if(document.hidden)pause();});
 $("sound").onclick=async()=>{await audio.toggle();if(paused)audio.pause(true);syncSettings();};$("motion").onclick=()=>{settings.reduced=!settings.reduced;syncSettings();};
 function bindDirector(){
- director.onPhase=()=>{$("phaseName").textContent="Holding the Line Through Turbulence";say("Real-world conditions. Holding the line matters more than high readings.",6);};
- director.onComplete=()=>{showControls();$("hud").hidden=true;$("report").hidden=false;audio.quiet();audio.chord();drawReport();$("copy").focus();};
+ director.onComplete=reason=>{input.clear();showControls();$("hud").hidden=true;$("report").hidden=false;audio.quiet();if(reason==="completed")audio.chord();else audio.tone(330,0,1.4,.045,"sine",220);drawReport();$("copy").focus();};
 }
 async function begin(){
  settings.audio=$("optAudio").checked;settings.reduced=$("optMotion").checked;
  $("intro").hidden=true;$("report").hidden=true;$("paused").hidden=true;$("hud").hidden=false;$("autoBanner").hidden=true;
- $("phaseName").textContent="The Good Spell";$("reflection").value="";$("fallbackCopy").hidden=true;$("copyStatus").textContent="";
- paused=false;lastMessage="";messageUntil=0;weather.reset();flight.reset();apb.reset();tactics.reset();thoughts.reset();trails.reset();director.reset();bindDirector();input.clear();
+ const selected=document.querySelector('input[name="flightWeather"]:checked').value;
+ $("phaseName").textContent=selected==="hard"?"The Hard Grind":"The Good Spell";$("reflection").value="";$("fallbackCopy").hidden=true;$("copyStatus").textContent="";
+ paused=false;lastMessage="";messageUntil=0;contactUntil=0;$("contactNotice").hidden=true;weather.reset();if(selected==="hard")weather.storm=1;flight.reset();apb.reset();tactics.reset();thoughts.reset();trails.reset();director.reset(selected);bindDirector();input.clear();
  camera.position.set(0,3,11);camera.rotation.set(0,0,0);director.start(flight,apb);showControls();say("Gentle banking. The gauges give data, not grades.",7);syncSettings();updateHUD();last=performance.now();accumulator=0;
  if(settings.audio)await audio.activate();else{audio.enabled=false;audio.pause(false);}syncSettings();$("world").focus();
 }
@@ -375,6 +398,9 @@ function updateHUD(){
  for(const[k,v]of[["A",apb.a],["P",apb.p],["B",apb.b]]){$("value"+k).textContent=Math.round(v*100)+"%";$("fill"+k).style.transform=`scaleX(${clamp(v)})`;}
  const remaining=Math.max(0,Math.ceil(DURATION-director.time));$("clock").innerHTML=`${Math.floor(remaining/60)}:${String(remaining%60).padStart(2,"0")} <small>REMAINING</small>`;
  $("altitude").textContent=Math.round(128+flight.y*8);$("airspeed").textContent=flight.speed.toFixed(1);$("mode").textContent=flight.auto?"FSD":"MANUAL";
+ $("continueValue").textContent=director.reserve+"%";$("continueFill").style.transform=`scaleX(${director.reserve/100})`;$("continueFill").style.background=director.reserve<=22?"#e45d78":director.reserve<=45?"var(--gold)":"var(--peace)";
+ $("continueLabel").textContent=flight.auto?"CONTINUE / FSD PROTECTED":tactics.shield>0?"CONTINUE / SHIELD ACTIVE":"CONTINUE / RESERVE";
+ if(director.time>=contactUntil)$("contactNotice").hidden=true;
  const x=60+clamp(-flight.roll*35,-34,34),y=60-clamp(flight.pitch*35,-34,34);$("vectorDot").setAttribute("cx",x);$("vectorDot").setAttribute("cy",y);$("vectorLine").setAttribute("d",`M60 60L${x} ${y}`);$("reticleLabel").textContent=flight.auto?"AUTONOMOUS":flight.stall?"SOFTEN THE CLIMB":flight.stability<.5?"RETURN WHEN READY":"RECOVERABLE";
  for(const i of[1,2,3])$("token"+i).disabled=!director.running||paused||!tactics.available(i,flight,apb);
  $("state1").textContent=flight.auto?"RELEASED":tactics.stakes>0?`FOCUS LOCK · ${tactics.stakes.toFixed(1)}s`:tactics.cool1>0?`RECHARGE · ${Math.ceil(tactics.cool1)}s`:"READY";
@@ -382,30 +408,35 @@ function updateHUD(){
  $("state3").textContent=flight.auto?"AUTONOMOUS GLIDE ENGAGED":apb.a>.70&&apb.p>.70?"ALIGNED · READY TO LET GO":"AWAITING A & P > 70%";
  if(director.time>=messageUntil){if(flight.auto)say("The controls rest. Presence does not need to be forced.");else if(flight.stall)say("Low airspeed. Ease the upward pitch; recover gently.");else if(128+flight.y*8<104)say("Low altitude. A small upward correction is enough.");else if(director.phase==="hard")say("Holding the line. Lower readings do not invalidate the return.");else say("The Good Spell. Notice ease without making it a demand.");}
 }
-function averages(key){const a=director.samples[key];const mean=k=>a.length?Math.round(a.reduce((sum,s)=>sum+s[k],0)/a.length*100):0;return{a:mean("a"),p:mean("p"),b:mean("b")};}
-function eventCount(key,kind){return director.events[key].filter(e=>e.kind===kind).length;}
-function drawChart(id,key){
+function averages(){const a=director.samples;const mean=k=>{if(!a.length)return 0;if(a.length===1||director.time===0)return Math.round(a[a.length-1][k]*100);let area=0;for(let i=1;i<a.length;i++)area+=(a[i-1][k]+a[i][k])*.5*(a[i].t-a[i-1].t);return Math.round(area/director.time*100);};return{a:mean("a"),p:mean("p"),b:mean("b")};}
+function eventCount(kind,category=null){return director.events.filter(e=>e.kind===kind&&(!category||e.category===category)).length;}
+function drawChart(id){
  const canvas=$(id),width=canvas.getBoundingClientRect().width,height=145;if(!width)return;const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);const c=canvas.getContext("2d");c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,width,height);
- const left=28,right=8,top=10,bottom=24,w=width-left-right,h=height-top-bottom,x=t=>left+t/60*w,y=v=>top+(1-v)*h;c.font="9px system-ui";c.textBaseline="middle";
+ const duration=Math.max(.01,director.time),left=28,right=8,top=10,bottom=24,w=width-left-right,h=height-top-bottom,x=t=>left+t/duration*w,y=v=>top+(1-v)*h;c.font="9px system-ui";c.textBaseline="middle";
  for(const v of[0,.5,1]){c.strokeStyle="rgba(180,215,230,.13)";c.lineWidth=1;c.beginPath();c.moveTo(left,y(v));c.lineTo(width-right,y(v));c.stroke();c.fillStyle="#94afbf";c.textAlign="right";c.fillText(Math.round(v*100),left-5,y(v));}
- for(const t of[0,30,60]){c.textAlign=t===0?"left":t===60?"right":"center";c.fillStyle="#94afbf";c.fillText(t+"s",x(t),height-10);}
- for(const[k,color,dashed]of[["stability","#a2bbc9",true],["a","#00d9ff",false],["p","#79dbc1",false],["b","#d4a574",false]]){c.strokeStyle=color;c.lineWidth=dashed?1:1.7;c.setLineDash(dashed?[4,5]:[]);c.beginPath();director.samples[key].forEach((s,i)=>{if(i)c.lineTo(x(s.t),y(s[k]));else c.moveTo(x(s.t),y(s[k]));});c.stroke();}c.setLineDash([]);
- for(const e of director.events[key]){c.fillStyle=e.kind==="hit"?"#b76f52":e.kind==="token"?"#00d9ff":"#79dbc1";c.fillRect(x(e.t)-1,top+h+3,2,4);}
- const v=averages(key);canvas.setAttribute("aria-label",`${key==="good"?"Good Spell":"Turbulence"}: average A ${v.a}%, P ${v.p}%, B ${v.b}%.`);
+ for(const f of[0,.5,1]){c.textAlign=f===0?"left":f===1?"right":"center";c.fillStyle="#94afbf";c.fillText(Math.round(director.time*f)+"s",x(duration*f),height-10);}
+ for(const[k,color,dashed]of[["stability","#a2bbc9",true],["a","#00d9ff",false],["p","#79dbc1",false],["b","#d4a574",false]]){c.strokeStyle=color;c.lineWidth=dashed?1:1.7;c.setLineDash(dashed?[4,5]:[]);c.beginPath();director.samples.forEach((s,i)=>{if(i)c.lineTo(x(s.t),y(s[k]));else c.moveTo(x(s.t),y(s[k]));});c.stroke();}c.setLineDash([]);
+ for(const e of director.events){c.fillStyle=e.kind==="token"?"#00d9ff":e.category==="crimson"?"#e45d78":"#d4a574";c.fillRect(x(e.t)-1,top+h+3,2,4);}
+ const v=averages();canvas.setAttribute("aria-label",`${director.phase==="good"?"Good Spell":"Hard Grind"}, ${director.time.toFixed(1)} seconds: average A ${v.a}%, P ${v.p}%, B ${v.b}%.`);
 }
 function drawReport(){
- const good=averages("good"),hard=averages("hard");for(const[key,v]of[["good",good],["hard",hard]])for(const k of["a","p","b"])$(key+k.toUpperCase()).textContent=v[k]+"%";
- const detail=key=>`${director.held[key].toFixed(1)}s in the recoverable envelope · ${eventCount(key,"hit")} thought contacts · ${eventCount(key,"shield")} protected encounters`;
- $("goodDetail").textContent=detail("good");$("hardDetail").textContent=detail("hard");
- $("sessionDetail").textContent=`120 seconds observed · ${director.autoSeconds.toFixed(1)}s autonomous glide · Stakes used ${tactics.used[1]}× · Contract used ${tactics.used[2]}×. No pass/fail or total score.`;
- drawChart("chartGood","good");drawChart("chartHard","hard");
- reportBase=["APB Flight Telemetry — Flight of the Mind","Simulated conditions, not a measurement or grade of meditation.","",`The Good Spell: A ${good.a}%, P ${good.p}%, B ${good.b}%`,detail("good"),"Effortless stillness becomes tangible when conditions align.","",`Holding the Line Through Turbulence: A ${hard.a}%, P ${hard.p}%, B ${hard.b}%`,detail("hard"),"Returning while the mind is on fire makes the capacity your own. Lower readings never erase a return.","",`Autonomous glide: ${director.autoSeconds.toFixed(1)} seconds.`,`Actions: Stakes ${tactics.used[1]}, Contract ${tactics.used[2]}, Let Go ${tactics.used[3]}.`,"", "Author’s work: https://selfdrivingmind.substack.com/"].join("\n");
+ const v=averages(),name=director.phase==="hard"?"The Hard Grind":"The Good Spell",depleted=director.reason==="depleted";
+ for(const k of["a","p","b"])$("session"+k.toUpperCase()).textContent=v[k]+"%";
+ const announcement=depleted?"Continue reserve depleted. This flight has ended. Take a moment; the telemetry records what happened.":"Two-minute flight complete. Let the controls rest and notice what the instruments recorded.";
+ $("endingTag").textContent=depleted?"Flight ended early · Data, not grades":"Flight complete · Data, not grades";$("announcement").textContent=announcement;$("reportPhase").textContent=name;
+ $("sessionInsight").textContent=director.phase==="hard"?"Returning while the mind is on fire exercises the capacity to stay. An early ending does not erase the steadiness already held.":"Smooth conditions reveal how ease can unfold. Passing thoughts still belong to the weather of this sitting.";
+ $("reportReserve").textContent=director.reserve+"%";
+ const detail=`${director.time.toFixed(1)} seconds observed · ${director.held.toFixed(1)}s in the recoverable envelope · ${director.autoSeconds.toFixed(1)}s autonomous glide`;
+ const encounters=`Gold contacts: ${eventCount("hit","gold")} · Crimson contacts: ${eventCount("hit","crimson")} · Protected encounters: ${eventCount("shield")} · Stakes used ${tactics.used[1]}× · Contract used ${tactics.used[2]}×`;
+ $("sessionDetail").textContent=detail;$("encounterDetail").textContent=encounters;drawChart("chartSession");
+ reportBase=["APB Flight Telemetry — Flight of the Mind",name,announcement,"Simulated conditions, not a measurement or grade of meditation.","",`Session averages: A ${v.a}%, P ${v.p}%, B ${v.b}%`,detail,encounters,`Continue remaining: ${director.reserve}%`,depleted?`Last contact: ${director.lastThought}`:"",$("sessionInsight").textContent,`Actions: Stakes ${tactics.used[1]}, Contract ${tactics.used[2]}, Let Go ${tactics.used[3]}.`,"", "Author’s work: https://selfdrivingmind.substack.com/"].filter(Boolean).join("\n");
 }
 $("copy").onclick=async()=>{const text=reportBase+"\n\nReflection: "+($("reflection").value||"What did you try to control, and what became easier when you let go?");let copied=false;try{if(navigator.clipboard&&isSecureContext){await navigator.clipboard.writeText(text);copied=true;}}catch(e){}if(!copied){const a=$("fallbackCopy");a.hidden=false;a.value=text;a.focus();a.select();try{copied=document.execCommand("copy");}catch(e){}if(copied)a.hidden=true;}$("copyStatus").textContent=copied?"Telemetry and reflection copied.":"Copying is unavailable here. Select and copy the report text below.";if(copied)$("copy").focus();};
 function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();if(!$("report").hidden)drawReport();}
 window.addEventListener("resize",resize);$("world").addEventListener("webglcontextlost",e=>{e.preventDefault();contextLost=true;pause();fail("The graphics context was interrupted. Reload to start a new skyway.");});
 function tick(dt){
  tactics.update(dt);weather.update(dt,director.phase,flight);flight.update(dt,input.axes(),weather,tactics,director.time);apb.update(dt,flight,weather,tactics,director.time);thoughts.update(dt,flight,tactics,director.phase,director.time);
+ if(!director.running)return;
  flight.render(1,director.time);flight.mesh.updateMatrixWorld(true);trails.update(dt,flight,weather);
  audioClock+=dt;if(audioClock>=.1){audio.update(audioClock,flight,weather,apb);audioClock=0;}
  director.update(dt,flight,apb);uiClock+=dt;if(uiClock>=.1){uiClock=0;updateHUD();}
