@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#171b23">
+<title>The Srirangam Corridor: Training Wheels to Stillness</title>
+<style>
+:root{color-scheme:dark;--gold:#e9cc88;--panel:rgba(20,25,33,.9)}
+*{box-sizing:border-box}
+body{margin:0;background:#171b23;color:#f6eedc;font:16px/1.5 system-ui,sans-serif;overflow:hidden}
+canvas{display:block}
+button{font:inherit;color:inherit;background:#363b43;border:1px solid #8b8067;border-radius:12px;padding:12px 18px;cursor:pointer;touch-action:manipulation}
+button:hover{background:#4b4d48}button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+button.primary{background:#dcc18a;color:#231f19}
+button:disabled{opacity:.45;cursor:default}
+#hud{position:fixed;inset:16px 16px auto;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;pointer-events:none}
+.pill{background:var(--panel);border:1px solid #ffffff20;border-radius:14px;padding:10px 14px}
+#value{display:flex;align-items:center;gap:10px}
+#ring{width:40px;height:40px;border-radius:50%;background:conic-gradient(var(--gold) 0deg,#ffffff15 0deg);padding:4px;box-shadow:0 0 20px #d7b36530}
+#ring:after{content:"";display:block;width:100%;height:100%;background:#20242a;border-radius:50%}
+small{display:block;font-size:12px;color:#c6c3bb}
+#banner{position:fixed;top:100px;left:50%;transform:translateX(-50%);width:min(650px,90vw);padding:15px 22px;text-align:center;background:var(--panel);border:1px solid #e8cf8e35;border-radius:16px;opacity:0;transition:opacity 1s;pointer-events:none}
+#banner.show{opacity:1}
+#controls{position:fixed;bottom:max(20px,env(safe-area-inset-bottom));left:16px;right:16px;display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap}
+#rhythm{min-width:160px}#reserve{border-color:#ccb987;min-width:160px}
+#beat{height:5px;width:100%;background:#ffffff12;border-radius:9px;overflow:hidden;margin-bottom:6px}
+#beatFill{width:0;height:100%;background:var(--gold)}
+#rhythmWrap{transition:opacity 2s}
+#utility{position:fixed;right:16px;bottom:100px;display:flex;gap:8px}
+#utility button{font-size:12px;padding:8px 12px;background:#20242abb}
+.overlay{position:fixed;inset:0;display:grid;place-items:center;background:#10141bbd;padding:20px;z-index:5;overflow:auto}
+.overlay[hidden]{display:none}
+.card{width:min(590px,100%);background:#24282d;border:1px solid #aa9460;border-radius:22px;padding:28px;text-align:center;box-shadow:0 20px 90px #0008}
+h1{font-size:26px;line-height:1.2;margin:0 0 15px}h2{font-size:22px;margin:0 0 12px}
+p{color:#dbd5c8}.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+#note{height:120px;max-width:310px;margin:20px auto;background:linear-gradient(120deg,#b9b18d,#eee1b5);color:#334137;border:8px double #697760;border-radius:6px;display:grid;place-items:center;box-shadow:8px 8px 0 #958a67,14px 14px 0 #766f57;user-select:none;cursor:pointer}
+#note strong{font:700 24px Georgia,serif}
+#countStatus{min-height:48px}
+#concerns{text-align:left;max-height:200px;overflow:auto;padding-left:24px}
+label{display:block;margin:12px 0;text-align:left}
+input[type=range]{width:100%;accent-color:var(--gold)}
+#fatal{display:none}
+@media(max-width:600px){#hud{inset:max(10px,env(safe-area-inset-top)) 10px auto;font-size:13px}.pill{padding:8px}#value small{max-width:90px}#banner{top:100px;font-size:14px}.card{padding:22px}#controls button{padding:12px}#utility{bottom:100px}#timer{max-width:110px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.steer{display:none;min-width:48px;min-height:48px;touch-action:none;user-select:none}
+@media(pointer:coarse),(max-width:600px){
+.steer{display:block}#controls{gap:8px;left:10px;right:10px}#rhythm{min-width:130px}#reserve{min-width:0}
+#utility{bottom:max(132px,calc(env(safe-area-inset-bottom) + 112px))}#utility button{min-height:44px}
+#hud{gap:6px}.pill{min-width:0}#value{gap:5px}#ring{width:28px;height:28px}#value small{font-size:10px}
+}
+</style>
+</head>
+<body>
+<div id="hud">
+ <div class="pill"><strong id="stage">Prakāra 0 · Calibration</strong><small id="phase">The Jagadguru’s Count</small></div>
+ <div class="pill" id="value"><div id="ring" aria-hidden="true"></div><div><small>Value given to<br>this moment</small></div></div>
+ <div class="pill" id="timer" role="timer">No contract<small>Concerns may wait</small></div>
+</div>
+<div id="banner" role="status" aria-live="polite"></div>
+<div id="controls">
+ <button id="steerLeft" class="steer" aria-label="Steer left">←</button><div id="rhythmWrap"><div id="beat" aria-hidden="true"><div id="beatFill"></div></div><button id="rhythm">Return · Space</button></div>
+ <button id="steerRight" class="steer" aria-label="Steer right">→</button><button id="reserve" hidden>Reserve · E</button>
+</div>
+<div id="utility">
+ <button id="settingsBtn">Settings</button>
+ <button id="pauseBtn">Pause</button>
+ <button id="exitBtn" hidden>Finish early</button>
+</div>
+
+<div id="intro" class="overlay">
+ <div class="card">
+  <h1>The Srirangam Corridor</h1>
+  <h2>Training Wheels to Stillness</h2>
+  <p>Discover attention, give it an anchor, and let your concerns wait.</p>
+  <p>First, count 12 salary notes by tapping each new note. In the corridor, tap Return with the pulse. Hold ← or → to steer gently; use Reserve when it appears. Keyboard: Space, A/D or arrows, and E.</p>
+  <small>A poetic temple journey inspired by seven enclosures. The yoga associations are educational interpretations.</small>
+  <p><button id="start" class="primary">Enter the corridor</button></p>
+ </div>
+</div>
+
+<div id="calibration" class="overlay" hidden>
+ <div class="card" style="background:linear-gradient(#39362f,#262a2c)">
+  <h2>The Jagadguru’s Count</h2>
+  <p>This is the pay you earned. Count each note once.</p>
+  <div id="note" role="button" tabindex="0" aria-label="Count the visible note"><strong>Salary · 1 / 12</strong></div>
+  <p id="countStatus" role="status">Tap the note or press Space. Let the next note arrive before counting again.</p>
+  <small>Each note is fictional. There is no time limit.</small>
+  <button id="recount" hidden>Recount the bundle</button>
+ </div>
+</div>
+
+<div id="contractModal" class="overlay" hidden>
+ <div class="card">
+  <h2>The ten-minute agreement</h2>
+  <p>Nothing needs to be solved in this moment. Give this practice ten minutes; return to your concerns in the eleventh.</p>
+  <p>For ten minutes, these concerns may wait. In the eleventh minute, you may return to them.</p>
+  <small>The clock continues if you switch tabs. You can finish early at any time.</small>
+  <p class="actions"><button id="beginContract" class="primary">Begin ten minutes</button><button id="skipContract">Continue without a timer</button></p>
+ </div>
+</div>
+
+<div id="settings" class="overlay" hidden>
+ <div class="card">
+  <h2>Comfort and sound</h2>
+  <label>Rhythm volume <input id="rhythmVolume" type="range" min="0" max="1" step=".05" value=".45"></label>
+  <label>Atmosphere volume <input id="ambienceVolume" type="range" min="0" max="1" step=".05" value=".4"></label>
+  <label><input id="assist" type="checkbox"> Assisted anchor · wider timing window</label>
+  <label><input id="reduceMotion" type="checkbox"> Reduced camera motion</label>
+  <small>The pulse is a timing aid. You do not need to match your breathing.</small>
+  <p><button id="closeSettings" class="primary">Return</button></p>
+ </div>
+</div>
+
+<div id="completion" class="overlay" hidden>
+ <div class="card">
+  <h2>The agreement is complete.</h2>
+  <p>These concerns are available again.</p>
+  <ul id="concerns"></ul>
+  <p>Choose what needs your attention.</p>
+  <small>At first, the stick helped you return. Later, the rhythm continued with less effort. What changed when the guides disappeared?</small>
+  <p class="actions"><button id="rest">Remain in the quiet</button><button id="restart">Begin a new journey</button></p>
+ </div>
+</div>
+<div id="fatal" class="overlay"><div class="card"><h2>The corridor could not open</h2><p id="fatalText">Please check your connection and WebGL support, then reload.</p><button onclick="location.reload()">Reload</button></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+'use strict';
+(() => {
+const $ = id => document.getElementById(id);
+const clamp = (x,a,b) => Math.max(a,Math.min(b,x));
+const damp = (x,y,k,dt) => y+(x-y)*Math.exp(-k*dt);
+const TAU = Math.PI*2;
+const DIALOGUES = [
+ '',
+ 'The trunk reaches for everything. Give it one thing to hold.',
+ 'It wandered. You noticed. Bring it back without a struggle.',
+ 'Let the body settle. Let the rhythm give attention a place to rest.',
+ 'Nothing needs to be solved in this moment. Give this practice ten minutes; return to your concerns in the eleventh.',
+ 'The concern has a place. Leave it there, and return to the stick.',
+ 'The rhythm is steady. You may release the controls and let the current carry you.',
+ 'Movement continues. You do not need to add anything.'
+];
+const LABELS = ['Calibration','Give attention a task','Return gently','Establish a rhythm','Make the agreement','Keep one place for attention','Release the supports','Continue in stillness'];
+const CONCERNS = ['Overdue Email','Portfolio Down 20%','Unfinished Meeting'];
+const config = {assisted:false,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches};
+$('reduceMotion').checked=config.reduced;
+let world,audio,attention,contract,movement,journey,paused=false,started=false,last=0,accumulator=0;
+let bannerTimeout;
+function banner(text,duration=8500){
+ $('banner').textContent=text;$('banner').classList.add('show');
+ clearTimeout(bannerTimeout);bannerTimeout=setTimeout(()=>$('banner').classList.remove('show'),duration);
+}
+function fatal(error){
+ console.error(error);$('fatal').style.display='grid';$('intro').hidden=true;
+ $('fatalText').textContent='Please check your connection and WebGL support, then reload.';
+}
+
+/* AUDIO ENGINE: all oscillators, noise and impulse responses are generated locally. */
+class AudioEngine {
+ constructor(){
+  const AC=window.AudioContext||window.webkitAudioContext;
+  this.ctx=AC?new AC():null;this.level=0;this.lastPulse=-1;
+  if(!this.ctx)return;
+  const c=this.ctx;
+  this.master=c.createGain();this.master.gain.value=.7;this.master.connect(c.destination);
+  this.rhythm=c.createGain();this.rhythm.gain.value=.45;this.rhythm.connect(this.master);
+  this.ambience=c.createGain();this.ambience.gain.value=.4;this.ambience.connect(this.master);
+  this.reverb=c.createConvolver();
+  const impulse=c.createBuffer(2,c.sampleRate*2.8,c.sampleRate);
+  for(let ch=0;ch<2;ch++){const d=impulse.getChannelData(ch);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3);}
+  this.reverb.buffer=impulse;this.wet=c.createGain();this.wet.gain.value=.2;
+  this.reverb.connect(this.wet);this.wet.connect(this.ambience);
+  this.noise=c.createBuffer(1,c.sampleRate,c.sampleRate);
+  const n=this.noise.getChannelData(0);for(let i=0;i<n.length;i++)n[i]=Math.random()*2-1;
+  [73.42,110.13,146.84].forEach((f,i)=>{
+   const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f;g.gain.value=.017/(i+1);
+   o.connect(g);g.connect(this.ambience);o.start();
+  });
+  this.market=c.createBufferSource();this.market.buffer=this.noise;this.market.loop=true;
+  const filter=c.createBiquadFilter();filter.type='lowpass';filter.frequency.value=650;
+  this.marketGain=c.createGain();this.marketGain.gain.value=0;
+  this.market.connect(filter);filter.connect(this.marketGain);this.marketGain.connect(this.ambience);this.market.start();
+ }
+ async resume(){if(this.ctx&&this.ctx.state==='suspended')try{await this.ctx.resume();}catch(e){}}
+ tone(f,d,v,bus=this.ambience,at=0){
+  if(!this.ctx)return;const c=this.ctx,t=at||c.currentTime,o=c.createOscillator(),g=c.createGain();
+  o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(v,.0002),t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+  o.connect(g);g.connect(bus);g.connect(this.reverb);o.start(t);o.stop(t+d+.05);
+ }
+ noiseHit(duration,frequency,volume,bus=this.ambience,at=0){
+  if(!this.ctx)return;const c=this.ctx,t=at||c.currentTime,s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();
+  s.buffer=this.noise;f.type='bandpass';f.frequency.value=frequency;f.Q.value=.8;
+  g.gain.setValueAtTime(volume,t);g.gain.exponentialRampToValueAtTime(.0001,t+duration);
+  s.connect(f);f.connect(g);g.connect(bus);s.start(t);s.stop(t+duration);
+ }
+ pulse(at,index){
+  this.tone(index%2?190:105,.2,.1,this.rhythm,at);this.tone(index%2?310:165,.12,.045,this.rhythm,at);
+  this.noiseHit(.075,index%2?1700:650,.09,this.rhythm,at);
+ }
+ bell(){
+  [1,2.71,4.09,5.43,6.8].forEach((r,i)=>this.tone(220*r,4.8-i*.55,.085/(i+1)));
+ }
+ paper(){this.noiseHit(.16,2300,.16);this.noiseHit(.06,3900,.08,this.ambience,this.ctx?this.ctx.currentTime+.08:0);}
+ click(){this.tone(380,.07,.08);this.noiseHit(.045,950,.08);}
+ returned(){this.tone(660,.22,.025,this.rhythm);}
+ update(stage,nextBeat,index){
+  if(!this.ctx)return;const t=this.ctx.currentTime;
+  this.marketGain.gain.setTargetAtTime(stage<=3?.035:stage===4?.01:0,t,1.5);
+  if(stage>=1&&stage<=5&&nextBeat<t+.12&&index!==this.lastPulse){
+   this.lastPulse=index;
+   if(stage<=3||index%2===0)this.pulse(Math.max(t,nextBeat),index);
+  }
+ }
+ get time(){return this.ctx?this.ctx.currentTime:performance.now()/1000;}
+}
+
+/* ATTENTION MODEL: no rendering or DOM dependency. */
+class AttentionModel {
+ constructor(){this.period=3.2;this.epoch=0;this.steadiness=.55;this.alignment=.7;this.value=0;this.returns=0;this.lastAccepted=-999;this.nextIndex=1;this.misses=0;}
+ reset(){this.epoch=audio.time;this.nextIndex=1;this.lastAccepted=-999;}
+ tap(){
+  const elapsed=audio.time-this.epoch,index=Math.round(elapsed/this.period),error=Math.abs(elapsed-index*this.period);
+  if(index===this.lastAccepted)return false;
+  if(error<=(config.assisted?.8:.4)){
+   this.lastAccepted=index;this.alignment=clamp(this.alignment+.35,0,1);this.steadiness=clamp(this.steadiness+.1,0,1);
+   this.value=clamp(this.value+.025,0,1);this.returns++;audio.returned();return true;
+  }
+  this.alignment=Math.max(.15,this.alignment-.025);return false;
+ }
+ update(dt,stage){
+  if(stage>=6){this.alignment=damp(this.alignment,1,1,dt);return;}
+  const elapsed=audio.time-this.epoch;
+  if(elapsed>this.nextIndex*this.period+.5){
+   if(this.lastAccepted!==this.nextIndex){this.alignment=Math.max(.15,this.alignment-.15);this.misses++;}
+   this.nextIndex++;
+  }
+  this.alignment=damp(this.alignment,.48,.025,dt);
+  this.steadiness=damp(this.steadiness,this.alignment,.2,dt);
+  if(config.assisted)this.alignment=Math.max(this.alignment,.65);
+ }
+ get phase(){return ((audio.time-this.epoch)/this.period%1+1)%1;}
+ get nextBeat(){return this.epoch+Math.ceil((audio.time-this.epoch)/this.period)*this.period;}
+ get beatIndex(){return Math.ceil((audio.time-this.epoch)/this.period);}
+}
+
+/* CONTRACT CONTROLLER: deadline uses wall-clock time, independent of simulation. */
+class ContractController {
+ constructor(){this.mode='none';this.deadline=0;this.items=[];this.finished=false;}
+ begin(timed){this.mode=timed?'timed':'untimed';this.deadline=timed?Date.now()+600000:0;$('exitBtn').hidden=false;}
+ reserve(text){if(!this.items.includes(text))this.items.push(text);attention.value=clamp(attention.value+.03,0,1);}
+ update(){
+  if(this.mode==='timed'&&!this.finished){
+   const seconds=Math.max(0,Math.ceil((this.deadline-Date.now())/1000));
+   $('timer').textContent=`${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')} remaining`;
+   if(seconds===0)this.complete(false);
+  }else if(this.mode==='untimed'&&!this.finished)$('timer').textContent='Open-ended presence';
+ }
+ complete(early){
+  if(this.finished)return;this.finished=true;this.mode='complete';
+  $('timer').textContent=early?'Finished early':'Minute 11 · Return';
+  world.unpack=true;world.tokens.forEach(t=>{if(!t.reserved){t.reserved=true;contract.reserve(t.text);}});
+  audio.bell();$('completion').hidden=false;$('exitBtn').hidden=true;
+  const list=$('concerns');list.replaceChildren();
+  this.items.forEach(text=>{const li=document.createElement('li');li.textContent=text;list.appendChild(li);});
+  if(!this.items.length){const li=document.createElement('li');li.textContent='No concerns were placed in the reserve.';list.appendChild(li);}
+  journey.resting=true;$('reserve').hidden=true;
+ }
+}
+
+/* MOVEMENT CONTROLLER */
+class MovementController {
+ constructor(){this.distance=0;this.x=0;this.velocity=0;this.keys=new Set();this.authority=1;this.time=0;}
+ update(dt,stage){
+  this.time+=dt;this.authority=damp(this.authority,stage>=6?0:1,stage>=6?1.2:3,dt);
+  const input=(this.keys.has('ArrowRight')||this.keys.has('KeyD')?1:0)-(this.keys.has('ArrowLeft')||this.keys.has('KeyA')?1:0);
+  const pull=Math.sin(this.time*.8)*(1-attention.alignment)*(stage<=3?.75:.25);
+  this.velocity=damp(this.velocity,input*1.5*this.authority+pull*this.authority,4,dt);
+  this.x=clamp(this.x+this.velocity*dt,-2.2,2.2);
+  this.x=damp(this.x,0,stage>=6?1.2:.3,dt);
+  if(!journey.resting)this.distance+=dt*(stage>=6?2:2.5);
+ }
+}
+
+/* WORLD PRESENTATION: procedural geometry and canvas textures only. */
+class WorldPresentation {
+ constructor(){
+  this.scene=new THREE.Scene();this.scene.fog=new THREE.FogExp2(0xa3937d,.026);
+  this.camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,170);
+  this.renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
+  this.renderer.setPixelRatio(Math.min(devicePixelRatio,2));this.renderer.setSize(innerWidth,innerHeight);
+  this.renderer.outputEncoding=THREE.sRGBEncoding;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.05;
+  document.body.prepend(this.renderer.domElement);
+  this.hemi=new THREE.HemisphereLight(0xe9dbbb,0x353338,1.1);this.scene.add(this.hemi);
+  this.sun=new THREE.DirectionalLight(0xffdda5,.9);this.sun.position.set(3,9,4);this.scene.add(this.sun);
+  this.lamp=new THREE.PointLight(0xffbc62,1.5,22);this.lamp.position.set(0,3,2);this.scene.add(this.lamp);
+  this.stone=this.material(0x82796d);this.dark=this.material(0x343943);this.gold=this.material(0xa68a49);
+  this.skin=this.material(0x969a9d);this.bamboo=this.material(0xb8ad65);this.wood=this.material(0x62492f);
+  this.tex=this.stoneTexture();this.stone.map=this.tex;
+  this.track=new THREE.Group();this.scene.add(this.track);
+  this.tokens=[];this.elapsed=0;this.unpack=false;
+  this.buildCorridor();this.buildElephant();this.buildReserve();this.buildGates();this.buildSanctum();
+  this.warm=new THREE.Color(0xa3937d);this.cold=new THREE.Color(0x10151e);
+  addEventListener('resize',()=>{this.camera.aspect=innerWidth/innerHeight;this.camera.updateProjectionMatrix();this.renderer.setSize(innerWidth,innerHeight);});
+ }
+ material(color,extra={}){return new THREE.MeshStandardMaterial({color,roughness:.9,...extra});}
+ box(w,h,d,mat,parent,x=0,y=0,z=0){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);parent.add(m);return m;
+ }
+ sphere(r,mat,parent,x=0,y=0,z=0,sx=1,sy=1,sz=1){
+  const m=new THREE.Mesh(new THREE.SphereGeometry(r,10,7),mat);m.position.set(x,y,z);m.scale.set(sx,sy,sz);parent.add(m);return m;
+ }
+ cylinder(top,bottom,h,mat,parent,x=0,y=0,z=0){
+  const m=new THREE.Mesh(new THREE.CylinderGeometry(top,bottom,h,10),mat);m.position.set(x,y,z);parent.add(m);return m;
+ }
+ stoneTexture(){
+  const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');
+  g.fillStyle='#bbb8b0';g.fillRect(0,0,128,128);
+  for(let i=0;i<1700;i++){g.fillStyle=`rgba(40,40,40,${Math.random()*.13})`;g.fillRect(Math.random()*128,Math.random()*128,Math.random()*3+1,1);}
+  g.strokeStyle='#7776';g.strokeRect(1,1,126,126);
+  const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;return t;
+ }
+ labelTexture(text){
+  const c=document.createElement('canvas');c.width=512;c.height=160;const g=c.getContext('2d');
+  g.fillStyle='#e1d2ad';g.fillRect(0,0,512,160);g.strokeStyle='#9d8355';g.lineWidth=10;g.strokeRect(8,8,496,144);
+  g.fillStyle='#322f29';g.font='bold 30px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(text,256,80,470);
+  return new THREE.CanvasTexture(c);
+ }
+ buildCorridor(){
+  const dummy=new THREE.Object3D();
+  this.pillars=new THREE.InstancedMesh(new THREE.BoxGeometry(.85,6,.85),this.stone,64);
+  this.bases=new THREE.InstancedMesh(new THREE.BoxGeometry(1.3,.4,1.3),this.stone,64);
+  for(let i=0;i<32;i++)for(let side=0;side<2;side++){
+   const j=i*2+side;dummy.position.set(side?5:-5,3,-i*5);dummy.updateMatrix();this.pillars.setMatrixAt(j,dummy.matrix);
+   dummy.position.y=.2;dummy.updateMatrix();this.bases.setMatrixAt(j,dummy.matrix);
+  }
+  this.track.add(this.pillars,this.bases);
+  this.box(14,.25,180,this.stone,this.track,0,-.2,-75);
+  this.box(.35,6,180,this.stone,this.track,-7,3,-75);this.box(.35,6,180,this.stone,this.track,7,3,-75);
+  this.box(14,.35,180,this.stone,this.track,0,6,-75);
+  this.guides=new THREE.Group();this.track.add(this.guides);
+  this.guideMat=new THREE.MeshBasicMaterial({color:0xe6c778,transparent:true,opacity:.5});
+  [-1.5,1.5].forEach(x=>this.box(.035,.025,160,this.guideMat,this.guides,x,.01,-70));
+  this.stalls=new THREE.Group();this.track.add(this.stalls);
+  for(let i=0;i<14;i++){
+   const s=new THREE.Group();s.position.set(i%2?6:-6,0,-i*10);
+   this.box(1.7,1.1,2,this.wood,s,0,.55,0);
+   const cloth=this.material([0xb95849,0x4c9197,0xc69a47,0x805c93][i%4]);
+   this.box(2.1,.15,2.5,cloth,s,0,2.4,0);
+   [-.8,.8].forEach(x=>this.box(.09,2.4,.09,this.wood,s,x,1.2,.9));
+   for(let k=0;k<3;k++)this.sphere(.22,this.gold,s,(k-1)*.45,1.25,0);
+   this.stalls.add(s);
+  }
+  this.flames=[];
+  const fire=this.material(0xffc66c,{emissive:0xffac35,emissiveIntensity:2});
+  for(let i=0;i<20;i++){
+   const x=i%2?4.6:-4.6,z=-i*8;
+   this.cylinder(.22,.15,.12,this.gold,this.track,x,1.9,z);
+   const f=this.sphere(.12,fire,this.track,x,2.08,z, .6,1.8,.6);this.flames.push(f);
+  }
+ }
+ buildElephant(){
+  this.elephant=new THREE.Group();this.scene.add(this.elephant);
+  this.sphere(.95,this.skin,this.elephant,0,1.6,0,1,1,1.5);
+  this.sphere(.72,this.skin,this.elephant,0,2,-1.1,1,1,1);
+  [-1,1].forEach(s=>this.sphere(.65,this.skin,this.elephant,s*.72,2,-.95,.2,1,.75));
+  const eye=this.material(0x1b2025);
+  [-1,1].forEach(s=>this.sphere(.07,eye,this.elephant,s*.43,2.22,-1.68));
+  this.legs=[];
+  for(let i=0;i<4;i++){const leg=this.cylinder(.23,.27,1.05,this.skin,this.elephant,i%2?.57:-.57,.65,i<2?-.65:.7);this.legs.push(leg);}
+  this.trunk=new THREE.Group();this.trunk.position.set(0,1.95,-1.6);this.elephant.add(this.trunk);
+  for(let i=0;i<5;i++)this.sphere(.2-i*.017,this.skin,this.trunk,0,-i*.19,-i*.07);
+  this.stick=new THREE.Group();this.stick.position.set(0,-.8,-.3);this.trunk.add(this.stick);
+  const b=this.cylinder(.055,.055,2.5,this.bamboo,this.stick);b.rotation.z=Math.PI/2;
+  for(let i=-2;i<=2;i++){const r=this.cylinder(.065,.065,.045,this.wood,this.stick,i*.45,0,0);r.rotation.z=Math.PI/2;}
+  const cloth=this.material(0x7c3f45);this.box(1.4,.15,1.5,cloth,this.elephant,0,2.47,.2);
+  this.box(1.9,.15,2.7,this.wood,this.elephant,0,.25,0);
+  this.wheels=[];
+  for(let s of [-1,1]){
+   const group=new THREE.Group();group.position.set(s*1.12,.35,.3);this.elephant.add(group);
+   const w=new THREE.Mesh(new THREE.TorusGeometry(.27,.07,6,12),this.gold);w.rotation.y=Math.PI/2;group.add(w);
+   this.box(.1,.1,.5,this.wood,group);this.wheels.push(group);
+  }
+ }
+ buildReserve(){
+  this.reserveGroup=new THREE.Group();this.scene.add(this.reserveGroup);this.reserveGroup.position.set(3.5,1.5,-1.5);
+  this.box(2,.15,1.5,this.dark,this.reserveGroup,0,-.7,0);
+  this.box(.15,2,1.5,this.dark,this.reserveGroup,1,-.05,0);
+  this.box(.15,2,1.5,this.dark,this.reserveGroup,-1,-.05,0);
+  const plaque=new THREE.Mesh(new THREE.PlaneGeometry(2.6,.8),new THREE.MeshBasicMaterial({map:this.labelTexture('11th Minute Reserve'),side:THREE.DoubleSide}));
+  plaque.position.set(0,1.1,.4);this.reserveGroup.add(plaque);this.reserveGroup.visible=false;
+ }
+ buildGates(){
+  this.gates=[];
+  for(let i=1;i<=7;i++){
+   const g=new THREE.Group();this.scene.add(g);
+   this.box(2,6,1.6,this.stone,g,-4.6,3,0);this.box(2,6,1.6,this.stone,g,4.6,3,0);
+   this.box(11,1,2,this.stone,g,0,6,0);
+   for(let tier=0;tier<5;tier++){
+    const w=10-tier*1.55;
+    this.box(w,.85,2.2-tier*.25,tier%2?this.gold:this.stone,g,0,7+tier*.8,0);
+    for(let k=0;k<Math.max(2,6-tier);k++)this.sphere(.16,this.gold,g,(k-(5-tier)/2)*1.2,7.5+tier*.8,1);
+   }
+   this.gates.push(g);
+  }
+ }
+ buildSanctum(){
+  this.sanctum=new THREE.Group();this.scene.add(this.sanctum);
+  const glow=this.material(0xbca165,{emissive:0xa97728,emissiveIntensity:.7});
+  this.box(.4,5,.6,glow,this.sanctum,-2.2,2.5,0);this.box(.4,5,.6,glow,this.sanctum,2.2,2.5,0);
+  this.box(4.8,.4,.6,glow,this.sanctum,0,5,0);
+  this.box(4,.1,4,this.gold,this.sanctum,0,.1,0);
+  this.sanctum.visible=false;
+ }
+ spawnConcern(text){
+  const g=new THREE.Group(),mat=new THREE.MeshStandardMaterial({map:this.labelTexture(text),roughness:.85,side:THREE.DoubleSide,transparent:true,opacity:.95});
+  const mesh=new THREE.Mesh(new THREE.PlaneGeometry(2.5,.8),mat);g.add(mesh);
+  g.position.set((Math.random()-.5)*2,2.5,-24);this.scene.add(g);
+  this.tokens.push({g,mesh,text,reserved:false,progress:0,misses:0});
+ }
+ reserveNearest(){
+  const candidates=this.tokens.filter(t=>!t.reserved).sort((a,b)=>b.g.position.z-a.g.position.z);
+  if(!candidates.length){banner('The reserve is ready. Notice the next concern.',3000);return false;}
+  const t=candidates[0];t.reserved=true;t.progress=0;t.start=t.g.position.clone();
+  contract.reserve(t.text);audio.paper();journey.deferrals++;
+  banner('The concern has a place. Return to the stick.',3500);return true;
+ }
+ update(dt){
+  this.elapsed+=dt;const stage=journey.stage,depth=clamp((stage-1)/6,0,1);
+  const color=this.warm.clone().lerp(this.cold,depth);
+  this.scene.background=color;this.scene.fog.color.copy(color);
+  this.hemi.intensity=damp(this.hemi.intensity,1.1-depth*.85,1,dt);
+  this.sun.intensity=damp(this.sun.intensity,.9*(1-depth),1,dt);
+  this.stone.color.lerp(new THREE.Color().setHex(stage>=6?0x343842:stage>=4?0x66625c:0x82796d),dt*.5);
+  this.track.position.z=movement.distance%5;
+  this.stalls.visible=stage<=4;
+  this.stalls.children.forEach((s,i)=>{s.position.z=-((i*10-movement.distance)%140+140)%140;s.rotation.z=Math.sin(this.elapsed+i)*.018;});
+  this.flames.forEach((f,i)=>f.scale.y=1.7+Math.sin(this.elapsed*5+i)*.15);
+  this.guideMat.opacity=damp(this.guideMat.opacity,stage<=3?.5:stage===4?.15:0,1,dt);
+  this.elephant.position.set(movement.x,config.reduced?0:Math.sin(movement.time*5)*.025,2);
+  this.elephant.rotation.z=config.reduced?0:-movement.velocity*.04;
+  this.legs.forEach((leg,i)=>{leg.rotation.x=journey.resting?0:Math.sin(movement.time*5+i%2*Math.PI+(i<2?0:Math.PI))*.18;});
+  this.trunk.rotation.z=damp(this.trunk.rotation.z,stage>=6?0:Math.sin(this.elapsed*2)*(1-attention.alignment)*.45,3,dt);
+  this.stick.rotation.z=damp(this.stick.rotation.z,stage>=6?0:Math.sin(this.elapsed*2.6)*(1-attention.alignment)*.28,3,dt);
+  this.wheels.forEach((w,i)=>{
+   if(stage>=6){w.position.x=damp(w.position.x,(i?1:-1)*3,1.5,dt);w.position.y=damp(w.position.y,-.5,1.5,dt);w.scale.multiplyScalar(Math.exp(-dt*.4));}
+   else w.children[0].rotation.x=movement.distance*2;
+  });
+  this.gates.forEach((g,i)=>{g.position.z=journey.boundaries[i]-movement.distance;g.visible=g.position.z<8&&g.position.z>-100;});
+  this.reserveGroup.visible=stage>=4;
+  for(let i=0;i<this.tokens.length;i++){
+   const t=this.tokens[i];
+   if(t.reserved){
+    t.progress=Math.min(1,t.progress+dt*1.2);
+    const a=this.elapsed*.2+i*2.1;
+    const target=this.unpack?new THREE.Vector3((i-1)*2,2,-5):new THREE.Vector3(3.5+Math.cos(a)*.6,1.5+Math.sin(a)*.3,-1.5+Math.sin(a)*.5);
+    t.g.position.lerp(target,Math.min(1,dt*3));
+    const size=this.unpack?1:.19;t.g.scale.lerp(new THREE.Vector3(size,size,size),Math.min(1,dt*3));
+    t.g.rotation.y=damp(t.g.rotation.y,this.unpack?0:Math.sin(a)*.6,3,dt);
+   }else if(!journey.resting){
+    t.g.position.z+=dt*2.7;t.g.position.y=2.4+Math.sin(this.elapsed+i)*.12;
+    if(t.g.position.z>3){
+     t.g.position.z=-20;t.misses++;attention.alignment=Math.max(.2,attention.alignment-.08);
+     banner('Notice the concern. Press E to give it a place.',4000);
+     if(t.misses>=2){config.assisted=true;$('assist').checked=true;}
+    }
+   }
+  }
+  this.sanctum.visible=stage>=7;
+  this.sanctum.position.z=journey.resting?-9:journey.endDistance-movement.distance;
+  const bob=config.reduced?0:Math.sin(this.elapsed*.7)*.035;
+  this.camera.position.set(movement.x*.25,4+bob,8.8);
+  this.camera.lookAt(movement.x*.35,1.9,-8);
+ }
+ render(){this.renderer.render(this.scene,this.camera);}
+}
+
+/* JOURNEY CONTROLLER */
+class JourneyController {
+ constructor(){
+  this.stage=0;this.boundaries=[-8,-68,-128,-188,-248,-308,-368];
+  this.endDistance=-398;this.resting=false;this.stageStart=0;this.deferrals=0;this.spawnIndex=0;this.spawnTime=0;
+  // World coordinates use negative Z. Progress distance is positive.
+  this.boundaries=this.boundaries.map(v=>-v);
+  this.endDistance=398;
+ }
+ enter(stage){
+  this.stage=stage;this.stageStart=movement.time;
+  $('stage').textContent=`Prakāra ${stage} · ${LABELS[stage]}`;
+  $('phase').textContent=stage<=3?'Notice · Return · Continue':stage<=5?'Acknowledge · Reserve · Return':'Effortless inward flow';
+  banner(DIALOGUES[stage]);audio.bell();
+  if(stage===4){$('contractModal').hidden=false;this.modal=true;}
+  if(stage===5){this.spawnTime=movement.time+2;}
+  if(stage===6){
+   audio.click();$('rhythmWrap').style.opacity='0';$('rhythm').disabled=true;$('reserve').hidden=true;
+   this.resting=false;
+   world.tokens.forEach(t=>{if(!t.reserved){t.reserved=true;contract.reserve(t.text);}});
+  }
+  if(stage===7){$('phase').textContent='A quiet place to remain';}
+ }
+ start(){attention.value=.6;attention.reset();this.enter(1);}
+ acceptContract(timed){
+  contract.begin(timed);this.modal=false;$('contractModal').hidden=true;$('reserve').hidden=false;
+  world.spawnConcern(CONCERNS[this.spawnIndex++]);this.spawnTime=movement.time+9;
+ }
+ update(){
+  if(this.stage===0||this.modal||this.resting)return;
+  const elapsed=movement.time-this.stageStart;
+  if(this.stage===1&&elapsed>20&&attention.returns<3){config.assisted=true;$('assist').checked=true;}
+  if(this.stage===2&&elapsed<4)attention.alignment=Math.min(attention.alignment,.55);
+  if(this.stage>=4&&this.stage<=5&&this.spawnIndex<3&&movement.time>this.spawnTime){
+   world.spawnConcern(CONCERNS[this.spawnIndex++]);this.spawnTime=movement.time+11;
+  }
+  if(this.stage<7&&movement.distance>=this.boundaries[this.stage]){
+   let eligible=true;
+   if(this.stage===1)eligible=attention.returns>=3||elapsed>28;
+   if(this.stage===4)eligible=this.deferrals>=1||elapsed>30;
+   if(this.stage===5)eligible=this.deferrals>=2||elapsed>35;
+   if(eligible)this.enter(this.stage+1);
+   else movement.distance=this.boundaries[this.stage]-.1;
+  }
+  if(this.stage===7&&movement.distance>=this.endDistance){
+   this.resting=true;banner('Movement settles. Remain as long as the agreement allows.',9000);
+   $('rhythmWrap').hidden=true;
+   if(contract.mode==='untimed')$('exitBtn').textContent='Complete the journey';
+  }
+ }
+}
+
+/* INPUT, CALIBRATION AND APPLICATION LIFECYCLE */
+let count=0,noteReady=true,countFailed=false,countTimer;
+function countNote(){
+ if($('calibration').hidden||countFailed)return;
+ if(!noteReady){
+  countFailed=true;clearTimeout(countTimer);$('recount').hidden=false;
+  $('countStatus').textContent='Check the count. Take the time you need.';return;
+ }
+ count++;audio.click();noteReady=false;
+ $('note').style.opacity='.5';$('note').setAttribute('aria-disabled','true');
+ $('countStatus').textContent=`${count} of 12 counted.`;
+ if(count===12){
+  countTimer=setTimeout(()=>{
+   $('calibration').hidden=true;journey.start();
+   banner('Your attention stayed with what mattered. For this journey, give presence that same value.',10000);
+  },650);return;
+ }
+ countTimer=setTimeout(()=>{
+  noteReady=true;$('note').style.opacity='1';$('note').setAttribute('aria-disabled','false');
+  $('note').firstElementChild.textContent=`Salary · ${count+1} / 12`;
+ },650);
+}
+function resetCount(){
+ clearTimeout(countTimer);count=0;countFailed=false;noteReady=true;$('recount').hidden=true;
+ $('note').style.opacity='1';$('note').firstElementChild.textContent='Salary · 1 / 12';
+ $('countStatus').textContent='Tap the note or press Space. Let the next note arrive before counting again.';
+}
+function returnAction(){
+ if(!$('calibration').hidden){countNote();return;}
+ if(!started||paused||journey.modal||journey.stage>=6||!$('settings').hidden||!$('completion').hidden)return;
+ audio.resume();attention.tap();
+}
+function reserveAction(){
+ if(started&&!paused&&!journey.modal&&journey.stage>=4&&journey.stage<=5)world.reserveNearest();
+}
+$('start').onclick=async()=>{
+ started=true;$('intro').hidden=true;$('calibration').hidden=false;await audio.resume();audio.bell();
+};
+$('note').onclick=countNote;
+$('note').onkeydown=e=>{if(e.code==='Enter'){e.preventDefault();countNote();}};
+$('recount').onclick=resetCount;
+for(const [id,key] of [['steerLeft','ArrowLeft'],['steerRight','ArrowRight']]){
+ const button=$(id);
+ button.addEventListener('pointerdown',e=>{
+  if(!started||paused||journey.modal||journey.stage===0||!$('settings').hidden)return;
+  e.preventDefault();button.setPointerCapture(e.pointerId);movement.keys.add(key);
+ });
+ for(const event of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(event,()=>movement.keys.delete(key));
+}
+$('rhythm').onclick=returnAction;$('reserve').onclick=reserveAction;
+$('beginContract').onclick=()=>journey.acceptContract(true);
+$('skipContract').onclick=()=>journey.acceptContract(false);
+$('exitBtn').onclick=()=>contract.complete(true);
+$('rest').onclick=()=>{$('completion').hidden=true;};
+$('restart').onclick=()=>location.reload();
+$('settingsBtn').onclick=()=>{$('settings').hidden=false;movement.keys.clear();};
+$('closeSettings').onclick=()=>{$('settings').hidden=true;attention.reset();audio.resume();};
+$('assist').onchange=e=>config.assisted=e.target.checked;
+$('reduceMotion').onchange=e=>config.reduced=e.target.checked;
+$('rhythmVolume').oninput=e=>{if(audio.ctx)audio.rhythm.gain.setTargetAtTime(+e.target.value,audio.ctx.currentTime,.1);};
+$('ambienceVolume').oninput=e=>{if(audio.ctx)audio.ambience.gain.setTargetAtTime(+e.target.value,audio.ctx.currentTime,.1);};
+$('pauseBtn').onclick=()=>{
+ paused=!paused;movement.keys.clear();$('pauseBtn').textContent=paused?'Resume':'Pause';
+ if(!paused){attention.reset();audio.resume();}
+ banner(paused?'The corridor is paused. An accepted contract keeps its real-world deadline.':'Return gently.',5000);
+};
+addEventListener('keydown',e=>{
+ if(['Space','ArrowLeft','ArrowRight'].includes(e.code)&&e.target.tagName!=='INPUT')e.preventDefault();
+ if(e.repeat)return;
+ if(e.code==='Space'&&e.target.tagName!=='INPUT'&&e.target.tagName!=='BUTTON')returnAction();
+ if(e.code==='KeyE')reserveAction();
+ if(started&&!paused&&$('settings').hidden&&!journey.modal)movement.keys.add(e.code);
+});
+addEventListener('keyup',e=>movement.keys.delete(e.code));
+addEventListener('blur',()=>movement&&movement.keys.clear());
+document.addEventListener('visibilitychange',()=>{
+ if(!document.hidden&&started){contract.update();attention.reset();audio.resume();}
+});
+try{
+ if(!window.THREE)throw new Error('Three.js did not load');
+ audio=new AudioEngine();attention=new AttentionModel();contract=new ContractController();movement=new MovementController();journey=new JourneyController();world=new WorldPresentation();
+}catch(e){fatal(e);return;}
+
+function frame(now){
+ requestAnimationFrame(frame);
+ const dt=Math.min(.08,(now-(last||now))/1000);last=now;
+ contract.update();
+ const active=started&&journey.stage>0&&!paused&&!journey.modal&&$('settings').hidden&&$('completion').hidden&&!document.hidden;
+ if(active){
+  accumulator+=dt;
+  while(accumulator>=1/60){attention.update(1/60,journey.stage);movement.update(1/60,journey.stage);journey.update();accumulator-=1/60;}
+  audio.update(journey.stage,attention.nextBeat,attention.beatIndex);
+ }else accumulator=0;
+ world.update(active?dt:0);
+ world.render();
+ $('ring').style.background=`conic-gradient(#e9cc88 ${attention.value*360}deg,#ffffff15 0deg)`;
+ const proximity=1-Math.min(attention.phase,1-attention.phase)*2;
+ $('beatFill').style.width=`${proximity*100}%`;
+ $('rhythm').style.borderColor=proximity>.75?'#eed59a':'#8b8067';
+ $('rhythm').textContent=journey.stage>=6?'Let the current carry you':'Return · Space';
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111726">
+<title>The Freeway Navigator: Subscription vs. Endowment</title>
+<style>
+:root{color-scheme:dark;--cyan:#79eadb;--amber:#ffbf81;--ink:#101728}
+*{box-sizing:border-box}
+body{margin:0;overflow:hidden;background:var(--ink);color:#eef4ff;font:15px system-ui,sans-serif}
+canvas{display:block}
+button{font:inherit;color:inherit;border:1px solid #ffffff35;border-radius:12px;background:#253348;padding:12px 16px;cursor:pointer;touch-action:manipulation}
+button:hover{background:#33455e}
+button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+button.primary{background:#20544f;border-color:#79eadb80}
+button:disabled{opacity:.45;cursor:default}
+.panel{background:#101827dd;border:1px solid #ffffff20;border-radius:18px;box-shadow:0 16px 60px #0005;backdrop-filter:blur(12px)}
+#hud{position:fixed;inset:18px 18px auto;display:flex;justify-content:space-between;gap:14px;pointer-events:none}
+#instruments{padding:16px;width:300px}
+.eyebrow{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:#bac9dd}
+#mode{font-size:18px;font-weight:700;margin:6px 0 12px;color:var(--amber)}
+.meter{margin-top:10px}
+.meter-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
+.track{height:7px;background:#ffffff16;border-radius:10px;overflow:hidden}
+.fill{height:100%;width:100%;transition:width .12s linear;background:var(--cyan)}
+#frictionFill{background:#ffb879}
+#journey{padding:16px;text-align:right;min-width:230px}
+#phase{font-size:17px;font-weight:650;margin:6px 0}
+#distance{color:#bdcde1}
+#progress{margin-top:12px}
+#controls{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;max-width:95vw}
+#notice{position:fixed;top:190px;left:50%;transform:translateX(-50%);padding:12px 20px;max-width:560px;width:max-content;text-align:center;pointer-events:none;opacity:0;transition:opacity .3s}
+#notice.show{opacity:1}
+#help{position:fixed;bottom:86px;width:100%;text-align:center;color:#d2dcec;font-size:12px;pointer-events:none}
+#touch{position:fixed;bottom:110px;left:16px;right:16px;display:none;justify-content:space-between;pointer-events:none}
+.touch-group{display:flex;gap:8px;pointer-events:auto}
+.touch-button{width:54px;height:54px;padding:0;touch-action:none;background:#172337d9;font-size:23px;user-select:none}
+.overlay{position:fixed;inset:0;display:grid;place-items:center;background:#080f1bcc;padding:20px;z-index:10;overflow:auto}
+.card{width:min(760px,100%);padding:30px}
+h1{font-size:clamp(26px,5vw,42px);line-height:1.08;margin:12px 0 20px}
+h2{font-size:26px;margin:8px 0 16px}
+p{line-height:1.6;color:#c9d6e7}
+.instructions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0}
+.instructions>div{padding:14px;border-radius:12px;background:#ffffff06;line-height:1.55}
+.instructions strong{display:block;margin-bottom:6px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:20px}
+label{display:inline-flex;gap:8px;align-items:center;color:#c9d6e7;font-size:13px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
+th,td{padding:12px 8px;text-align:left;border-bottom:1px solid #ffffff17}
+th{color:var(--cyan);font-weight:600}
+th:first-child{color:#c9d6e7}
+.small{font-size:12px;color:#aabbd1}
+[hidden]{display:none!important}
+@media(pointer:coarse){#touch{display:flex}#help{bottom:180px}}
+@media(max-width:620px){
+#hud{inset:max(10px,env(safe-area-inset-top)) 10px auto;gap:8px;align-items:flex-start}
+#instruments{width:52%;padding:12px}
+#journey{min-width:0;width:48%;padding:12px}
+#phase{font-size:13px}#mode{font-size:14px}
+#notice{top:196px;max-width:92vw;width:92vw;font-size:13px}
+.card{padding:22px}.instructions{grid-template-columns:1fr}
+#controls button{padding:12px 10px;font-size:13px}
+th,td{font-size:12px;padding:10px 5px}
+}
+
+@media(max-width:620px){
+#instruments,#journey{padding:10px;border-radius:12px}
+#instruments .eyebrow,#journey .eyebrow{font-size:9px}
+.meter{margin-top:6px}.meter-label{font-size:11px}
+#mode{margin:4px 0 8px}#phase{margin:4px 0}
+#notice{top:180px;padding:9px 12px}
+#controls{bottom:max(12px,env(safe-area-inset-bottom));left:10px;right:10px;transform:none;max-width:none;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 44px 44px;gap:6px}
+#controls button{min-height:48px;padding:8px 5px;font-size:11px}
+#help{display:none}#touch{display:flex;bottom:max(84px,calc(env(safe-area-inset-bottom) + 76px));left:12px;right:12px}
+}
+@media(max-height:500px) and (max-width:920px){#hud{inset:8px 8px auto;align-items:flex-start}#instruments{width:210px;padding:8px}#journey{padding:8px}.meter{margin-top:4px}#notice{top:150px}#help{display:none}}
+</style>
+</head>
+<body>
+<div id="hud" hidden>
+  <div id="instruments" class="panel">
+    <div class="eyebrow">Driving relationship</div>
+    <div id="mode">Manual · Subscription</div>
+    <div class="meter">
+      <div class="meter-label"><span>Ego Energy / Battery</span><span id="batteryText">100%</span></div>
+      <div class="track"><div class="fill" id="batteryFill"></div></div>
+    </div>
+    <div class="meter">
+      <div class="meter-label"><span>Cognitive Friction</span><span id="frictionText">0%</span></div>
+      <div class="track"><div class="fill" id="frictionFill"></div></div>
+    </div>
+    <div class="meter">
+      <div class="meter-label"><span>Optical Clarity</span><span id="sensorText">100%</span></div>
+      <div class="track"><div class="fill" id="sensorFill"></div></div>
+    </div>
+  </div>
+  <div id="journey" class="panel">
+    <div class="eyebrow">Destination already set</div>
+    <div id="phase">Free Flowing Highway</div>
+    <div id="distance">0.00 / 3.00 miles</div>
+    <div id="speed">0 mph</div>
+    <div class="track" id="progress"><div class="fill" id="progressFill" style="width:0"></div></div>
+  </div>
+</div>
+<div id="notice" class="panel" role="status" aria-live="polite"></div>
+<div id="help" hidden>← → / A D steer · ↑ ↓ / W S speed · Space release/take over · C clean · P pause</div>
+<div id="controls" hidden>
+  <button id="modeButton" class="primary">Engage FSD</button>
+  <button id="cleanButton">Clean Sensor · C</button>
+  <button id="pauseButton" aria-label="Pause commute">Ⅱ</button>
+  <button id="soundButton" aria-label="Mute sound">♫</button>
+</div>
+<div id="touch" hidden>
+  <div class="touch-group">
+    <button class="touch-button" data-input="left" aria-label="Steer left">←</button>
+    <button class="touch-button" data-input="right" aria-label="Steer right">→</button>
+  </div>
+  <div class="touch-group">
+    <button class="touch-button" data-input="brake" aria-label="Brake">−</button>
+    <button class="touch-button" data-input="accelerate" aria-label="Accelerate">+</button>
+  </div>
+</div>
+<div id="start" class="overlay">
+  <div class="card panel">
+    <div class="eyebrow">The Self-Driving Mind · A playable metaphor</div>
+    <h1>The Freeway Navigator</h1>
+    <div style="font-size:20px;color:var(--cyan)">Subscription vs. Endowment</div>
+    <p>A three-mile coastal commute. Drive through the changing traffic, feel the cost of continual correction, then release the wheel and let the guidance carry you.</p>
+    <div class="instructions">
+      <div><strong style="color:var(--amber)">Manual · Subscription</strong>Steer with arrows or A/D. Adjust speed with ↑/↓ or W/S. Corrections, pressure, and braking consume ego energy.</div>
+      <div><strong style="color:var(--cyan)">Autonomous · Endowment</strong>Press Space to release control. Flow restores energy. Press C when perception becomes obscured.</div>
+    </div>
+    <label><input id="reducedMotion" type="checkbox"> Reduced camera motion</label>
+    <div class="actions"><button id="startButton" class="primary">Begin Commute</button></div>
+    <p class="small">A symbolic educational simulation. Energy flow and autonomous behavior are fictional game systems.</p>
+    <p id="loadStatus" class="small" role="status">Loading the procedural freeway…</p>
+  </div>
+</div>
+<div id="pause" class="overlay" hidden>
+  <div class="card panel">
+    <div class="eyebrow">A moment of stillness</div>
+    <h2>Commute paused</h2>
+    <p>Your route and progress are held.</p>
+    <button id="resumeButton" class="primary">Resume</button>
+  </div>
+</div>
+<div id="report" class="overlay" hidden>
+  <div class="card panel">
+    <div class="eyebrow">Destination reached · Charging connected</div>
+    <h2>What carried your journey?</h2>
+    <table>
+      <thead><tr><th>Recorded in this commute</th><th>Manual Grind<br><span class="small">Willpower / Exhaustion</span></th><th>Autonomous Carry<br><span class="small">Endowment / Restoration</span></th></tr></thead>
+      <tbody id="reportRows"></tbody>
+    </table>
+    <p>The destination was already set. Continual correction spent energy; releasing control and maintaining clear alignment allowed the system to carry the journey.</p>
+    <p id="reflection" class="small"></p>
+    <div class="actions"><button id="replayButton" class="primary">Drive Again</button></div>
+    <p class="small">Results are measured from this run. Unused modes are marked “Not experienced.” Energy is a metaphor, not an EV efficiency model.</p>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+(() => {
+const $ = id => document.getElementById(id);
+if (!window.THREE) {
+  $("loadStatus").textContent = "Three.js could not load. Connect to the internet and reload.";
+  $("startButton").disabled = true;
+  return;
+}
+const clamp = (x,a=0,b=1) => Math.max(a,Math.min(b,x));
+const smooth = (a,b,k,dt) => a+(b-a)*(1-Math.exp(-k*dt));
+const MILE=1609.344, FINISH=3*MILE, LANE=3.8;
+const LANES=[-LANE,0,LANE];
+let seed=89341;
+function random(){seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;}
+const input={left:false,right:false,accelerate:false,brake:false};
+const materials={};
+function material(name,color,extra={}){
+  return materials[name]||(materials[name]=new THREE.MeshStandardMaterial({color,roughness:.72,...extra}));
+}
+function box(w,h,d,mat,x=0,y=0,z=0){
+  const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
+  mesh.position.set(x,y,z);return mesh;
+}
+function vehicleMesh(color,isTruck=false){
+  const g=new THREE.Group();
+  const body=new THREE.MeshStandardMaterial({color,roughness:.4,metalness:.35});
+  const glass=material("glass",0x152e42,{metalness:.45,roughness:.2});
+  const dark=material("rubber",0x11151d);
+  const red=new THREE.MeshBasicMaterial({color:0xef3e48});
+  const white=material("headlamp",0xb9eeff,{emissive:0x8acbde,emissiveIntensity:1});
+  if(isTruck){
+    g.add(box(2.1,1.9,3.5,body,0,1.2,.55));
+    g.add(box(2,1.35,1.55,body,0,.92,-1.75));
+    g.add(box(1.72,.58,.06,glass,0,1.3,-2.55));
+  }else{
+    g.add(box(1.95,.48,4.25,body,0,.55,0));
+    const roof=box(1.65,.62,2.15,glass,0,1.04,.1);
+    g.add(roof);
+    g.add(box(1.62,.07,1.15,body,0,1.38,.25));
+    g.add(box(1.9,.09,.65,body,0,.83,-1.55));
+  }
+  const wheelGeo=new THREE.CylinderGeometry(.34,.34,.22,10);
+  for(const x of [-1,1])for(const z of [-1.35,1.35]){
+    const w=new THREE.Mesh(wheelGeo,dark);w.rotation.z=Math.PI/2;w.position.set(x,.35,z);g.add(w);
+  }
+  for(const x of [-.66,.66]){
+    g.add(box(.43,.13,.07,white,x,.67,isTruck?-2.56:-2.15));
+    g.add(box(.43,.15,.08,red,x,.66,isTruck?2.34:2.15));
+  }
+  g.userData.brakeMaterial=red;
+  return g;
+}
+
+class AudioSynthesizer{
+  constructor(){this.ctx=null;this.muted=false;}
+  init(){
+    if(this.ctx){this.ctx.resume().catch(()=>{});return;}
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC)return;
+    try{
+      this.ctx=new AC();
+      this.master=this.ctx.createGain();this.master.gain.value=.38;this.master.connect(this.ctx.destination);
+      this.motorGain=this.ctx.createGain();this.motorGain.gain.value=.025;this.motorGain.connect(this.master);
+      this.motor=this.ctx.createOscillator();this.motor.type="sine";this.motor.frequency.value=65;this.motor.connect(this.motorGain);this.motor.start();
+      this.overtone=this.ctx.createOscillator();this.overtone.type="triangle";
+      this.overtoneGain=this.ctx.createGain();this.overtoneGain.gain.value=.008;
+      this.overtone.connect(this.overtoneGain);this.overtoneGain.connect(this.master);this.overtone.start();
+      const buffer=this.ctx.createBuffer(1,this.ctx.sampleRate*3,this.ctx.sampleRate);
+      const data=buffer.getChannelData(0);let last=0;
+      for(let i=0;i<data.length;i++){last=(last+(Math.random()*2-1)*.06)/1.025;data[i]=last;}
+      const noise=this.ctx.createBufferSource();noise.buffer=buffer;noise.loop=true;
+      const filter=this.ctx.createBiquadFilter();filter.type="lowpass";filter.frequency.value=850;
+      this.roadGain=this.ctx.createGain();this.roadGain.gain.value=.05;
+      noise.connect(filter);filter.connect(this.roadGain);this.roadGain.connect(this.master);noise.start();
+    }catch(e){this.ctx=null;}
+  }
+  tone(f,start,duration=.4,volume=.13){
+    if(!this.ctx)return;
+    const t=this.ctx.currentTime+start,o=this.ctx.createOscillator(),g=this.ctx.createGain();
+    o.type="sine";o.frequency.value=f;
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(volume,t+.025);
+    g.gain.exponentialRampToValueAtTime(.0001,t+duration);
+    o.connect(g);g.connect(this.master);o.start(t);o.stop(t+duration+.03);
+  }
+  chime(on){this.tone(on?440:660,0);this.tone(on?660:440,.13);}
+  clean(){this.tone(660,0,.25,.09);this.tone(880,.09,.4,.08);}
+  arrival(){[261.63,329.63,392,523.25].forEach((f,i)=>this.tone(f,i*.17,2,.11));}
+  update(speed,auto,paused){
+    if(!this.ctx)return;
+    const t=this.ctx.currentTime;
+    this.master.gain.setTargetAtTime(this.muted||paused?0:.38,t,.12);
+    this.motor.frequency.setTargetAtTime(48+speed*(auto?2:2.7),t,.15);
+    this.overtone.frequency.setTargetAtTime(96+speed*4,t,.15);
+    this.motorGain.gain.setTargetAtTime(.015+speed*.00065,t,.15);
+    this.roadGain.gain.setTargetAtTime(.015+speed*.0012,t,.2);
+  }
+}
+
+class VehicleDynamicsController{
+  constructor(){this.reset();}
+  reset(){this.x=0;this.vx=0;this.speed=24;this.distance=0;this.steer=0;this.correction=0;this.braking=0;this.previousSteer=0;}
+  update(dt,command,energy){
+    this.steer=smooth(this.steer,command.steer,6,dt);
+    const change=Math.abs(this.steer-this.previousSteer)/dt;
+    this.correction=smooth(this.correction,clamp(change/3),5,dt);
+    this.previousSteer=this.steer;
+    const targetVx=command.lateral!==undefined?command.lateral:this.steer*4.4;
+    this.vx=smooth(this.vx,targetVx,4,dt);
+    this.x=clamp(this.x+this.vx*dt,-4.85,4.85);
+    const acceleration=clamp((command.speed-this.speed)*1.5,-7,energy<.08?1.1:3);
+    this.braking=clamp(-acceleration/7);
+    this.speed=clamp(this.speed+acceleration*dt,0,36);
+    this.distance+=this.speed*dt;
+  }
+}
+
+class TrafficSimulation{
+  constructor(world){this.world=world;this.cars=[];this.populate();}
+  populate(){
+    const palette=[0x667994,0xd3c9bb,0x485766,0x92666c,0x879588,0xc2b18d];
+    for(let i=0;i<66;i++){
+      const truck=i%9===0,mesh=vehicleMesh(palette[i%palette.length],truck);
+      this.world.add(mesh);
+      this.cars.push({mesh,lane:i%3,x:LANES[i%3],s:90+Math.floor(i/3)*33+(i%3)*7,
+        v:19+random()*7,desired:22+random()*8,truck,cooldown:5+random()*10,target:i%3});
+    }
+  }
+  reset(){
+    this.cars.forEach((c,i)=>{c.lane=c.target=i%3;c.x=LANES[c.lane];c.s=90+Math.floor(i/3)*33+(i%3)*7;c.v=20+random()*6;});
+  }
+  ahead(s,x,exclude=null){
+    let best=null,gap=Infinity;
+    for(const c of this.cars){
+      if(c===exclude||Math.abs(c.x-x)>2.2)continue;
+      const d=c.s-s;
+      if(d>0&&d<gap){gap=d;best=c;}
+    }
+    return {car:best,gap};
+  }
+  safeLane(lane,s,speed,player){
+    const x=LANES[lane];
+    for(const c of this.cars){
+      if(Math.abs(c.x-x)>2.4&&c.target!==lane)continue;
+      const d=c.s-s;
+      if(d>-(12+c.v*.9)&&d<14+speed*1.1)return false;
+    }
+    if(player&&Math.abs(player.x-x)<2.6&&Math.abs(player.distance-s)<32)return false;
+    return true;
+  }
+  update(dt,player,phase){
+    // Compute decisions from one shared snapshot before moving any vehicles.
+    const decisions=this.cars.map(c=>{
+      const front=this.ahead(c.s,c.x,c);
+      let desired=phase===1?11+(c.desired-22)*.7:c.desired;
+      if(phase===1&&c.s>2050&&c.s<2720&&c.target===2)desired=Math.min(desired,8);
+      if(front.car)desired=Math.min(desired,Math.max(0,(front.gap-8)/1.65));
+      const playerGap=player.distance-c.s;
+      if(playerGap>0&&Math.abs(player.x-c.x)<2.25)desired=Math.min(desired,Math.max(0,(playerGap-9)/1.6));
+      return desired;
+    });
+    this.cars.forEach((c,i)=>{
+      const old=c.v;
+      c.v=smooth(c.v,decisions[i],1.8,dt);c.s+=c.v*dt;c.cooldown-=dt;
+      if(c.cooldown<=0&&Math.abs(c.x-LANES[c.target])<.1){
+        const candidate=c.target+(random()<.5?-1:1);
+        if(candidate>=0&&candidate<3&&this.safeLane(candidate,c.s,c.v,player)){
+          c.target=candidate;
+        }
+        c.cooldown=7+random()*12;
+      }
+      c.x=smooth(c.x,LANES[c.target],.65,dt);
+      if(Math.abs(c.x-LANES[c.target])<.15)c.lane=c.target;
+      if(c.s-player.distance< -80){
+        c.s=player.distance+500+random()*450;
+        c.target=c.lane=Math.floor(random()*3);c.x=LANES[c.lane];
+        c.v=phase===1?12:23;
+      }
+      c.mesh.position.set(c.x,0,-(c.s-player.distance));
+      c.mesh.rotation.y=-clamp((LANES[c.target]-c.x)*.08,-.16,.16);
+      c.mesh.userData.brakeMaterial.color.setHex(old-c.v>.025?0xff6455:0xa52a39);
+      c.mesh.visible=Math.abs(c.s-player.distance)<850;
+    });
+  }
+}
+
+class AutopilotEngine{
+  constructor(){this.reset();}
+  reset(){this.lane=1;this.cooldown=0;this.maneuvers=0;}
+  update(dt,v,traffic,limited,phase){
+    this.cooldown=Math.max(0,this.cooldown-dt);
+    const front=traffic.ahead(v.distance,v.x);
+    const cruise=limited?9:phase===1?20:29;
+    if(!limited&&this.cooldown===0&&Math.abs(v.x-LANES[this.lane])<.3&&front.gap<65){
+      let best=this.lane,bestScore=front.gap;
+      for(const lane of [this.lane-1,this.lane+1]){
+        if(lane<0||lane>2||!traffic.safeLane(lane,v.distance,v.speed))continue;
+        const gap=traffic.ahead(v.distance,LANES[lane]).gap;
+        if(gap>bestScore+22){best=lane;bestScore=gap;}
+      }
+      if(best!==this.lane){this.lane=best;this.cooldown=5;this.maneuvers++;}
+    }
+    let target=cruise;
+    if(front.car){
+      const comfortable=12+v.speed*1.7;
+      target=Math.min(target,Math.max(0,front.car.v+(front.gap-comfortable)*.48));
+    }
+    const lateral=clamp((LANES[this.lane]-v.x)*1.4,-2.25,2.25);
+    return {steer:lateral/4.4,lateral,speed:target};
+  }
+}
+
+class BatteryFrictionSystem{
+  constructor(){this.reset();}
+  reset(){this.battery=1;this.friction=0;this.cleanliness=1;this.nextDust=36;this.limited=false;this.dustAge=0;}
+  update(dt,v,traffic,automatic,time){
+    const front=traffic.ahead(v.distance,v.x);
+    const pressure=front.car?clamp(1-front.gap/(16+v.speed*2)):0;
+    const neighbors=traffic.cars.filter(c=>Math.abs(c.s-v.distance)<16&&Math.abs(c.x-v.x)<5).length;
+    const target=automatic?0:clamp(.07+pressure*.65+v.correction*.3+Math.min(neighbors,3)*.05);
+    this.friction=smooth(this.friction,target,automatic?.8:.5,dt);
+    if(automatic&&this.friction<.002)this.friction=0;
+    let delta;
+    if(automatic){
+      delta=this.limited?0:.004*this.cleanliness*clamp(v.speed/12)*dt;
+      if(time>=this.nextDust&&this.cleanliness>.65){
+        this.cleanliness=.32;this.limited=true;this.dustAge=0;this.nextDust=time+48+random()*25;
+        game.notify("Sensor Obscured: Clean Perception Needed · Press C",7);
+        game.audio.tone(330,0,.5,.08);
+      }
+      if(this.limited)this.dustAge+=dt;
+    }else{
+      delta=-(.0015+.003*Math.abs(v.steer)+.005*v.correction+.0035*v.braking+.003*this.friction)*dt;
+    }
+    const before=this.battery;
+    this.battery=clamp(this.battery+delta);
+    return this.battery-before;
+  }
+  clean(){
+    this.cleanliness=1;this.limited=false;this.dustAge=0;
+    this.nextDust=Math.max(this.nextDust,game.time+32);
+  }
+}
+
+class ProceduralWorld{
+  constructor(){
+    this.scene=new THREE.Scene();this.scene.background=new THREE.Color(0x27283e);
+    this.scene.fog=new THREE.Fog(0x716079,110,750);
+    this.renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:"high-performance"});
+    this.renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));
+    this.renderer.setSize(innerWidth,innerHeight);
+    this.renderer.outputEncoding=THREE.sRGBEncoding;
+    this.renderer.toneMapping=THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure=1.2;
+    document.body.prepend(this.renderer.domElement);
+    this.camera=new THREE.PerspectiveCamera(57,innerWidth/innerHeight,.1,1500);
+    this.camera.position.set(0,5.5,11);
+    this.scene.add(new THREE.HemisphereLight(0xb8caff,0x423138,1.1));
+    const sunLight=new THREE.DirectionalLight(0xffc095,1.3);sunLight.position.set(-80,45,-100);this.scene.add(sunLight);
+    const road=material("road",0x303340);
+    this.scene.add(box(14,.15,1600,road,0,-.13,-620));
+    this.scene.add(box(1400,.1,1600,material("ocean",0x354761,{metalness:.6,roughness:.35}),-720,-2,-600));
+    this.scene.add(box(500,.1,1600,material("land",0x353846),265,-.8,-600));
+    this.scene.add(box(.45,.65,1600,material("barrier",0x8f8993),-7.2,.27,-620));
+    this.scene.add(box(.45,.65,1600,materials.barrier,7.2,.27,-620));
+    const line=material("line",0xd7c7ac,{emissive:0x786b56,emissiveIntensity:.2});
+    for(const x of [-6.2,6.2])this.scene.add(box(.12,.02,1600,line,x,.005,-620));
+    this.markers=new THREE.InstancedMesh(new THREE.BoxGeometry(.12,.025,4),line,180);
+    this.scene.add(this.markers);
+    this.matrix=new THREE.Matrix4();
+    this.poles=[];
+    const poleMat=material("pole",0x535666),lampMat=material("lamp",0xffd9ac,{emissive:0xffaf68,emissiveIntensity:2});
+    for(let i=0;i<28;i++){
+      const g=new THREE.Group();
+      g.add(box(.14,10,.14,poleMat,0,5,0));
+      g.add(box(2.7,.12,.14,poleMat,-1.3,10,0));
+      g.add(box(.7,.12,.45,lampMat,-2.5,9.9,0));
+      this.scene.add(g);this.poles.push(g);
+    }
+    for(let i=0;i<18;i++){
+      const mountain=new THREE.Mesh(new THREE.ConeGeometry(35+random()*55,35+random()*65,5),material("mountain",0x4a435c));
+      mountain.position.set(65+random()*200,12,-80-i*65);mountain.rotation.y=random()*6;this.scene.add(mountain);
+    }
+    const skyCanvas=document.createElement("canvas");skyCanvas.width=16;skyCanvas.height=256;
+    const ctx=skyCanvas.getContext("2d"),gradient=ctx.createLinearGradient(0,0,0,256);
+    gradient.addColorStop(0,"#101b36");gradient.addColorStop(.5,"#665475");gradient.addColorStop(.82,"#df967f");gradient.addColorStop(1,"#efb98f");
+    ctx.fillStyle=gradient;ctx.fillRect(0,0,16,256);
+    const sky=new THREE.Mesh(new THREE.SphereGeometry(1200,24,16),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(skyCanvas),side:THREE.BackSide,fog:false}));
+    this.scene.add(sky);
+    const sun=new THREE.Mesh(new THREE.SphereGeometry(22,20,12),new THREE.MeshBasicMaterial({color:0xffc497,fog:false}));
+    sun.position.set(-260,44,-650);this.scene.add(sun);
+    this.player=vehicleMesh(0xe3e9e9);this.scene.add(this.player);
+    this.ribbon=box(.12,.015,30,new THREE.MeshBasicMaterial({color:0x67e6d4,transparent:true,opacity:.45}),0,.035,-19);
+    this.scene.add(this.ribbon);
+    this.cones=[];
+    for(let i=0;i<28;i++){
+      const cone=new THREE.Mesh(new THREE.ConeGeometry(.28,.8,6),material("cone",0xfda16a));
+      this.scene.add(cone);this.cones.push(cone);
+    }
+    this.hub=new THREE.Group();
+    const hubMat=material("hub",0xdee8ed),glow=material("hubGlow",0x81ffe0,{emissive:0x45e9bd,emissiveIntensity:1.7});
+    this.hub.add(box(15,.35,12,hubMat,16,.05,0));
+    this.hub.add(box(15,.35,9,hubMat,16,5,0));
+    for(const x of [10,22])this.hub.add(box(.3,5,.3,hubMat,x,2.5,0));
+    for(let i=0;i<4;i++){
+      this.hub.add(box(.9,2.1,.55,hubMat,11+i*3,1.15,-2));
+      this.hub.add(box(.55,.9,.1,glow,11+i*3,1.5,-1.7));
+    }
+    const sign=document.createElement("canvas");sign.width=512;sign.height=128;
+    const sc=sign.getContext("2d");sc.fillStyle="#142b34";sc.fillRect(0,0,512,128);
+    sc.fillStyle="#8fffe2";sc.font="bold 38px sans-serif";sc.textAlign="center";sc.fillText("THE HORIZON",256,57);
+    sc.font="22px sans-serif";sc.fillText("CHARGING · DESTINATION",256,94);
+    const board=new THREE.Mesh(new THREE.PlaneGeometry(9,2.25),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(sign)}));
+    board.position.set(16,4.4,4.7);this.hub.add(board);this.scene.add(this.hub);
+    addEventListener("resize",()=>{
+      this.camera.aspect=innerWidth/innerHeight;this.camera.updateProjectionMatrix();
+      this.renderer.setSize(innerWidth,innerHeight);
+    });
+  }
+  render(game,dt){
+    const v=game.vehicle,d=v.distance;
+    let index=0;
+    for(const x of [-LANE/2,LANE/2])for(let i=0;i<90;i++){
+      this.matrix.makeTranslation(x,.01,40-i*12+(d%12));this.markers.setMatrixAt(index++,this.matrix);
+    }
+    this.markers.instanceMatrix.needsUpdate=true;
+    this.poles.forEach((p,i)=>p.position.set(8.3,0,40-i*42+(d%42)));
+    this.cones.forEach((c,i)=>{c.position.set(5.15,.4,-(2050+i*24-d));c.visible=c.position.z<30&&c.position.z> -700;});
+    this.hub.position.z=-(FINISH-d+12);this.hub.visible=d>FINISH-750;
+    const arrival=game.arriving?clamp(game.arrivalTime/4):game.ended?1:0;
+    const px=v.x+(16-v.x)*arrival;
+    this.player.position.set(px,0,0);
+    this.player.rotation.y=smooth(this.player.rotation.y,-v.vx*.055,5,dt);
+    this.player.rotation.z=game.reduced?0:-v.vx*.014;
+    this.ribbon.visible=game.automatic&&!game.ended;
+    this.ribbon.position.x=LANES[game.autopilot.lane];
+    this.ribbon.material.opacity=game.systems.limited?.12:.4;
+    const cameraX=game.reduced?px:px*.55;
+    this.camera.position.x=smooth(this.camera.position.x,cameraX,game.automatic?1.5:3,dt);
+    this.camera.position.y=smooth(this.camera.position.y,game.automatic?5.7:5.1,2,dt);
+    this.camera.lookAt(px*.7,.8,-22);
+    this.renderer.render(this.scene,this.camera);
+  }
+}
+
+class Game{
+  constructor(){
+    this.world=new ProceduralWorld();
+    this.vehicle=new VehicleDynamicsController();
+    this.autopilot=new AutopilotEngine();
+    this.traffic=new TrafficSimulation(this.world.scene);
+    this.systems=new BatteryFrictionSystem();
+    this.audio=new AudioSynthesizer();
+    this.started=false;this.paused=false;this.ended=false;
+    this.last=performance.now();this.accumulator=0;this.uiClock=0;
+    this.reset();
+    requestAnimationFrame(t=>this.frame(t));
+  }
+  reset(){
+    seed=89341;this.vehicle.reset();this.autopilot.reset();this.traffic.reset();this.systems.reset();
+    this.time=0;this.automatic=false;this.engaging=0;this.phase=0;this.manualTarget=24;
+    this.arriving=false;this.arrivalTime=0;this.ended=false;this.prompted=false;this.lowWarn=false;
+    this.stats=[0,1].map(()=>({time:0,distance:0,spent:0,restored:0,friction:0,corrections:0}));
+    this.lastCorrection=0;this.contactCooldown=0;this.noticeUntil=0;this.accumulator=0;
+    Object.keys(input).forEach(k=>input[k]=false);
+  }
+  start(){
+    this.audio.init();this.reset();this.started=true;this.paused=false;
+    this.reduced=$("reducedMotion").checked;
+    ["start","report","pause"].forEach(id=>$(id).hidden=true);
+    ["hud","controls","help","touch"].forEach(id=>$(id).hidden=false);
+    this.notify("The destination is already set. Begin by feeling the road.",6);
+    this.updateUI();
+  }
+  notify(message,seconds=4){
+    $("notice").textContent=message;$("notice").classList.add("show");
+    this.noticeUntil=this.time+seconds;
+  }
+  toggle(){
+    if(!this.started||this.paused||this.ended||this.arriving)return;
+    if(!this.automatic&&this.systems.cleanliness<.65){this.notify("Clean perception first · Press C");return;}
+    this.automatic=!this.automatic;this.audio.chime(this.automatic);
+    if(this.automatic){
+      this.autopilot.lane=LANES.reduce((best,x,i)=>Math.abs(x-this.vehicle.x)<Math.abs(LANES[best]-this.vehicle.x)?i:best,0);
+      this.engaging=1.2;this.notify("Destination retained. Support engaged.");
+    }else{
+      this.manualTarget=this.vehicle.speed;this.notify("Manual control returned · Subscription Model");
+    }
+    this.updateUI();
+  }
+  clean(){
+    if(!this.started||this.paused||this.ended||this.arriving)return;
+    if(this.systems.cleanliness>.99){this.notify("Perception is clear. Let the journey continue.");return;}
+    this.systems.clean();this.audio.clean();
+    this.notify("Clarity restored · Ethical alignment keeps perception clear.");
+  }
+  setPause(value){
+    if(!this.started||this.ended||this.arriving)return;
+    this.paused=value;$("pause").hidden=!value;
+    Object.keys(input).forEach(k=>input[k]=false);
+    this.accumulator=0;
+  }
+  step(dt){
+    if(!this.started||this.paused||this.ended)return;
+    this.time+=dt;
+    if(this.time>this.noticeUntil)$("notice").classList.remove("show");
+    if(this.arriving){
+      this.arrivalTime+=dt;this.vehicle.speed=smooth(this.vehicle.speed,0,2,dt);
+      if(this.arrivalTime>=4)this.finish();
+      return;
+    }
+    const v=this.vehicle;
+    const phase=Math.min(2,Math.floor(v.distance/MILE));
+    if(phase!==this.phase){
+      this.phase=phase;
+      this.notify(phase===1?"The Congested Choke · The road asks for continual correction.":"The Supercharger Horizon · Your destination is approaching.",6);
+    }
+    if(this.time>13&&!this.prompted){
+      this.prompted=true;this.notify("The route is already held. Press Space to release control.",7);
+    }
+    if(this.automatic&&(input.left||input.right)){this.toggle();}
+    this.traffic.update(dt,v,this.phase);
+    let command;
+    if(this.automatic){
+      command=this.autopilot.update(dt,v,this.traffic,this.systems.limited,this.phase);
+      if(this.engaging>0){
+        this.engaging=Math.max(0,this.engaging-dt);
+        const blend=1-this.engaging/1.2;
+        command.lateral*=blend;command.steer*=blend;
+        command.speed=this.manualTarget+(command.speed-this.manualTarget)*blend;
+      }
+      if(this.systems.dustAge>12)command.speed=0;
+    }else{
+      this.manualTarget=clamp(this.manualTarget+(input.accelerate?5:0)*dt-(input.brake?10:0)*dt,0,34);
+      command={steer:(input.right?1:0)-(input.left?1:0),speed:this.manualTarget};
+      if(this.systems.battery===0)command.speed=0;
+    }
+    const previousDistance=v.distance,previousX=v.x;
+    v.update(dt,command,this.systems.battery);
+    // Swept longitudinal contact check prevents crossing a vehicle between ticks.
+    this.contactCooldown=Math.max(0,this.contactCooldown-dt);
+    for(const c of this.traffic.cars){
+      const gap=c.s-v.distance,previousGap=c.s-previousDistance;
+      const lateralNear=Math.min(Math.abs(c.x-v.x),Math.abs(c.x-previousX))<1.85;
+      if(lateralNear&&((Math.abs(gap)<4.5)||(previousGap>4.5&&gap<=4.5))){
+        if(previousGap>=0){
+          v.distance=Math.min(v.distance,c.s-4.6);v.speed=Math.min(v.speed,c.v);
+        }else{
+          c.s=v.distance-4.6;c.v=Math.min(c.v,v.speed);
+        }
+        if(!this.automatic&&this.contactCooldown===0){
+          this.systems.battery=clamp(this.systems.battery-.035);
+          this.stats[0].spent+=.035;this.systems.friction=clamp(this.systems.friction+.3);
+          this.contactCooldown=2;this.notify("Close contact · Give the road more space.");
+        }
+      }
+    }
+    v.distance=Math.max(previousDistance,v.distance);
+    const delta=this.systems.update(dt,v,this.traffic,this.automatic,this.time);
+    const s=this.stats[this.automatic?1:0];
+    s.time+=dt;s.distance+=v.distance-previousDistance;
+    s.spent+=Math.max(0,-delta);s.restored+=Math.max(0,delta);s.friction+=this.systems.friction*dt;
+    if(!this.automatic&&v.correction>.3&&this.lastCorrection<=.3)s.corrections++;
+    this.lastCorrection=v.correction;
+    if(this.systems.battery<.2&&!this.lowWarn){
+      this.lowWarn=true;this.notify("Ego energy is running low. Release control to receive support.",7);
+    }
+    if(v.distance>=FINISH){
+      v.distance=FINISH;this.arriving=true;this.arrivalTime=0;
+      this.notify("Destination reached · Connecting to the charging horizon.",5);
+    }
+  }
+  finish(){
+    this.ended=true;this.arriving=false;this.vehicle.speed=0;this.audio.arrival();
+    $("report").hidden=false;["controls","touch","help"].forEach(id=>$(id).hidden=true);
+    const a=this.stats[0],b=this.stats[1];
+    const value=(s,fn)=>s.time<.1?"Not experienced":fn(s);
+    const rows=[
+      ["Time in mode",s=>`${Math.floor(s.time/60)}m ${Math.floor(s.time%60)}s`],
+      ["Distance",s=>`${(s.distance/MILE).toFixed(2)} miles`],
+      ["Energy consumed",s=>`${(s.spent*100).toFixed(1)} points`],
+      ["Energy restored",s=>`${(s.restored*100).toFixed(1)} points`],
+      ["Average friction",s=>`${Math.round(s.friction/s.time*100)}%`]
+    ];
+    $("reportRows").innerHTML=rows.map(([label,fn])=>`<tr><td>${label}</td><td>${value(a,fn)}</td><td>${value(b,fn)}</td></tr>`).join("")+
+      `<tr><td>Driving actions</td><td>${value(a,s=>s.corrections+" correction bursts")}</td><td>${value(b,s=>this.autopilot.maneuvers+" guided lane changes")}</td></tr>`;
+    $("reflection").textContent=a.time&&b.time?
+      "Where did effort help—and where did releasing control help? These measurements reflect the different road conditions encountered in each mode.":
+      "You experienced one mode. Replay and try the other to feel how your relationship to the same road changes.";
+  }
+  updateUI(){
+    const s=this.systems;
+    $("batteryText").textContent=Math.round(s.battery*100)+"%";
+    $("batteryFill").style.width=s.battery*100+"%";
+    $("batteryFill").style.background=s.battery<.2?"#ffa28a":"#79eadb";
+    $("frictionText").textContent=Math.round(s.friction*100)+"%";
+    $("frictionFill").style.width=s.friction*100+"%";
+    $("sensorText").textContent=Math.round(s.cleanliness*100)+"%";
+    $("sensorFill").style.width=s.cleanliness*100+"%";
+    $("sensorFill").style.background=s.limited?"#ffba81":"#79eadb";
+    $("mode").textContent=this.automatic?(s.limited?"FSD · Clarity Needed":this.engaging>0?"Releasing Control…":"Autonomous · Endowment"):"Manual · Subscription";
+    $("mode").style.color=this.automatic?"#79eadb":"#ffbf81";
+    $("modeButton").textContent=this.automatic?"Take Manual Control":"Release Control · Engage FSD";
+    $("cleanButton").textContent=s.limited?"Clean Sensor · C":"Sensors Clear · C";
+    $("phase").textContent=["Free Flowing Highway","Heavy Rush-Hour Choke","The Supercharger Horizon"][this.phase];
+    $("distance").textContent=(this.vehicle.distance/MILE).toFixed(2)+" / 3.00 miles";
+    $("speed").textContent=Math.round(this.vehicle.speed*2.23694)+" mph";
+    $("progressFill").style.width=clamp(this.vehicle.distance/FINISH)*100+"%";
+  }
+  frame(t){
+    const elapsed=Math.min((t-this.last)/1000,.1);this.last=t;
+    if(!this.paused){this.accumulator+=elapsed;while(this.accumulator>=1/60){this.step(1/60);this.accumulator-=1/60;}}
+    this.uiClock+=elapsed;
+    if(this.uiClock>.1){this.updateUI();this.uiClock=0;}
+    this.audio.update(this.vehicle.speed,this.automatic,this.paused||!this.started);
+    this.world.render(this,elapsed);
+    requestAnimationFrame(n=>this.frame(n));
+  }
+}
+
+let game;
+try{
+  game=new Game();
+  $("loadStatus").textContent="Ready · Procedural scenery and sound. No downloaded assets.";
+}catch(e){
+  $("loadStatus").textContent="WebGL could not initialize. Try a browser with hardware acceleration enabled.";
+  $("startButton").disabled=true;
+  return;
+}
+$("startButton").onclick=()=>game.start();
+$("replayButton").onclick=()=>game.start();
+$("modeButton").onclick=()=>game.toggle();
+$("cleanButton").onclick=()=>game.clean();
+$("pauseButton").onclick=()=>game.setPause(true);
+$("resumeButton").onclick=()=>{game.audio.init();game.setPause(false);};
+$("soundButton").onclick=()=>{
+  game.audio.init();game.audio.muted=!game.audio.muted;
+  $("soundButton").textContent=game.audio.muted?"♪ Off":"♫";
+  $("soundButton").setAttribute("aria-label",game.audio.muted?"Unmute sound":"Mute sound");
+};
+const bindings={ArrowLeft:"left",KeyA:"left",ArrowRight:"right",KeyD:"right",
+  ArrowUp:"accelerate",KeyW:"accelerate",ArrowDown:"brake",KeyS:"brake"};
+addEventListener("keydown",e=>{
+  if(!game.started||game.ended)return;
+  if(bindings[e.code]||["Space","KeyC","KeyP"].includes(e.code))e.preventDefault();
+  if(e.repeat)return;
+  if(e.code==="KeyP"){game.setPause(!game.paused);return;}
+  if(game.paused)return;
+  if(bindings[e.code])input[bindings[e.code]]=true;
+  if(e.code==="Space")game.toggle();
+  if(e.code==="KeyC")game.clean();
+});
+addEventListener("keyup",e=>{if(bindings[e.code])input[bindings[e.code]]=false;});
+document.querySelectorAll("[data-input]").forEach(button=>{
+  button.addEventListener("pointerdown",e=>{
+    e.preventDefault();button.setPointerCapture(e.pointerId);
+    input[button.dataset.input]=true;
+  });
+  for(const event of ["pointerup","pointercancel","lostpointercapture"]){
+    button.addEventListener(event,()=>input[button.dataset.input]=false);
+  }
+});
+addEventListener("blur",()=>game.setPause(true));
+document.addEventListener("visibilitychange",()=>{if(document.hidden)game.setPause(true);});
+$("reducedMotion").checked=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+})();
+</script>
+</body>
+</html>

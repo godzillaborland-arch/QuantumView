@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#081321">
+<title>The APB Compass: Flight of the Mind</title>
+<style>
+:root{color-scheme:dark;--navy:#081321;--cyan:#00d9ff;--gold:#d4a574;--rust:#b76f52;--peace:#79dbc1;--ink:#eaf3f7;--muted:#9bb0bf;--line:rgba(166,208,226,.22);--panel:rgba(6,19,33,.87)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}body{background:var(--navy);color:var(--ink);font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}button,input,textarea{font:inherit}button{min-height:44px;cursor:pointer;color:var(--ink);background:#132c40;border:1px solid var(--line);border-radius:9px;padding:10px 15px}button:hover:not(:disabled){background:#204258}button:disabled{opacity:.46;cursor:default}button:focus-visible,input:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}button.primary{background:var(--cyan);color:#04141e;border-color:transparent;font-weight:700}a{color:var(--gold)}[hidden]{display:none!important}
+#world{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}#vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 40%,transparent 35%,rgba(1,7,15,.48))}#hud{position:fixed;inset:0;pointer-events:none}.top{position:absolute;left:max(20px,env(safe-area-inset-left));right:max(20px,env(safe-area-inset-right));top:max(16px,env(safe-area-inset-top));display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:start}.eyebrow{color:var(--gold);font-size:10px;letter-spacing:.18em;text-transform:uppercase}.brand{font-size:10px;letter-spacing:.16em;color:#b8cdd7}#phaseName{font-size:19px;font-weight:450;margin:5px 0 3px}#clock{font-size:25px;letter-spacing:.1em;font-variant-numeric:tabular-nums}#clock small{font-size:10px;letter-spacing:.06em;color:var(--muted)}.gauges{display:flex;gap:9px}.gauge{width:114px;padding:12px;border:1px solid var(--line);border-top:2px solid var(--c);background:var(--panel);border-radius:5px}.gaugeHead{display:flex;justify-content:space-between;align-items:center;color:var(--c)}.gaugeHead b{font-size:20px;font-weight:500}.gaugeHead span{font-size:20px;font-variant-numeric:tabular-nums}.gauge small{font-size:10px;color:#b7c9d4}.track{height:4px;background:#294252;margin:10px 0 6px;overflow:hidden}.fill{height:100%;background:var(--c);transform-origin:left;transform:scaleX(.3)}.tools{pointer-events:auto;display:flex;justify-content:flex-end;gap:6px;flex-wrap:wrap}.tools button{font-size:10px;min-height:34px;padding:7px 10px;background:var(--panel)}
+#flightData{position:absolute;right:24px;top:37%;padding:13px 17px;border-right:2px solid var(--gold);background:var(--panel);min-width:130px}.dataRow{margin:8px 0}.dataRow small{display:block;font-size:9px;letter-spacing:.13em;color:var(--muted)}.dataRow strong{font-size:20px;font-weight:450;font-variant-numeric:tabular-nums}#reticle{position:absolute;left:50%;top:43%;transform:translate(-50%,-50%);width:125px;opacity:.8}#reticle svg{width:100%;height:auto}#reticleLabel{text-align:center;font-size:9px;color:var(--cyan);letter-spacing:.12em;margin-top:-7px}#message{position:absolute;left:50%;top:63%;transform:translateX(-50%);text-align:center;font-size:12px;width:min(490px,90%);padding:9px 18px;background:var(--panel);border:1px solid var(--line);border-radius:30px}#bottom{position:absolute;bottom:max(19px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(910px,calc(100% - 32px));text-align:center}.tokens{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;pointer-events:auto}.token{text-align:left;min-height:84px;border-top:2px solid var(--cyan);background:var(--panel);position:relative;padding:12px 14px}.token:nth-child(2){border-top-color:var(--peace)}.token:nth-child(3){border-top-color:var(--gold)}.token .key{color:var(--gold);font-size:10px;margin-right:6px}.token b{font-weight:600;font-size:12px}.token small{display:block;color:#adc4d1;font-size:10px;margin:5px 0 3px}.token .state{font-size:10px;color:var(--cyan);letter-spacing:.04em}.hint{font-size:10px;color:#a9c0cd;margin-top:9px}#autoBanner{position:absolute;left:50%;top:155px;transform:translateX(-50%);color:#ffe1b1;border:1px solid rgba(212,165,116,.5);border-radius:30px;background:rgba(49,35,24,.65);padding:8px 18px;font-size:11px;letter-spacing:.08em}
+#joystick{display:none;position:fixed;left:24px;bottom:160px;width:100px;height:100px;border:1px solid rgba(150,210,230,.45);border-radius:50%;background:rgba(6,25,40,.6);touch-action:none}#joystick:before,#joystick:after{content:"";position:absolute;background:rgba(163,211,232,.25)}#joystick:before{left:50%;top:14%;width:1px;height:72%}#joystick:after{left:14%;top:50%;height:1px;width:72%}#stick{position:absolute;left:34px;top:34px;width:30px;height:30px;border-radius:50%;background:#659db3;pointer-events:none}
+.overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(1,8,17,.75);backdrop-filter:blur(12px);padding:22px}.card{width:min(780px,100%);max-height:calc(100dvh - 44px);overflow:auto;padding:clamp(23px,5vw,42px);border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#152b3f,#071321);box-shadow:0 30px 90px rgba(0,0,0,.4)}h1{font-size:clamp(32px,6vw,47px);line-height:1.1;font-weight:450;margin:14px 0 20px}h2{font-size:clamp(25px,4vw,34px);font-weight:450;line-height:1.2;margin:12px 0 18px}p{color:#b8ccd8}.lead{font-size:16px;color:#e6f0f5}.fine{font-size:11px;color:#95afbf}.briefing{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}.briefing div{border:1px solid var(--line);padding:12px;border-radius:9px}.briefing b{display:block;color:var(--gold);font-size:12px;margin-bottom:8px}.briefing small{font-size:11px;color:#adbfcc}.options{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;margin:21px 0}.options label{display:flex;gap:6px;align-items:center}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}#report .card{width:min(1040px,100%)}.comparison{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:22px 0}.reportCard{padding:20px;border:1px solid var(--line);border-radius:12px;background:rgba(2,12,22,.4);min-width:0}.reportCard h3{font-size:21px;font-weight:450;margin:6px 0 16px}.reportMeters{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.reportMeters strong{display:block;font-size:27px;font-weight:450;color:var(--c)}.reportMeters small{font-size:10px;color:var(--muted)}.reportCard canvas{width:100%;height:145px;display:block;margin:14px 0}.reportCard p{font-size:12px}.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:10px;color:var(--muted)}.legend span:before{content:"";display:inline-block;width:13px;height:3px;background:var(--c);margin-right:5px;vertical-align:middle}textarea{width:100%;min-height:74px;padding:12px;border-radius:9px;border:1px solid var(--line);background:#0b1c2b;color:var(--ink);resize:vertical}#copyStatus{min-height:18px}#fallbackCopy{height:140px;margin-top:10px}#fatal{z-index:30}
+@media(pointer:coarse){#joystick{display:block}}
+@media(max-width:720px){.top{grid-template-columns:1fr 1fr;gap:10px;left:13px;right:13px}.gauges{grid-row:2;grid-column:1/3;justify-content:center;gap:7px}.gauge{width:105px;padding:9px}.gaugeHead span,.gaugeHead b{font-size:18px}.track{margin:6px 0}.tools{grid-column:2;grid-row:1}.tools button{font-size:9px;padding:6px 8px}#phaseName{font-size:16px}#clock{font-size:20px}.brand{font-size:8px}#autoBanner{top:200px;font-size:9px;white-space:nowrap}#flightData{right:13px;top:41%;min-width:95px;padding:8px 11px}.dataRow strong{font-size:16px}.dataRow small{font-size:8px}#reticle{width:94px;top:43%}#message{top:61%;font-size:10px;width:min(390px,90%)}.token{padding:10px 8px;min-height:104px}.token b{font-size:10px}.token small{font-size:9px}.token .state{font-size:9px}.tokens{gap:6px}.hint{font-size:9px}.briefing{gap:7px}.briefing div{padding:9px}.briefing small{font-size:10px}.comparison{grid-template-columns:1fr}#joystick{width:86px;height:86px;left:16px;bottom:170px}#stick{left:27px;top:27px}}
+@media(max-height:500px) and (orientation:landscape){.top{grid-template-columns:1fr auto 1fr;gap:10px}.gauges{grid-column:2;grid-row:1}.tools{grid-column:3;grid-row:1}.gauge{width:88px;padding:7px}.gauge small{font-size:8px}#phaseName{font-size:14px}#autoBanner{top:102px}#bottom{bottom:7px}.token{min-height:67px;padding:7px 10px}.token small{margin:3px 0}.hint{margin-top:5px}#joystick{bottom:110px;width:80px;height:80px}#stick{left:24px;top:24px}#message{top:62%;font-size:10px}#flightData{top:30%}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.flightSelector{border:1px solid var(--line);border-radius:12px;padding:15px;margin:22px 0}.flightSelector legend{color:var(--gold);padding:0 7px;font-size:12px}.flightChoices{display:grid;grid-template-columns:1fr 1fr;gap:12px}.flightChoice{display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid var(--line);border-radius:8px;cursor:pointer}.flightChoice:has(input:checked){border-color:var(--cyan);background:rgba(0,217,255,.07)}.flightChoice input{margin-top:5px}.flightChoice b{display:block;font-size:13px}.flightChoice small{color:var(--muted);font-size:11px}.continueTrack{height:4px;background:#294252;margin-top:6px;overflow:hidden}#continueFill{height:100%;background:var(--peace);transform-origin:left}.thoughtLegend{display:flex;gap:18px;font-size:11px;margin:14px 0}.goldThought{color:var(--gold)}.crimsonThought{color:#e45d78}#announcement{border-left:3px solid var(--gold);padding:12px 16px;background:rgba(212,165,116,.08)}.singleReport{max-width:690px;margin:22px auto}.singleReport canvas{height:180px}#reportPhase{margin-bottom:18px}#reportReserve{color:var(--peace)}@media(max-width:500px){.flightChoices{grid-template-columns:1fr}.flightSelector{padding:12px}}
+#contactNotice{position:absolute;left:50%;top:53%;transform:translateX(-50%);width:min(510px,90%);padding:10px 16px;text-align:center;background:rgba(27,16,25,.96);border:1px solid #e45d78;border-radius:9px;font-size:13px;color:#fff0ea;font-variant-numeric:tabular-nums}#contactNotice.protected{background:rgba(8,35,36,.96);border-color:var(--peace);color:#a4f2d8}
+/* Mobile cockpit: reserve the middle of the screen for the glider. */
+@media(max-width:720px), (max-width:900px) and (pointer:coarse){
+ .top{top:max(9px,env(safe-area-inset-top));left:12px;right:12px;grid-template-columns:1fr auto;gap:6px;align-items:center}
+ .brand{display:none}
+ #phaseName{font-size:12px;margin:0;max-width:170px;line-height:1.25}
+ #clock{font-size:17px;letter-spacing:.04em;line-height:1.4}
+ #clock small{font-size:8px}
+ .tools{grid-column:2;grid-row:1;gap:4px;max-width:none}
+ .tools button{font-size:9px;min-height:44px;padding:6px 7px;border-radius:7px}
+ .gauges{grid-column:1/3;grid-row:2;width:100%;gap:6px}
+ .gauge{width:auto;flex:1;min-width:0;padding:5px 8px;border-top-width:2px}
+ .gaugeHead b{font-size:14px}.gaugeHead span{font-size:15px}
+ .gauge small{display:none}.track{margin:4px 0 0;height:3px}
+ #flightData{top:max(112px,calc(env(safe-area-inset-top) + 103px));left:12px;right:12px;min-width:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;padding:6px 9px;border:1px solid var(--line);border-radius:7px}
+ .dataRow{margin:0;min-width:0}.dataRow small{font-size:7px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dataRow strong{font-size:13px;line-height:1.3}
+ .continueTrack{height:3px;margin-top:2px}
+ #autoBanner{top:max(162px,calc(env(safe-area-inset-top) + 153px));width:calc(100% - 24px);padding:5px 8px;font-size:8px;text-align:center;white-space:normal}
+ #contactNotice{top:max(190px,calc(env(safe-area-inset-top) + 181px));width:calc(100% - 24px);padding:7px 10px;font-size:11px}
+ #reticle{top:43%;width:65px;opacity:.45}#reticleLabel{font-size:7px}
+ #message{display:none}
+ #bottom{bottom:max(10px,env(safe-area-inset-bottom));width:calc(100% - 24px)}
+ .tokens{gap:7px}.token{min-height:58px;padding:8px 7px;text-align:center;border-radius:9px}
+ .token .key{display:none}.token b{display:block;font-size:11px;line-height:1.25}.token small{display:none}.token .state{display:block;margin-top:5px;font-size:8px;letter-spacing:0;line-height:1.2}
+ .hint{font-size:0;margin-top:5px}.hint:after{content:"Drag to steer · Tap an action";font-size:9px}
+ #joystick{display:block;left:14px;bottom:max(107px,calc(env(safe-area-inset-bottom) + 97px));width:74px;height:74px;background:rgba(6,25,40,.35)}
+ #stick{left:21px;top:21px}
+ .overlay{padding:12px}.card{max-height:calc(100dvh - 24px);padding:21px}
+ .briefing{grid-template-columns:1fr;margin:16px 0;gap:7px}.briefing div{padding:9px 12px}.briefing b{margin-bottom:3px}
+}
+@media(max-height:500px) and (orientation:landscape){
+ .top{grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
+ .gauges{grid-column:2;grid-row:1;width:225px}.gauge{padding:6px}
+ .tools{grid-column:3;grid-row:1;justify-content:flex-end}
+ #flightData{top:max(68px,calc(env(safe-area-inset-top) + 59px));width:330px;right:auto;grid-template-columns:repeat(4,minmax(0,1fr));padding:5px 8px}
+ #autoBanner{top:70px;left:auto;right:12px;transform:none;width:240px}
+ #contactNotice{top:110px;width:min(440px,70%);padding:6px 9px}
+ #reticle{top:39%;width:60px}
+ #bottom{width:min(550px,calc(100% - 120px));bottom:max(7px,env(safe-area-inset-bottom))}
+ .token{min-height:50px;padding:6px}.hint{margin-top:3px}
+ #joystick{left:14px;bottom:max(19px,env(safe-area-inset-bottom))}
+}
+</style>
+</head>
+<body>
+<canvas id="world" tabindex="0" aria-label="Third-person consciousness glider"></canvas><div id="vignette"></div>
+<div id="hud" hidden>
+ <header class="top">
+  <div><div class="brand">APB COMPASS / FLIGHT OF THE MIND</div><h2 id="phaseName">The Good Spell</h2><div id="clock">2:00 <small>REMAINING</small></div></div>
+  <div class="gauges" aria-label="Simulated APB instruments">
+   <div class="gauge" style="--c:var(--cyan)"><div class="gaugeHead"><b>A</b><span id="valueA">35%</span></div><div class="track"><div id="fillA" class="fill"></div></div><small>Absorption / focus</small></div>
+   <div class="gauge" style="--c:var(--peace)"><div class="gaugeHead"><b>P</b><span id="valueP">55%</span></div><div class="track"><div id="fillP" class="fill"></div></div><small>Peace / stability</small></div>
+   <div class="gauge" style="--c:var(--gold)"><div class="gaugeHead"><b>B</b><span id="valueB">20%</span></div><div class="track"><div id="fillB" class="fill"></div></div><small>Bliss / presence</small></div>
+  </div>
+  <div class="tools"><button id="sound" aria-pressed="true">Sound: on</button><button id="motion" aria-pressed="false">Motion: full</button><button id="pause">Pause</button></div>
+ </header>
+ <div id="autoBanner" hidden>FSD / AUTONOMOUS GLIDE — HANDS OFF</div>
+ <div id="reticle"><svg viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="43" stroke="#00d9ff" stroke-opacity=".5"/><circle cx="60" cy="60" r="25" stroke="#00d9ff" stroke-opacity=".25" stroke-dasharray="2 6"/><path d="M60 9v12M60 99v12M9 60h12M99 60h12M52 60h16M60 52v16" stroke="#9dd4e2"/><path id="vectorLine" d="M60 60L60 60" stroke="#d4a574"/><circle id="vectorDot" cx="60" cy="60" r="4" stroke="#d4a574"/></svg><div id="reticleLabel">RECOVERABLE</div></div>
+ <aside id="flightData"><div class="dataRow"><small>ALTITUDE / SIM m</small><strong id="altitude">128</strong></div><div class="dataRow"><small>AIRSPEED / SIM</small><strong id="airspeed">22.0</strong></div><div class="dataRow"><small>CONTROL MODE</small><strong id="mode">MANUAL</strong></div><div class="dataRow"><small id="continueLabel">CONTINUE / RESERVE</small><strong id="continueValue">100%</strong><div class="continueTrack"><div id="continueFill"></div></div></div></aside>
+ <div id="contactNotice" hidden role="status" aria-live="polite"></div>
+ <div id="message" role="status" aria-live="polite">Gentle banking. The gauges give data, not grades.</div>
+ <footer id="bottom"><div class="tokens">
+  <button id="token1" class="token"><span class="key">[1]</span><b>₹500 Stakes</b><small>This Is Important · focus lock for 4s</small><span id="state1" class="state">READY</span></button>
+  <button id="token2" class="token"><span class="key">[2]</span><b>10-Minute Contract</b><small>Commitment · stability shield for 10s</small><span id="state2" class="state">READY</span></button>
+  <button id="token3" class="token"><span class="key">[3]</span><b>Let Go Boost</b><small>FSD Autonomous Glide · A & P above 70%</small><span id="state3" class="state">AWAITING ALIGNMENT</span></button>
+ </div><div class="hint">← → / A D: bank · ↑ ↓ / W S: pitch · Drag or joystick: steer · 1 / 2 / 3: tactical actions</div></footer>
+</div>
+<div id="joystick" hidden aria-label="Drag to steer"><div id="stick"></div></div>
+<section id="intro" class="overlay" aria-labelledby="introTitle"><div class="card">
+ <div class="eyebrow">Inspired by The Self-Driving Mind · Sundar Rajan</div><h1 id="introTitle">The APB Compass:<br>Flight of the Mind</h1><p class="lead">Attention is the heading. Peace is the trim. Letting go opens the sky.</p>
+ <p>Choose the conditions for one two-minute flight. Navigate passing thought clouds, use your tactical commitments, and discover when hands-off glide becomes available.</p>
+ <fieldset class="flightSelector"><legend>Choose your weather</legend><div class="flightChoices"><label class="flightChoice"><input type="radio" name="flightWeather" value="good" checked><span><b>The Good Spell</b><small>Gentle tailwinds. Fewer thoughts, mostly gold.</small></span></label><label class="flightChoice"><input type="radio" name="flightWeather" value="hard"><span><b>The Hard Grind</b><small>Crosswinds. More thoughts and more crimson urgency.</small></span></label></div></fieldset>
+ <div class="thoughtLegend"><span class="goldThought">Gold contact: −12 Continue</span><span class="crimsonThought">Crimson contact: −22 Continue</span></div>
+ <p class="fine">Continue starts at 100. Unprotected thought collisions drain it; protected encounters do not. At zero, this flight ends immediately with an announcement and its telemetry. There is no automatic switch between weather modes.</p>
+ <div class="briefing"><div><b>[1] ₹500 Stakes</b><small>Make it important. Absorption snaps to 100% and gust response softens for 4 seconds. Recharge: 12 seconds.</small></div><div><b>[2] 10-Minute Contract</b><small>Stay with the sitting. A 10-second shield lets thoughts bounce away. Recharge: 22 seconds.</small></div><div><b>[3] Let Go / FSD</b><small>Unlock at A & P above 70%. Release the controls, rise above the clutter, and allow Bliss to unfold.</small></div></div>
+ <p class="fine">Steer with arrows, WASD, or touch/drag. The stakes are a metaphor—no payment occurs. The “10-Minute Contract” is represented by a compressed 10-second shield. Instruments are simulated conditions, not measurements of your meditation.</p>
+ <div class="options"><label><input id="optAudio" type="checkbox" checked> Procedural sound</label><label><input id="optMotion" type="checkbox"> Reduced motion</label></div><button id="begin" class="primary" disabled>Preparing the skyway…</button>
+</div></section>
+<section id="paused" class="overlay" hidden aria-labelledby="pauseTitle"><div class="card"><div class="eyebrow">A moment of space</div><h2 id="pauseTitle">Flight paused.</h2><p>The session clock, weather, and telemetry wait with you.</p><button id="resume" class="primary">Resume flight</button></div></section>
+<section id="report" class="overlay" hidden aria-labelledby="reportTitle"><div class="card">
+ <div id="endingTag" class="eyebrow">Flight ended · Data, not grades</div><h2 id="reportTitle">APB Flight Telemetry</h2><p id="announcement" class="lead" role="status" aria-live="polite"></p>
+ <article class="reportCard singleReport"><div class="eyebrow">Selected weather</div><h3 id="reportPhase">The Good Spell</h3><div class="reportMeters"><div style="--c:var(--cyan)"><strong id="sessionA">—</strong><small>Absorption</small></div><div style="--c:var(--peace)"><strong id="sessionP">—</strong><small>Peace</small></div><div style="--c:var(--gold)"><strong id="sessionB">—</strong><small>Bliss</small></div></div><canvas id="chartSession" role="img" aria-label="Selected flight telemetry"></canvas><p id="sessionInsight"></p><div id="sessionDetail" class="fine"></div><p>Continue remaining: <strong id="reportReserve">—</strong></p></article>
+ <div class="legend"><span style="--c:var(--cyan)">A / Absorption</span><span style="--c:var(--peace)">P / Peace</span><span style="--c:var(--gold)">B / Bliss</span><span style="--c:#a2bbc9">Stability · dashed</span></div>
+ <p id="encounterDetail" class="fine"></p><p class="fine">Percentages are recorded session averages. Gold and crimson marks show thought encounters; cyan marks show tactical actions. Continue is a game reserve, not a measure of your worth or meditation. Ending early preserves the complete telemetry observed so far.</p>
+ <label for="reflection">What did you try to control, and what became easier when you let go?</label><textarea id="reflection" placeholder="A quiet reflection. Nothing is sent or saved automatically."></textarea>
+ <div class="actions"><button id="copy" class="primary">Copy Telemetry & Reflection</button><button id="again">Fly Again</button></div><p id="copyStatus" class="fine" role="status" aria-live="polite"></p><textarea id="fallbackCopy" readonly hidden aria-label="Telemetry text for manual copying"></textarea>
+ <p class="fine">Continue exploring <a href="https://selfdrivingmind.substack.com/" target="_blank" rel="noopener noreferrer">Sundar Rajan’s The Self-Driving Mind</a>.</p>
+</div></section>
+<section id="fatal" class="overlay" hidden role="alert"><div class="card"><div class="eyebrow">Skyway unavailable</div><h2>This flight could not start.</h2><p id="fatalText"></p><button onclick="location.reload()">Reload</button></div></section>
+<!-- Sole external dependency. All meshes, textures, and audio are generated below. -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js" onerror="document.getElementById('fatal').hidden=false;document.getElementById('fatalText').textContent='Three.js could not load. Check your connection and reload.'"></script>
+<script>
+"use strict";
+(() => {
+const $=id=>document.getElementById(id);
+const clamp=(x,lo=0,hi=1)=>Math.max(lo,Math.min(hi,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const damp=(a,b,k,dt)=>lerp(a,b,1-Math.exp(-k*dt));
+const smooth=t=>{t=clamp(t);return t*t*(3-2*t);};
+const STEP=1/60,DURATION=120;
+const settings={audio:true,reduced:matchMedia("(prefers-reduced-motion: reduce)").matches};
+$("optMotion").checked=settings.reduced;
+function randomFactory(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function fail(message){$("fatalText").textContent=message;$("fatal").hidden=false;}
+if(!window.THREE)return;
+
+class InputController{
+ constructor(canvas,joystick){
+  this.enabled=false;this.keys=new Set();this.x=0;this.y=0;this.pointer=null;
+  this.onToken=()=>{};this.onPause=()=>{};
+  window.addEventListener("keydown",e=>{
+   if(/INPUT|TEXTAREA/.test(e.target.tagName))return;
+   const k=e.key.toLowerCase();
+   if(k==="escape"&&!e.repeat){e.preventDefault();this.onPause();return;}
+   if(!this.enabled)return;
+   if(["arrowleft","arrowright","arrowup","arrowdown","a","d","w","s","1","2","3"].includes(k))e.preventDefault();
+   this.keys.add(k);if(["1","2","3"].includes(k)&&!e.repeat)this.onToken(Number(k));
+  });
+  window.addEventListener("keyup",e=>this.keys.delete(e.key.toLowerCase()));
+  [canvas,joystick].forEach(area=>{
+   area.addEventListener("pointerdown",e=>{
+    if(!this.enabled||this.pointer!==null||e.button!==0)return;
+    this.pointer=e.pointerId;this.area=area;
+    const r=area.getBoundingClientRect();this.origin=area===joystick?{x:r.left+r.width/2,y:r.top+r.height/2}:{x:e.clientX,y:e.clientY};
+    area.setPointerCapture(e.pointerId);this.move(e);
+   });
+   area.addEventListener("pointermove",e=>this.move(e));
+   const release=e=>{if(e.pointerId!==this.pointer)return;this.clearPointer();if(area.hasPointerCapture(e.pointerId))area.releasePointerCapture(e.pointerId);};
+   area.addEventListener("pointerup",release);area.addEventListener("pointercancel",release);area.addEventListener("lostpointercapture",()=>this.clearPointer());
+  });
+ }
+ move(e){if(!this.enabled||e.pointerId!==this.pointer)return;const size=this.area===$("joystick")?36:86;this.x=clamp((e.clientX-this.origin.x)/size,-1,1);this.y=clamp(-(e.clientY-this.origin.y)/size,-1,1);$("stick").style.transform=`translate(${this.x*23}px,${-this.y*23}px)`;}
+ clearPointer(){this.pointer=null;this.area=null;this.x=0;this.y=0;$("stick").style.transform="";}
+ clear(){this.keys.clear();this.clearPointer();}
+ axes(){return{x:clamp(this.x+Number(this.keys.has("d")||this.keys.has("arrowright"))-Number(this.keys.has("a")||this.keys.has("arrowleft")),-1,1),y:clamp(this.y+Number(this.keys.has("w")||this.keys.has("arrowup"))-Number(this.keys.has("s")||this.keys.has("arrowdown")),-1,1)};}
+}
+
+class GliderFlightController{
+ constructor(scene){
+  this.mesh=new THREE.Group();
+  const pearl=new THREE.MeshStandardMaterial({color:0xd8e7e9,metalness:.55,roughness:.32,flatShading:true,side:THREE.DoubleSide});
+  const navy=new THREE.MeshStandardMaterial({color:0x173e56,metalness:.6,roughness:.2});
+  const body=new THREE.Mesh(new THREE.ConeGeometry(.27,3,6),pearl);body.rotation.x=-Math.PI/2;this.mesh.add(body);
+  for(const s of[-1,1]){
+   const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute([0,.02,-.7,s*2.85,0,.85,s*.7,.08,1.1,0,.02,-.7,s*.7,.08,1.1,0,.14,.6,0,-.07,-.7,s*.7,-.07,1.1,s*2.85,0,.85],3));g.computeVertexNormals();this.mesh.add(new THREE.Mesh(g,pearl));
+   const tip=new THREE.Mesh(new THREE.SphereGeometry(.065,8,6),new THREE.MeshBasicMaterial({color:0x00d9ff}));tip.position.set(s*2.77,.02,.85);this.mesh.add(tip);
+  }
+  const canopy=new THREE.Mesh(new THREE.SphereGeometry(.24,12,8),navy);canopy.scale.set(.72,.72,2.4);canopy.position.set(0,.16,-.3);this.mesh.add(canopy);
+  const fin=new THREE.Mesh(new THREE.ConeGeometry(.22,.85,3),pearl);fin.scale.z=.3;fin.position.set(0,.28,1);this.mesh.add(fin);
+  this.shield=new THREE.Mesh(new THREE.SphereGeometry(3.2,24,16),new THREE.MeshBasicMaterial({color:0x79dbc1,transparent:true,opacity:.09,depthWrite:false,wireframe:true}));this.mesh.add(this.shield);scene.add(this.mesh);
+  this.reset();
+ }
+ reset(){this.x=0;this.y=0;this.vx=0;this.vy=0;this.roll=0;this.pitch=0;this.speed=22;this.stability=1;this.tension=0;this.shock=0;this.kick=0;this.stall=false;this.auto=false;this.autoAge=0;this.autoStartY=0;this.previous={x:0,y:0,roll:0,pitch:0};this.shield.visible=false;}
+ impact(direction){this.shock=1;this.kick=direction*3.4;this.vx+=direction*1.8;this.vy-=.6;}
+ engageAuto(){this.auto=true;this.autoAge=0;this.autoStartY=this.y;this.stall=false;}
+ update(dt,axes,weather,tactics,time){
+  Object.assign(this.previous,{x:this.x,y:this.y,roll:this.roll,pitch:this.pitch});
+  this.shock=Math.max(0,this.shock-dt*.42);this.kick=damp(this.kick,0,1.6,dt);
+  if(this.auto){
+   this.autoAge+=dt;this.x=damp(this.x,Math.sin(time*.13)*.8,.7,dt);
+   this.y=lerp(this.autoStartY,14,smooth(this.autoAge/12));this.vx=0;this.vy=0;
+   this.roll=damp(this.roll,Math.sin(time*.2)*.025,2,dt);this.pitch=damp(this.pitch,this.autoAge<12?.12:.015,2,dt);
+   this.speed=damp(this.speed,24,1,dt);this.stability=damp(this.stability,.99,1,dt);this.tension=damp(this.tension,0,1,dt);this.stall=false;
+  }else{
+   const protection=tactics.stakes>0?.25:tactics.shield>0?.45:1;
+   const bank=axes.x*.72+weather.windX*.024*protection+this.kick*.075;
+   const pitch=axes.y*.66+weather.windY*.025*protection;
+   this.roll=damp(this.roll,-bank,3.6,dt);this.pitch=damp(this.pitch,pitch,2.5,dt);
+   this.vx+=(-Math.sin(this.roll)*5+weather.windX*.45*protection+this.kick-this.vx*1.35-this.x*.15)*dt;
+   this.vy+=(Math.sin(this.pitch)*5+weather.windY*.3*protection-this.vy*1.3)*dt;
+   this.x=clamp(this.x+this.vx*dt,-10,10);this.y=clamp(this.y+this.vy*dt,-5,9);
+   if(this.y<=-5&&this.vy<0)this.vy=0;if(this.y>=9&&this.vy>0)this.vy=0;
+   const targetSpeed=24-Math.max(0,this.pitch)*17-Math.abs(this.roll)*2-this.shock*4;
+   this.speed=damp(this.speed,clamp(targetSpeed,8,30),.9,dt);this.stall=this.speed<13.2&&this.pitch>.43;
+   this.tension=damp(this.tension,(Math.abs(axes.x)+Math.abs(axes.y))*.18,1,dt);
+   this.stability=clamp(1-Math.abs(this.roll)*.32-Math.abs(this.vx)*.065-Math.abs(this.vy)*.045-this.shock*.32-(this.stall?.25:0));
+  }
+  this.shield.visible=tactics.shield>0&&!this.auto;this.shield.rotation.y+=dt*.3;
+ }
+ render(alpha,time){
+  this.mesh.position.set(lerp(this.previous.x,this.x,alpha),lerp(this.previous.y,this.y,alpha)-1,0);
+  const shake=settings.reduced?0:this.shock*Math.sin(time*31)*.035;
+  this.mesh.rotation.set(lerp(this.previous.pitch,this.pitch,alpha)+shake,0,lerp(this.previous.roll,this.roll,alpha)+shake);
+ }
+}
+
+class APBInstrumentModel{
+ constructor(){this.reset();}
+ reset(){this.a=.35;this.p=.55;this.b=.20;this.continuity=.6;}
+ hit(category="gold"){this.p=clamp(this.p-(category==="crimson"?.32:.20));}
+ update(dt,flight,weather,tactics,time){
+  this.continuity=damp(this.continuity,flight.stability,.2,dt);
+  const storm=weather.storm;
+  const targetA=flight.auto?.97:clamp(.86-storm*.20-flight.tension*.2-flight.shock*.12+this.continuity*.025);
+  const targetP=flight.auto?.95:clamp(.90-storm*.27-flight.tension*.15-flight.shock*.22-(flight.stall?.12:0)+(tactics.shield>0?.10:0));
+  const targetB=flight.auto?.99:clamp(.55-storm*.22+Math.sin(time*.07)*.018);
+  this.a=tactics.stakes>0?1:damp(this.a,targetA,.13,dt);
+  this.p=damp(this.p,targetP,flight.auto?.20:.13,dt);
+  this.b=damp(this.b,targetB,flight.auto?.18:.065,dt);
+ }
+}
+
+class TacticalActionController{
+ constructor(){this.reset();}
+ reset(){this.stakes=0;this.shield=0;this.cool1=0;this.cool2=0;this.used={1:0,2:0,3:0};}
+ update(dt){for(const k of["stakes","shield","cool1","cool2"])this[k]=Math.max(0,this[k]-dt);}
+ available(index,flight,apb){return !flight.auto&&(index===1?this.cool1<=0:index===2?this.cool2<=0:apb.a>.70&&apb.p>.70);}
+ activate(index,flight,apb){
+  if(!this.available(index,flight,apb))return false;
+  if(index===1){this.stakes=4;this.cool1=12;apb.a=1;flight.shock*=.25;}
+  if(index===2){this.shield=10;this.cool2=22;}
+  if(index===3)flight.engageAuto();
+  this.used[index]++;return true;
+ }
+}
+
+class AtmosphericWeatherEngine{
+ constructor(scene){
+  this.scene=scene;this.random=randomFactory(498);
+  this.uniforms={top:{value:new THREE.Color(0x112943)},horizon:{value:new THREE.Color(0xaa827e)},bottom:{value:new THREE.Color(0x1b3449)}};
+  const sky=new THREE.Mesh(new THREE.SphereGeometry(430,24,16),new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,uniforms:this.uniforms,
+   vertexShader:`varying vec3 v;void main(){v=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+   fragmentShader:`varying vec3 v;uniform vec3 top,horizon,bottom;void main(){float h=normalize(v).y;vec3 c=h>0.0?mix(horizon,top,smoothstep(0.0,.8,h)):mix(horizon,bottom,smoothstep(0.0,.6,-h));gl_FragColor=vec4(c,1.0);}`}));sky.frustumCulled=false;scene.add(sky);
+  scene.fog=new THREE.FogExp2(0x3d5367,.006);
+  this.hemi=new THREE.HemisphereLight(0xd4efff,0x28384b,1.2);scene.add(this.hemi);
+  this.key=new THREE.DirectionalLight(0xffd2a4,1.2);this.key.position.set(-20,35,-30);scene.add(this.key);
+  const c=document.createElement("canvas");c.width=c.height=256;const ctx=c.getContext("2d"),r=randomFactory(554);
+  for(let i=0;i<24;i++){const x=55+r()*140,y=65+r()*125,size=25+r()*55,g=ctx.createRadialGradient(x,y,0,x,y,size);g.addColorStop(0,"rgba(255,255,255,.18)");g.addColorStop(.5,"rgba(255,255,255,.08)");g.addColorStop(1,"rgba(255,255,255,0)");ctx.fillStyle=g;ctx.fillRect(0,0,256,256);}
+  this.cloudTexture=new THREE.CanvasTexture(c);
+  this.cloudMat=new THREE.SpriteMaterial({map:this.cloudTexture,color:0xb7aebc,transparent:true,opacity:.65,depthWrite:false,fog:true});this.clouds=[];
+  for(let i=0;i<72;i++){const s=new THREE.Sprite(this.cloudMat),size=13+this.random()*25;s.position.set((this.random()<.5?-1:1)*(14+this.random()*60),-15+this.random()*37,-this.random()*280);s.scale.set(size*1.8,size,1);s.userData={x:s.position.x,y:s.position.y,phase:this.random()*6.28};scene.add(s);this.clouds.push(s);}
+  this.ringMat=new THREE.MeshBasicMaterial({color:0xd4a574,opacity:.18,transparent:true,depthWrite:false});this.rings=[];
+  const rg=new THREE.TorusGeometry(12,.055,6,72);
+  for(let i=0;i<6;i++){const ring=new THREE.Mesh(rg,this.ringMat);ring.position.set(Math.sin(i)*6,1,-50-i*40);scene.add(ring);this.rings.push(ring);}
+  this.positions=new Float32Array(260*3);for(let i=0;i<260;i++){this.positions[i*3]=(this.random()-.5)*110;this.positions[i*3+1]=(this.random()-.5)*70;this.positions[i*3+2]=-this.random()*230;}
+  const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.BufferAttribute(this.positions,3));this.dustMat=new THREE.PointsMaterial({color:0xbeddea,size:.12,transparent:true,opacity:.6,depthWrite:false});this.dust=new THREE.Points(g,this.dustMat);this.dust.frustumCulled=false;scene.add(this.dust);
+  this.colors={navy:new THREE.Color(0x112943),storm:new THREE.Color(0x081323),gold:new THREE.Color(0x9b7451),horizon:new THREE.Color(0xaa827e),stormHorizon:new THREE.Color(0x34475c),goldHorizon:new THREE.Color(0xffdfa1),bottom:new THREE.Color(0x1b3449),fog:new THREE.Color(0x3d5367),goldFog:new THREE.Color(0xd1b38a)};
+  this.reset();
+ }
+ reset(){this.time=0;this.storm=0;this.gold=0;this.windX=0;this.windY=0;}
+ update(dt,phase,flight){
+  this.time+=dt;this.storm=damp(this.storm,phase==="hard"?1:0,.25,dt);this.gold=damp(this.gold,flight.auto?smooth(flight.autoAge/10):0,.7,dt);
+  const t=this.time;this.windX=.35*Math.sin(t*.6)+this.storm*(3*Math.sin(t*.91)+1.9*Math.sin(t*1.71));this.windY=.2*Math.sin(t*.4)+this.storm*(1.5*Math.sin(t*1.13)+.8*Math.sin(t*.53));
+  const motion=settings.reduced?.3:1;
+  for(const s of this.clouds){s.position.z+=flight.speed*dt*motion*.8;if(s.position.z>25)s.position.z=-280;s.position.x=s.userData.x+Math.sin(t*.1+s.userData.phase)*(1+this.storm*4);s.position.y=s.userData.y+Math.sin(t*.14+s.userData.phase);}
+  for(const ring of this.rings){ring.position.z+=flight.speed*dt*motion*.75;if(ring.position.z>20)ring.position.z=-280;ring.position.y=flight.auto?12:1;}
+  for(let i=0;i<this.positions.length;i+=3){this.positions[i+2]+=flight.speed*dt*motion*(1+.7*this.storm);this.positions[i]+=this.windX*dt*.2;if(this.positions[i+2]>20)this.positions[i+2]=-230;if(this.positions[i]>55)this.positions[i]=-55;if(this.positions[i]<-55)this.positions[i]=55;}
+  this.dust.geometry.attributes.position.needsUpdate=true;
+ }
+ render(){const c=this.colors,s=this.storm,g=this.gold;this.uniforms.top.value.copy(c.navy).lerp(c.storm,s).lerp(c.gold,g);this.uniforms.horizon.value.copy(c.horizon).lerp(c.stormHorizon,s).lerp(c.goldHorizon,g);this.uniforms.bottom.value.copy(c.bottom);this.scene.fog.color.copy(c.fog).lerp(c.stormHorizon,s).lerp(c.goldFog,g);this.scene.fog.density=.006+s*.003-g*.005;this.cloudMat.color.setHex(this.storm>.5?0x63768c:0xb7aebc);this.cloudMat.opacity=.65*(1-g*.65);this.key.intensity=1.2-s*.55+g*.6;this.ringMat.opacity=.17*(1-s*.6)+g*.12;this.ringMat.color.setHex(g>.5?0xffdca0:0xd4a574);}
+}
+
+class ThoughtObstacleField{
+ constructor(scene,cloudTexture,onEncounter){
+  this.scene=scene;this.onEncounter=onEncounter;this.pool=[];this.random=randomFactory(409);
+  this.catalog={gold:["can't sit still","did payment clear?","how much lost?","should've said that","deadline panic","run the numbers","what's next?","minutes left?","doing this wrong","unread text","comparison","lane drift","road noise","blind spot","drowsy"],crimson:["get up now","fix this now","check screen","stop thinking!","total waste","what if it fails?","not my fault","make it stop!"]};
+  this.entries=Object.entries(this.catalog).flatMap(([category,texts])=>texts.map(text=>({category,text})));
+  this.textures=this.entries.map(({text,category})=>{
+   const c=document.createElement("canvas");c.width=1024;c.height=192;const x=c.getContext("2d");
+   const gradient=x.createRadialGradient(512,96,0,512,96,490);gradient.addColorStop(0,"rgba(7,24,40,.98)");gradient.addColorStop(.8,"rgba(16,40,57,.88)");gradient.addColorStop(1,"rgba(14,32,47,0)");x.fillStyle=gradient;x.fillRect(0,0,1024,192);
+   x.fillStyle=category==="crimson"?"#e45d78":"#d4a574";x.font="18px system-ui";x.textAlign="center";x.fillText(category==="crimson"?"CRIMSON / URGENCY":"GOLD / MENTAL WEATHER",512,48);x.font="500 46px system-ui";x.fillText(text,512,115);return new THREE.CanvasTexture(c);
+  });
+  for(let i=0;i<12;i++){
+   const group=new THREE.Group();const cloud=new THREE.Sprite(new THREE.SpriteMaterial({map:cloudTexture,color:0xa3aabd,transparent:true,opacity:.36,depthWrite:false}));cloud.scale.set(12,5,1);group.add(cloud);
+   const label=new THREE.Sprite(new THREE.SpriteMaterial({map:this.textures[0],transparent:true,depthWrite:false,fog:true}));label.scale.set(9,1.69,1);label.position.z=.2;group.add(label);group.visible=false;scene.add(group);this.pool.push({group,label,cloud,active:false,resolved:false,vx:0,age:0,index:0});
+  }
+  this.reset();
+ }
+ reset(){this.random=randomFactory(409);this.spawnClock=2;this.count=0;this.categoryIndex={gold:0,crimson:0};for(const o of this.pool){o.active=false;o.group.visible=false;}}
+ spawn(mode="good"){
+  const o=this.pool.find(p=>!p.active);if(!o)return;
+  const category=this.count===0?"gold":this.random()<(mode==="hard"?.40:.12)?"crimson":"gold";
+  const text=this.catalog[category][this.categoryIndex[category]++%this.catalog[category].length];
+  o.index=this.entries.findIndex(e=>e.category===category&&e.text===text);o.category=category;o.text=text;
+  o.label.material.map=this.textures[o.index];o.label.material.needsUpdate=true;
+  o.label.material.opacity=1;o.label.material.color.setHex(0xffffff);o.cloud.material.opacity=.4;o.cloud.material.color.setHex(category==="crimson"?0xb63d5c:0xd4a574);o.group.scale.setScalar(1);
+  const first=this.count===0;o.group.position.set(first?0:(this.random()-.5)*12,first?-1:-3+this.random()*7,-110);
+  o.baseY=o.group.position.y;o.phase=this.random()*6.28;o.active=true;o.resolved=false;o.vx=0;o.age=0;o.group.visible=true;this.count++;
+ }
+ update(dt,flight,tactics,phase,time){
+  this.spawnClock-=dt;if(this.spawnClock<=0){this.spawn(phase);this.spawnClock=phase==="hard"?2.8:7.2;}
+  for(const o of this.pool){
+   if(!o.active)continue;const previous={x:o.group.position.x,y:o.group.position.y,z:o.group.position.z};o.age+=dt;o.group.position.z+=flight.speed*dt;
+   o.group.position.x+=o.vx*dt;o.group.position.y=o.baseY+Math.sin(time*.45+o.phase)*.24;
+   const x=o.group.position.x-flight.x,y=o.group.position.y-(flight.y-1),z=o.group.position.z;
+   // Sweep relative motion through an ellipsoid covering the visible cloud
+   // and glider wing span. Banking increases the vertical wing extent.
+   const roll=flight.roll||0,rx=5.4+2.85*Math.abs(Math.cos(roll)),ry=2.3+2.85*Math.abs(Math.sin(roll)),rz=3.1;
+   const oldFlight=flight.previous||{x:flight.x,y:flight.y};
+   const ax=(previous.x-oldFlight.x)/rx,ay=(previous.y-(oldFlight.y-1))/ry,az=previous.z/rz;
+   const bx=x/rx,by=y/ry,bz=z/rz,dx=bx-ax,dy=by-ay,dz=bz-az;
+   const length=dx*dx+dy*dy+dz*dz;
+   const u=length>1e-12?clamp(-(ax*dx+ay*dy+az*dz)/length):0;
+   const closestX=ax+u*dx,closestY=ay+u*dy,closestZ=az+u*dz;
+   const touching=closestX*closestX+closestY*closestY+closestZ*closestZ<=1;
+   if(!o.resolved&&touching){
+    o.resolved=true;
+    if(tactics.shield>0||flight.auto){o.vx=(x>=0?1:-1)*8;o.cloud.material.color.setHex(0x79dbc1);this.onEncounter("shield",o.text,x>=0?1:-1,o.category);}
+    else{this.onEncounter("hit",o.text,x>=0?-1:1,o.category);o.label.material.color.setHex(0xdca082);}
+   }
+   if(!o.resolved&&z>rz){o.resolved=true;this.onEncounter("dodged",o.text,0,o.category);}
+   if(o.resolved&&z>0){o.label.material.opacity=clamp(1-z/20);o.cloud.material.opacity=.36*clamp(1-z/20);}
+   if(z>24){o.active=false;o.group.visible=false;}
+  }
+ }
+}
+
+class WindTrails{
+ constructor(scene){this.paths=[];this.tip=new THREE.Vector3();for(const side of[-1,1]){const array=new Float32Array(48*3),g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.BufferAttribute(array,3));const line=new THREE.Line(g,new THREE.LineBasicMaterial({color:0x00d9ff,transparent:true,opacity:.45,depthWrite:false}));line.frustumCulled=false;scene.add(line);this.paths.push({side,array,line});}this.reset();}
+ reset(){for(const p of this.paths)for(let i=0;i<48;i++){p.array[i*3]=p.side*2.77;p.array[i*3+1]=-1;p.array[i*3+2]=.85+i*.36;}}
+ update(dt,flight,weather){for(const p of this.paths){for(let i=47;i>0;i--){const n=i*3;p.array[n]=p.array[n-3]+weather.windX*dt*.15;p.array[n+1]=p.array[n-2]+weather.windY*dt*.1;p.array[n+2]=p.array[n-1]+flight.speed*dt;}this.tip.set(p.side*2.77,.02,.85);flight.mesh.localToWorld(this.tip);p.array[0]=this.tip.x;p.array[1]=this.tip.y;p.array[2]=this.tip.z;p.line.geometry.attributes.position.needsUpdate=true;p.line.material.color.setHex(flight.auto?0xd4a574:0x00d9ff);p.line.material.opacity=.25+flight.stability*.2;}}
+}
+
+class ProceduralAudioEngine{
+ constructor(){this.ctx=null;this.enabled=false;this.paused=false;this.alarmTimer=0;this.altTimer=0;}
+ build(){
+  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)throw Error("Web Audio unavailable");const c=this.ctx=new AC();
+  this.master=c.createGain();this.master.gain.value=0;const limiter=c.createDynamicsCompressor();limiter.threshold.value=-22;limiter.knee.value=16;limiter.ratio.value=5;this.master.connect(limiter);limiter.connect(c.destination);
+  const size=c.sampleRate*4,buffer=c.createBuffer(1,size,c.sampleRate),data=buffer.getChannelData(0),random=randomFactory(505);let a=0,b=0,d=0;
+  for(let i=0;i<size;i++){const white=random()*2-1;a=.997*a+white*.035;b=.985*b+white*.06;d=.95*d+white*.1;data[i]=(a+b+d+white*.1)*.35;}
+  for(let i=0;i<2048;i++)data[i]=lerp(data[size-2048+i],data[i],i/2048);
+  this.noise=c.createBufferSource();this.noise.buffer=buffer;this.noise.loop=true;
+  this.filter=c.createBiquadFilter();this.filter.type="lowpass";this.filter.Q.value=.5;
+  this.dry=c.createGain();this.dry.gain.value=0;this.wet=c.createGain();this.wet.gain.value=0;
+  this.distortion=c.createWaveShaper();const curve=new Float32Array(1024);for(let i=0;i<curve.length;i++){const x=i*2/(curve.length-1)-1;curve[i]=(1+24)*x/(1+24*Math.abs(x));}this.distortion.curve=curve;this.distortion.oversample="2x";
+  this.noise.connect(this.filter);this.filter.connect(this.dry);this.dry.connect(this.master);this.filter.connect(this.distortion);this.distortion.connect(this.wet);this.wet.connect(this.master);
+  this.lowFilter=c.createBiquadFilter();this.lowFilter.type="lowpass";this.lowFilter.frequency.value=90;this.rumble=c.createGain();this.rumble.gain.value=0;this.noise.connect(this.lowFilter);this.lowFilter.connect(this.rumble);this.rumble.connect(this.master);this.noise.start();
+  this.hum=c.createGain();this.hum.gain.value=0;this.hum.connect(this.master);
+  [110,165,220].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=f;g.gain.value=i?.16:.4;o.connect(g);g.connect(this.hum);o.start();});
+ }
+ async activate(){if(!settings.audio)return;try{if(!this.ctx)this.build();await this.ctx.resume();this.enabled=true;this.paused=false;this.master.gain.setTargetAtTime(.4,this.ctx.currentTime,.15);}catch(e){settings.audio=false;this.enabled=false;console.info("Flying silently:",e);}}
+ async toggle(){settings.audio=!settings.audio;if(settings.audio)await this.activate();else{this.enabled=false;if(this.ctx)this.master.gain.setTargetAtTime(0,this.ctx.currentTime,.15);}}
+ pause(value){this.paused=value;if(this.ctx)this.master.gain.setTargetAtTime(value||!this.enabled?0:.4,this.ctx.currentTime,.12);}
+ tone(f,delay=0,duration=.7,level=.06,type="sine",endF=null){
+  if(!this.ctx||!this.enabled||this.paused)return;const c=this.ctx,t=c.currentTime+delay,o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(endF)o.frequency.linearRampToValueAtTime(endF,t+duration);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(level,t+.025);g.gain.exponentialRampToValueAtTime(.0001,t+duration);o.connect(g);g.connect(this.master);o.start(t);o.stop(t+duration+.04);o.onended=()=>{o.disconnect();g.disconnect();};
+ }
+ chord(){[261.63,329.63,392,523.25].forEach((f,i)=>this.tone(f,i*.17,3.6,.075));}
+ impact(){this.tone(130,0,.35,.055,"triangle",85);}
+ quiet(){if(!this.ctx)return;const t=this.ctx.currentTime;[this.dry,this.wet,this.rumble,this.hum].forEach(g=>g.gain.setTargetAtTime(0,t,.6));}
+ update(dt,flight,weather,apb){
+  if(!this.ctx||!this.enabled||this.paused)return;const t=this.ctx.currentTime,auto=flight.auto;
+  this.filter.frequency.setTargetAtTime(450+flight.speed*22+weather.storm*900*(auto?.18:1),t,.3);
+  this.dry.gain.setTargetAtTime(auto?.07:.12+weather.storm*.05,t,.25);
+  this.wet.gain.setTargetAtTime(auto?0:flight.shock*.09,t,.15);
+  this.rumble.gain.setTargetAtTime(auto?0:weather.storm*.15+flight.shock*.09,t,.3);
+  this.hum.gain.setTargetAtTime(auto?.05:.012+apb.b*.016,t,.4);
+  this.alarmTimer-=dt;this.altTimer-=dt;
+  if(flight.stall&&!auto&&this.alarmTimer<=0){this.tone(260,0,.35,.035,"square",180);this.tone(260,.4,.35,.035,"square",180);this.alarmTimer=2.4;}
+  if(128+flight.y*8<104&&!auto&&this.altTimer<=0){this.tone(740,0,.12,.035);this.altTimer=1.4;}
+ }
+}
+
+class ScenarioDirector{
+ constructor(){this.reset();}
+ reset(mode="good"){this.mode=mode==="hard"?"hard":"good";this.time=0;this.running=false;this.samples=[];this.events=[];this.held=0;this.reserve=100;this.reason=null;this.lastThought="";this.autoSeconds=0;this.sampleClock=0;this.onComplete=()=>{};}
+ get phase(){return this.mode;}
+ record(kind,text,category=null){if(this.running)this.events.push({t:this.time,kind,text,category});}
+ sample(flight,apb){const a=this.samples,s={t:this.time,a:apb.a,p:apb.p,b:apb.b,stability:flight.stability,reserve:this.reserve};if(a.length&&Math.abs(a[a.length-1].t-this.time)<.001)a[a.length-1]=s;else a.push(s);}
+ start(flight,apb){this.running=true;this.sample(flight,apb);}
+ contact(category,text,flight,apb){
+  if(!this.running)return;
+  this.reserve=Math.max(0,this.reserve-(category==="crimson"?22:12));this.lastThought=text;
+  if(this.reserve===0)this.finish("depleted",flight,apb);
+ }
+ finish(reason,flight,apb){if(!this.running)return;this.reason=reason;this.sample(flight,apb);this.running=false;this.onComplete(reason);}
+ update(dt,flight,apb){
+  if(!this.running)return;const step=Math.min(dt,DURATION-this.time);this.time=Math.min(DURATION,this.time+step);if(DURATION-this.time<1e-7)this.time=DURATION;
+  if(flight.stability>=.5)this.held+=step;if(flight.auto)this.autoSeconds+=step;
+  this.sampleClock+=step;
+  if(this.sampleClock>=.5){this.sampleClock-=.5;this.sample(flight,apb);}
+  if(this.time>=DURATION)this.finish("completed",flight,apb);
+ }
+}
+
+let renderer,scene,camera;
+try{renderer=new THREE.WebGLRenderer({canvas:$("world"),antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.6));renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(58,innerWidth/innerHeight,.1,550);camera.position.set(0,3,11);}catch(e){fail("WebGL could not initialize. Enable hardware acceleration or try another browser.");return;}
+const weather=new AtmosphericWeatherEngine(scene),flight=new GliderFlightController(scene),apb=new APBInstrumentModel(),tactics=new TacticalActionController(),audio=new ProceduralAudioEngine(),director=new ScenarioDirector(),input=new InputController($("world"),$("joystick")),trails=new WindTrails(scene);
+let paused=false,contextLost=false,last=performance.now(),accumulator=0,uiClock=0,audioClock=0,messageUntil=0,lastMessage="",reportBase="",contactUntil=0;
+const cameraGoal=new THREE.Vector3(),look=new THREE.Vector3();
+function say(text,seconds=0){if(text!==lastMessage){lastMessage=text;$("message").textContent=text;}messageUntil=director.time+seconds;}
+function contactNotice(text,protectedContact=false){$("contactNotice").textContent=text;$("contactNotice").classList.toggle("protected",protectedContact);$("contactNotice").hidden=false;contactUntil=director.time+4;}
+const thoughts=new ThoughtObstacleField(scene,weather.cloudTexture,(kind,text,direction,category)=>{
+ if(!director.running)return;
+ director.record(kind,text,category);
+ if(kind==="hit"){const before=director.reserve;flight.impact(direction);apb.hit(category);audio.impact();director.contact(category,text,flight,apb);contactNotice(`${category.toUpperCase()} HIT · Continue ${before}% → ${director.reserve}% (−${before-director.reserve})`);say(`Thought contact: ${text}. Continue decreased.`,4);updateHUD();}
+ else if(kind==="shield"){contactNotice(flight.auto?"PROTECTED · Autonomous glide · No Continue loss":"PROTECTED · Contract shield active · No Continue loss",true);say(flight.auto?"The thoughts continue below. Let the glide carry you.":"Contract held. The thought passes without a penalty.",3);}
+});
+function syncSettings(){$("sound").textContent=`Sound: ${settings.audio?"on":"off"}`;$("sound").setAttribute("aria-pressed",String(settings.audio));$("motion").textContent=`Motion: ${settings.reduced?"reduced":"full"}`;$("motion").setAttribute("aria-pressed",String(settings.reduced));}
+function showControls(){input.enabled=director.running&&!paused;$("joystick").hidden=!input.enabled||flight.auto;}
+function activateToken(index){
+ if(!director.running||paused)return;
+ if(!tactics.activate(index,flight,apb))return;
+ director.record("token",["","₹500 Stakes","10-Minute Contract","Let Go / FSD"][index]);
+ if(index===1){audio.tone(440,0,.7,.035);say("This is important. Absorption locked; gust response softened.",4);}
+ if(index===2){audio.tone(330,0,1,.04);say("Contract engaged. Stay with the flight; thoughts may pass.",4);}
+ if(index===3){input.clear();audio.chord();$("autoBanner").hidden=false;say("Hands off. A deeper steadiness carries the flight.",8);}
+ showControls();updateHUD();
+}
+input.onToken=activateToken;input.onPause=()=>paused?resume():pause();
+[1,2,3].forEach(i=>$("token"+i).onclick=()=>activateToken(i));
+function pause(){if(paused||!director.running)return;paused=true;input.clear();showControls();$("paused").hidden=false;audio.pause(true);$("resume").focus();}
+async function resume(){if(!paused||contextLost)return;paused=false;$("paused").hidden=true;last=performance.now();accumulator=0;showControls();if(settings.audio)await audio.activate();else audio.pause(false);syncSettings();$("world").focus();}
+$("pause").onclick=pause;$("resume").onclick=resume;
+window.addEventListener("blur",pause);document.addEventListener("visibilitychange",()=>{if(document.hidden)pause();});
+$("sound").onclick=async()=>{await audio.toggle();if(paused)audio.pause(true);syncSettings();};$("motion").onclick=()=>{settings.reduced=!settings.reduced;syncSettings();};
+function bindDirector(){
+ director.onComplete=reason=>{input.clear();showControls();$("hud").hidden=true;$("report").hidden=false;audio.quiet();if(reason==="completed")audio.chord();else audio.tone(330,0,1.4,.045,"sine",220);drawReport();$("copy").focus();};
+}
+async function begin(){
+ settings.audio=$("optAudio").checked;settings.reduced=$("optMotion").checked;
+ $("intro").hidden=true;$("report").hidden=true;$("paused").hidden=true;$("hud").hidden=false;$("autoBanner").hidden=true;
+ const selected=document.querySelector('input[name="flightWeather"]:checked').value;
+ $("phaseName").textContent=selected==="hard"?"The Hard Grind":"The Good Spell";$("reflection").value="";$("fallbackCopy").hidden=true;$("copyStatus").textContent="";
+ paused=false;lastMessage="";messageUntil=0;contactUntil=0;$("contactNotice").hidden=true;weather.reset();if(selected==="hard")weather.storm=1;flight.reset();apb.reset();tactics.reset();thoughts.reset();trails.reset();director.reset(selected);bindDirector();input.clear();
+ camera.position.set(0,3,11);camera.rotation.set(0,0,0);director.start(flight,apb);showControls();say("Gentle banking. The gauges give data, not grades.",7);syncSettings();updateHUD();last=performance.now();accumulator=0;
+ if(settings.audio)await audio.activate();else{audio.enabled=false;audio.pause(false);}syncSettings();$("world").focus();
+}
+$("begin").onclick=begin;$("again").onclick=()=>{$("report").hidden=true;$("intro").hidden=false;$("optAudio").checked=settings.audio;$("optMotion").checked=settings.reduced;audio.quiet();$("begin").focus();};
+function updateHUD(){
+ for(const[k,v]of[["A",apb.a],["P",apb.p],["B",apb.b]]){$("value"+k).textContent=Math.round(v*100)+"%";$("fill"+k).style.transform=`scaleX(${clamp(v)})`;}
+ const remaining=Math.max(0,Math.ceil(DURATION-director.time));$("clock").innerHTML=`${Math.floor(remaining/60)}:${String(remaining%60).padStart(2,"0")} <small>REMAINING</small>`;
+ $("altitude").textContent=Math.round(128+flight.y*8);$("airspeed").textContent=flight.speed.toFixed(1);$("mode").textContent=flight.auto?"FSD":"MANUAL";
+ $("continueValue").textContent=director.reserve+"%";$("continueFill").style.transform=`scaleX(${director.reserve/100})`;$("continueFill").style.background=director.reserve<=22?"#e45d78":director.reserve<=45?"var(--gold)":"var(--peace)";
+ $("continueLabel").textContent=flight.auto?"CONTINUE / FSD PROTECTED":tactics.shield>0?"CONTINUE / SHIELD ACTIVE":"CONTINUE / RESERVE";
+ if(director.time>=contactUntil)$("contactNotice").hidden=true;
+ const x=60+clamp(-flight.roll*35,-34,34),y=60-clamp(flight.pitch*35,-34,34);$("vectorDot").setAttribute("cx",x);$("vectorDot").setAttribute("cy",y);$("vectorLine").setAttribute("d",`M60 60L${x} ${y}`);$("reticleLabel").textContent=flight.auto?"AUTONOMOUS":flight.stall?"SOFTEN THE CLIMB":flight.stability<.5?"RETURN WHEN READY":"RECOVERABLE";
+ for(const i of[1,2,3])$("token"+i).disabled=!director.running||paused||!tactics.available(i,flight,apb);
+ $("state1").textContent=flight.auto?"RELEASED":tactics.stakes>0?`FOCUS LOCK · ${tactics.stakes.toFixed(1)}s`:tactics.cool1>0?`RECHARGE · ${Math.ceil(tactics.cool1)}s`:"READY";
+ $("state2").textContent=flight.auto?"RELEASED":tactics.shield>0?`SHIELD · ${tactics.shield.toFixed(1)}s`:tactics.cool2>0?`RECHARGE · ${Math.ceil(tactics.cool2)}s`:"READY";
+ $("state3").textContent=flight.auto?"AUTONOMOUS GLIDE ENGAGED":apb.a>.70&&apb.p>.70?"ALIGNED · READY TO LET GO":"AWAITING A & P > 70%";
+ if(director.time>=messageUntil){if(flight.auto)say("The controls rest. Presence does not need to be forced.");else if(flight.stall)say("Low airspeed. Ease the upward pitch; recover gently.");else if(128+flight.y*8<104)say("Low altitude. A small upward correction is enough.");else if(director.phase==="hard")say("Holding the line. Lower readings do not invalidate the return.");else say("The Good Spell. Notice ease without making it a demand.");}
+}
+function averages(){const a=director.samples;const mean=k=>{if(!a.length)return 0;if(a.length===1||director.time===0)return Math.round(a[a.length-1][k]*100);let area=0;for(let i=1;i<a.length;i++)area+=(a[i-1][k]+a[i][k])*.5*(a[i].t-a[i-1].t);return Math.round(area/director.time*100);};return{a:mean("a"),p:mean("p"),b:mean("b")};}
+function eventCount(kind,category=null){return director.events.filter(e=>e.kind===kind&&(!category||e.category===category)).length;}
+function drawChart(id){
+ const canvas=$(id),width=canvas.getBoundingClientRect().width,height=145;if(!width)return;const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);const c=canvas.getContext("2d");c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,width,height);
+ const duration=Math.max(.01,director.time),left=28,right=8,top=10,bottom=24,w=width-left-right,h=height-top-bottom,x=t=>left+t/duration*w,y=v=>top+(1-v)*h;c.font="9px system-ui";c.textBaseline="middle";
+ for(const v of[0,.5,1]){c.strokeStyle="rgba(180,215,230,.13)";c.lineWidth=1;c.beginPath();c.moveTo(left,y(v));c.lineTo(width-right,y(v));c.stroke();c.fillStyle="#94afbf";c.textAlign="right";c.fillText(Math.round(v*100),left-5,y(v));}
+ for(const f of[0,.5,1]){c.textAlign=f===0?"left":f===1?"right":"center";c.fillStyle="#94afbf";c.fillText(Math.round(director.time*f)+"s",x(duration*f),height-10);}
+ for(const[k,color,dashed]of[["stability","#a2bbc9",true],["a","#00d9ff",false],["p","#79dbc1",false],["b","#d4a574",false]]){c.strokeStyle=color;c.lineWidth=dashed?1:1.7;c.setLineDash(dashed?[4,5]:[]);c.beginPath();director.samples.forEach((s,i)=>{if(i)c.lineTo(x(s.t),y(s[k]));else c.moveTo(x(s.t),y(s[k]));});c.stroke();}c.setLineDash([]);
+ for(const e of director.events){c.fillStyle=e.kind==="token"?"#00d9ff":e.category==="crimson"?"#e45d78":"#d4a574";c.fillRect(x(e.t)-1,top+h+3,2,4);}
+ const v=averages();canvas.setAttribute("aria-label",`${director.phase==="good"?"Good Spell":"Hard Grind"}, ${director.time.toFixed(1)} seconds: average A ${v.a}%, P ${v.p}%, B ${v.b}%.`);
+}
+function drawReport(){
+ const v=averages(),name=director.phase==="hard"?"The Hard Grind":"The Good Spell",depleted=director.reason==="depleted";
+ for(const k of["a","p","b"])$("session"+k.toUpperCase()).textContent=v[k]+"%";
+ const announcement=depleted?"Continue reserve depleted. This flight has ended. Take a moment; the telemetry records what happened.":"Two-minute flight complete. Let the controls rest and notice what the instruments recorded.";
+ $("endingTag").textContent=depleted?"Flight ended early · Data, not grades":"Flight complete · Data, not grades";$("announcement").textContent=announcement;$("reportPhase").textContent=name;
+ $("sessionInsight").textContent=director.phase==="hard"?"Returning while the mind is on fire exercises the capacity to stay. An early ending does not erase the steadiness already held.":"Smooth conditions reveal how ease can unfold. Passing thoughts still belong to the weather of this sitting.";
+ $("reportReserve").textContent=director.reserve+"%";
+ const detail=`${director.time.toFixed(1)} seconds observed · ${director.held.toFixed(1)}s in the recoverable envelope · ${director.autoSeconds.toFixed(1)}s autonomous glide`;
+ const encounters=`Gold contacts: ${eventCount("hit","gold")} · Crimson contacts: ${eventCount("hit","crimson")} · Protected encounters: ${eventCount("shield")} · Stakes used ${tactics.used[1]}× · Contract used ${tactics.used[2]}×`;
+ $("sessionDetail").textContent=detail;$("encounterDetail").textContent=encounters;drawChart("chartSession");
+ reportBase=["APB Flight Telemetry — Flight of the Mind",name,announcement,"Simulated conditions, not a measurement or grade of meditation.","",`Session averages: A ${v.a}%, P ${v.p}%, B ${v.b}%`,detail,encounters,`Continue remaining: ${director.reserve}%`,depleted?`Last contact: ${director.lastThought}`:"",$("sessionInsight").textContent,`Actions: Stakes ${tactics.used[1]}, Contract ${tactics.used[2]}, Let Go ${tactics.used[3]}.`,"", "Author’s work: https://selfdrivingmind.substack.com/"].filter(Boolean).join("\n");
+}
+$("copy").onclick=async()=>{const text=reportBase+"\n\nReflection: "+($("reflection").value||"What did you try to control, and what became easier when you let go?");let copied=false;try{if(navigator.clipboard&&isSecureContext){await navigator.clipboard.writeText(text);copied=true;}}catch(e){}if(!copied){const a=$("fallbackCopy");a.hidden=false;a.value=text;a.focus();a.select();try{copied=document.execCommand("copy");}catch(e){}if(copied)a.hidden=true;}$("copyStatus").textContent=copied?"Telemetry and reflection copied.":"Copying is unavailable here. Select and copy the report text below.";if(copied)$("copy").focus();};
+function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();if(!$("report").hidden)drawReport();}
+window.addEventListener("resize",resize);$("world").addEventListener("webglcontextlost",e=>{e.preventDefault();contextLost=true;pause();fail("The graphics context was interrupted. Reload to start a new skyway.");});
+function tick(dt){
+ tactics.update(dt);weather.update(dt,director.phase,flight);flight.update(dt,input.axes(),weather,tactics,director.time);apb.update(dt,flight,weather,tactics,director.time);thoughts.update(dt,flight,tactics,director.phase,director.time);
+ if(!director.running)return;
+ flight.render(1,director.time);flight.mesh.updateMatrixWorld(true);trails.update(dt,flight,weather);
+ audioClock+=dt;if(audioClock>=.1){audio.update(audioClock,flight,weather,apb);audioClock=0;}
+ director.update(dt,flight,apb);uiClock+=dt;if(uiClock>=.1){uiClock=0;updateHUD();}
+}
+function frame(now){
+ requestAnimationFrame(frame);const dt=Math.min(Math.max((now-last)/1000,0),.1);last=now;if(contextLost)return;
+ if(director.running&&!paused){accumulator+=dt;while(accumulator>=STEP){tick(STEP);accumulator-=STEP;if(!director.running){accumulator=0;break;}}}else accumulator=0;
+ flight.render(director.running&&!paused?accumulator/STEP:1,director.time);weather.render();
+ const motion=settings.reduced?.18:1;cameraGoal.set(flight.mesh.position.x*.35*motion,3+flight.mesh.position.y*(flight.auto?.8:.45),settings.reduced?13:11);camera.position.lerp(cameraGoal,1-Math.exp(-dt*2.2));look.set(flight.mesh.position.x*.5*motion,flight.mesh.position.y*(flight.auto?.85:.55),-16);camera.lookAt(look);if(!settings.reduced)camera.rotation.z+=flight.roll*.09;
+ renderer.render(scene,camera);
+}
+bindDirector();resize();syncSettings();updateHUD();$("begin").disabled=false;$("begin").textContent="Begin the two-minute flight";requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
