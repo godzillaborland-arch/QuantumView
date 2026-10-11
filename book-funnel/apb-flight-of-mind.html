@@ -75,7 +75,7 @@
  </header>
  <div id="autoBanner" hidden>FSD / AUTONOMOUS GLIDE — HANDS OFF</div>
  <div id="reticle"><svg viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="43" stroke="#00d9ff" stroke-opacity=".5"/><circle cx="60" cy="60" r="25" stroke="#00d9ff" stroke-opacity=".25" stroke-dasharray="2 6"/><path d="M60 9v12M60 99v12M9 60h12M99 60h12M52 60h16M60 52v16" stroke="#9dd4e2"/><path id="vectorLine" d="M60 60L60 60" stroke="#d4a574"/><circle id="vectorDot" cx="60" cy="60" r="4" stroke="#d4a574"/></svg><div id="reticleLabel">RECOVERABLE</div></div>
- <aside id="flightData"><div class="dataRow"><small>ALTITUDE / SIM m</small><strong id="altitude">128</strong></div><div class="dataRow"><small>AIRSPEED / SIM</small><strong id="airspeed">22.0</strong></div><div class="dataRow"><small>CONTROL MODE</small><strong id="mode">MANUAL</strong></div><div class="dataRow"><small id="continueLabel">CONTINUE / RESERVE</small><strong id="continueValue">100%</strong><div class="continueTrack"><div id="continueFill"></div></div></div></aside>
+ <aside id="flightData"><div class="dataRow"><small>ALTITUDE / SIM m</small><strong id="altitude">128</strong></div><div class="dataRow"><small>AIRSPEED / SIM</small><strong id="airspeed">22.0</strong></div><div class="dataRow"><small>CONTROL MODE</small><strong id="mode">MANUAL</strong></div><div class="dataRow"><small id="continueLabel">CONTINUE / RESERVE</small><strong id="continueValue">100%</strong><div class="continueTrack"><div id="continueFill"></div></div></div><div class="dataRow"><small>CRASHES</small><strong id="crashCounter">0</strong></div></aside>
  <div id="contactNotice" hidden role="status" aria-live="polite"></div>
  <div id="message" role="status" aria-live="polite">Gentle banking. The gauges give data, not grades.</div>
  <footer id="bottom"><div class="tokens">
@@ -86,10 +86,10 @@
 </div>
 <div id="joystick" hidden aria-label="Drag to steer"><div id="stick"></div></div>
 <section id="intro" class="overlay" aria-labelledby="introTitle"><div class="card">
- <div class="eyebrow">Inspired by The Self-Driving Mind · Sundar Rajan</div><h1 id="introTitle">The APB Compass:<br>Flight of the Mind</h1><p class="lead">Attention is the heading. Peace is the trim. Letting go opens the sky.</p>
+ <div class="eyebrow">Inspired by The Self-Driving Mind · Sundar Rajan</div><h1 id="introTitle">The APB Compass:<br>Flight of the Mind</h1><p class="lead">Attention is the heading. Peace is the trim. Letting go opens the sky.</p><p class="fine">Reference cockpit · edition 7 · Crash count in the right panel</p>
  <p>Choose the conditions for one two-minute flight. Navigate passing thought clouds, use your tactical commitments, and discover when hands-off glide becomes available.</p>
  <fieldset class="flightSelector"><legend>Choose your weather</legend><div class="flightChoices"><label class="flightChoice"><input type="radio" name="flightWeather" value="good" checked><span><b>The Good Spell</b><small>Gentle tailwinds. Fewer thoughts, mostly gold.</small></span></label><label class="flightChoice"><input type="radio" name="flightWeather" value="hard"><span><b>The Hard Grind</b><small>Crosswinds. More thoughts and more crimson urgency.</small></span></label></div></fieldset>
- <div class="thoughtLegend"><span class="goldThought">Gold contact: −12 Continue</span><span class="crimsonThought">Crimson contact: −22 Continue</span></div>
+ <div class="thoughtLegend"><span class="goldThought">Gold: A −8 · P −20 · B −5 · Continue −12</span><span class="crimsonThought">Crimson: A −15 · P −32 · B −10 · Continue −22</span></div>
  <p class="fine">Continue starts at 100. Unprotected thought collisions drain it; protected encounters do not. At zero, this flight ends immediately with an announcement and its telemetry. There is no automatic switch between weather modes.</p>
  <div class="briefing"><div><b>[1] ₹500 Stakes</b><small>Make it important. Absorption snaps to 100% and gust response softens for 4 seconds. Recharge: 12 seconds.</small></div><div><b>[2] 10-Minute Contract</b><small>Stay with the sitting. A 10-second shield lets thoughts bounce away. Recharge: 22 seconds.</small></div><div><b>[3] Let Go / FSD</b><small>Unlock at A & P above 70%. Release the controls, rise above the clutter, and allow Bliss to unfold.</small></div></div>
  <p class="fine">Steer with arrows, WASD, or touch/drag. The stakes are a metaphor—no payment occurs. The “10-Minute Contract” is represented by a compressed 10-second shield. Instruments are simulated conditions, not measurements of your meditation.</p>
@@ -206,14 +206,14 @@ class GliderFlightController{
 class APBInstrumentModel{
  constructor(){this.reset();}
  reset(){this.a=.35;this.p=.55;this.b=.20;this.continuity=.6;}
- hit(category="gold"){this.p=clamp(this.p-(category==="crimson"?.32:.20));}
+ hit(category="gold"){const crimson=category==="crimson";this.a=clamp(this.a-(crimson?.15:.08));this.p=clamp(this.p-(crimson?.32:.20));this.b=clamp(this.b-(crimson?.10:.05));}
  update(dt,flight,weather,tactics,time){
   this.continuity=damp(this.continuity,flight.stability,.2,dt);
   const storm=weather.storm;
   const targetA=flight.auto?.97:clamp(.86-storm*.20-flight.tension*.2-flight.shock*.12+this.continuity*.025);
   const targetP=flight.auto?.95:clamp(.90-storm*.27-flight.tension*.15-flight.shock*.22-(flight.stall?.12:0)+(tactics.shield>0?.10:0));
   const targetB=flight.auto?.99:clamp(.55-storm*.22+Math.sin(time*.07)*.018);
-  this.a=tactics.stakes>0?1:damp(this.a,targetA,.13,dt);
+  this.a=damp(this.a,tactics.stakes>0?1:targetA,.13,dt);
   this.p=damp(this.p,targetP,flight.auto?.20:.13,dt);
   this.b=damp(this.b,targetB,flight.auto?.18:.065,dt);
  }
@@ -401,8 +401,8 @@ function contactNotice(text,protectedContact=false){$("contactNotice").textConte
 const thoughts=new ThoughtObstacleField(scene,weather.cloudTexture,(kind,text,direction,category)=>{
  if(!director.running)return;
  director.record(kind,text,category);
- if(kind==="hit"){const before=director.reserve;flight.impact(direction);apb.hit(category);audio.impact();director.contact(category,text,flight,apb);contactNotice(`${category.toUpperCase()} HIT · Continue ${before}% → ${director.reserve}% (−${before-director.reserve})`);say(`Thought contact: ${text}. Continue decreased.`,4);updateHUD();}
- else if(kind==="shield"){contactNotice(flight.auto?"PROTECTED · Autonomous glide · No Continue loss":"PROTECTED · Contract shield active · No Continue loss",true);say(flight.auto?"The thoughts continue below. Let the glide carry you.":"Contract held. The thought passes without a penalty.",3);}
+ if(kind==="hit"){const before=director.reserve;flight.impact(direction);apb.hit(category);audio.impact();director.contact(category,text,flight,apb);const losses=category==="crimson"?"A −15 · P −32 · B −10":"A −8 · P −20 · B −5";contactNotice(`${category.toUpperCase()} HIT · ${losses} · Continue ${before}% → ${director.reserve}%`);say(`Thought contact: ${text}. The instruments can settle again.`,4);updateHUD();}
+ else if(kind==="shield"){contactNotice(flight.auto?"PROTECTED · Autonomous glide · No APB or Continue loss":"PROTECTED · Contract shield active · No APB or Continue loss",true);say(flight.auto?"The thoughts continue below. Let the glide carry you.":"Contract held. The thought passes without a penalty.",3);updateHUD();}
 });
 function syncSettings(){$("sound").textContent=`Sound: ${settings.audio?"on":"off"}`;$("sound").setAttribute("aria-pressed",String(settings.audio));$("motion").textContent=`Motion: ${settings.reduced?"reduced":"full"}`;$("motion").setAttribute("aria-pressed",String(settings.reduced));}
 function showControls(){input.enabled=director.running&&!paused;$("joystick").hidden=!input.enabled||flight.auto;}
@@ -440,6 +440,7 @@ function updateHUD(){
  const remaining=Math.max(0,Math.ceil(DURATION-director.time));$("clock").innerHTML=`${Math.floor(remaining/60)}:${String(remaining%60).padStart(2,"0")} <small>REMAINING</small>`;
  $("altitude").textContent=Math.round(128+flight.y*8);$("airspeed").textContent=flight.speed.toFixed(1);$("mode").textContent=flight.auto?"FSD":"MANUAL";
  $("continueValue").textContent=director.reserve+"%";$("continueFill").style.transform=`scaleX(${director.reserve/100})`;$("continueFill").style.background=director.reserve<=22?"#e45d78":director.reserve<=45?"var(--gold)":"var(--peace)";
+ $("crashCounter").textContent=String(eventCount("hit"));
  $("continueLabel").textContent=flight.auto?"CONTINUE / FSD PROTECTED":tactics.shield>0?"CONTINUE / SHIELD ACTIVE":"CONTINUE / RESERVE";
  if(director.time>=contactUntil)$("contactNotice").hidden=true;
  const x=60+clamp(-flight.roll*35,-34,34),y=60-clamp(flight.pitch*35,-34,34);$("vectorDot").setAttribute("cx",x);$("vectorDot").setAttribute("cy",y);$("vectorLine").setAttribute("d",`M60 60L${x} ${y}`);$("reticleLabel").textContent=flight.auto?"AUTONOMOUS":flight.stall?"SOFTEN THE CLIMB":flight.stability<.5?"RETURN WHEN READY":"RECOVERABLE";
@@ -468,12 +469,13 @@ function drawReport(){
  $("sessionInsight").textContent=director.phase==="hard"?"Returning while the mind is on fire exercises the capacity to stay. An early ending does not erase the steadiness already held.":"Smooth conditions reveal how ease can unfold. Passing thoughts still belong to the weather of this sitting.";
  $("reportReserve").textContent=director.reserve+"%";
  const detail=`${director.time.toFixed(1)} seconds observed · ${director.held.toFixed(1)}s in the recoverable envelope · ${director.autoSeconds.toFixed(1)}s autonomous glide`;
- const encounters=`Gold contacts: ${eventCount("hit","gold")} · Crimson contacts: ${eventCount("hit","crimson")} · Protected encounters: ${eventCount("shield")} · Stakes used ${tactics.used[1]}× · Contract used ${tactics.used[2]}×`;
+ const encounters=`Crashes: ${eventCount("hit")} · Gold: ${eventCount("hit","gold")} · Crimson: ${eventCount("hit","crimson")} · Protected encounters: ${eventCount("shield")} · Stakes used ${tactics.used[1]}× · Contract used ${tactics.used[2]}×`;
  $("sessionDetail").textContent=detail;$("encounterDetail").textContent=encounters;drawChart("chartSession");
  reportBase=["APB Flight Telemetry — Flight of the Mind",name,announcement,"Simulated conditions, not a measurement or grade of meditation.","",`Session averages: A ${v.a}%, P ${v.p}%, B ${v.b}%`,detail,encounters,`Continue remaining: ${director.reserve}%`,depleted?`Last contact: ${director.lastThought}`:"",$("sessionInsight").textContent,`Actions: Stakes ${tactics.used[1]}, Contract ${tactics.used[2]}, Let Go ${tactics.used[3]}.`,"", "Author’s work: https://selfdrivingmind.substack.com/"].filter(Boolean).join("\n");
 }
 $("copy").onclick=async()=>{const text=reportBase+"\n\nReflection: "+($("reflection").value||"What did you try to control, and what became easier when you let go?");let copied=false;try{if(navigator.clipboard&&isSecureContext){await navigator.clipboard.writeText(text);copied=true;}}catch(e){}if(!copied){const a=$("fallbackCopy");a.hidden=false;a.value=text;a.focus();a.select();try{copied=document.execCommand("copy");}catch(e){}if(copied)a.hidden=true;}$("copyStatus").textContent=copied?"Telemetry and reflection copied.":"Copying is unavailable here. Select and copy the report text below.";if(copied)$("copy").focus();};
 function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();if(!$("report").hidden)drawReport();}
+if(window.visualViewport)window.visualViewport.addEventListener("resize",resize);
 window.addEventListener("resize",resize);$("world").addEventListener("webglcontextlost",e=>{e.preventDefault();contextLost=true;pause();fail("The graphics context was interrupted. Reload to start a new skyway.");});
 function tick(dt){
  tactics.update(dt);weather.update(dt,director.phase,flight);flight.update(dt,input.axes(),weather,tactics,director.time);apb.update(dt,flight,weather,tactics,director.time);thoughts.update(dt,flight,tactics,director.phase,director.time);
