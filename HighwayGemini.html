@@ -1,0 +1,948 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0B1426">
+<meta name="description" content="Highway to Dhyāna: a driving game from The Self-Driving Mind by Sundar Rajan. Begin in manual mode, answer from the book, and let the car take over.">
+<title>Highway to Dhyāna</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --night:#0B1426; --ink:#EDE6D6; --gold:#D9A93E; --gold-soft:#F2D58A; --ember:#E0533D; --haze:#8A93A8; --mint:#7FC8A9;
+  --panel:rgba(11,20,38,.82); --line:rgba(217,169,62,.35);
+  --display:"Marcellus", "Cormorant Garamond", Georgia, serif;
+  --body:"Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{background:var(--night);color:var(--ink);font-family:var(--body);font-size:14px;overflow:hidden;-webkit-text-size-adjust:100%}
+.stage{position:fixed;inset:0;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+.hud{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+  padding-top:max(12px, env(safe-area-inset-top,0px));padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));pointer-events:none}
+.readout{font-family:var(--mono);font-variant-numeric:tabular-nums;display:grid;gap:2px}
+.readout .big{font-size:22px;font-weight:700;letter-spacing:.02em}
+.readout .lbl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--haze)}
+.right{display:grid;justify-items:end;gap:6px}
+.tools{display:flex;gap:6px;pointer-events:auto}
+.icon{width:32px;height:32px;padding:0;border-radius:50%;background:var(--panel);border:1px solid var(--line);color:var(--gold);font-family:var(--mono);font-size:14px;font-weight:700;cursor:pointer;display:grid;place-items:center;touch-action:manipulation;position:relative;overflow:hidden;}
+.icon:hover{border-color:var(--gold)}
+.icon svg{width:16px;height:16px;position:relative;z-index:2;}
+.cooldown-fill{position:absolute;bottom:0;left:0;width:100%;background:rgba(217,169,62,0.3);height:0%;z-index:1;transition:height 0.1s linear;}
+.mode{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;padding:5px 9px;border:1px solid var(--haze);color:var(--ink);border-radius:3px;background:var(--panel);transition:all .4s}
+.mode.assist{border-color:var(--gold-soft);color:var(--gold-soft)}
+.mode.fsd{border-color:var(--gold);color:var(--night);background:var(--gold);box-shadow:0 0 14px rgba(217,169,62,.55)}
+.mode.off{border-color:var(--ember);color:var(--ember);background:var(--panel);box-shadow:none}
+.sensors{display:flex;gap:5px;align-items:center}
+.sensors .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--haze);margin-right:3px}
+.dot{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--gold);background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.dot.off{background:transparent;box-shadow:none;border-color:var(--haze);opacity:.5}
+.mist{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--haze)}
+.mist b{color:var(--ember)}
+
+.quiz,.lesson{position:absolute;left:50%;transform:translateX(-50%);top:calc(max(12px, env(safe-area-inset-top,0px)) + 150px);
+  width:min(620px, calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:12px 16px 13px;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);pointer-events:none;text-align:center}
+@media (min-width:760px){ .quiz,.lesson{top:calc(max(12px, env(safe-area-inset-top,0px)) + 16px)} }
+.quiz .q-eyebrow,.lesson .l-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+.quiz .q-text{font-family:var(--display);font-size:clamp(17px, 2.6vw, 23px);line-height:1.25;text-wrap:balance}
+.chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.chips span{font-size:13px;line-height:1.3;color:var(--gold-soft);border-top:1px solid var(--line);padding-top:6px;min-width:0;overflow-wrap:anywhere}
+.chips span::before{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--haze);margin-bottom:2px}
+.chips span:nth-child(1)::before{content:"\2190 LEFT"} .chips span:nth-child(2)::before{content:"CENTER"} .chips span:nth-child(3)::before{content:"RIGHT \2192"}
+.lesson{transition:opacity .3s}
+.lesson .l-title{font-family:var(--display);font-size:clamp(18px,2.6vw,23px);color:var(--gold-soft)}
+.lesson .l-why{font-size:14px;line-height:1.45;margin-top:4px;color:var(--ink);text-wrap:pretty}
+.lesson.miss{border-color:rgba(224,83,61,.5)} .lesson.miss .l-eyebrow{color:var(--ember)}
+
+.toast{position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);font-family:var(--display);font-size:clamp(20px,3.6vw,32px);
+  color:var(--gold-soft);text-shadow:0 0 18px rgba(217,169,62,.6);pointer-events:none;opacity:0;transition:opacity .25s;text-align:center;width:min(92%,720px);text-wrap:balance}
+.toast.show{opacity:1}
+.toast.warn{color:var(--ember);text-shadow:0 0 14px rgba(224,83,61,.5)}
+
+.demo-tag{position:absolute;left:50%;transform:translateX(-50%);bottom:max(22px, env(safe-area-inset-bottom,0px));font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--haze);background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:6px 10px;pointer-events:none;white-space:nowrap;max-width:calc(100% - 32px);overflow:hidden;text-overflow:ellipsis}
+.demo-tag b{color:var(--gold)}
+@media (max-width:520px){ .demo-tag{white-space:normal;text-align:center;width:min(300px,calc(100% - 32px))} }
+.pads{position:absolute;left:0;right:0;bottom:0;display:none;justify-content:space-between;pointer-events:none;
+  padding-bottom:max(18px, env(safe-area-inset-bottom,0px));padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px))}
+@media (pointer:coarse){ .pads{display:flex} }
+.pad{pointer-events:auto;width:66px;height:66px;border-radius:50%;border:1.5px solid var(--line);background:rgba(11,20,38,.55);color:var(--gold-soft);font-size:26px;display:grid;place-items:center;touch-action:none;cursor:pointer}
+.pad:active{background:rgba(217,169,62,.25);border-color:var(--gold)}
+
+.overlay{position:absolute;inset:0;display:grid;place-items:center;background:rgba(6,11,22,.62);
+  padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));
+  padding-top:max(20px, env(safe-area-inset-top,0px));padding-bottom:max(20px, env(safe-area-inset-bottom,0px));touch-action:auto}
+.card{width:min(560px,100%);background:rgba(11,20,38,.94);border:1px solid var(--line);border-radius:6px;padding:26px 26px 22px;display:grid;gap:14px;max-height:100%;overflow:auto;-webkit-overflow-scrolling:touch}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.eyebrow.ember{color:var(--ember)}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance;line-height:1.08}
+h1{font-size:clamp(34px,7vw,52px)} h1 .mac{color:var(--gold)}
+h2{font-size:clamp(26px,5vw,36px)}
+h3{font-size:18px;color:var(--gold-soft)}
+.card p{margin:0;line-height:1.55;font-size:15px;max-width:62ch}
+.card p.dim{color:var(--haze);font-size:13.5px}
+.modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;border:0;padding:0;margin:0}
+.modes legend{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--haze);margin-bottom:6px;padding:0}
+.modes label{display:grid;gap:3px;border:1px solid var(--line);border-radius:4px;padding:9px 10px;cursor:pointer;min-width:0}
+.modes label b{font-family:var(--display);font-weight:400;font-size:17px;color:var(--ink)}
+.modes label span{font-size:12px;line-height:1.35;color:var(--haze)}
+.modes input{position:absolute;opacity:0;pointer-events:none}
+.modes label:has(input:checked){border-color:var(--gold);background:rgba(217,169,62,.1)}
+.modes label:has(input:checked) b{color:var(--gold-soft)}
+.modes label:has(input:focus-visible){outline:2px solid var(--gold-soft);outline-offset:2px}
+@media (max-width:420px){ .modes{grid-template-columns:1fr} .modes label{grid-template-columns:auto 1fr;align-items:baseline;gap:8px} }
+.howto{display:grid;gap:14px;margin:0;padding:0;list-style:none}
+.howto li{display:grid;gap:4px}
+.howto p{font-size:14px}
+.answer{border-left:2px solid var(--gold);padding:6px 0 6px 12px;display:grid;gap:4px}
+.answer b{font-family:var(--display);font-weight:400;font-size:19px;color:var(--gold-soft)}
+.stats{display:flex;gap:22px;font-family:var(--mono);font-variant-numeric:tabular-nums;flex-wrap:wrap}
+.stats div{display:grid;gap:2px}
+.stats span{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--haze)}
+.stats strong{font-size:20px}
+.share{border:1px dashed var(--line);border-radius:4px;padding:12px 14px;display:grid;gap:10px}
+.share q{font-family:var(--display);font-size:18px;line-height:1.35;quotes:none;color:var(--ink);user-select:text;-webkit-user-select:text}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn,.link{font-family:var(--body);font-size:15px;font-weight:600;border-radius:4px;padding:11px 18px;cursor:pointer;text-decoration:none;display:inline-block;touch-action:manipulation}
+.btn{background:var(--gold);color:var(--night);border:1px solid var(--gold)}
+.btn:hover{background:var(--gold-soft)}
+.link{color:var(--gold);border:1px solid var(--line);background:transparent}
+.link:hover{border-color:var(--gold)}
+.btn:focus-visible,.link:focus-visible,.icon:focus-visible,.pad:focus-visible{outline:2px solid var(--gold-soft);outline-offset:3px}
+.foot{font-size:12px;color:var(--haze)}
+.note{font-size:12.5px;color:var(--mint);min-height:1em}
+@media (max-width:480px){ .card{padding:20px 18px 18px} .readout .big{font-size:18px} }
+@media (max-width:759px){
+  .readout .big{font-size:17px} .readout .lbl{font-size:9px} .right{gap:4px}
+  .icon{width:30px;height:30px} .mode{font-size:10px;padding:4px 7px}
+  .quiz,.lesson{top:calc(max(10px, env(safe-area-inset-top,0px)) + 128px);padding:9px 12px 10px}
+  .quiz .q-text{font-size:17px} .chips{gap:6px;margin-top:7px} .chips span{font-size:12.5px;padding-top:4px}
+  .lesson .l-title{font-size:18px} .lesson .l-why{font-size:13px}
+}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas id="cv" aria-label="A car driving down a three-lane highway"></canvas>
+
+  <div class="hud">
+    <div class="readout">
+      <span class="lbl">Score</span><span class="big" id="score">0</span>
+      <span class="lbl" style="margin-top:6px">Speed</span><span class="big" id="speed" style="font-size:15px">0 mph</span>
+    </div>
+    <div class="right">
+      <div class="tools">
+        <button class="icon" id="pulseBtn" type="button" aria-label="Awareness Pulse (Space)">
+          <span style="position:relative; z-index:2; font-size: 16px;">◎</span>
+          <div class="cooldown-fill" id="pulseFill"></div>
+        </button>
+        <button class="icon" id="pauseBtn" type="button" aria-label="Pause"></button>
+        <button class="icon" id="helpBtn" type="button" aria-label="How to play">?</button>
+        <button class="icon" id="soundBtn" type="button" aria-label="Sound on" aria-pressed="true"></button>
+      </div>
+      <div class="mode" id="mode">MANUAL MODE</div>
+      <div class="sensors" aria-label="Sensor clarity"><span class="lbl">SENSORS</span><i class="dot" id="s0"></i><i class="dot" id="s1"></i><i class="dot" id="s2"></i></div>
+      <div class="mist" id="mist" hidden>MISTAKES <b id="mistN">0</b> / 3</div>
+      <div class="readout" style="justify-items:end"><span class="lbl">Answered</span><span class="big" id="qcount" style="font-size:15px">0 / 10</span></div>
+    </div>
+  </div>
+
+  <div class="quiz" id="quiz" hidden>
+    <div class="q-eyebrow">Toll gate ahead · steer into the answer</div>
+    <div class="q-text" id="qtext"></div>
+    <div class="chips" id="qchips"><span></span><span></span><span></span></div>
+  </div>
+  <div class="lesson" id="lesson" hidden>
+    <div class="l-eyebrow" id="lEyebrow">Correct</div>
+    <div class="l-title" id="lTitle"></div>
+    <div class="l-why" id="lWhy"></div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <div class="demo-tag" id="demoTag" hidden><b>DEMO</b> · the car is playing itself · tap or press any key to exit</div>
+
+  <div class="pads" id="pads" hidden>
+    <button class="pad" id="padL" type="button" aria-label="Steer left">&#9664;</button>
+    <button class="pad" id="padR" type="button" aria-label="Steer right">&#9654;</button>
+  </div>
+
+  <div class="overlay" id="startOv">
+    <div class="card">
+      <div class="eyebrow">From The Self-Driving Mind</div>
+      <h1 id="title">Highway to <span class="mac">Dhyāna</span></h1>
+      <p>You start in manual mode, steering through a noisy road of vṛttis. Use your <b>Awareness Pulse</b> (Spacebar or ◎) to clear immediate distractions when the mind gets crowded. Steer through the toll gate with the right answer to clear your sensors and let the car take over.</p>
+      <fieldset class="modes">
+        <legend>Choose your drive</legend>
+        <label><input type="radio" name="mode" value="discovery" id="m-discovery"><b>Discovery</b><span>Learn as you go. Mistakes never end the run.</span></label>
+        <label><input type="radio" name="mode" value="challenge" id="m-challenge"><b>Challenge</b><span>Three wrong gates and you are back in manual.</span></label>
+        <label><input type="radio" name="mode" value="mastery" id="m-mastery"><b>Mastery</b><span>One wrong gate ends the run.</span></label>
+      </fieldset>
+      <div class="actions">
+        <button class="btn" id="startBtn" type="button">Start driving</button>
+        <button class="link" id="howBtn" type="button">How to play</button>
+      </div>
+      <div class="foot" id="bestLine"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="pauseOv" hidden>
+    <div class="card" style="width:min(380px,100%);text-align:center;justify-items:center">
+      <div class="eyebrow">Paused</div>
+      <h2 id="pauseTitle">Taking a breath</h2>
+      <p class="dim" id="pauseWhy">The road will wait for you.</p>
+      <div class="actions"><button class="btn" id="resumeBtn" type="button">Resume driving</button></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="helpOv" hidden>
+    <div class="card">
+      <div class="eyebrow">How to play</div>
+      <h2>From effort to effortless</h2>
+      <ol class="howto">
+        <li><h3>Steering</h3><p>Computer: arrow keys or A / D. Phone: swipe left or right from the middle of the screen, tap the left or right half, or use the ◀ ▶ buttons.</p></li>
+        <li><h3>Awareness Pulse</h3><p>Press <b>Spacebar</b> or tap the ◎ icon to instantly clear all immediate distractions. It takes time to recharge.</p></li>
+        <li><h3>Dodge the vṛttis</h3><p>Distractions escalate as you drive. Hitting them costs a sensor. Each correct gate cleans one sensor.</p></li>
+        <li><h3>Three stages of the drive</h3><p><b>Manual mode</b> (0–2 correct). <b>Lane assist</b> (3–5 correct). <b>Full Self-Driving</b> (6+ correct): the car steers around the vṛttis by itself.</p></li>
+        <li><h3>Scoring & Goal</h3><p>Ten correct gates reach Dhyāna. After that, the road stays open in endless mode with contemplative reflections.</p></li>
+      </ol>
+      <div class="actions"><button class="btn" id="helpClose" type="button">Got it</button></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="endOv" hidden>
+    <div class="card">
+      <div class="eyebrow ember">Disengaged</div>
+      <h2 id="endTitle">Back in manual mode</h2>
+      <p id="endReason"></p>
+      <div class="answer" id="endAnswer" hidden><span class="eyebrow">The right lane was</span><b id="endCorrect"></b><p class="dim" id="endWhy"></p></div>
+      <div class="stats"><div><span>Score</span><strong id="endScore">0</strong></div><div><span>Answered</span><strong id="endQ">0</strong></div><div><span>Best</span><strong id="endBest">0</strong></div></div>
+      <div class="actions">
+        <button class="btn" id="againBtn" type="button">Drive again</button>
+        <button class="link" id="menuBtn" type="button">Change mode</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="arriveOv" hidden>
+    <div class="card">
+      <div class="eyebrow">Destination reached</div>
+      <h2>The car has always been self-driving.</h2>
+      <p>Ten gates, cleared. The fuel has always been infinite, and the destination has always been set. You just needed to understand the system well enough to let go of the wheel.</p>
+      <div class="stats"><div><span>Score</span><strong id="arrScore">0</strong></div><div><span>Mode</span><strong id="arrMode">Discovery</strong></div><div><span>Sensors</span><strong id="arrSens">3</strong></div></div>
+      <div class="share">
+        <q id="shareText"></q>
+        <div class="actions"><button class="btn" id="shareBtn" type="button">Share</button><button class="link" id="copyBtn" type="button">Copy text</button></div>
+        <div class="note" id="shareNote" aria-live="polite"></div>
+      </div>
+      <div class="actions">
+        <button class="link" id="keepBtn" type="button">Keep driving, faster</button>
+        <a class="link" href="https://theselfdrivingmind.com" target="_blank" rel="noopener">theselfdrivingmind.com</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+const QUESTIONS = [
+  { t:1, q:"What is the biggest obstacle to meditation?", a:["The restless mind","Not having enough time","Not sitting perfectly"], why:"Arjuna's complaint in the Gītā: the mind is harder to control than the wind. Yoga is the stilling of its waves, the vṛttis." },
+  { t:1, q:"When Full Self-Driving is engaged, the car…", a:["Drives itself","Needs constant steering","Only cruises straight"], why:"The locus of control shifts from the hand gripping the wheel to the car's own intelligence. The passenger stays alert, but is not driving." },
+  { t:1, q:"With Lifetime Charging, a Tesla never suffers from…", a:["Range anxiety","Flat tires","Traffic jams"], why:"The energy question is settled. You will never be stranded for lack of power, and the journey is always possible." },
+  { t:1, q:"Which measures a meditation session best?", a:["Quality of attention","Minutes on the timer","How still you sat"], why:"Depth of presence is measured by the quality of attention, not the quantity of minutes." },
+  { t:1, q:"In the book's analogy, Full Self-Driving maps to…", a:["Dhyāna","Prāṇāyāma","Willpower"], why:"FSD maps to Dhyāna: deep, effortless contemplative absorption. The shift from manual to autonomous." },
+  { t:1, q:"Lifetime Charging maps to…", a:["Kṛpā, Grace","Daily discipline","Self-effort"], why:"Kṛpā is the infinite spiritual energy that reaches the Guru's lineage." },
+  { t:1, q:"“I sat for forty-five minutes” is which false measure?", a:["Clock time","Posture perfection","Visual fireworks"], why:"False Measure #1. Duration is not depth. Five real minutes outweigh forty-five performed ones." },
+  { t:1, q:"App meditation and classical Dhyāna differ like…", a:["A campfire and a supernova","Tea and coffee","A bicycle and a bus"], why:"Both involve fire. One warms your hands on a cold night. The other can reshape galaxies." },
+  { t:1, q:"In 1978 at Guindy, the author's nickname was…", a:["Quantum","Feynman","Professor"], why:"“Quantum,” for his obsession with quantum mechanics and pure logic. The skeptical rationalist." },
+  { t:2, q:"Patañjali's image for the unbroken flow of Dhyāna is…", a:["Oil poured between vessels","Water splashing in a cup","A candle flickering"], why:"Taila-dhārāvat: oil pouring from one vessel to another. Continuous, smooth, uninterrupted. Water splashes and breaks." },
+  { t:2, q:"In the Tesla metaphor, the realized Guru is the…", a:["Systems programmer","Passenger","Roadside mechanic"], why:"The Acharya who has traversed the path implants the destination in the seeker's navigation system." },
+  { t:2, q:"Which discipline is “the clean sensor”?", a:["Satya, truthfulness","Longer sittings","Perfect posture"], why:"Every act of inner dishonesty is mud on the lens. Self-deception corrupts the data the mind feeds the system." },
+  { t:2, q:"With the destination set, the seeker's one remaining job is…", a:["Vehicle maintenance","Gripping the wheel","Watching the battery"], why:"The Yamas and Niyamas are the maintenance schedule: keep the vehicle in the condition that lets the autopilot run." },
+  { t:2, q:"The APB Compass reads three signals:", a:["Absorption, Peace, Bliss","Attention, Posture, Breath","Awareness, Patience, Balance"], why:"Absorption, Peace (Śānti) and Bliss (Ānanda). At the apex they fuse into a single state." },
+  { t:2, q:"According to the book, what clouds the system first?", a:["Self-deception","Lying to others","Skipping practice"], why:"We lie to others occasionally. We lie to ourselves constantly. Every story we tell ourselves about our motives is mud on the lens." },
+  { t:2, q:"Who demolished Quantum's rational arguments at Guindy?", a:["A young PhD candidate","A visiting swami","His physics lecturer"], why:"A research scholar in crisp white with vibhūti on his forehead, who knew more quantum mechanics than the lecturers." },
+  { t:2, q:"For that young PhD candidate, Samādhi was…", a:["The default state","A rare achievement","A distant goal"], why:"He had to struggle to come out of meditation to do ordinary chores. A Siddha Purusha at twenty-three or twenty-four." },
+  { t:3, q:"Step one of the Śaṅkara Algorithm, Pūrvapakṣa, is to…", a:["State the common view fairly","Show the glitch","Land the deeper truth"], why:"Pūrvapakṣa, Uttarapakṣa, Siddhānta. Start by stating the prior view so charitably the opponent feels heard." },
+  { t:3, q:"Neti Neti means…", a:["Not this, not this","I am that","Here and now"], why:"The ancient method of debugging by exclusion. Strip away everything that is not the answer until the truth remains." },
+  { t:3, q:"Scrolling a feed with no destination in mind is which chitta-bhūmi?", a:["Kṣipta, restless","Mūḍha, dull","Ekāgram, one-pointed"], why:"Kṣipta is the mind under the sway of the senses: a pinball bouncing between inputs, with no stable center." },
+  { t:3, q:"The first chitta-bhūmi where higher spiritual experience becomes possible:", a:["Ekāgram, one-pointed","Vikṣipta, preoccupied","Kṣipta, restless"], why:"Bhojadeva is unambiguous: ekāgram is the first state where higher experience opens. Years of preparation are the entry cost." },
+  { t:3, q:"Where do most educated, productive people spend their waking hours?", a:["Vikṣipta, preoccupied","Niruddha, closed","Ekāgram, one-pointed"], why:"Vikṣipta works a problem with some continuity. It permits concentration, but it is quite different from true meditation." },
+  { t:3, q:"Satya comes from the root sat, which means…", a:["Being, what truly exists","Silence","Strength"], why:"Sat is being, reality, that which truly exists. Satya is alignment between what is seen, thought, spoken and done." },
+  { t:3, q:"Śānti comes from the root śam, which means…", a:["To settle, to cease","To shine","To strive"], why:"Peace is not the absence of noise. It is a mind that has settled on its own rather than been forced into submission." }
+];
+const ENDLESS_PROMPTS = [
+  "The fuel is infinite.", "The destination is already set.", "Let the road carry you.",
+  "Stillness in motion.", "No effort remains.", "Observe the passing thoughts."
+];
+
+const TIERED_VRITTIS = {
+  1: ["PING", "NEW EMAIL", "50% OFF", "SCROLL", "LOUD NOISE"],
+  2: ["REGRET", "DEADLINE", "WORRY", "RANGE ANXIETY", "CRAVING"],
+  3: ["EGO", "WHAT IF?", "DOUBT", "SPIRITUAL PRIDE", "VISUAL FIREWORKS"]
+};
+const GOAL = 10;
+const BILLBOARDS = ["BUY NOW","BREAKING","3 NEW ALERTS","LIMITED TIME","YOU'RE LATE","TRENDING","SALE","UNREAD 99+"];
+const MONO='"JetBrains Mono", ui-monospace, Menlo, monospace', DISPLAY='"Marcellus", Georgia, serif';
+const MODES = { discovery:{name:'Discovery', read:1.4, slow:0.68}, challenge:{name:'Challenge', read:1.0, slow:0.78}, mastery:{name:'Mastery', read:0.8, slow:0.82} };
+
+const store = { get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }, set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} } };
+const $ = id => document.getElementById(id);
+
+const Snd = {
+  ctx:null, master:null, eng:null, muted: store.get('htd-muted')==='1',
+  init(){
+    if(this.ctx){ if(this.ctx.state==='suspended') this.ctx.resume(); return; }
+    const AC = window.AudioContext || window.webkitAudioContext; if(!AC) return;
+    const c = this.ctx = new AC();
+    this.master = c.createGain(); this.master.gain.value = this.muted?0:0.7; this.master.connect(c.destination);
+    const b=c.createBuffer(1,1,22050), s=c.createBufferSource(); s.buffer=b; s.connect(this.master); s.start(0);
+    const o1=c.createOscillator(), o2=c.createOscillator(), f=c.createBiquadFilter(), g=c.createGain();
+    o1.type='sawtooth'; o2.type='triangle'; o1.frequency.value=48; o2.frequency.value=96; f.type='lowpass'; f.frequency.value=320; g.gain.value=0;
+    o1.connect(f); o2.connect(f); f.connect(g); g.connect(this.master); o1.start(); o2.start(); this.eng={o1,o2,f,g};
+    const nb=c.createBuffer(1,c.sampleRate*0.6,c.sampleRate), d=nb.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1; this.noiseBuf=nb;
+  },
+  setMuted(m){ this.muted=m; store.set('htd-muted', m?'1':'0'); if(this.master) this.master.gain.setTargetAtTime(m?0:0.7, this.ctx.currentTime, 0.05); },
+  engine(on, speed, calm){
+    if(!this.eng) return; const t=this.ctx.currentTime;
+    this.eng.g.gain.setTargetAtTime(on? 0.05 - 0.025*calm : 0, t, 0.3);
+    this.eng.o1.frequency.setTargetAtTime(40+speed*2.2, t, 0.4); this.eng.o2.frequency.setTargetAtTime(80+speed*4.4, t, 0.4);
+    this.eng.f.frequency.setTargetAtTime(260+speed*12 - calm*90, t, 0.4);
+  },
+  tone(freq, dur, type='sine', vol=0.2, when=0, glideTo=null){
+    if(!this.ctx) return; const c=this.ctx, t=c.currentTime+when, o=c.createOscillator(), g=c.createGain();
+    o.type=type; o.frequency.setValueAtTime(freq,t); if(glideTo) o.frequency.exponentialRampToValueAtTime(glideTo,t+dur);
+    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g); g.connect(this.master); o.start(t); o.stop(t+dur+0.05);
+  },
+  noise(dur, freq, q=1, vol=0.2, sweepTo=null, type='bandpass'){
+    if(!this.ctx) return; const c=this.ctx, t=c.currentTime, s=c.createBufferSource(), f=c.createBiquadFilter(), g=c.createGain();
+    s.buffer=this.noiseBuf; f.type=type; f.frequency.setValueAtTime(freq,t); f.Q.value=q; if(sweepTo) f.frequency.exponentialRampToValueAtTime(sweepTo,t+dur);
+    g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    s.connect(f); f.connect(g); g.connect(this.master); s.start(t); s.stop(t+dur+0.05);
+  },
+  pulse(){ this.tone(880, 0.4, 'sine', 0.15, 0, 220); },
+  lane(){ this.noise(0.14, 700, 1.4, 0.12, 2200); },
+  auto(){ this.noise(0.18, 1200, 2, 0.06, 2600); },
+  hit(){ this.noise(0.3, 500, 0.7, 0.35, 120, 'lowpass'); this.tone(110,0.28,'square',0.1,0,45); },
+  gate(){ this.tone(660,0.35,'sine',0.08); this.tone(990,0.5,'sine',0.05,0.08); },
+  bell(f0, when=0, vol=0.16){ [1,2.01,2.76,4.07].forEach((m,i)=>this.tone(f0*m, 2.2/(i+1), 'sine', vol/(i+1.2), when)); },
+  correct(streak){ const base = 523 * Math.pow(1.0595, Math.min(7, streak-1)*2); this.bell(base,0,0.18); this.bell(base*1.5,0.12,0.12); },
+  miss(){ this.tone(392,0.45,'triangle',0.12,0,262); },
+  rattle(){ [0,0.045,0.09,0.15,0.22].forEach((w,i)=>setTimeout(()=>this.noise(0.06,2400-i*300,3,0.16-i*0.02,900),w*1000)); this.tone(90,0.35,'square',0.12,0,50); this.noise(0.6,600,0.5,0.12,150,'lowpass'); },
+  wrong(){ this.tone(330,0.7,'sawtooth',0.12,0,90); this.tone(220,0.7,'sawtooth',0.08,0.05,70); this.noise(0.5,300,0.6,0.15,80,'lowpass'); },
+  stage(){ [392,523,659,784].forEach((f,i)=>this.bell(f,i*0.11,0.1)); },
+  arrive(){ [262,392,523,659,784].forEach((f,i)=>this.bell(f,i*0.18,0.14)); }
+};
+const ICON = {
+  on:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M17 8.5a5 5 0 0 1 0 7M19.5 6a8.5 8.5 0 0 1 0 12"/></svg>',
+  off:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/></svg>',
+  pause:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>',
+  play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5l11 7-11 7z"/></svg>',
+};
+const soundBtn=$('soundBtn'), pauseBtn=$('pauseBtn');
+function drawSoundIcon(){ soundBtn.innerHTML = Snd.muted?ICON.off:ICON.on; soundBtn.setAttribute('aria-label', Snd.muted?'Sound off':'Sound on'); soundBtn.setAttribute('aria-pressed', String(!Snd.muted)); }
+drawSoundIcon();
+soundBtn.addEventListener('click', e=>{ e.stopPropagation(); Snd.init(); Snd.setMuted(!Snd.muted); drawSoundIcon(); });
+
+const cv=$('cv'), ctx=cv.getContext('2d');
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let W=0,H=0,DPR=1, lastW=0, lastH=0;
+function resize(force){
+  const r=cv.getBoundingClientRect();
+  if(!force && Math.abs(r.width-lastW)<1 && Math.abs(r.height-lastH)<140) return; 
+  lastW=r.width; lastH=r.height; W=r.width; H=r.height;
+  DPR=Math.min(W>1400?1.25:2, window.devicePixelRatio||1);
+  cv.width=Math.round(W*DPR); cv.height=Math.round(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0);
+  HY = Math.min(H*0.6, Math.max(H*0.36, measureReserve()+12));
+  buildScenery();
+}
+let GUINDY=null, SACRAMENTO=null, NEON=[];
+function rng(seed){ return ()=>{ seed=(seed*16807)%2147483647; return (seed-1)/2147483646; }; }
+function buildScenery(){
+  const hy=HY, sw=W*1.12, top=Math.max(0, hy-Math.min(hy*0.92, H*0.42));
+  const mk=()=>{ const c=document.createElement('canvas'); c.width=Math.max(1,Math.round(sw*DPR)); c.height=Math.max(1,Math.round(hy*DPR)); const g=c.getContext('2d'); g.setTransform(DPR,0,0,DPR,0,0); return [c,g]; };
+  
+  let [c,g]=mk(); const r=rng(1978); NEON=[];
+  const maxH=hy-top;
+  const layer=(count, hMin, hMax, light, winP, tint)=>{
+    let x=-20;
+    while(x<sw+20){
+      const bw=sw/count*(0.55+r()*0.9), bh=maxH*(hMin+r()*(hMax-hMin)), bx=x, by=hy-bh;
+      const hue=10+r()*20, L=light+r()*5; 
+      g.fillStyle=`hsl(${hue},${20+tint}%,${L}%)`; g.fillRect(bx,by,bw,bh);
+      
+      if(r()<0.08){ 
+          g.strokeStyle=`hsl(0,0%,${L+10}%)`; g.lineWidth=2;
+          g.beginPath(); g.moveTo(bx+bw/2, by); g.lineTo(bx+bw/2, top+10); 
+          g.moveTo(bx+bw/2, top+10); g.lineTo(bx+bw/2-bw*0.4, by);
+          g.moveTo(bx+bw/2, top+10); g.lineTo(bx+bw/2+bw*0.4, by);
+          g.stroke();
+      } else if(r()<0.45){ 
+          const cw=bw*(0.5+r()*0.3), ch=bh*(0.06+r()*0.08); g.fillRect(bx+(bw-cw)/2,by-ch,cw,ch);
+      }
+      const ww=Math.max(1.5,bw/14), wh=Math.max(2,ww*1.4), gx=ww*1.9, gy=wh*1.9;
+      for(let wy=by+gy*0.8; wy<hy-gy; wy+=gy) for(let wx=bx+gx*0.6; wx<bx+bw-ww-1; wx+=gx){
+        if(r()<winP){ const warm=r()<0.7; g.fillStyle = warm?`rgba(255,${200+r()*40|0},${120+r()*60|0},${0.55+r()*0.4})`:`rgba(${150+r()*60|0},${200+r()*40|0},255,${0.5+r()*0.4})`; g.fillRect(wx,wy,ww,wh); } }
+      x+=bw+(r()<0.3?r()*bw*0.4:0);
+    }
+  };
+  layer(18, 0.25, 0.5, 12, 0.18, 6);
+  g.fillStyle='rgba(120,62,52,.25)'; g.fillRect(0,top,sw,maxH); 
+  layer(10, 0.35, 0.8, 9, 0.32, 10); 
+  GUINDY=c;
+
+  [c,g]=mk(); const m=rng(108);
+  const ridge=(baseY, amp, rough, col, lamps)=>{
+    g.beginPath(); g.moveTo(0,hy); let y=baseY; const pts=[];
+    for(let x=0;x<=sw;x+=sw/90){ y=baseY - amp*(0.5+0.5*Math.sin(x/sw*Math.PI*(2+rough)+m()*0.6)) - amp*0.35*m(); pts.push([x,y]); g.lineTo(x,y); }
+    g.lineTo(sw,hy); g.closePath(); g.fillStyle=col; g.fill();
+    if(lamps){ 
+        g.strokeStyle='rgba(100,110,120,0.8)'; g.fillStyle='rgba(255,240,200,0.9)';
+        for(let i=5;i<pts.length-5;i+=12){ 
+            const [x,y]=pts[i]; 
+            g.lineWidth=1.5; g.beginPath(); g.moveTo(x,y); g.lineTo(x,y-maxH*0.4); g.stroke();
+            g.beginPath(); g.arc(x,y-maxH*0.4, 3, 0, Math.PI*2); g.fill();
+        } 
+    }
+  };
+  ridge(hy-maxH*0.04, maxH*0.05, 1.2, 'rgba(28,36,44,.95)', false);
+  ridge(hy, maxH*0.02, 1.1, 'rgba(18,22,28,1)', true);
+  SACRAMENTO=c;
+}
+function measureReserve(){
+  const q=document.getElementById('quiz'); if(!q) return 0;
+  const qt=document.getElementById('qtext'), chips=[...document.getElementById('qchips').children];
+  const keep=[q.hidden, qt.textContent, chips.map(c=>c.textContent)];
+  const longQ=QUESTIONS.reduce((a,b)=>b.q.length>a.q.length?b:a), longA=QUESTIONS.reduce((a,b)=>Math.max(...b.a.map(x=>x.length))>Math.max(...a.a.map(x=>x.length))?b:a);
+  q.style.visibility='hidden'; q.hidden=false; qt.textContent=longQ.q; chips.forEach((c,i)=>c.textContent=longA.a[i]);
+  const r=q.getBoundingClientRect(), top=q.parentElement.getBoundingClientRect().top;
+  q.hidden=keep[0]; qt.textContent=keep[1]; chips.forEach((c,i)=>c.textContent=keep[2][i]); q.style.visibility='';
+  return r.bottom-top;
+}
+addEventListener('resize', ()=>resize(false));
+
+let mode = store.get('htd-mode'); if(!MODES[mode]) mode='discovery';
+$('m-'+mode).checked = true;
+document.querySelectorAll('input[name=mode]').forEach(i=>i.addEventListener('change',()=>{ mode=i.value; store.set('htd-mode',mode); showBest(); }));
+const bestOf = m => +store.get('htd-best-'+m) || 0;
+function showBest(){ const b=bestOf(mode); $('bestLine').textContent = b ? `Best ${MODES[mode].name} score on this device: ${b.toLocaleString()}` : `${QUESTIONS.length} questions from the book. Ten gates to reach Dhyāna.`; }
+showBest();
+
+const D=4, ZMAX=60, CARZ=1;
+const proj=z=>1/(1+z/D);
+let HY=0; const horizonY=()=>HY;
+function yAt(z){ const hy=horizonY(), yb=H*1.02; return hy+(yb-hy)*proj(z); }
+function halfW(z){ return Math.min(W*0.5, H*0.62)*proj(z); }
+function laneX(lane,z){ return W/2 + lane*(halfW(z)*2/3); }
+
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];} return a; }
+function buildOrder(){
+  const ix=t=>shuffle(QUESTIONS.map((q,i)=>[q,i]).filter(([q])=>q.t===t).map(([,i])=>i));
+  const t1=ix(1), t2=ix(2), t3=ix(3);
+  const first=[...t1.splice(0,4), ...t2.splice(0,3), ...t3.splice(0,3)];
+  return [...first, ...shuffle([...t1,...t2,...t3])];
+}
+function fresh(loop=0){
+  return { running:false, paused:false, t:0, dist:0, score:0, speed:9, lane:0, carX:0, from:0, tt:1, sensors:3,
+    calm:0, calmTarget:0, objs:[], spawnT:1.2, quizT:4.2, quiz:null, order:buildOrder(), qi:0,
+    answered:0, mistakes:0, streak:0, loop, stage:1, shake:0, flash:0, flashCol:'217,169,62', bb:[], over:false, idle:0, lessonT:0, handsHint:false, pulseCool:0, pulseRing:0 };
+}
+let S=fresh();
+let FX=[], WRECK=null, last=performance.now();
+const stageFor = n => S.loop ? 3 : (n>=6 ? 3 : n>=3 ? 2 : 1);
+let DEMO=false, demoTimer=null;
+
+function startDemo(){
+  DEMO=true; mode='discovery'; start(0); S.demo={ missAt:3, step:0 }; S.quizT=3.5;
+  $('demoTag').hidden=false; $('pads').hidden=true;
+}
+function exitDemo(){
+  if(!DEMO) return; DEMO=false; clearTimeout(demoTimer); $('demoTag').hidden=true;
+  S=fresh(); ['endOv','arriveOv','pauseOv','helpOv'].forEach(id=>$(id).hidden=true); $('quiz').hidden=true; $('lesson').hidden=true; $('pads').hidden=true;
+  mode=(document.querySelector('input[name=mode]:checked')||{}).value||'discovery';
+  $('startOv').hidden=false; hudMode(); hudSensors(); updateHud(); toast('',false,0.01);
+}
+function demoBot(dt){
+  const D=S.demo; if(!D) return;
+  D.step-=dt;
+  if(S.quiz){
+    S.quiz.botT=(S.quiz.botT||0)+dt;
+    if(S.quiz.botT>1.1 && D.step<=0){
+      const asked=S.answered+S.mistakes+1;
+      const target = asked===D.missAt ? S.quiz.lanes[(S.quiz.lanes.indexOf(S.quiz.lanes[0])+1)%3] : S.quiz.lanes[0];
+      if(S.lane!==target){ moveTo(S.lane+(target>S.lane?1:-1), false); D.step=0.32; }
+    }
+    return;
+  }
+  if(S.stage<3 && D.step<=0){
+    if(danger(S.lane, 15)){
+      if(S.pulseCool<=0 && Math.random()<0.2){ firePulse(); D.step=0.5; }
+      else {
+        const safe=[-1,0,1].filter(l=>!danger(l,22));
+        if(safe.length){
+          const target=safe[Math.random()*safe.length|0];
+          if(S.lane!==target){ moveTo(S.lane+(target>S.lane?1:-1), false); D.step=0.25; }
+        }
+      }
+    }
+  }
+}
+
+function firePulse(){
+    if(!S.running || S.paused || S.pulseCool > 0 || S.stage >= 3) return;
+    S.pulseCool = 10;
+    S.pulseRing = 0.1;
+    Snd.pulse();
+    S.objs = S.objs.filter(o => o.z > 25);
+    toast("Awareness Pulse", false, 1.2);
+    updatePulseUI();
+}
+
+function moveTo(n, auto){
+  n=Math.max(-1,Math.min(1,n)); if(n===S.lane) return;
+  S.from=S.carX; S.tt=0; S.lane=n; S.idle=0;
+  auto ? Snd.auto() : Snd.lane();
+}
+function steer(d){
+  if(!S.running||S.paused) return;
+  moveTo(S.lane+d, false);
+  if(S.stage===3 && !S.quiz && !S.handsHint){ S.handsHint=true; toast('Hands off. The car is driving.', false, 1.6); }
+}
+addEventListener('keydown', e=>{
+  if(['ArrowLeft','a','A'].includes(e.key)){ steer(-1); e.preventDefault(); }
+  else if(['ArrowRight','d','D'].includes(e.key)){ steer(1); e.preventDefault(); }
+  else if(e.key===' '){ firePulse(); e.preventDefault(); }
+  else if(['p','P','Escape'].includes(e.key) && S.running && $('helpOv').hidden){ setPaused(!S.paused, 'You pressed pause. The road will wait for you.'); }
+  else if((e.key===' '||e.key==='Enter') && S.paused && !$('pauseOv').hidden){ setPaused(false); e.preventDefault(); }
+});
+$('pulseBtn').addEventListener('click', e=>{ e.stopPropagation(); firePulse(); });
+
+const stage=$('stage');
+let px=null, py=null, moved=false;
+stage.addEventListener('pointerdown', e=>{ if(e.target.closest('.card,.pad,.icon')) return; px=e.clientX; py=e.clientY; moved=false; });
+stage.addEventListener('pointermove', e=>{ if(px===null) return; const dx=e.clientX-px, dy=e.clientY-py;
+  if(Math.abs(dx)>26 && Math.abs(dx)>Math.abs(dy)*1.1){ steer(dx>0?1:-1); px=e.clientX; py=e.clientY; moved=true; } });
+stage.addEventListener('pointerup', e=>{ if(px===null) return; const dx=e.clientX-px, dy=e.clientY-py; px=null;
+  if(!moved && Math.abs(dx)<14 && Math.abs(dy)<14){ const r=stage.getBoundingClientRect(); steer(e.clientX-r.left < r.width/2 ? -1 : 1); } });
+stage.addEventListener('pointercancel', ()=>{ px=null; });
+for(const [id,d] of [['padL',-1],['padR',1]]) $(id).addEventListener('pointerdown', e=>{ e.preventDefault(); e.stopPropagation(); steer(d); });
+
+function danger(lane, reach){ return S.objs.some(o=>!o.hit && o.lane===lane && o.z>CARZ && o.z<reach); }
+function autopilot(dt){
+  if(S.stage<2 || S.quiz) return;
+  if(S.tt<1) return;
+  const reach = S.stage===3 ? 16 : 3.6;
+  if(danger(S.lane, reach)){
+    const opts=[S.lane-1,S.lane+1].filter(l=>l>=-1&&l<=1&&!danger(l,reach+4));
+    if(opts.length){ const pick = opts.length>1 ? opts[Math.random()*2|0] : opts[0]; moveTo(pick, true); if(S.stage===2) toast('Lane assist', false, 0.7); }
+    return;
+  }
+  if(S.stage===3 && !S.quiz){ S.idle+=dt; if(S.idle>1.6 && S.lane!==0 && !danger(0, reach+6)) moveTo(S.lane>0?S.lane-1:S.lane+1, true); }
+}
+
+let toastTimer=0;
+function toast(msg, warn=false, dur=1.1){ const el=$('toast'); el.textContent=msg; el.classList.toggle('warn',warn); el.classList.toggle('show',!!msg); toastTimer=dur; }
+function hudSensors(){ for(let i=0;i<3;i++) $('s'+i).classList.toggle('off', i>=S.sensors); }
+function hudMode(){
+  const m=$('mode'); m.classList.remove('assist','fsd','off');
+  if(S.over){ m.textContent='DISENGAGED'; m.classList.add('off'); return; }
+  if(S.stage===3){ m.textContent='FSD ENGAGED'; m.classList.add('fsd'); }
+  else if(S.stage===2){ m.textContent='LANE ASSIST'; m.classList.add('assist'); }
+  else m.textContent='MANUAL MODE';
+}
+function updatePulseUI(){
+    const fill = $('pulseFill');
+    if(S.stage >= 3){ fill.style.height = "100%"; fill.style.background = "rgba(120,200,160,0.4)"; $('pulseBtn').style.opacity="0.5"; return; }
+    $('pulseBtn').style.opacity="1";
+    fill.style.background = "rgba(217,169,62,0.3)";
+    if(S.pulseCool <= 0){ fill.style.height = "0%"; }
+    else { fill.style.height = (S.pulseCool/10 * 100) + "%"; }
+}
+function setPaused(p, why){
+  S.paused=p; pauseBtn.innerHTML=p?ICON.play:ICON.pause; pauseBtn.setAttribute('aria-label', p?'Resume':'Pause');
+  const showOv = p && !!why;
+  $('pauseOv').hidden = !showOv;
+  if(showOv){ $('pauseWhy').textContent = why; $('resumeBtn').focus({preventScroll:true}); }
+  if(!p){ last=performance.now(); }
+}
+pauseBtn.innerHTML=ICON.pause;
+$('resumeBtn').addEventListener('click', e=>{ e.stopPropagation(); setPaused(false); });
+$('pauseOv').addEventListener('pointerdown', e=>{ if(e.target===e.currentTarget){ e.stopPropagation(); setPaused(false); } });
+pauseBtn.addEventListener('click', e=>{ e.stopPropagation(); if(S.running && $('helpOv').hidden) setPaused(!S.paused, 'You pressed pause. The road will wait for you.'); });
+function updateHud(){
+  $('score').textContent=Math.floor(S.score).toLocaleString();
+  $('speed').textContent=Math.round((S.running?S.speed:0)*6.2)+' mph';
+  $('qcount').textContent = S.loop ? `${S.answered} total` : `${S.answered} / ${GOAL}`;
+  $('mistN').textContent = S.mistakes;
+  updatePulseUI();
+}
+function lesson(ok, q){
+  const el=$('lesson'); el.classList.toggle('miss',!ok);
+  $('lEyebrow').textContent = ok ? (S.streak>1?`Correct · streak ×${S.streak}`:'Correct') : 'Not quite · the right gate was';
+  $('lTitle').textContent = q.a[0]; $('lWhy').textContent = q.why;
+  el.hidden=false; S.lessonT = ok ? 3.6 : 4.6;
+}
+
+let helpFrom=null;
+function openHelp(){
+  helpFrom = !$('startOv').hidden ? 'start' : (S.running ? 'game' : null);
+  if(helpFrom==='start') $('startOv').hidden=true;
+  if(helpFrom==='game' && !S.paused) setPaused(true);
+  $('helpOv').hidden=false; $('helpOv').querySelector('.card').scrollTop=0; $('helpClose').focus({preventScroll:true});
+}
+function closeHelp(){ $('helpOv').hidden=true; if(helpFrom==='start'){ $('startOv').hidden=false; $('startBtn').focus(); } else if(helpFrom==='game'){ setPaused(false); } helpFrom=null; }
+$('howBtn').onclick=openHelp;
+$('helpBtn').addEventListener('click', e=>{ e.stopPropagation(); $('helpOv').hidden ? openHelp() : closeHelp(); });
+$('helpClose').onclick=closeHelp;
+
+function start(loop=0){
+  Snd.init();
+  S=fresh(loop); S.running=true; S.speed=9+loop*2.5; S.stage=stageFor(0);
+  ['startOv','endOv','arriveOv','helpOv'].forEach(id=>$(id).hidden=true);
+  $('quiz').hidden=true; $('lesson').hidden=true; $('pads').hidden=false; $('mist').hidden = mode!=='challenge';
+  setPaused(false); $('pauseOv').hidden=true; if(!DEMO) $('demoTag').hidden=true; hudSensors(); hudMode(); updateHud();
+  if(!loop) toast('Manual mode. You are driving.', false, 1.8);
+}
+$('startBtn').onclick=()=>start(0);
+$('againBtn').onclick=()=>start(0);
+$('menuBtn').onclick=()=>{ $('endOv').hidden=true; $('startOv').hidden=false; showBest(); $('startBtn').focus(); };
+$('keepBtn').onclick=()=>{ const keep={score:S.score, answered:S.answered, loop:S.loop+1}; start(keep.loop); S.score=keep.score; S.answered=keep.answered; S.calm=S.calmTarget=1; S.stage=3; hudMode(); updateHud(); };
+
+function saveBest(){ const sc=Math.floor(S.score), k='htd-best-'+mode; if(!DEMO && sc>bestOf(mode)) store.set(k,String(sc)); return sc; }
+function gameOver(reason, q){
+  S.running=false; S.over=true; hudMode(); $('quiz').hidden=true; $('lesson').hidden=true; $('pads').hidden=true;
+  Snd.wrong(); const sc=saveBest();
+  $('endTitle').textContent = q ? 'Wrong gate. Back in manual mode.' : 'Sensors muddied. Autopilot disengaged.';
+  $('endReason').textContent=reason; $('endAnswer').hidden=!q;
+  if(q){ $('endCorrect').textContent=q.a[0]; $('endWhy').textContent=q.why; }
+  $('endScore').textContent=sc.toLocaleString(); $('endQ').textContent=S.answered; $('endBest').textContent=bestOf(mode).toLocaleString();
+  setTimeout(()=>{ $('endOv').hidden=false; $('againBtn').focus(); }, 700);
+  showBest();
+}
+function arrive(){
+  S.running=false; $('quiz').hidden=true; $('lesson').hidden=true; $('pads').hidden=true; Snd.arrive();
+  const sc=saveBest();
+  $('arrScore').textContent=sc.toLocaleString(); $('arrSens').textContent=S.sensors; $('arrMode').textContent=MODES[mode].name;
+  $('shareText').textContent = `I reached Dhyāna on Highway to Dhyāna: ${sc.toLocaleString()} points in ${MODES[mode].name} mode. Can you? theselfdrivingmind.com`;
+  $('shareNote').textContent='';
+  setTimeout(()=>{ $('arriveOv').hidden=false; if(!DEMO)$('shareBtn').focus(); }, 1000);
+  if(DEMO){ clearTimeout(demoTimer); demoTimer=setTimeout(()=>{ if(DEMO){ $('arriveOv').hidden=true; startDemo(); } }, 9000); }
+  showBest();
+}
+function copyShare(){
+  const t=$('shareText').textContent, note=$('shareNote');
+  const fallback=()=>{ const r=document.createRange(); r.selectNodeContents($('shareText')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); note.textContent='Selected. Press copy on your device to copy it.'; };
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(()=>{ note.textContent='Copied. Paste it into WhatsApp, LinkedIn or anywhere.'; }, fallback); } else fallback();
+}
+$('copyBtn').onclick=copyShare;
+$('shareBtn').onclick=()=>{
+  const t=$('shareText').textContent;
+  if(navigator.share){ navigator.share({ title:'Highway to Dhyāna', text:t }).catch(e=>{ if(!e || e.name!=='AbortError') copyShare(); }); } else copyShare();
+};
+
+function spawnVrittis(){
+  const lanes=shuffle([-1,0,1]);
+  const n=(!DEMO && S.calm<0.45 && Math.random()<0.45) ? 2 : 1;
+  const list = TIERED_VRITTIS[S.stage] || TIERED_VRITTIS[1];
+  for(let i=0;i<n;i++) S.objs.push({ lane:lanes[i], z:ZMAX, label:list[Math.random()*list.length|0], hue:[330,20,280,190][Math.random()*4|0] });
+}
+function spawnQuiz(){
+  if (S.loop || S.answered >= GOAL) {
+      const prompt = ENDLESS_PROMPTS[Math.random()*ENDLESS_PROMPTS.length|0];
+      S.quiz = { q: {q: prompt, a:[prompt,prompt,prompt], why: "The journey continues in stillness."}, lanes:[-1,0,1], phase:'read', t: 2, gate:{z:ZMAX}, endless:true };
+      $('qtext').textContent = prompt;
+      const chips = $('qchips').children;
+      [-1,0,1].forEach((ln,i)=> chips[i].textContent = "STEER HERE");
+      $('lesson').hidden = true; $('quiz').hidden = false;
+      S.objs = S.objs.filter(o=>o.z<9);
+      return;
+  }
+  
+  if(S.qi>=S.order.length){ S.order=shuffle([...QUESTIONS.keys()]); S.qi=0; }
+  const q=QUESTIONS[S.order[S.qi++]];
+  const pos=shuffle([-1,0,1]);
+  const words=(q.q+' '+q.a.join(' ')).split(/\s+/).length;
+  S.quiz={ q, lanes:pos, phase:'read', t:MODES[mode].read + words*0.07, gate:null };
+  $('qtext').textContent=q.q;
+  const chips=$('qchips').children; [-1,0,1].forEach((ln,i)=>{ chips[i].textContent=q.a[pos.indexOf(ln)]; });
+  $('lesson').hidden=true; $('quiz').hidden=false;
+  S.objs=S.objs.filter(o=>o.z<9);
+}
+function puff(x,y,size,kind){
+  const n = kind==='smoke'?34:22;
+  for(let i=0;i<n;i++){
+    const a=Math.random()*Math.PI*2, sp=(kind==='smoke'?60:140)*(0.4+Math.random())*size/100;
+    FX.push({ x, y, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp*0.6-(kind==='smoke'?40:70)*size/100, life:0, max:kind==='smoke'?(0.9+Math.random()*0.6):(0.5+Math.random()*0.4),
+      r:(kind==='smoke'?(8+Math.random()*14):(2+Math.random()*3))*size/100, kind, hue:kind==='smoke'?(Math.random()<0.3?12:220):45 });
+  }
+}
+function wreckGate(Q,k){
+  const z=CARZ+0.6, x=laneX(Q.lanes[k],z), y=yAt(z), lw=halfW(z)*2/3, gh=lw*1.25;
+  WRECK={ q:Q.q, lanes:Q.lanes, k, t:0, z };
+  puff(x, y-gh*0.65, lw, 'smoke'); puff(x, y-gh*0.65, lw*0.8, 'shard');
+  Snd.rattle(); S.shake=1;
+}
+function setStage(n){
+  if(n===S.stage) return; S.stage=n; hudMode(); Snd.stage();
+  if(n===2) toast('Lane assist engaged. The car begins to help.', false, 2.2);
+  if(n===3) toast('Full Self-Driving engaged. Let go of the wheel.', false, 2.6);
+}
+
+function update(dt){
+  if(toastTimer>0){ toastTimer-=dt; if(toastTimer<=0) $('toast').classList.remove('show'); }
+  if(S.lessonT>0){ S.lessonT-=dt; if(S.lessonT<=0) $('lesson').hidden=true; }
+  if(S.pulseCool>0) { S.pulseCool-=dt; if(S.pulseCool<0) S.pulseCool=0; }
+  if(S.pulseRing>0) { S.pulseRing+=dt*50; if(S.pulseRing>30) S.pulseRing=0; }
+  
+  S.calm += (S.calmTarget-S.calm)*Math.min(1,dt*0.8);
+  S.tt=Math.min(1,S.tt+dt/0.24); { const e=S.tt*S.tt*(3-2*S.tt); S.carX=S.from+(S.lane-S.from)*e; }
+  S.shake=Math.max(0,S.shake-dt*4); S.flash=Math.max(0,S.flash-dt*1.6);
+  const atr=!S.running;
+  const v = atr ? 7 : S.speed*(S.quiz && !S.quiz.endless ? MODES[mode].slow : 1);
+  S.dist+=v*dt; S.t+=dt;
+  Snd.engine(!atr, v, S.calm);
+  if(Math.random() < dt*(3.2*(1-S.calm)+0.15)) S.bb.push({ z:ZMAX, side:Math.random()<.5?-1:1, off:1.25+Math.random()*1.4, txt:BILLBOARDS[Math.random()*BILLBOARDS.length|0], hue:[300,25,200,50,0][Math.random()*5|0], h:0.6+Math.random()*0.9 });
+  S.bb.forEach(b=>b.z-=v*dt); S.bb=S.bb.filter(b=>b.z>0.2);
+  for(const f of FX){ f.life+=dt; f.x+=f.vx*dt; f.y+=f.vy*dt; f.vy+= (f.kind==='smoke'?-20:260)*dt; f.vx*=0.98; if(f.kind==='smoke') f.r+=18*dt; }
+  FX=FX.filter(f=>f.life<f.max);
+  if(WRECK){ WRECK.t+=dt; if(WRECK.t>0.9) WRECK=null; }
+  if(atr) return;
+
+  S.speed=Math.min(17+S.loop*3, S.speed+dt*0.07);
+  S.score+=v*dt*1.5;
+
+  if(S.quiz){
+    const Q=S.quiz;
+    if(Q.phase==='read'){ Q.t-=dt; if(Q.t<=0){ Q.phase='gate'; Q.gate={z:ZMAX}; Snd.gate(); } }
+    else {
+      Q.gate.z-=v*dt;
+      if(Q.gate.z<=CARZ){
+        const k=Q.lanes.indexOf(S.lane);
+        S.quiz=null; $('quiz').hidden=true;
+        
+        if (Q.endless) {
+            S.answered++; S.score+=100;
+            setStage(3); S.quizT = 5.0;
+            Snd.correct(2);
+        } else if(k===0){
+          S.answered++; S.streak++; S.score+=100*S.streak; S.sensors=Math.min(3,S.sensors+1); hudSensors();
+          S.calmTarget=Math.min(1,S.answered/8); S.flash=1; S.flashCol='217,169,62';
+          Snd.correct(S.streak); lesson(true, Q.q); { const z=CARZ+0.6; puff(laneX(S.lane,z), yAt(z)-halfW(z)*0.6, halfW(z)*0.5, 'shard'); }
+          S.quizT = 8.5 - Math.min(3, S.answered*0.2);
+          setStage(stageFor(S.answered));
+          if(!S.loop && S.answered>=GOAL){ updateHud(); arrive(); return; }
+        } else {
+          S.streak=0; S.flash=1; S.flashCol='224,83,61'; wreckGate(Q,k);
+          if(mode==='mastery' || (mode==='challenge' && S.mistakes+1>=3)){
+            S.mistakes++; updateHud(); S.shake=0.6;
+            gameOver(`You steered into “${Q.q.a[k]}”.`+(mode==='challenge'?' That was your third wrong gate.':''), Q.q); return;
+          }
+          S.mistakes++; Snd.miss(); lesson(false, Q.q);
+          S.calmTarget=Math.max(0, S.calmTarget-0.12);
+          S.quizT=7.5;
+        }
+      }
+    }
+  } else { S.quizT-=dt; if(S.quizT<=0) spawnQuiz(); }
+
+  if(!S.quiz){ S.spawnT-=dt; if(S.spawnT<=0){ spawnVrittis(); S.spawnT=0.85+S.calm*1.4+Math.random()*0.5; } }
+  autopilot(dt);
+  if(DEMO) demoBot(dt);
+  for(const o of S.objs){
+    const prev=o.z; o.z-=v*dt;
+    if(!o.hit && prev>CARZ && o.z<=CARZ && Math.abs(o.lane-S.carX)<0.55){
+      o.hit=true; if(S.demo) S.demo.hitDone=true; S.sensors--; hudSensors(); S.shake=0.6; S.flash=.7; S.flashCol='224,83,61'; S.streak=0; Snd.hit();
+      if(navigator.vibrate) try{ navigator.vibrate(50); }catch(e){}
+      toast(`Mud on the lens · ${o.label.toLowerCase()}`, true);
+      if(S.sensors<=0){
+        if(mode==='discovery'){ S.sensors=3; hudSensors(); S.score=Math.max(0,S.score-150); toast('Sensors wiped clean. Keep driving.', false, 1.6); }
+        else { gameOver('Three vṛttis landed on the windshield. With the sensors covered, the autopilot cannot see the road.'); return; }
+      }
+    }
+  }
+  S.objs=S.objs.filter(o=>o.z>0.15 && !o.hit);
+  updateHud();
+}
+
+const lerp=(a,b,t)=>a+(b-a)*t;
+const mixCol=(c1,c2,t)=>`rgb(${Math.round(lerp(c1[0],c2[0],t))},${Math.round(lerp(c1[1],c2[1],t))},${Math.round(lerp(c1[2],c2[2],t))})`;
+const stars=[]; for(let i=0;i<120;i++) stars.push([Math.random(),Math.random()*0.36,Math.random()*1.4+0.3,Math.random()*6]);
+const noise=[]; for(let i=0;i<70;i++) noise.push([Math.random(),Math.random(),Math.random()*360,Math.random()*3+2]);
+
+function glowLine(x1,y1,x2,y2,w,rgba,a){
+  ctx.lineCap='round';
+  ctx.strokeStyle=`rgba(${rgba},${a*0.18})`; ctx.lineWidth=w*4; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  ctx.strokeStyle=`rgba(${rgba},${a})`; ctx.lineWidth=w; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+}
+function draw(){
+  const c=S.calm, hy=horizonY();
+  ctx.save();
+  if(S.shake>0 && !reduceMotion) ctx.translate((Math.random()-.5)*6*S.shake,(Math.random()-.5)*4*S.shake);
+  const sky=ctx.createLinearGradient(0,0,0,hy);
+  sky.addColorStop(0, mixCol([46,24,40],[6,12,26],c)); sky.addColorStop(1, mixCol([120,62,52],[22,36,66],c));
+  ctx.fillStyle=sky; ctx.fillRect(-20,-20,W+40,hy+22);
+  if(c>0.2){ for(const s of stars){ const tw=0.6+0.4*Math.sin(S.t*1.5+s[3]); ctx.fillStyle=`rgba(242,213,138,${(c-0.2)*0.9*tw})`; ctx.fillRect(s[0]*W,s[1]*H,s[2],s[2]); } }
+  const g=ctx.createRadialGradient(W/2,hy,4,W/2,hy,Math.max(W,H)*0.55);
+  g.addColorStop(0,`rgba(217,169,62,${0.18+0.42*c})`); g.addColorStop(1,'rgba(217,169,62,0)');
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,hy+H*0.2);
+  const par = -S.carX*W*0.025 - W*0.06;
+  if(SACRAMENTO && c>0.03){ ctx.globalAlpha=Math.min(1,c*1.3); ctx.drawImage(SACRAMENTO, par*0.5, 0, W*1.12, hy); ctx.globalAlpha=1; }
+  if(GUINDY && c<0.97){
+    ctx.globalAlpha=1-c; ctx.drawImage(GUINDY, par, 0, W*1.12, hy);
+    for(const n of NEON){ const on = Math.sin(S.t*(3+n.ph%3)+n.ph)>-0.3 || reduceMotion;
+      if(on){ ctx.fillStyle=`hsla(${n.hue},95%,62%,.85)`; ctx.fillRect(par+n.x*W*1.12, n.y, n.w*W*1.12, Math.max(2,H*0.004)); } }
+    ctx.globalAlpha=1;
+  }
+  const gr=ctx.createLinearGradient(0,hy,0,H);
+  gr.addColorStop(0, mixCol([58,44,46],[10,18,34],c)); gr.addColorStop(1, mixCol([34,28,30],[5,9,18],c));
+  ctx.fillStyle=gr; ctx.fillRect(-20,hy,W+40,H-hy+20);
+  ctx.beginPath(); ctx.moveTo(W/2-halfW(ZMAX),yAt(ZMAX)); ctx.lineTo(W/2+halfW(ZMAX),yAt(ZMAX)); ctx.lineTo(W/2+halfW(0),yAt(0)); ctx.lineTo(W/2-halfW(0),yAt(0)); ctx.closePath();
+  ctx.fillStyle=mixCol([62,60,64],[8,14,28],c); ctx.fill();
+  for(const s of [-1,1]) glowLine(W/2+s*halfW(ZMAX),yAt(ZMAX),W/2+s*halfW(0),yAt(0), 2+2*c, '217,169,62', 0.25+0.7*c);
+  const seg=4, off=S.dist%seg;
+  ctx.lineCap='butt';
+  for(const l of [-1/3,1/3]){ for(let z=-off+seg; z<ZMAX; z+=seg){ const z2=Math.max(0,z-1.6);
+    ctx.beginPath(); ctx.moveTo(W/2+l*halfW(z),yAt(z)); ctx.lineTo(W/2+l*halfW(z2),yAt(z2));
+    ctx.lineWidth=Math.max(1,5*proj(z2)); ctx.strokeStyle=c>0.5?`rgba(242,213,138,${0.35+0.4*c})`:'rgba(225,220,205,.55)'; ctx.stroke(); } }
+  if(c<0.9){ for(let z=-(S.dist%7)+7; z<ZMAX; z+=7){ const p=proj(z); ctx.strokeStyle=`rgba(200,150,120,${0.18*(1-c)})`; ctx.lineWidth=2*p; ctx.beginPath(); const x=W/2+Math.sin(z*3.3)*halfW(z)*0.6; ctx.moveTo(x-30*p,yAt(z)); ctx.lineTo(x+40*p,yAt(z)+6*p); ctx.stroke(); } }
+
+  const items=[];
+  for(const b of S.bb) items.push({z:b.z,f:()=>drawBillboard(b)});
+  for(const o of S.objs) items.push({z:o.z,f:()=>drawVritti(o)});
+  if(S.quiz && S.quiz.gate) items.push({z:S.quiz.gate.z,f:()=>drawGate(S.quiz)});
+  items.sort((a,b)=>b.z-a.z).forEach(i=>i.f());
+  if(WRECK) drawWreck();
+  
+  if(S.pulseRing > 0) {
+      ctx.beginPath();
+      ctx.arc(laneX(S.carX,CARZ), yAt(CARZ), S.pulseRing*W*0.05, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(242,213,138,${Math.max(0, 1 - S.pulseRing/30)})`;
+      ctx.lineWidth = 10;
+      ctx.stroke();
+  }
+
+  drawCar();
+  for(const f of FX){ const a=1-f.life/f.max;
+    if(f.kind==='smoke'){ ctx.fillStyle = f.hue===12 ? `rgba(160,70,50,${0.35*a})` : `rgba(150,150,160,${0.4*a})`; }
+    else ctx.fillStyle = S.flashCol==='217,169,62' ? `rgba(242,213,138,${a})` : `rgba(240,200,170,${a})`;
+    ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,Math.PI*2); ctx.fill(); }
+  if(c<0.8 && !reduceMotion){ const a=0.22*(1-c), k=Math.floor(S.t*12); for(let i=0;i<Math.floor(70*(1-c));i++){ const n=noise[(i+k)%noise.length]; ctx.fillStyle=`hsla(${n[2]},80%,65%,${a})`; ctx.fillRect(((n[0]+i*0.137+k*0.071)%1)*W, ((n[1]+i*0.291+k*0.053)%1)*H, n[3], 1.5); } }
+  if(S.flash>0){ ctx.fillStyle=`rgba(${S.flashCol},${0.26*S.flash})`; ctx.fillRect(-20,-20,W+40,H+40); }
+  ctx.restore();
+}
+function drawWreck(){
+  const Wk=WRECK, z=Wk.z, y=yAt(z), lw=halfW(z)*2/3, gh=lw*1.25, decay=Math.max(0,1-Wk.t/0.7);
+  ctx.globalAlpha=Math.min(1,(0.9-Wk.t)/0.3);
+  const x=laneX(Wk.lanes[Wk.k],z) + (reduceMotion?0:Math.sin(Wk.t*70)*lw*0.06*decay);
+  const pw=lw*0.9, ph=gh*0.62, top=y-gh+lw*0.04 + (reduceMotion?0:Math.abs(Math.sin(Wk.t*55))*lw*0.03*decay);
+  ctx.save(); ctx.translate(x, top+ph/2); ctx.rotate(reduceMotion?0:Math.sin(Wk.t*48)*0.07*decay);
+  ctx.fillStyle='rgba(40,18,18,.92)'; ctx.fillRect(-pw/2,-ph/2,pw,ph);
+  ctx.strokeStyle='rgba(224,83,61,.95)'; ctx.lineWidth=Math.max(2,lw*0.02); ctx.strokeRect(-pw/2,-ph/2,pw,ph);
+  ctx.beginPath(); ctx.moveTo(-pw*0.32,-ph*0.42); ctx.lineTo(-pw*0.05,-ph*0.05); ctx.lineTo(-pw*0.18,ph*0.12); ctx.lineTo(pw*0.12,ph*0.44); ctx.stroke();
+  const {fs,lines}=fitText(Wk.q.a[Wk.k], pw*0.8, ph*0.86, Math.max(9,ph*0.2), DISPLAY); ctx.fillStyle='#F4D6CC'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  const lh=fs*1.15; lines.forEach((ln,i)=>ctx.fillText(ln,0,(i-(lines.length-1)/2)*lh));
+  ctx.restore(); ctx.globalAlpha=1;
+}
+function drawBillboard(b){
+  const p=proj(b.z), y=yAt(b.z), w=170*p*(W/700+0.4), h=w*0.45, post=b.h*120*p;
+  let x=W/2+b.side*halfW(b.z)*b.off; x=Math.max(w/2+3, Math.min(W-w/2-3, x)); 
+  const big = w>W*0.36 ? Math.max(0,1-(w-W*0.36)/(W*0.1)) : 1;
+  ctx.globalAlpha=Math.min(1,(1-S.calm)*1.2)*Math.min(1,(ZMAX-b.z)/8)*big; if(ctx.globalAlpha<=0.01){ ctx.globalAlpha=1; return; }
+  ctx.fillStyle='rgba(30,25,30,.9)'; ctx.fillRect(x-2*p,y-post,4*p,post);
+  ctx.fillStyle=`hsl(${b.hue},75%,${45+8*Math.sin(S.t*6+b.z)}%)`; ctx.fillRect(x-w/2,y-post-h,w,h);
+  ctx.fillStyle='#120d10'; { let fs=Math.max(6,h*0.36); ctx.font=`700 ${fs}px ${MONO}`; const tw=ctx.measureText(b.txt).width; if(tw>w*0.88){ fs=fs*w*0.88/tw; ctx.font=`700 ${fs}px ${MONO}`; } }
+  ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(b.txt,x,y-post-h/2);
+  ctx.globalAlpha=1;
+}
+function drawVritti(o){
+  const p=proj(o.z), x=laneX(o.lane,o.z), y=yAt(o.z), w=halfW(o.z)*0.5, h=w*0.62;
+  ctx.globalAlpha=Math.min(1,(ZMAX-o.z)/6);
+  ctx.save(); ctx.translate(x,y-h*0.55); ctx.beginPath();
+  for(let i=0;i<=22;i++){ const a=i/22*Math.PI*2, r=(i%2?0.78:1)*(1+0.06*Math.sin(S.t*7+i)); ctx.lineTo(Math.cos(a)*w/2*r, Math.sin(a)*h/2*r); }
+  ctx.closePath(); ctx.fillStyle=`hsla(${o.hue},70%,42%,.92)`; ctx.fill();
+  ctx.lineWidth=Math.max(1,2.5*p); ctx.strokeStyle=`hsla(${o.hue},90%,70%,.9)`; ctx.stroke();
+  ctx.fillStyle='#fff6ea'; { let fs=Math.max(6,h*0.22); ctx.font=`700 ${fs}px ${MONO}`; const tw=ctx.measureText(o.label).width; if(tw>w*0.78){ fs=Math.max(5,fs*w*0.78/tw); ctx.font=`700 ${fs}px ${MONO}`; } }
+  ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(o.label,0,0);
+  ctx.restore();
+  ctx.fillStyle='rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(x,y,w*0.42,h*0.08,0,0,Math.PI*2); ctx.fill();
+  if(S.stage===3 && o.z<18 && o.z>CARZ){ ctx.strokeStyle=`rgba(127,200,169,${0.5*Math.min(1,(18-o.z)/6)})`; ctx.lineWidth=Math.max(1,1.5*p); ctx.strokeRect(x-w*0.55,y-h*1.15,w*1.1,h*1.2); }
+  ctx.globalAlpha=1;
+}
+function fitText(text, maxW, maxH, startFs, family, weight=''){
+  for(let fs=startFs; fs>=5; fs-=0.5){
+    ctx.font=`${weight}${fs}px ${family}`; const lines=wrap(text,maxW);
+    if(lines.length*fs*1.15<=maxH && lines.every(l=>ctx.measureText(l).width<=maxW)) return {fs,lines};
+  }
+  ctx.font=`${weight}5px ${family}`; return {fs:5, lines:wrap(text,maxW)};
+}
+function wrap(text,maxW){ const words=text.split(' '), lines=[]; let cur=''; for(const w of words){ const t=cur?cur+' '+w:w; if(ctx.measureText(t).width>maxW && cur){ lines.push(cur); cur=w; } else cur=t; } if(cur) lines.push(cur); return lines; }
+function drawGate(Q){
+  const z=Q.gate.z, p=proj(z), y=yAt(z), lw=halfW(z)*2/3, gh=lw*1.25;
+  ctx.globalAlpha=Math.min(1,(ZMAX-z)/5);
+  const bx=W/2-halfW(z), by=y-gh-lw*0.12, bw=halfW(z)*2, bh=lw*0.12;
+  ctx.fillStyle='rgba(217,169,62,.16)'; ctx.fillRect(bx-4*p,by-4*p,bw+8*p,bh+8*p);
+  ctx.fillStyle='rgba(11,20,38,.92)'; ctx.fillRect(bx,by,bw,bh);
+  ctx.strokeStyle='rgba(217,169,62,.9)'; ctx.lineWidth=Math.max(1,3*p); ctx.strokeRect(bx,by,bw,bh);
+  for(let k=0;k<3;k++){
+    const x=laneX(Q.lanes[k],z), pw=lw*0.9, ph=gh*0.62, top=y-gh+lw*0.04, pl=Math.max(1.5,4*p);
+    ctx.fillStyle='rgba(217,169,62,.85)'; ctx.fillRect(x-pw/2,top,pl,gh-lw*0.04); ctx.fillRect(x+pw/2-pl,top,pl,gh-lw*0.04);
+    ctx.fillStyle='rgba(14,26,50,.94)'; ctx.fillRect(x-pw/2+5*p,top,pw-10*p,ph);
+    ctx.strokeStyle='rgba(242,213,138,.75)'; ctx.lineWidth=Math.max(1,2*p); ctx.strokeRect(x-pw/2+5*p,top,pw-10*p,ph);
+    const lg=ctx.createLinearGradient(0,y-gh*0.3,0,y); lg.addColorStop(0,'rgba(217,169,62,0)'); lg.addColorStop(1,'rgba(217,169,62,.35)'); ctx.fillStyle=lg; ctx.fillRect(x-pw/2,y-gh*0.3,pw,gh*0.3);
+    const {fs,lines}=fitText(Q.q.a[k], pw*0.82, ph*0.86, Math.max(7,ph*0.22), DISPLAY); ctx.fillStyle='#F4ECD8'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    const lh=fs*1.15, y0=top+ph/2-(lines.length-1)*lh/2;
+    lines.forEach((ln,i)=>ctx.fillText(ln,x,y0+i*lh));
+  }
+  ctx.globalAlpha=1;
+}
+function drawCar(){
+  const z=CARZ, y=yAt(z)+H*0.005, x=laneX(S.carX,z), w=Math.min(halfW(z)*0.56,170), h=w*0.62;
+  const col = S.over ? '224,83,61' : S.stage===3 ? '242,213,138' : S.stage===2 ? '236,222,190' : '230,226,215';
+  ctx.save(); ctx.translate(x,y); ctx.rotate((S.lane-S.carX)*0.02);
+  const gg=ctx.createRadialGradient(0,0,4,0,0,w*0.9);
+  gg.addColorStop(0, `rgba(${S.over?'224,83,61':'217,169,62'},${S.over?0.35:(0.12+0.18*S.stage)})`); gg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=gg; ctx.beginPath(); ctx.ellipse(0,-h*0.04,w*0.9,h*0.26,0,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#07090f'; ctx.fillRect(-w*0.46,-h*0.2,w*0.16,h*0.22); ctx.fillRect(w*0.30,-h*0.2,w*0.16,h*0.22);
+  ctx.beginPath(); ctx.moveTo(-w*0.5,-h*0.14); ctx.quadraticCurveTo(-w*0.52,-h*0.5,-w*0.42,-h*0.56); ctx.lineTo(-w*0.3,-h*0.9);
+  ctx.quadraticCurveTo(0,-h*1.02,w*0.3,-h*0.9); ctx.lineTo(w*0.42,-h*0.56); ctx.quadraticCurveTo(w*0.52,-h*0.5,w*0.5,-h*0.14); ctx.closePath();
+  const bg=ctx.createLinearGradient(0,-h,0,0); bg.addColorStop(0,'#2a3550'); bg.addColorStop(1,'#111a2c'); ctx.fillStyle=bg; ctx.fill();
+  ctx.lineWidth=1.5; ctx.strokeStyle='rgba(242,213,138,.35)'; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(-w*0.27,-h*0.86); ctx.quadraticCurveTo(0,-h*0.96,w*0.27,-h*0.86); ctx.lineTo(w*0.34,-h*0.6); ctx.lineTo(-w*0.34,-h*0.6); ctx.closePath();
+  ctx.fillStyle='rgba(120,150,190,.28)'; ctx.fill();
+  ctx.fillStyle=`rgba(${col},.18)`; ctx.fillRect(-w*0.47,-h*0.53,w*0.94,h*0.15);
+  ctx.fillStyle=`rgba(${col},.35)`; ctx.fillRect(-w*0.455,-h*0.505,w*0.91,h*0.1);
+  ctx.fillStyle=`rgb(${col})`; ctx.fillRect(-w*0.44,-h*0.48,w*0.88,h*0.055);
+  ctx.strokeStyle='rgba(242,213,138,.8)'; ctx.lineWidth=1.3; const ly=-h*0.32, ls=w*0.05;
+  for(const a of [-0.6,0,0.6]){ ctx.beginPath(); ctx.ellipse(Math.sin(a)*ls*0.9,ly-ls*0.2,ls*0.35,ls*0.85,a,0,Math.PI*2); ctx.stroke(); }
+  ctx.restore();
+}
+
+let errCount=0;
+function frame(now){
+  requestAnimationFrame(frame);
+  const dt=Math.min(0.05,Math.max(0,(now-last)/1000)); last=now;
+  try{ if(!S.paused) update(dt); draw(); }
+  catch(err){ errCount++; console.error('Highway to Dhyāna frame error', err); try{ ctx.restore(); }catch(e){} if(errCount===1 && S.quiz){ S.quiz=null; $('quiz').hidden=true; } }
+}
+function autoPause(){ if(S.running && !S.paused) setPaused(true, 'The game paused itself because the screen lost focus (a notification, another app, or a menu). Nothing was lost.'); }
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) autoPause(); if(Snd.ctx){ document.hidden ? Snd.ctx.suspend() : Snd.ctx.resume(); } });
+addEventListener('pagehide', autoPause);
+let typed='', taps=0, tapT=0;
+addEventListener('keydown', e=>{
+  if(DEMO){ e.preventDefault(); e.stopImmediatePropagation(); exitDemo(); return; }
+  if(!$('startOv').hidden && e.key.length===1){ typed=(typed+e.key.toLowerCase()).slice(-4); if(typed==='demo'){ typed=''; Snd.init(); startDemo(); } }
+}, true);
+$('title').addEventListener('click', ()=>{ const n=performance.now(); taps = n-tapT<700 ? taps+1 : 1; tapT=n; if(taps>=5){ taps=0; Snd.init(); startDemo(); } });
+stage.addEventListener('pointerdown', e=>{ if(DEMO){ e.stopPropagation(); exitDemo(); } }, true);
+resize(true);
+(document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, new Promise(r=>setTimeout(r,1500))]) : Promise.resolve()).then(()=>{ resize(true); requestAnimationFrame(frame); if(location.hash==='#demo') startDemo(); });
+})();
+</script>
+</body>
+</html>
