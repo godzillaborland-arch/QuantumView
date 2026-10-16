@@ -209,7 +209,7 @@ h3{font-size:18px;color:var(--gold-soft)}
         <li><h3>Awareness Pulse</h3><p>Press <b>Spacebar</b> or tap the ◎ icon to instantly clear all immediate distractions. It takes time to recharge.</p></li>
         <li><h3>Dodge the vṛttis</h3><p>Distractions escalate as you drive. Hitting them costs a sensor. Each correct gate cleans one sensor.</p></li>
         <li><h3>Three stages of the drive</h3><p><b>Manual mode</b> (0–2 correct). <b>Lane assist</b> (3–5 correct). <b>Full Self-Driving</b> (6+ correct): the car steers around the vṛttis by itself.</p></li>
-        <li><h3>Scoring & Goal</h3><p>Ten correct gates reach Dhyāna. After that, the road stays open in endless mode with contemplative reflections.</p></li>
+        <li><h3>Scoring & Goal</h3><p>Ten correct gates reach Dhyāna. After that, the road stays open to explore the remaining advanced questions while the car drives.</p></li>
       </ol>
       <div class="actions"><button class="btn" id="helpClose" type="button">Got it</button></div>
     </div>
@@ -241,7 +241,7 @@ h3{font-size:18px;color:var(--gold-soft)}
         <div class="note" id="shareNote" aria-live="polite"></div>
       </div>
       <div class="actions">
-        <button class="link" id="keepBtn" type="button">Keep driving, faster</button>
+        <button class="link" id="keepBtn" type="button">Continue the journey</button>
         <a class="link" href="https://theselfdrivingmind.com" target="_blank" rel="noopener">theselfdrivingmind.com</a>
       </div>
     </div>
@@ -451,7 +451,7 @@ function buildOrder(){
 function fresh(loop=0){
   return { running:false, paused:false, t:0, dist:0, score:0, speed:9, lane:0, carX:0, from:0, tt:1, sensors:3,
     calm:0, calmTarget:0, objs:[], spawnT:1.2, quizT:4.2, quiz:null, order:buildOrder(), qi:0,
-    answered:0, mistakes:0, streak:0, loop, stage:1, shake:0, flash:0, flashCol:'217,169,62', bb:[], over:false, idle:0, lessonT:0, handsHint:false, pulseCool:0, pulseRing:0 };
+    answered:0, mistakes:0, streak:0, loop, stage:1, shake:0, flash:0, flashCol:'217,169,62', bb:[], over:false, idle:0, lessonT:0, handsHint:false, pulseCool:0, pulseRing:0, arrived:false };
 }
 let S=fresh();
 let FX=[], WRECK=null, last=performance.now();
@@ -499,7 +499,7 @@ function firePulse(){
     S.pulseCool = 10;
     S.pulseRing = 0.1;
     Snd.pulse();
-    S.objs = S.objs.filter(o => o.z > 25);
+    for (let i = S.objs.length - 1; i >= 0; i--) if (S.objs[i].z <= 25) S.objs.splice(i, 1);
     toast("Awareness Pulse", false, 1.2);
     updatePulseUI();
 }
@@ -612,7 +612,18 @@ function start(loop=0){
 $('startBtn').onclick=()=>start(0);
 $('againBtn').onclick=()=>start(0);
 $('menuBtn').onclick=()=>{ $('endOv').hidden=true; $('startOv').hidden=false; showBest(); $('startBtn').focus(); };
-$('keepBtn').onclick=()=>{ const keep={score:S.score, answered:S.answered, loop:S.loop+1}; start(keep.loop); S.score=keep.score; S.answered=keep.answered; S.calm=S.calmTarget=1; S.stage=3; hudMode(); updateHud(); };
+$('keepBtn').onclick=()=>{ 
+    $('arriveOv').hidden = true; 
+    S.running = true; 
+    S.stage = 3; 
+    S.calmTarget = 1;
+    hudMode(); updateHud();
+    last = performance.now();
+    if(DEMO){
+        clearTimeout(demoTimer);
+        demoTimer = setTimeout(()=>{ if(DEMO){ $('arriveOv').hidden=true; S.running=true; S.stage=3; last=performance.now(); } }, 1000);
+    }
+};
 
 function saveBest(){ const sc=Math.floor(S.score), k='htd-best-'+mode; if(!DEMO && sc>bestOf(mode)) store.set(k,String(sc)); return sc; }
 function gameOver(reason, q){
@@ -631,8 +642,8 @@ function arrive(){
   $('arrScore').textContent=sc.toLocaleString(); $('arrSens').textContent=S.sensors; $('arrMode').textContent=MODES[mode].name;
   $('shareText').textContent = `I reached Dhyāna on Highway to Dhyāna: ${sc.toLocaleString()} points in ${MODES[mode].name} mode. Can you? theselfdrivingmind.com`;
   $('shareNote').textContent='';
-  setTimeout(()=>{ $('arriveOv').hidden=false; if(!DEMO)$('shareBtn').focus(); }, 1000);
-  if(DEMO){ clearTimeout(demoTimer); demoTimer=setTimeout(()=>{ if(DEMO){ $('arriveOv').hidden=true; startDemo(); } }, 9000); }
+  setTimeout(()=>{ $('arriveOv').hidden=false; if(!DEMO) $('shareBtn').focus(); }, 1000);
+  if(DEMO){ clearTimeout(demoTimer); demoTimer=setTimeout(()=>{ if(DEMO){ $('keepBtn').click(); } }, 5000); }
   showBest();
 }
 function copyShare(){
@@ -653,18 +664,17 @@ function spawnVrittis(){
   for(let i=0;i<n;i++) S.objs.push({ lane:lanes[i], z:ZMAX, label:list[Math.random()*list.length|0], hue:[330,20,280,190][Math.random()*4|0] });
 }
 function spawnQuiz(){
-  if (S.loop || S.answered >= GOAL) {
+  if (S.qi >= QUESTIONS.length) {
       const prompt = ENDLESS_PROMPTS[Math.random()*ENDLESS_PROMPTS.length|0];
       S.quiz = { q: {q: prompt, a:[prompt,prompt,prompt], why: "The journey continues in stillness."}, lanes:[-1,0,1], phase:'read', t: 2, gate:{z:ZMAX}, endless:true };
       $('qtext').textContent = prompt;
       const chips = $('qchips').children;
       [-1,0,1].forEach((ln,i)=> chips[i].textContent = "STEER HERE");
       $('lesson').hidden = true; $('quiz').hidden = false;
-      S.objs = S.objs.filter(o=>o.z<9);
+      for (let i = S.objs.length - 1; i >= 0; i--) if (S.objs[i].z < 9) S.objs.splice(i, 1);
       return;
   }
   
-  if(S.qi>=S.order.length){ S.order=shuffle([...QUESTIONS.keys()]); S.qi=0; }
   const q=QUESTIONS[S.order[S.qi++]];
   const pos=shuffle([-1,0,1]);
   const words=(q.q+' '+q.a.join(' ')).split(/\s+/).length;
@@ -672,7 +682,7 @@ function spawnQuiz(){
   $('qtext').textContent=q.q;
   const chips=$('qchips').children; [-1,0,1].forEach((ln,i)=>{ chips[i].textContent=q.a[pos.indexOf(ln)]; });
   $('lesson').hidden=true; $('quiz').hidden=false;
-  S.objs=S.objs.filter(o=>o.z<9);
+  for (let i = S.objs.length - 1; i >= 0; i--) if (S.objs[i].z < 9) S.objs.splice(i, 1);
 }
 function puff(x,y,size,kind){
   const n = kind==='smoke'?34:22;
@@ -707,10 +717,22 @@ function update(dt){
   const v = atr ? 7 : S.speed*(S.quiz && !S.quiz.endless ? MODES[mode].slow : 1);
   S.dist+=v*dt; S.t+=dt;
   Snd.engine(!atr, v, S.calm);
+  
   if(Math.random() < dt*(3.2*(1-S.calm)+0.15)) S.bb.push({ z:ZMAX, side:Math.random()<.5?-1:1, off:1.25+Math.random()*1.4, txt:BILLBOARDS[Math.random()*BILLBOARDS.length|0], hue:[300,25,200,50,0][Math.random()*5|0], h:0.6+Math.random()*0.9 });
-  S.bb.forEach(b=>b.z-=v*dt); S.bb=S.bb.filter(b=>b.z>0.2);
-  for(const f of FX){ f.life+=dt; f.x+=f.vx*dt; f.y+=f.vy*dt; f.vy+= (f.kind==='smoke'?-20:260)*dt; f.vx*=0.98; if(f.kind==='smoke') f.r+=18*dt; }
-  FX=FX.filter(f=>f.life<f.max);
+  for (let i = S.bb.length - 1; i >= 0; i--) {
+      S.bb[i].z -= v*dt;
+      if (S.bb[i].z <= 0.2) S.bb.splice(i, 1);
+  }
+
+  for (let i = FX.length - 1; i >= 0; i--) {
+      const f = FX[i];
+      f.life += dt; f.x += f.vx*dt; f.y += f.vy*dt;
+      f.vy += (f.kind === 'smoke' ? -20 : 260) * dt; 
+      f.vx *= 0.98;
+      if (f.kind === 'smoke') f.r += 18 * dt;
+      if (f.life >= f.max) FX.splice(i, 1);
+  }
+
   if(WRECK){ WRECK.t+=dt; if(WRECK.t>0.9) WRECK=null; }
   if(atr) return;
 
@@ -736,7 +758,7 @@ function update(dt){
           Snd.correct(S.streak); lesson(true, Q.q); { const z=CARZ+0.6; puff(laneX(S.lane,z), yAt(z)-halfW(z)*0.6, halfW(z)*0.5, 'shard'); }
           S.quizT = 8.5 - Math.min(3, S.answered*0.2);
           setStage(stageFor(S.answered));
-          if(!S.loop && S.answered>=GOAL){ updateHud(); arrive(); return; }
+          if(!S.arrived && S.answered>=GOAL){ S.arrived = true; updateHud(); arrive(); return; }
         } else {
           S.streak=0; S.flash=1; S.flashCol='224,83,61'; wreckGate(Q,k);
           if(mode==='mastery' || (mode==='challenge' && S.mistakes+1>=3)){
@@ -754,19 +776,24 @@ function update(dt){
   if(!S.quiz){ S.spawnT-=dt; if(S.spawnT<=0){ spawnVrittis(); S.spawnT=0.85+S.calm*1.4+Math.random()*0.5; } }
   autopilot(dt);
   if(DEMO) demoBot(dt);
-  for(const o of S.objs){
-    const prev=o.z; o.z-=v*dt;
-    if(!o.hit && prev>CARZ && o.z<=CARZ && Math.abs(o.lane-S.carX)<0.55){
-      o.hit=true; if(S.demo) S.demo.hitDone=true; S.sensors--; hudSensors(); S.shake=0.6; S.flash=.7; S.flashCol='224,83,61'; S.streak=0; Snd.hit();
-      if(navigator.vibrate) try{ navigator.vibrate(50); }catch(e){}
-      toast(`Mud on the lens · ${o.label.toLowerCase()}`, true);
-      if(S.sensors<=0){
-        if(mode==='discovery'){ S.sensors=3; hudSensors(); S.score=Math.max(0,S.score-150); toast('Sensors wiped clean. Keep driving.', false, 1.6); }
-        else { gameOver('Three vṛttis landed on the windshield. With the sensors covered, the autopilot cannot see the road.'); return; }
+  
+  for (let i = S.objs.length - 1; i >= 0; i--) {
+      const o = S.objs[i];
+      const prev = o.z;
+      o.z -= v*dt;
+      if (!o.hit && prev > CARZ && o.z <= CARZ && Math.abs(o.lane - S.carX) < 0.55) {
+          o.hit = true; 
+          if(S.demo) S.demo.hitDone=true; 
+          S.sensors--; hudSensors(); S.shake=0.6; S.flash=.7; S.flashCol='224,83,61'; S.streak=0; Snd.hit();
+          if(navigator.vibrate) try{ navigator.vibrate(50); }catch(e){}
+          toast(`Mud on the lens · ${o.label.toLowerCase()}`, true);
+          if(S.sensors<=0){
+            if(mode==='discovery'){ S.sensors=3; hudSensors(); S.score=Math.max(0,S.score-150); toast('Sensors wiped clean. Keep driving.', false, 1.6); }
+            else { gameOver('Three vṛttis landed on the windshield. With the sensors covered, the autopilot cannot see the road.'); return; }
+          }
       }
-    }
+      if (o.z <= 0.15 || o.hit) S.objs.splice(i, 1);
   }
-  S.objs=S.objs.filter(o=>o.z>0.15 && !o.hit);
   updateHud();
 }
 
@@ -832,7 +859,15 @@ function draw(){
     if(f.kind==='smoke'){ ctx.fillStyle = f.hue===12 ? `rgba(160,70,50,${0.35*a})` : `rgba(150,150,160,${0.4*a})`; }
     else ctx.fillStyle = S.flashCol==='217,169,62' ? `rgba(242,213,138,${a})` : `rgba(240,200,170,${a})`;
     ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,Math.PI*2); ctx.fill(); }
-  if(c<0.8 && !reduceMotion){ const a=0.22*(1-c), k=Math.floor(S.t*12); for(let i=0;i<Math.floor(70*(1-c));i++){ const n=noise[(i+k)%noise.length]; ctx.fillStyle=`hsla(${n[2]},80%,65%,${a})`; ctx.fillRect(((n[0]+i*0.137+k*0.071)%1)*W, ((n[1]+i*0.291+k*0.053)%1)*H, n[3], 1.5); } }
+  if(c<0.8 && !reduceMotion){ 
+      const a=0.22*(1-c), k=Math.floor(S.t*12); 
+      const maxNoise = Math.floor((W < 600 ? 25 : 70) * (1-c));
+      for(let i=0;i<maxNoise;i++){ 
+          const n=noise[(i+k)%noise.length]; 
+          ctx.fillStyle=`hsla(${n[2]},80%,65%,${a})`; 
+          ctx.fillRect(((n[0]+i*0.137+k*0.071)%1)*W, ((n[1]+i*0.291+k*0.053)%1)*H, n[3], 1.5); 
+      } 
+  }
   if(S.flash>0){ ctx.fillStyle=`rgba(${S.flashCol},${0.26*S.flash})`; ctx.fillRect(-20,-20,W+40,H+40); }
   ctx.restore();
 }
