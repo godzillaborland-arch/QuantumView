@@ -20,6 +20,8 @@ let ambience;
 let demoMode=false,demoTimer=0;
 function demoStep(){if(!demoMode)return;if(screen==='play'){S.auto=true;S.inv=2}else if(!demoTimer&&(screen==='quiz'||screen==='lesson'||screen==='arrival'||screen==='over')){const current=screen;demoTimer=setTimeout(()=>{demoTimer=0;if(!demoMode||screen!==current)return;if(current==='quiz'){select(question.correct);setTimeout(()=>{if(demoMode&&screen==='quiz')confirm()},900)}else if(current==='lesson')$('continue').click();else start()},current==='quiz'?4500:current==='lesson'?4000:6500)}}
 function activateDemo(){demoMode=true;start();toast('Demo mode · Press Escape to take over',4)}
+let titleTaps=0,titleTapTimer;
+const brand=document.querySelector('.brand');brand.style.touchAction='manipulation';brand.addEventListener('click',()=>{clearTimeout(titleTapTimer);titleTaps++;if(titleTaps>=5){titleTaps=0;if(demoMode){demoMode=false;clearTimeout(demoTimer);demoTimer=0;S.auto=S.correct>=6;toast('Demo ended. You are driving.',3)}else activateDemo()}else titleTapTimer=setTimeout(()=>titleTaps=0,2500)});
 let secretKeys='';addEventListener('keydown',e=>{if(e.key==='Escape'&&demoMode){demoMode=false;S.auto=S.correct>=6;e.stopImmediatePropagation();clearTimeout(demoTimer);demoTimer=0;toast('Demo ended. You are driving.',2);return}if(e.key.length===1){secretKeys=(secretKeys+e.key.toLowerCase()).slice(-4);if(secretKeys==='demo')activateDemo()}},true);
 
 const safeGet=k=>{try{return localStorage.getItem(k)||0}catch{return 0}},safeSet=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
