@@ -1378,6 +1378,28 @@
   box-shadow: 0 4px 20px rgba(245,158,11,0.4);
 }
 .bn-btn:hover { background: linear-gradient(135deg, #fbbf24, #f59e0b) !important; transform: translateY(-2px) !important; box-shadow: 0 8px 28px rgba(245,158,11,0.5) !important; }
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  #bn-overlay { padding: 0.75rem; align-items: flex-end; }
+  .bn-card {
+    max-width: 100%;
+    border-radius: 18px 18px 12px 12px;
+    padding: 1.4rem 1.1rem 1.2rem;
+    gap: 0.7rem;
+  }
+  .bn-banner {
+    width: calc(100% + 2.2rem);
+    margin: -1.4rem -1.1rem 0;
+    padding: 0.5rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .bn-banner-text { font-size: 0.72rem; }
+  .bn-headline { font-size: 0.9rem; }
+  .bn-cover { width: 48px; }
+  .bn-btn { font-size: 0.88rem !important; padding: 0.7rem 1rem !important; }
+}
 </style>
 
 <div id="bn-overlay" role="dialog" aria-modal="true" aria-label="Pre-order The Self-Driving Mind">
@@ -1480,11 +1502,23 @@
       </div>
     </div>
 
+    <div style="background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3); border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 0.75rem; text-align: center;">
+      <div style="font-family: 'Work Sans', sans-serif; font-size: 0.78rem; font-weight: 700; color: #f97316; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 0.3rem;">🎁 Bonus with every pre-order</div>
+      <div style="font-family: 'Work Sans', sans-serif; font-size: 0.85rem; color: #e0e1dd; line-height: 1.4;">The Attention Lab — 8 interactive experiences<br>+ a 30-day meditation guide</div>
+    </div>
+
     <a class="bn-btn"
        href="https://www.barnesandnoble.com/w/the-self-driving-mind-sundar-rajan/1151506645?ean=9798895741986"
        target="_blank" rel="noopener">
       Pre-order at Barnes &amp; Noble →
     </a>
+
+    <div style="text-align: center; margin-top: 0.6rem; font-family: 'Work Sans', sans-serif; font-size: 0.78rem; color: #778da9; line-height: 1.5;">
+      Then email your order # to<br>
+      <a href="mailto:selfdrivingmind.receipt@gmail.com" style="color: #f97316; font-weight: 600; text-decoration: none;">selfdrivingmind.receipt@gmail.com</a><br>
+      <span style="font-size: 0.72rem; opacity: 0.8;">to instantly unlock your bonus</span>
+    </div>
+
     <button class="bn-dismiss" onclick="closeBnPopup()">No thanks, I'll find it later</button>
   </div>
 </div>
