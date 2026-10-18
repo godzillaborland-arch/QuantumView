@@ -83,7 +83,7 @@ export function vsPulse(pid){
   const S=G.S; if(!S.versus || !S.running || S.paused) return;
   const p=S.players[pid]; if(!p || p.over || p.pulseCool>0 || p.stage>=3) return;
   p.pulseCool=10; Snd.pulse(); G.world.pulse(pid);
-  for(const o of S.objs){ if(o.z<=25 && !o.gone[pid]){ o.gone[pid]=true; G.world.puff(o.x, o.z, 'shard', 0.8); } }
+  for(const o of S.objs){ if(o.z<=25 && !o.gone[pid]){ o.gone[pid]=true; G.world.puff(o.x, o.z, 'shard', 0.8, pid); } }
   vsToast(pid, 'Awareness Pulse', false, 1);
 }
 
@@ -145,7 +145,7 @@ function resolveGate(S, Q){
       if(p.sensors<3) fx.wipe();
       p.sensors=Math.min(3,p.sensors+1);
       p.calmTarget=Math.min(1, S.def.calm0 + p.answered*(1-S.def.calm0)/S.goal);
-      fx.flash('217,169,62'); G.world.puff(p.lane, CARZ+0.6, 'shard', 1);
+      fx.flash('217,169,62'); G.world.puff(p.lane, CARZ+0.6, 'shard', 1, p.id);
       const st=stageFor(p.answered); if(st!==p.stage){ p.stage=st; vsToast(p.id, st===3?'FSD engaged':'Lane assist engaged', false, 1.6); }
       marks.push(`P${p.id+1} ✓`);
     } else {
@@ -168,7 +168,7 @@ function hit(S, p, o){
   o.gone[p.id]=true;
   p.sensors--; p.shake=0.6; p.streak=0; Snd.hit();
   (p.id===0 ? G.fx : G.fx2).flash(o.kind==='puddle'?'120,90,60':'224,83,61', 0.7);
-  G.world.puff(o.x, CARZ+1.2, 'smoke', 0.5);
+  G.world.puff(o.x, CARZ+1.2, 'smoke', 0.5, p.id);
   vsToast(p.id, o.kind==='puddle' ? `Splash · ${o.label.toLowerCase()}` : `Mud · ${o.label.toLowerCase()}`, true);
   if(p.sensors<=0){
     if(G.mode==='discovery'){ p.sensors=3; p.score=Math.max(0,p.score-150); (p.id===0 ? G.fx : G.fx2).wipe(); vsToast(p.id, 'Sensors wiped. Keep driving.', false, 1.4); }

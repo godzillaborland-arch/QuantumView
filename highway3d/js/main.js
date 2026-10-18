@@ -14,11 +14,19 @@ if(location.protocol==='file:') throw new Error('Opened from a file; the guard i
 
 function fail(msg){ $('fatalText').textContent = msg; $('fatal').hidden = false; $('loading').classList.add('gone'); }
 
-// One simulation + render tick. Split screen draws each player's screen effects inside their half.
-function tick(dt){
+// One frame: the rules advance in small fixed sub-steps covering all the real time since the last frame,
+// (up to half a second per frame), so game time keeps pace with the clock even when rendering is slow
+// (a weak GPU, software WebGL, a busy tab).
+// Previously each frame advanced at most 0.05 s, so at a few frames per second nothing ever reached the car.
+const SUB_STEP = 1/60, MAX_FRAME = 0.5;
+function simulate(dt){
   if(G.perpetual) tickPerpetual(dt);
+  if(!G.S.paused) (G.S.versus ? updateVersus : update)(dt);
+}
+function tick(dt){
+  const n = Math.max(1, Math.ceil(dt/SUB_STEP - 1e-6)), h = dt/n;
+  for(let i=0;i<n;i++) simulate(h);
   const S = G.S, d = S.paused ? 0 : dt;
-  if(!S.paused) (S.versus ? updateVersus : update)(dt);
   G.world.render(G.S, d);
   if(G.S.versus){
     const { h } = G.fx.size, rects = G.world.splitRects(2).map(r=>({ x:r.x, y:h-r.y-r.h, w:r.w, h:r.h }));
@@ -43,23 +51,39 @@ async function boot(){
   addEventListener('resize', resize); resize();
 
   bindUI();
-  $('loading').classList.add('gone');
+  // Fade the loading screen, then remove it so screen readers and page-text tools stop reporting it.
+  const loading = $('loading'); loading.classList.add('gone'); loading.setAttribute('aria-hidden', 'true');
+  setTimeout(()=>loading.remove(), 800);
 
   // Perpetual demo resumes by itself after a reload or a kiosk reboot; ?perpetual (optionally &clean) starts it from a link.
   const q = new URLSearchParams(location.search), saved = store.get('htd-perpetual');
   if(q.has('perpetual') || saved==='1' || saved==='clean') startPerpetual({ clean: q.has('clean') || (!q.has('perpetual') && saved==='clean') });
 
   let last = performance.now(), errCount = 0;
+  // Quality steps down automatically if frames stay slow: 0 = full, 1 = no bloom + lower resolution, 2 = also no shadows.
+  const forced = { high:0, medium:1, low:2 }[q.get('quality')];
+  let quality = forced ?? 0, slowSum = 0, slowN = 0, lastDrop = performance.now();
+  if(quality) G.world.setQuality(quality);
+  function watchQuality(dt, now){
+    if(forced!==undefined || quality>=2 || document.hidden) return;
+    slowSum += dt; slowN++;
+    if(slowN < 45) return;
+    const avg = slowSum/slowN; slowSum = 0; slowN = 0;
+    if(avg > 0.045 && now-lastDrop > 2500){ quality++; lastDrop = now; G.world.setQuality(quality); console.info('Highway to Dhyāna: lowering graphics quality to', quality, `(${Math.round(avg*1000)} ms per frame)`); }
+  }
   function frame(now){
-    requestAnimationFrame(frame);
-    const dt = Math.min(0.05, Math.max(0, (now-last)/1000)); last = now;
-    try { if(!G.perpetual) pollPads(); tick(dt); }
+    const raw = Math.max(0, (now-last)/1000), dt = Math.min(MAX_FRAME, raw); last = now;
+    try { if(!G.perpetual) pollPads(); tick(dt); watchQuality(raw, now); }
     catch(err){
       if(++errCount < 5) console.error('Highway to Dhyāna frame error', err);
       if(G.perpetual && errCount > 30) location.reload(); // unattended screen: recover rather than freeze
     }
   }
-  requestAnimationFrame(frame);
+  const loop = now => { requestAnimationFrame(loop); frame(now); };
+  requestAnimationFrame(loop);
+  // Backup clock: some browsers stop or heavily throttle animation frames for a visible but unfocused or
+  // occluded window. If no frame has run for a while, drive one from a timer so the road never freezes.
+  setInterval(()=>{ const now = performance.now(); if(!document.hidden && now-last > 300) frame(now); }, 250);
 
   // ?debug exposes a manual stepper for testing without relying on requestAnimationFrame.
   if(new URLSearchParams(location.search).has('debug')){
@@ -143,6 +167,13 @@ function bindUI(){
   };
 
   initPerpetual({ toMenu });
+
+  // Pause menu: restart whatever is being played, or leave to the main menu.
+  $('restartBtn').addEventListener('click', e=>{
+    e.stopPropagation(); const S = G.S;
+    if(S.versus) startVersus(); else if(S.camp) startChapter(S.camp.ch); else start(S.loop||0);
+  });
+  $('quitBtn').addEventListener('click', e=>{ e.stopPropagation(); toMenu(); });
 
   // Campaign flow
   const showCampaign = () => {

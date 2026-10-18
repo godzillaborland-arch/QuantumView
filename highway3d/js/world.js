@@ -39,9 +39,14 @@ shared(softDot);
 
 export async function createWorld(canvas){
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: !coarse, powerPreference:'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio||1, coarse?1.5:2));
+  const basePixelRatio = Math.min(devicePixelRatio||1, coarse?1.5:2);
+  renderer.setPixelRatio(basePixelRatio);
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+  // Real-time shadows from one "moon" light. Rendered once per frame (even in split screen), not once per view.
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.autoUpdate = false;
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(62, 1, 0.1, 900);
@@ -104,18 +109,28 @@ export async function createWorld(canvas){
 
   // ---------- Lights ----------
   const hemi = new THREE.HemisphereLight(0xb8c6ff, 0x30241e, 0.9); scene.add(hemi);
-  const moon = new THREE.DirectionalLight(0xffd2a4, 1.1); moon.position.set(-30,40,-20); scene.add(moon);
+  const moon = new THREE.DirectionalLight(0xffd2a4, 1.1); scene.add(moon); scene.add(moon.target);
+  // The light sits up and to the front-left, so shadows fall back toward the chase camera where you can see them.
+  // Its shadow box only covers the stretch of road near the cars, which keeps shadows sharp and cheap.
+  const MOON_OFFSET = new THREE.Vector3(-26, 38, -22);
+  moon.castShadow = true;
+  moon.shadow.mapSize.set(coarse ? 1024 : 2048, coarse ? 1024 : 2048);
+  Object.assign(moon.shadow.camera, { left:-22, right:22, top:30, bottom:-30, near:1, far:120 });
+  moon.shadow.bias = -0.0004; moon.shadow.normalBias = 0.03;
+  moon.shadow.camera.updateProjectionMatrix();
+  // Marks every solid mesh in an object as a shadow caster; glows, decals and sprites are skipped.
+  const casts = obj => { obj.traverse(n=>{ if(n.isMesh && !(n.material && (n.material.blending===THREE.AdditiveBlending || n.material.depthWrite===false))) n.castShadow = true; }); return obj; };
 
   // ---------- Ground and road ----------
   const groundMat = new THREE.MeshLambertMaterial({ color:0x222222 });
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(2400, 2400), groundMat);
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(2400, 2400), groundMat); ground.receiveShadow = true;
   ground.rotation.x = -Math.PI/2; ground.position.set(0,-0.03,-400); scene.add(ground);
 
   const asphalt = canvasTex(256,256,(g,w,h)=>{ g.fillStyle='#8a8a8a'; g.fillRect(0,0,w,h); for(let i=0;i<5000;i++){ const v=110+Math.random()*90|0; g.fillStyle=`rgba(${v},${v},${v},.35)`; g.fillRect(Math.random()*w,Math.random()*h,1.5,1.5); } });
   asphalt.wrapS = asphalt.wrapT = THREE.RepeatWrapping; asphalt.repeat.set(2, 70);
   const roadMat = new THREE.MeshStandardMaterial({ map:asphalt, color:0x555555, roughness:0.82, metalness:0.05 });
   const ROAD_LEN = 420;
-  const road = new THREE.Mesh(new THREE.PlaneGeometry(ROAD_HALF*2, ROAD_LEN), roadMat);
+  const road = new THREE.Mesh(new THREE.PlaneGeometry(ROAD_HALF*2, ROAD_LEN), roadMat); road.receiveShadow = true;
   road.rotation.x = -Math.PI/2; road.position.set(0, 0, 30-ROAD_LEN/2); scene.add(road);
 
   const edgeMat = new THREE.MeshBasicMaterial({ color:0xd9a93e, transparent:true, opacity:0.3 });
@@ -146,7 +161,7 @@ export async function createWorld(canvas){
   }
   const boxGeo = new THREE.BoxGeometry(1,1,1);
   const neonGeo = new THREE.BoxGeometry(1,0.35,0.2);
-  const neonMats = [330,20,280,190,50].map(h=>new THREE.MeshBasicMaterial({ color:new THREE.Color().setHSL(h/360,0.95,0.6) }));
+  const neonMats = [330,20,280,190,50].map(h=>{ const m = new THREE.MeshBasicMaterial({ color:new THREE.Color().setHSL(h/360,0.95,0.6) }); m.userData.base = m.color.clone(); return m; });
   const buildings = [];
   for(const side of [-1,1]){
     let z = 25;
@@ -155,7 +170,7 @@ export async function createWorld(canvas){
       const grp = new THREE.Group();
       const body = new THREE.Mesh(boxGeo, windowMats[r()*windowMats.length|0]);
       body.scale.set(w,h,d); body.position.y = h/2; grp.add(body);
-      if(r()<0.45){ const n=new THREE.Mesh(neonGeo, neonMats[r()*neonMats.length|0]); n.scale.x=w*0.8; n.position.set(0, h*(0.55+r()*0.4), d/2+0.12); n.rotation.y = 0; grp.add(n); grp.userData.neon=n; grp.userData.ph=r()*10; }
+      if(r()<0.45){ const n=new THREE.Mesh(neonGeo, neonMats[r()*neonMats.length|0]); n.scale.x=w*0.8; n.position.set(0, h*(0.55+r()*0.4), d/2+0.08); n.rotation.y = 0; grp.add(n); grp.userData.neon=n; grp.userData.ph=r()*10; }
       // Rotated so the local +z face (windows, neon) looks at the road: depth runs across, width runs along it.
       grp.position.set(side*(ROAD_HALF + 5 + d/2 + r()*14), 0, z - w/2);
       grp.rotation.y = side>0 ? -Math.PI/2 : Math.PI/2;
@@ -175,7 +190,7 @@ export async function createWorld(canvas){
     const arm = new THREE.Mesh(armGeo, poleMat); arm.position.set(-side*0.75, 6.95, 0); g.add(arm);
     const bulb = new THREE.Mesh(bulbGeo, bulbMat); bulb.position.set(-side*1.45, 6.8, 0); g.add(bulb);
     const pool = new THREE.Mesh(poolGeo, poolMat); pool.rotation.x=-Math.PI/2; pool.position.set(-side*2.2, 0.03, 0); g.add(pool);
-    g.position.set(side*(ROAD_HALF+1.1), 0, 25 - i*20 - (side>0?10:0)); lamps.push(g); addRecycled(g);
+    g.position.set(side*(ROAD_HALF+1.1), 0, 25 - i*20 - (side>0?10:0)); casts(g); lamps.push(g); addRecycled(g);
   }
 
   const treeMat = new THREE.MeshLambertMaterial({ color:0x16323a });
@@ -184,7 +199,7 @@ export async function createWorld(canvas){
   for(let i=0;i<70;i++){
     const t = new THREE.Mesh(treeGeo, treeMat), side = r()<0.5?-1:1, s = 0.7+r()*1.2;
     t.scale.set(s, s*(0.8+r()*0.6), s); t.position.set(side*(ROAD_HALF+4+r()*40), 0, 25 - r()*SPAN); t.userData.s=t.scale.y;
-    trees.push(t); addRecycled(t);
+    t.castShadow = true; trees.push(t); addRecycled(t);
   }
 
   // ---------- Weather (monsoon chapter) ----------
@@ -207,9 +222,18 @@ export async function createWorld(canvas){
 
   // ---------- Cars: one rig per player (car, headlight, pulse ring, chase camera) ----------
   const PAINTS = [0xb9c0ca, 0x2f5f9e];
+  // Player cars from the Kenney Car Kit (CC0, models/LICENSE-kenney-car-kit.txt). P1 and P2 get different models
+  // so they are easy to tell apart in split screen. If loading fails or is slow, the procedural car is used instead.
+  const CAR_MODELS = ['models/sedan-sports.glb', 'models/race-future.glb'];
+  let carTemplates = [];
+  try {
+    const { GLTFLoader } = await soon(import('three/addons/loaders/GLTFLoader.js'));
+    const loader = new GLTFLoader();
+    carTemplates = await Promise.all(CAR_MODELS.map(u => soon(loader.loadAsync(u), 8000).then(g=>g.scene).catch(e=>{ console.warn('Car model failed, using fallback', u, e); return null; })));
+  } catch(e){ console.warn('Car models unavailable, using fallback', e); }
   const ringGeo = new THREE.RingGeometry(0.92, 1, 64);
   function makeRig(i){
-    const car = buildCar(envMap, PAINTS[i]); scene.add(car.group);
+    const car = buildCar(envMap, PAINTS[i], carTemplates[i] || carTemplates[0] || null); casts(car.group); scene.add(car.group);
     const headlight = new THREE.SpotLight(0xfff1d6, 80, 90, 0.42, 0.6, 1.2);
     headlight.position.set(0, 1.1, -2.2); headlight.target.position.set(0, 0, -30);
     car.group.add(headlight); car.group.add(headlight.target);
@@ -271,7 +295,8 @@ export async function createWorld(canvas){
   const views = new Map(); let stamp = 0;
   const outgoing = [];
   const blobGeo = (()=>{ const g=new THREE.IcosahedronGeometry(1,1), p=g.attributes.position, v=new THREE.Vector3(); for(let i=0;i<p.count;i++){ v.fromBufferAttribute(p,i); const k=0.75+0.5*Math.abs(Math.sin(v.x*7.1+v.y*5.3+v.z*3.7)); v.multiplyScalar(k); p.setXYZ(i,v.x,v.y,v.z);} g.computeVertexNormals(); return g; })();
-  const shadowMat = new THREE.MeshBasicMaterial({ map:softDot, color:0x000000, transparent:true, opacity:0.45, depthWrite:false });
+  // Soft contact darkening under each vṛtti; the real cast shadow comes from the moon light.
+  const shadowMat = new THREE.MeshBasicMaterial({ map:softDot, color:0x000000, transparent:true, opacity:0.25, depthWrite:false });
   const shadowGeo = new THREE.PlaneGeometry(2.6,2.6);
   const boxEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(2.8,3.4,2.8));
   const bbPanelGeo = new THREE.PlaneGeometry(7, 3.15);
@@ -285,7 +310,7 @@ export async function createWorld(canvas){
     if(o.kind==='puddle'){
       // A flat, glossy pool of mud on the asphalt.
       const m = new THREE.MeshStandardMaterial({ color:0x3a2616, roughness:0.08, metalness:0.6, transparent:true, opacity:0.95 });
-      const p = new THREE.Mesh(puddleGeo, m); p.rotation.x=-Math.PI/2; p.scale.set(1, 1.5, 1); p.position.y=0.03; g.add(p);
+      const p = new THREE.Mesh(puddleGeo, m); p.rotation.x=-Math.PI/2; p.scale.set(1, 1.5, 1); p.position.y=0.03; p.receiveShadow = true; g.add(p);
       u.blob = p;
     } else {
       const m = new THREE.MeshStandardMaterial({ color:c, emissive:e, emissiveIntensity:0.7, roughness:0.4, flatShading:true, transparent:true });
@@ -304,6 +329,7 @@ export async function createWorld(canvas){
     const box = new THREE.LineSegments(boxEdges, new THREE.LineBasicMaterial({ color:0x7fc8a9, transparent:true, opacity:0 }));
     box.position.y = 1.6; g.add(box); u.box = box;
     g.userData = u;
+    if(o.kind!=='puddle') casts(g);
     g.position.x = o.x*LANE_W; scene.add(g); return g;
   }
   function makeBillboard(b){
@@ -312,7 +338,7 @@ export async function createWorld(canvas){
     const mat = new THREE.MeshBasicMaterial({ map:billboardTex(b.txt, b.hue), transparent:true, side:THREE.DoubleSide });
     const panel = new THREE.Mesh(bbPanelGeo, mat); panel.position.y = h+1.5; g.add(panel);
     g.position.x = b.side*(ROAD_HALF + 4.5 + b.off*9); g.rotation.y = b.side*-0.35;
-    g.userData = { mat, post }; scene.add(g); return g;
+    g.userData = { mat, post }; casts(g); scene.add(g); return g;
   }
   const goldMat = new THREE.MeshStandardMaterial({ color:0xd9a93e, emissive:0xb07a20, emissiveIntensity:0.6, metalness:0.7, roughness:0.35 });
   const crimsonMat = new THREE.MeshStandardMaterial({ color:0xb8323a, emissive:0x9a1a22, emissiveIntensity:0.9, metalness:0.6, roughness:0.3 });
@@ -332,7 +358,7 @@ export async function createWorld(canvas){
       const glow = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 5), glowM); glow.rotation.x=-Math.PI/2; glow.position.set(x, 0.05, 0); g.add(glow);
       panels.push(panel); mats.push(m, glowM);
     }
-    g.userData = { panels, mats }; scene.add(g); return g;
+    g.userData = { panels, mats }; casts(g); scene.add(g); return g;
   }
   function dispose(obj){
     obj.traverse(n=>{
@@ -355,7 +381,7 @@ export async function createWorld(canvas){
   const parts = [];
   const shardMat = new THREE.SpriteMaterial({ map:softDot, color:0xf2d58a, transparent:true, blending:THREE.AdditiveBlending, depthWrite:false });
   // anchored: particles stay with the car instead of scrolling past with the road.
-  function puffAt(x, y, z, kind, scale=1, anchored=false){
+  function puffAt(x, y, z, kind, scale=1, anchored=false, owner=null){
     const n = kind==='smoke' ? 18 : 26;
     for(let i=0;i<n;i++){
       const mat = kind==='smoke'
@@ -366,13 +392,23 @@ export async function createWorld(canvas){
       s.position.set(x, y, z);
       const size = kind==='smoke' ? 1.2+Math.random()*1.4 : 0.25+Math.random()*0.35;
       s.scale.setScalar(size*scale);
-      parts.push({ s, kind, vx:Math.cos(a)*Math.cos(el)*sp, vy:Math.sin(el)*sp+(kind==='smoke'?1.5:3), vz:Math.sin(a)*Math.cos(el)*sp, life:0, max: kind==='smoke'?0.9+Math.random()*0.5:0.5+Math.random()*0.4, size:size*scale, anchored });
+      parts.push({ s, kind, vx:Math.cos(a)*Math.cos(el)*sp, vy:Math.sin(el)*sp+(kind==='smoke'?1.5:3), vz:Math.sin(a)*Math.cos(el)*sp, life:0, max: kind==='smoke'?0.9+Math.random()*0.5:0.5+Math.random()*0.4, size:size*scale, anchored, owner });
       scene.add(s);
     }
   }
 
   // ---------- Resize ----------
   let W = 1, H = 1;
+  // Graphics quality for slow devices: 0 = full, 1 = no bloom and at most 1× resolution, 2 = also no shadows.
+  let useComposer = true;
+  function setQuality(level){
+    useComposer = level < 1;
+    renderer.setPixelRatio(level >= 1 ? Math.min(1, basePixelRatio) : basePixelRatio);
+    if(composer) composer.setPixelRatio(renderer.getPixelRatio());
+    moon.castShadow = level < 2;
+    resize();
+  }
+
   function resize(){
     const w = canvas.clientWidth, h = canvas.clientHeight; if(!w || !h) return;
     W = w; H = h;
@@ -422,6 +458,12 @@ export async function createWorld(canvas){
     }
     lightning = Math.max(0, lightning-dt*3.5);
 
+    // Keep the shadow box centred just ahead of the cars, then redraw the shadow map once for this frame.
+    const focusX = players.reduce((a,P)=>a+P.carX, 0)/players.length*LANE_W*0.5;
+    moon.target.position.set(focusX, 0, -14);
+    moon.position.copy(moon.target.position).add(MOON_OFFSET);
+    renderer.shadowMap.needsUpdate = true;
+
     // Road motion
     roadScroll += dz;
     asphalt.offset.y = (roadScroll / (ROAD_LEN/asphalt.repeat.y)) % 1;
@@ -434,7 +476,8 @@ export async function createWorld(canvas){
     dashes.instanceMatrix.needsUpdate = true;
 
     for(const o of recyclers){ o.position.z += dz; if(o.position.z > 30) o.position.z -= SPAN; }
-    for(const b of buildings){ const n = b.userData.neon; if(n) n.visible = reduceMotion || Math.sin(time*(3+b.userData.ph%3)+b.userData.ph) > -0.3; }
+    // Neon signs glow steadily with a slow breathing pulse (fast on/off blinking read as rendering glitches).
+    neonMats.forEach((m,i)=>{ m.color.copy(m.userData.base).multiplyScalar(reduceMotion ? 0.9 : 0.78 + 0.22*Math.sin(time*1.6 + i*1.3)); });
 
     // Cars and their pulse rings
     players.forEach((P, i)=>{
@@ -536,7 +579,7 @@ export async function createWorld(canvas){
     starMat.opacity = clamp((c-0.2)*1.1, 0, 0.9);
     sunMat.opacity = 0.15 + 0.2*c;
     for(const m of ridges) m.material.opacity = clamp(Math.max(theme.ridges, c*1.3), 0, 1);
-    hemi.intensity = lerp(0.95, 0.6, c); moon.intensity = lerp(1.0, 0.55, c);
+    hemi.intensity = lerp(0.55, 0.38, c); moon.intensity = lerp(2.6, 1.5, c); // moon is the key light so its shadows read
     if(bloom) bloom.strength = 0.6 + 0.35*c;
     if(lightning>0){ const f = lightning*(0.6+0.4*Math.sin(time*60)); hemi.intensity += f*3; skyU.horizon.value.offsetHSL(0, 0, f*0.25); }
     scene.fog.color.copy(skyU.horizon.value); scene.fog.near = lerp(30, 60, c); scene.fog.far = lerp(200, 300, c);
@@ -550,6 +593,9 @@ export async function createWorld(canvas){
 
     // In split screen the rival's car is a ghost, so it never hides your own.
     for(let i=0;i<rigCount;i++) rigs[i].car.setGhost(multi && i!==pid);
+    // A player's pulse ring and their own sparks/splashes belong to their view only (one shared scene, two screens).
+    for(let i=0;i<rigCount;i++) rigs[i].ring.visible = !multi || i===pid;
+    for(const p of parts) p.s.visible = !multi || p.owner===null || p.owner===pid;
 
     const carX = P.carX*LANE_W;
     path.visible = P.stage>=2 && !P.over && S.running;
@@ -588,7 +634,7 @@ export async function createWorld(canvas){
     if(Math.abs(cam.fov-fov) > 0.01){ cam.fov = lerp(cam.fov, fov, Math.min(1, dt*3 || 1)); cam.updateProjectionMatrix(); }
     sky.position.copy(cam.position); stars.position.copy(cam.position);
 
-    if(!multi && composer){ composer.render(dt); return; }
+    if(!multi && composer && useComposer){ composer.render(dt); return; }
     renderer.setViewport(rect.x, rect.y, rect.w, rect.h); renderer.setScissor(rect.x, rect.y, rect.w, rect.h);
     renderer.render(scene, cam);
   }
@@ -619,13 +665,13 @@ export async function createWorld(canvas){
   }
 
   return {
-    render, resize, reset, setTheme, showBoss, hideBoss, splitRects,
+    render, resize, reset, setTheme, setQuality, showBoss, hideBoss, splitRects,
     bossHit(){ if(!boss) return; boss.target *= 0.72; boss.flash = 1; bossBurst('shard', 3); },
     bossTaunt(){ if(!boss) return; boss.target *= 1.18; boss.flash = 1; bossBurst('smoke', 2.5); },
     bossWins(){ if(!boss) return; boss.target *= 1.4; boss.flash = 1; },
     bossDefeated(){ if(!boss || boss.dying>=0) return; boss.dying = 0; boss.flash = 1; bossBurst('shard', 4); bossBurst('shard', 3); bossBurst('smoke', 3); },
     pulse(pid=0){ if(rigs[pid]) rigs[pid].pulseT = 0; },
-    puff(lane, z, kind, scale=1){ const atCar = z < CARZ+2; puffAt(lane*LANE_W, 1.4, atCar ? -2.5 : wz(z), kind, scale, atCar); },
+    puff(lane, z, kind, scale=1, owner=null){ const atCar = z < CARZ+2; puffAt(lane*LANE_W, 1.4, atCar ? -2.5 : wz(z), kind, scale, atCar, owner); },
     // results: one {k, ok} per player who drove through (single player may pass k, ok directly).
     passGate(Q, k, ok){
       const results = Array.isArray(k) ? k : [{ k, ok }];

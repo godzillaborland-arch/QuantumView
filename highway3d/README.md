@@ -75,3 +75,8 @@ Add `?debug` to the URL to get `window.__htd.step(frames)` for stepping the simu
 (campaign chapters, local split screen with two `G.S` states and two cameras) straightforward.
 
 Three.js 0.160 loads from jsDelivr via the import map in `index.html`.
+
+The player cars are `models/sedan-sports.glb` (P1) and `models/race-future.glb` (P2) from the
+[Kenney Car Kit](https://kenney.nl/assets/car-kit), CC0 public domain (see `models/LICENSE-kenney-car-kit.txt`).
+If they fail to load, the game falls back to its built-in procedural car. Real-time shadows come from one
+directional "moon" light whose shadow box follows the cars.

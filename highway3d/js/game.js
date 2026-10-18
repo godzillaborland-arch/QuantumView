@@ -8,7 +8,8 @@ import * as UI from './ui.js';
 // (puff, passGate, boss…) through G.world; screen effects (flash, wiper) go through G.fx.
 export const G = {
   S: null, mode: 'discovery', demo: false, world: null, fx: null,
-  bestOf: m => +store.get('htd-best-'+m) || 0,
+  // 'htd3d-' keys: the older single-file Highway games on the same site use 'htd-best-', so keep scores apart.
+  bestOf: m => +store.get('htd3d-best-'+m) || 0,
 };
 
 // ---------- Campaign progress (per difficulty) ----------
@@ -117,7 +118,7 @@ export function startChapter(ch){
   UI.toast(`Chapter ${ch+1} · ${def.title}`, false, 2.4);
 }
 
-function saveBest(){ const sc=Math.floor(G.S.score), k='htd-best-'+G.mode; if(!G.demo && !G.perpetual && !G.S.camp && sc>G.bestOf(G.mode)) store.set(k,String(sc)); return sc; }
+function saveBest(){ const sc=Math.floor(G.S.score), k='htd3d-best-'+G.mode; if(!G.demo && !G.perpetual && !G.S.camp && sc>G.bestOf(G.mode)) store.set(k,String(sc)); return sc; }
 
 function gameOver(reason, q){
   const S=G.S;
