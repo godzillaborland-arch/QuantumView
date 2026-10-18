@@ -143,8 +143,8 @@ function arrive(campaign=false){
   $('arrScore').textContent=sc.toLocaleString(); $('arrSens').textContent=S.sensors; $('arrMode').textContent=name;
   const stars = campaign ? campProgress().stars.reduce((a,b)=>a+b,0) : 0;
   $('shareText').textContent = campaign
-    ? `I finished the Highway to Dhyāna campaign in ${name} mode with ${stars} of ${CHAPTERS.length*3} stars. Can you? theselfdrivingmind.com`
-    : `I reached Dhyāna on Highway to Dhyāna: ${sc.toLocaleString()} points in ${name} mode. Can you? theselfdrivingmind.com`;
+    ? `I finished the Highway to Dhyāna campaign in ${name} mode with ${stars} of ${CHAPTERS.length*3} stars. Can you? https://theselfdrivingmind.com/highway3d/`
+    : `I reached Dhyāna on Highway to Dhyāna: ${sc.toLocaleString()} points in ${name} mode. Can you? https://theselfdrivingmind.com/highway3d/`;
   $('shareNote').textContent='';
   setTimeout(()=>{ $('arriveOv').hidden=false; if(!G.demo) $('shareBtn').focus(); }, 1400);
   if(G.demo){ clearTimeout(demoTimer); demoTimer=setTimeout(()=>{ if(G.demo) keepDriving(); }, 5000); }
