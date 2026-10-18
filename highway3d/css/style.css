@@ -109,6 +109,12 @@ h3{font-size:16px;color:var(--gold-soft)}
 .link{color:var(--gold);border:1px solid var(--line);background:transparent}
 .link:hover{border-color:var(--gold)}
 .foot{font-size:11.5px;color:var(--haze)}
+/* Link to the book's page: on the start screen right under the title, and on every end card. */
+.book-link{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-size:13.5px;color:var(--gold-soft);text-decoration:none;
+  border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:rgba(217,169,62,.08);touch-action:manipulation}
+.book-link b{font-weight:600;color:var(--gold)}
+.book-link:hover,.book-link:focus-visible{border-color:var(--gold);background:rgba(217,169,62,.16)}
+.link.book{color:var(--gold-soft)}
 .note{font-size:11.5px;color:var(--mint);min-height:1em}
 
 /* While any menu or card is open, keep Sound and Help clickable above it; hide the in-run readouts and buttons. */
