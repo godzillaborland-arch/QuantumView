@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0B1426">
+<meta name="description" content="Highway to Dhyāna: a 3D driving game from The Self-Driving Mind by Sundar Rajan.">
+<title>Highway to Dhyāna</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div class="stage" id="stage">
+  <canvas id="gl" aria-label="A car driving down a three-lane highway"></canvas>
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <div class="hud">
+    <div class="readout">
+      <span class="lbl">Score</span><span class="big" id="score">0</span>
+      <span class="lbl" style="margin-top:4px">Speed</span><span class="big" id="speed" style="font-size:14px">0 mph</span>
+    </div>
+    <div class="right">
+      <div class="tools">
+        <button class="icon" id="pulseBtn" type="button" aria-label="Awareness Pulse (Space)"><span class="glyph">◎</span><div class="cooldown-fill" id="pulseFill"></div></button>
+        <button class="icon" id="pauseBtn" type="button" aria-label="Pause"></button>
+        <button class="icon" id="helpBtn" type="button" aria-label="How to play">?</button>
+        <button class="icon" id="soundBtn" type="button" aria-label="Sound on" aria-pressed="true"></button>
+      </div>
+      <div class="mode" id="mode">MANUAL MODE</div>
+      <div class="row">
+        <div class="apb-compass" aria-label="APB Compass Status">
+          <div><i class="apb-dot" id="apbA"></i>A</div>
+          <div><i class="apb-dot" id="apbP"></i>P</div>
+          <div><i class="apb-dot" id="apbB"></i>B</div>
+        </div>
+        <div class="sensors" aria-label="Sensor clarity"><span class="lbl">SENSORS</span><i class="dot" id="s0"></i><i class="dot" id="s1"></i><i class="dot" id="s2"></i></div>
+      </div>
+      <div class="readout" style="justify-items:end"><span class="lbl" id="qlabel">Answered</span><span class="big" id="qcount" style="font-size:14px">0 / 10</span></div>
+    </div>
+  </div>
+
+  <div class="quiz" id="quiz" hidden>
+    <div class="q-eyebrow" id="qeyebrow">Toll gate ahead · steer into the answer</div>
+    <div class="q-text" id="qtext"></div>
+    <div class="chips" id="qchips"><span></span><span></span><span></span></div>
+  </div>
+  <div class="lesson" id="lesson" hidden>
+    <div class="l-eyebrow" id="lEyebrow">Correct</div>
+    <div class="l-title" id="lTitle"></div>
+    <div class="l-why" id="lWhy"></div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <!-- Split screen: one HUD panel and toast per player, positioned by .vs / .vs-portrait on #stage -->
+  <div class="vs-divider" id="vsDivider" hidden></div>
+  <div id="vsHud" hidden>
+    <div class="vs-panel p0" aria-label="Player 1">
+      <div class="vs-tag">P1 <small>A / D · W</small></div>
+      <div class="vs-row"><span class="vs-lbl">Score</span><b id="vs0Score">0</b></div>
+      <div class="vs-row"><span class="vs-lbl">Gates</span><b id="vs0Gates">0 / 8</b></div>
+      <div class="vs-row"><span class="mode" id="vs0Mode">MANUAL</span><span class="sensors"><i class="dot" id="vs0s0"></i><i class="dot" id="vs0s1"></i><i class="dot" id="vs0s2"></i></span>
+        <button class="icon small" id="vs0Pulse" type="button" aria-label="Player 1 Awareness Pulse"><span class="glyph">◎</span><div class="cooldown-fill" id="vs0PulseFill"></div></button></div>
+    </div>
+    <div class="vs-panel p1" aria-label="Player 2">
+      <div class="vs-tag">P2 <small>← / → · ↑</small></div>
+      <div class="vs-row"><span class="vs-lbl">Score</span><b id="vs1Score">0</b></div>
+      <div class="vs-row"><span class="vs-lbl">Gates</span><b id="vs1Gates">0 / 8</b></div>
+      <div class="vs-row"><span class="mode" id="vs1Mode">MANUAL</span><span class="sensors"><i class="dot" id="vs1s0"></i><i class="dot" id="vs1s1"></i><i class="dot" id="vs1s2"></i></span>
+        <button class="icon small" id="vs1Pulse" type="button" aria-label="Player 2 Awareness Pulse"><span class="glyph">◎</span><div class="cooldown-fill" id="vs1PulseFill"></div></button></div>
+    </div>
+    <button class="icon vs-pause" id="vsPauseBtn" type="button" aria-label="Pause">II</button>
+    <div class="toast vs-toast t0" id="vsToast0"></div>
+    <div class="toast vs-toast t1" id="vsToast1"></div>
+  </div>
+  <div class="perpetual-tag" id="perpetualTag" hidden><span class="long">Highway to <b>Dhyāna</b> · from The Self-Driving Mind · </span>theselfdrivingmind.com</div>
+  <div class="demo-tag" id="demoTag" hidden><b>DEMO</b> · the car is playing itself · tap or press any key to exit</div>
+
+  <div class="pads" id="pads" hidden>
+    <button class="pad" id="padL" type="button" aria-label="Steer left">&#9664;</button>
+    <button class="pad" id="padR" type="button" aria-label="Steer right">&#9654;</button>
+  </div>
+
+  <div class="overlay" id="startOv">
+    <div class="card">
+      <div class="eyebrow">From The Self-Driving Mind</div>
+      <h1 id="title">Highway to <span class="mac">Dhyāna</span></h1>
+      <p>You start in manual mode, steering through a noisy road of vṛttis. Use your <b>Awareness Pulse</b> (Spacebar or ◎) to clear immediate distractions when the mind gets crowded. Steer through the toll gate with the right answer to clear your sensors and let the car take over.</p>
+      <fieldset class="modes">
+        <legend>Difficulty</legend>
+        <label><input type="radio" name="mode" value="discovery" id="m-discovery"><b>Discovery</b><span>Learn as you go. Mistakes never end the run.</span></label>
+        <label><input type="radio" name="mode" value="challenge" id="m-challenge"><b>Challenge</b><span>Three wrong gates and you are back in manual.</span></label>
+        <label><input type="radio" name="mode" value="mastery" id="m-mastery"><b>Mastery</b><span>One wrong gate ends the run.</span></label>
+      </fieldset>
+      <div class="actions">
+        <button class="btn" id="campBtn" type="button">Campaign</button>
+        <button class="link" id="startBtn" type="button">Free drive</button>
+        <button class="link" id="vsBtn" type="button">2 players</button>
+        <button class="link" id="howBtn" type="button">How to play</button>
+      </div>
+      <div class="foot" id="bestLine"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="pauseOv" hidden>
+    <div class="card" style="width:min(360px,100%);text-align:center;justify-items:center">
+      <div class="eyebrow">Paused</div>
+      <h2>Taking a breath</h2>
+      <p style="color:var(--haze);font-size:13.5px" id="pauseWhy">The road will wait for you.</p>
+      <div class="actions"><button class="btn" id="resumeBtn" type="button">Resume driving</button></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="helpOv" hidden>
+    <div class="card">
+      <div class="eyebrow">How to play</div>
+      <h2>From effort to effortless</h2>
+      <ol class="howto">
+        <li><h3>Steering and speed</h3><p>Computer: ← → or A/D steer, ↑ ↓ or W/S drive faster or slower. Phone: tap either side or swipe left/right to steer, swipe up or down to change speed, or use the ◀ ▶ buttons. Faster earns more points; slower gives you more time to read.</p></li>
+        <li><h3>Awareness Pulse</h3><p>Press <b>Spacebar</b> or tap ◎ to vaporize nearby vṛttis into golden light. It recharges in ten seconds.</p></li>
+        <li><h3>Windshield clarity</h3><p>Every vṛtti you hit muddies a sensor. Correct answers trigger a clean golden wiper sweep.</p></li>
+        <li><h3>Three stages & the APB Compass</h3><p><b>Manual mode</b> (0–2 correct). <b>Lane assist</b> (3–5 correct). <b>FSD</b> (6+ correct): the car steers itself while the tanpura fifth swells.</p></li>
+        <li><h3>Campaign</h3><p>Three chapters, one per part of the book, each with its own road and hazards: drifting worries (watch the arrow), mud puddles, and mirages that FSD cannot see. Clear the gates, then beat the boss by winning two of its three crimson gates. Fewer wrong gates earn more stars.</p></li>
+        <li><h3>2 players</h3><p>Split screen on one keyboard (P1: A/D and W, P2: ←/→ and ↑) or two gamepads. Same road, same gates: whoever clears more reaches Dhyāna first.</p></li>
+        <li><h3>Free drive</h3><p>Ten correct gates reach Dhyāna. After that, reflection portals keep the road open forever.</p></li>
+      </ol>
+      <div class="actions"><button class="btn" id="helpClose" type="button">Got it</button></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="endOv" hidden>
+    <div class="card">
+      <div class="eyebrow ember">Disengaged</div>
+      <h2 id="endTitle">Back in manual mode</h2>
+      <p id="endReason"></p>
+      <div class="answer" id="endAnswer" hidden><span class="eyebrow">The right lane was</span><b id="endCorrect"></b><p style="color:var(--haze);font-size:13px" id="endWhy"></p></div>
+      <div class="stats"><div><span>Score</span><strong id="endScore">0</strong></div><div><span>Answered</span><strong id="endQ">0</strong></div><div><span>Best</span><strong id="endBest">0</strong></div></div>
+      <div class="actions">
+        <button class="btn" id="againBtn" type="button">Drive again</button>
+        <button class="link" id="menuBtn" type="button">Change mode</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="arriveOv" hidden>
+    <div class="card">
+      <div class="eyebrow">Destination reached</div>
+      <h2 id="arrTitle">The car has always been self-driving.</h2>
+      <p id="arrText">Ten gates, cleared. The fuel has always been infinite, and the destination has always been set. You just needed to understand the system well enough to let go of the wheel.</p>
+      <div class="stats"><div><span>Score</span><strong id="arrScore">0</strong></div><div><span>Mode</span><strong id="arrMode">Discovery</strong></div><div><span>Sensors</span><strong id="arrSens">3</strong></div></div>
+      <div class="share">
+        <q id="shareText"></q>
+        <div class="actions"><button class="btn" id="shareBtn" type="button">Share</button><button class="link" id="copyBtn" type="button">Copy text</button></div>
+        <div class="note" id="shareNote" aria-live="polite"></div>
+      </div>
+      <div class="actions">
+        <button class="link" id="keepBtn" type="button">Continue the journey</button>
+        <a class="link" href="https://theselfdrivingmind.com" target="_blank" rel="noopener">theselfdrivingmind.com</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="campOv" hidden>
+    <div class="card">
+      <div class="eyebrow">Campaign · <span id="campMode">Discovery</span></div>
+      <h2>Three chapters, three bosses</h2>
+      <p style="color:var(--haze);font-size:13px">Each chapter draws its toll gates from one part of the book. Clear its gates, then win two of three boss gates to unlock the next.</p>
+      <div class="chapters" id="chapterList"></div>
+      <div class="actions"><button class="link" id="campBack" type="button" data-back>Back</button></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="chapOv" hidden>
+    <div class="card">
+      <div class="eyebrow" id="chapEyebrow">Chapter 1</div>
+      <h2 id="chapTitle"></h2>
+      <p id="chapBlurb"></p>
+      <ul class="briefing">
+        <li><span>Hazards</span><p id="chapHazards"></p></li>
+        <li><span>Goal</span><p id="chapGoal"></p></li>
+      </ul>
+      <div class="actions">
+        <button class="btn" id="chapBegin" type="button">Begin chapter</button>
+        <button class="link" id="chapBack" type="button" data-back>Chapters</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="resultOv" hidden>
+    <div class="card">
+      <div class="eyebrow" id="resEyebrow">Chapter cleared</div>
+      <h2 id="resTitle"></h2>
+      <div class="stars" id="resStars" role="img"></div>
+      <p id="resText"></p>
+      <div class="answer" id="resAnswer" hidden><span class="eyebrow">The right lane was</span><b id="resCorrect"></b><p style="color:var(--haze);font-size:13px" id="resWhy"></p></div>
+      <div class="stats"><div><span>Score</span><strong id="resScore">0</strong></div><div><span>Gates cleared</span><strong id="resGates">0</strong></div><div><span>Wrong gates</span><strong id="resMiss">0</strong></div></div>
+      <div class="actions">
+        <button class="btn" id="resNext" type="button">Next chapter</button>
+        <button class="link" id="resChapters" type="button" data-back>Chapters</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="vsOv" hidden>
+    <div class="card">
+      <div class="eyebrow">2 players · split screen · <span id="vsModeName">Discovery</span></div>
+      <h2>Same road, two minds</h2>
+      <p style="color:var(--haze);font-size:13px">Both cars face the same vṛttis and the same <span id="vsGoalTxt">8</span> toll gates. Clear more gates than your rival to reach Dhyāna first. The difficulty you picked on the main screen applies to both.</p>
+      <fieldset class="modes" id="vsRoads"><legend>Choose the road</legend></fieldset>
+      <ul class="briefing">
+        <li><span>Player 1 (left / top)</span><p><b>A</b> and <b>D</b> steer, <b>W</b> fires the Awareness Pulse. Gamepad 1: d-pad or stick, <b>A</b> to pulse.</p></li>
+        <li><span>Player 2 (right / bottom)</span><p><b>←</b> and <b>→</b> steer, <b>↑</b> fires the pulse. Gamepad 2: d-pad or stick, <b>A</b> to pulse.</p></li>
+        <li><span>Touch</span><p>Tap or swipe inside your own half of the screen.</p></li>
+      </ul>
+      <p class="note" id="padStatus"></p>
+      <div class="actions">
+        <button class="btn" id="vsStart" type="button">Start race</button>
+        <button class="link" id="vsBack" type="button" data-back>Back</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="vsEndOv" hidden>
+    <div class="card">
+      <div class="eyebrow">Race finished</div>
+      <h2 id="vsEndTitle"></h2>
+      <p id="vsEndText"></p>
+      <div class="vs-results">
+        <div class="vs-res p0" id="vsEnd0"><div class="vs-tag">Player 1</div><div class="stats"><div><span>Gates</span><strong id="vsEnd0Gates">0</strong></div><div><span>Score</span><strong id="vsEnd0Score">0</strong></div><div><span>Wrong</span><strong id="vsEnd0Miss">0</strong></div></div></div>
+        <div class="vs-res p1" id="vsEnd1"><div class="vs-tag">Player 2</div><div class="stats"><div><span>Gates</span><strong id="vsEnd1Gates">0</strong></div><div><span>Score</span><strong id="vsEnd1Score">0</strong></div><div><span>Wrong</span><strong id="vsEnd1Miss">0</strong></div></div></div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="vsRematch" type="button">Rematch</button>
+        <button class="link" id="vsChangeRoad" type="button">Change road</button>
+        <button class="link" id="vsMenu" type="button" data-back>Main menu</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading" id="loading">LOADING THE ROAD…</div>
+  <div class="fatal" id="fatal" hidden><div class="card"><div class="eyebrow ember">Could not start</div><p id="fatalText"></p></div></div>
+</div>
+<script>
+// Plain (non-module) guard: it runs even when the game's modules can't, so the loading screen never hangs silently.
+(function(){
+  function show(msg){
+    var f=document.getElementById('fatal'), t=document.getElementById('fatalText'), l=document.getElementById('loading');
+    if(t) t.innerHTML=msg; if(f) f.hidden=false; if(l) l.classList.add('gone');
+  }
+  window.__htdFail = show;
+  if(location.protocol==='file:'){
+    show('This page was opened straight from a file, and browsers block games that run that way.<br><br><b>To play:</b> double-click <b>Play.cmd</b> in the highway3d folder. It starts a small local server and opens the game at <b>http://localhost:8173</b>.');
+    return;
+  }
+  setTimeout(function(){
+    var l=document.getElementById('loading');
+    if(l && !l.classList.contains('gone')) show('The road is taking too long to load. The game downloads its 3D engine from cdn.jsdelivr.net, so check the internet connection and any ad or content blocker, then reload the page.');
+  }, 20000);
+})();
+</script>
+<script type="module" src="js/main.js" onerror="window.__htdFail && window.__htdFail('Part of the game failed to download. Check the internet connection (the 3D engine comes from cdn.jsdelivr.net) and reload the page.')"></script>
+</body>
+</html>
