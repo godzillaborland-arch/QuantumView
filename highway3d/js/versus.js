@@ -63,7 +63,7 @@ function hudPlayer(S, p){
   $(`vs${i}PulseFill`).style.transform = `scaleY(${spent ? 1 : Math.max(0, p.pulseCool/10)})`;
 }
 function vsToast(i, msg, warn=false, dur=1.1){
-  const el=$(`vsToast${i}`); el.textContent=msg; el.classList.toggle('warn',warn); el.classList.toggle('show',!!msg);
+  const el=$(`vsToast${i}`); el.textContent=msg; el.classList.toggle('warn',warn); el.classList.toggle('show',!!msg); el.classList.remove('big');
   G.S.players[i].toastT = dur;
 }
 
@@ -84,7 +84,10 @@ export function vsPulse(pid){
   const p=S.players[pid]; if(!p || p.over || p.pulseCool>0 || p.stage>=3) return;
   p.pulseCool=10; Snd.pulse(); G.world.pulse(pid);
   for(const o of S.objs){ if(o.z<=25 && !o.gone[pid]){ o.gone[pid]=true; G.world.puff(o.x, o.z, 'shard', 0.8, pid); } }
-  vsToast(pid, 'Awareness Pulse', false, 1);
+  // Make it unmistakable who fired: named message in their half, and their own HUD panel flashes.
+  vsToast(pid, `P${pid+1} · Awareness Pulse`, false, 1);
+  const panel = document.querySelector(`.vs-panel.p${pid}`);
+  if(panel){ panel.classList.remove('pulsed'); void panel.offsetWidth; panel.classList.add('pulsed'); }
 }
 
 // ---------- Rules ----------
@@ -146,7 +149,7 @@ function resolveGate(S, Q){
       p.sensors=Math.min(3,p.sensors+1);
       p.calmTarget=Math.min(1, S.def.calm0 + p.answered*(1-S.def.calm0)/S.goal);
       fx.flash('217,169,62'); G.world.puff(p.lane, CARZ+0.6, 'shard', 1, p.id);
-      const st=stageFor(p.answered); if(st!==p.stage){ p.stage=st; vsToast(p.id, st===3?'FSD engaged':'Lane assist engaged', false, 1.6); }
+      const st=stageFor(p.answered); if(st!==p.stage){ p.stage=st; vsToast(p.id, st===3?`P${p.id+1} · FSD engaged`:'Lane assist engaged', false, st===3?4:2.2); $(`vsToast${p.id}`).classList.toggle('big', st===3); }
       marks.push(`P${p.id+1} ✓`);
     } else {
       anyWrong=true; p.streak=0; p.mistakes++; p.shake=1; fx.flash('224,83,61');

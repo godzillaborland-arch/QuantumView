@@ -71,6 +71,11 @@
     <div class="l-why" id="lWhy"></div>
   </div>
   <div class="toast" id="toast"></div>
+  <div class="stage-banner" id="stageBanner" hidden aria-live="polite">
+    <div class="sb-eyebrow" id="sbEyebrow">Stage 3 of 3</div>
+    <div class="sb-title" id="sbTitle">Full Self-Driving engaged</div>
+    <div class="sb-sub" id="sbSub">Let go of the wheel. The car is driving.</div>
+  </div>
 
   <!-- Split screen: one HUD panel and toast per player, positioned by .vs / .vs-portrait on #stage -->
   <div class="vs-divider" id="vsDivider" hidden></div>
@@ -144,12 +149,17 @@
         <li><h3>Steering and speed</h3><p>Computer: ← → or A/D steer, ↑ ↓ or W/S drive faster or slower. Phone: tap either side or swipe left/right to steer, swipe up or down to change speed, or use the ◀ ▶ buttons. Faster earns more points; slower gives you more time to read.</p></li>
         <li><h3>Awareness Pulse</h3><p>Press <b>Spacebar</b> or tap ◎ to vaporize nearby vṛttis into golden light. It recharges in ten seconds.</p></li>
         <li><h3>Windshield clarity</h3><p>Every vṛtti you hit muddies a sensor. Correct answers trigger a clean golden wiper sweep.</p></li>
-        <li><h3>Three stages & the APB Compass</h3><p><b>Manual mode</b> (0–2 correct). <b>Lane assist</b> (3–5 correct). <b>FSD</b> (6+ correct): the car steers itself while the tanpura fifth swells.</p></li>
+        <li><h3>Three stages</h3><p><b>Manual mode</b> (0–2 correct). <b>Lane assist</b> (3–5 correct). <b>FSD</b> (6+ correct): the car steers itself while the tanpura fifth swells.</p></li>
+        <li><h3>The APB Compass</h3><p>From the book: three inner signals that measure a meditation by how it feels inside, not by minutes on a timer. <b>A</b>bsorption is depth of presence, the quality of attention. <b>P</b>eace (Śānti) is a mind that has settled on its own. <b>B</b>liss (Ānanda) is a deeper joy than ordinary happiness. In the game, the A · P · B dots beside the sensors light up as you progress: A when lane assist engages, P when FSD takes over, B when you reach Dhyāna.</p>
+          <a class="help-link" href="https://selfdrivingmind.substack.com/p/can-you-measure-meditation-dont-be" target="_blank" rel="noopener">Read more: Can you measure meditation? <span aria-hidden="true">→</span></a></li>
         <li><h3>Campaign</h3><p>Three chapters, one per part of the book, each with its own road and hazards: drifting worries (watch the arrow), mud puddles, and mirages that FSD cannot see. Clear the gates, then beat the boss by winning two of its three crimson gates. Fewer wrong gates earn more stars.</p></li>
         <li><h3>2 players</h3><p>Split screen on one keyboard (P1: A/D and W, P2: ←/→ and ↑) or two gamepads. Same road, same gates: whoever clears more reaches Dhyāna first.</p></li>
         <li><h3>Free drive</h3><p>Ten correct gates reach Dhyāna. After that, reflection portals keep the road open forever.</p></li>
       </ol>
-      <div class="actions"><button class="btn" id="helpClose" type="button">Got it</button></div>
+      <div class="actions">
+        <button class="btn" id="helpClose" type="button">Got it</button>
+        <a class="link book" href="https://theselfdrivingmind.com/tesla-dhyana-blog.html" target="_blank" rel="noopener">About the book</a>
+      </div>
     </div>
   </div>
 

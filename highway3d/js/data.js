@@ -1,15 +1,15 @@
 // Content from The Self-Driving Mind. Answer index 0 is always the correct one.
 export const QUESTIONS = [
-  { t:1, q:"What is the biggest obstacle to meditation?", a:["The restless mind","Not having enough time","Not sitting perfectly"], why:"Arjuna's complaint in the Gītā: the mind is harder to control than the wind. Yoga is the stilling of its waves, the vṛttis." },
+  { t:1, q:"What is the biggest obstacle to meditation?", a:["The restless mind","Not having enough time","Not sitting perfectly"], why:"Arjuna's complaint in the Gītā: the mind is harder to control than the wind. This book opens with exactly that question." },
   { t:1, q:"When Full Self-Driving is engaged, the car…", a:["Drives itself","Needs constant steering","Only cruises straight"], why:"The locus of control shifts from the hand gripping the wheel to the car's own intelligence. The passenger stays alert, but is not driving." },
   { t:1, q:"With Lifetime Charging, a Tesla never suffers from…", a:["Range anxiety","Flat tires","Traffic jams"], why:"The energy question is settled. You will never be stranded for lack of power, and the journey is always possible." },
   { t:1, q:"Which measures a meditation session best?", a:["Quality of attention","Minutes on the timer","How still you sat"], why:"Depth of presence is measured by the quality of attention, not the quantity of minutes." },
   { t:1, q:"In the book's analogy, Full Self-Driving maps to…", a:["Dhyāna","Prāṇāyāma","Willpower"], why:"FSD maps to Dhyāna: deep, effortless contemplative absorption. The shift from manual to autonomous." },
-  { t:1, q:"Lifetime Charging maps to…", a:["Kṛpā, Grace","Daily discipline","Self-effort"], why:"Kṛpā is the infinite spiritual energy that reaches the Guru's lineage." },
+  { t:1, q:"Lifetime Charging maps to…", a:["Kṛpā, Grace","Daily discipline","Self-effort"], why:"Kṛpā is the infinite spiritual energy that becomes available to the seeker through the Guru's lineage." },
   { t:1, q:"“I sat for forty-five minutes” is which false measure?", a:["Clock time","Posture perfection","Visual fireworks"], why:"False Measure #1. Duration is not depth. Five real minutes outweigh forty-five performed ones." },
   { t:1, q:"App meditation and classical Dhyāna differ like…", a:["A campfire and a supernova","Tea and coffee","A bicycle and a bus"], why:"Both involve fire. One warms your hands on a cold night. The other can reshape galaxies." },
   { t:1, q:"In 1978 at Guindy, the author's nickname was…", a:["Quantum","Feynman","Professor"], why:"“Quantum,” for his obsession with quantum mechanics and pure logic. The skeptical rationalist." },
-  { t:2, q:"Patañjali's image for the unbroken flow of Dhyāna is…", a:["Oil poured between vessels","Water splashing in a cup","A candle flickering"], why:"Taila-dhārāvat: oil pouring from one vessel to another. Continuous, smooth, uninterrupted. Water splashes and breaks." },
+  { t:2, q:"Patañjali's image for the unbroken flow of Dhyāna is…", a:["Oil poured between vessels","Water splashing in a cup","A candle flickering"], why:"Taila-dhārāvat: oil pouring from one vessel to another. Continuous, smooth, uninterrupted." },
   { t:2, q:"In the Tesla metaphor, the realized Guru is the…", a:["Systems programmer","Passenger","Roadside mechanic"], why:"The Acharya who has traversed the path implants the destination in the seeker's navigation system." },
   { t:2, q:"Which discipline is “the clean sensor”?", a:["Satya, truthfulness","Longer sittings","Perfect posture"], why:"Every act of inner dishonesty is mud on the lens. Self-deception corrupts the data the mind feeds the system." },
   { t:2, q:"With the destination set, the seeker's one remaining job is…", a:["Vehicle maintenance","Gripping the wheel","Watching the battery"], why:"The Yamas and Niyamas are the maintenance schedule: keep the vehicle in the condition that lets the autopilot run." },
@@ -30,6 +30,8 @@ export const ENDLESS_PROMPTS = [
   "The fuel is infinite.", "The destination is already set.", "Let the road carry you.",
   "Stillness in motion.", "No effort remains.", "Observe the passing thoughts."
 ];
+// Reflection portals (after Dhyāna) offer three of these; every lane is right.
+export const REFLECTIONS = ["Breathe", "Let go", "Observe", "Rest", "Trust", "Be still", "Notice", "Allow", "Return", "Soften"];
 
 export const TIERED_VRITTIS = {
   1: ["PING", "NEW EMAIL", "50% OFF", "SCROLL", "LOUD NOISE"],

@@ -288,6 +288,7 @@ export async function createWorld(canvas){
   }
   const header = (text, bg, fg) => canvasTex(1024, 96, (g,w,h)=>{ g.fillStyle=bg; g.fillRect(0,0,w,h); let fs=44; g.font=`700 ${fs}px ${FONTS.mono}`; while(g.measureText(text).width>w-40){ fs-=2; g.font=`700 ${fs}px ${FONTS.mono}`; } g.fillStyle=fg; g.textAlign='center'; g.textBaseline='middle'; g.fillText(text, w/2, h/2+2); });
   const headerTex = shared(header('◆  TOLL GATE · STEER INTO THE ANSWER  ◆', '#0b1426', '#d9a93e'));
+  const portalHeaderTex = shared(header('◆  REFLECTION PORTAL · EVERY LANE IS RIGHT  ◆', '#0b1426', '#7fc8a9'));
   const bossHeaders = new Map();
   const bossHeader = name => { if(!bossHeaders.has(name)) bossHeaders.set(name, shared(header(`✦  BOSS GATE · ${name}  ✦`, '#2a0c10', '#ff8a6a'))); return bossHeaders.get(name); };
 
@@ -344,7 +345,7 @@ export async function createWorld(canvas){
   const crimsonMat = new THREE.MeshStandardMaterial({ color:0xb8323a, emissive:0x9a1a22, emissiveIntensity:0.9, metalness:0.6, roughness:0.3 });
   function makeGate(Q){
     const g = new THREE.Group(), mats = [], frame = Q.boss ? crimsonMat : goldMat;
-    const hdr = new THREE.MeshBasicMaterial({ map: Q.boss ? bossHeader(Q.bossName) : headerTex, transparent:true });
+    const hdr = new THREE.MeshBasicMaterial({ map: Q.boss ? bossHeader(Q.bossName) : Q.endless ? portalHeaderTex : headerTex, transparent:true });
     const bar = new THREE.Mesh(new THREE.BoxGeometry(ROAD_HALF*2+0.6, Q.boss?1.2:0.9, 0.5), [frame,frame,frame,frame,hdr,frame]);
     bar.position.y = Q.boss ? 6.5 : 6.3; g.add(bar); mats.push(hdr);
     if(Q.boss){ for(const s of [-1,1]){ const t=new THREE.Mesh(new THREE.ConeGeometry(0.35, 1.6, 4), crimsonMat); t.position.set(s*(ROAD_HALF+0.1), 7.9, 0); g.add(t); } }

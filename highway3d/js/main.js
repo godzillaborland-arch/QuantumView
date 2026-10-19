@@ -268,6 +268,8 @@ function bindUI(){
     }
     // The old one-shot demo now needs the word "demo", so typing "dhyana" never trips it on the way.
     if(!$('startOv').hidden && secret.endsWith('demo')){ Snd.init(); startDemo(); return; }
+    // On menus, leave keys to the page: arrows move between the difficulty and road options, Space/Enter press buttons.
+    if(visibleOverlay() || !S.running) return;
     if(k==='ArrowLeft' || k==='a' || k==='A'){ steer(-1); e.preventDefault(); }
     else if(k==='ArrowRight' || k==='d' || k==='D'){ steer(1); e.preventDefault(); }
     else if(k===' ' && S.running && !S.paused){ firePulse(); e.preventDefault(); }

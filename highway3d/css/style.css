@@ -64,6 +64,25 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .toast.show{opacity:1}
 .toast.warn{color:var(--ember);text-shadow:0 0 14px rgba(224,83,61,.5),0 2px 8px rgba(0,0,0,.8)}
 
+/* Stage banner: a big announcement when the drive stage changes (FSD is the headline moment). */
+.stage-banner{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:14;pointer-events:none;text-align:center;
+  width:min(94%,860px);padding:18px 22px 20px;border-radius:12px;background:rgba(6,14,26,.72);border:1px solid rgba(127,200,169,.55);
+  box-shadow:0 0 0 1px rgba(127,200,169,.15),0 0 60px rgba(127,200,169,.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  animation:sbShow var(--sb-dur,6s) ease-out forwards}
+.stage-banner.assist{border-color:rgba(242,213,138,.5);box-shadow:0 0 50px rgba(217,169,62,.3)}
+.sb-eyebrow{font-family:var(--mono);font-size:clamp(10px,1.4vw,13px);letter-spacing:.28em;text-transform:uppercase;color:var(--mint)}
+.stage-banner.assist .sb-eyebrow{color:var(--gold)}
+.sb-title{font-family:var(--display);font-size:clamp(30px,7.2vw,72px);line-height:1.02;margin:6px 0 8px;color:#e9fff4;
+  text-shadow:0 0 18px rgba(127,200,169,.85),0 0 46px rgba(127,200,169,.55),0 3px 10px rgba(0,0,0,.8)}
+.stage-banner.assist .sb-title{color:var(--gold-soft);text-shadow:0 0 18px rgba(217,169,62,.75),0 3px 10px rgba(0,0,0,.8)}
+.sb-sub{font-size:clamp(14px,2vw,19px);color:var(--ink)}
+@keyframes sbShow{0%{opacity:0;transform:translate(-50%,-50%) scale(.82)}8%{opacity:1;transform:translate(-50%,-50%) scale(1.04)}14%{transform:translate(-50%,-50%) scale(1)}82%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion: reduce){ @keyframes sbShow{0%{opacity:0}6%{opacity:1}85%{opacity:1}100%{opacity:0}} }
+/* Phones upright: bigger title, and sit below the lesson card that appears at the top after a gate. */
+@media (max-width:760px){ .stage-banner{top:60%} .sb-title{font-size:clamp(36px,10.5vw,52px)} }
+@media (max-height:520px){ .stage-banner{top:62%;padding:10px 16px 12px} .sb-title{font-size:clamp(26px,6vw,46px);margin:3px 0 4px} }
+.toast.big{font-size:clamp(20px,3.6vw,34px);color:#e9fff4;text-shadow:0 0 16px rgba(127,200,169,.9),0 2px 8px rgba(0,0,0,.8)}
+
 .demo-tag{position:absolute;left:50%;transform:translateX(-50%);bottom:max(18px, env(safe-area-inset-bottom,0px));font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--haze);background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:5px 10px;pointer-events:none;z-index:10}
 .demo-tag b{color:var(--gold)}
 
@@ -101,7 +120,10 @@ h3{font-size:16px;color:var(--gold-soft)}
 .stats span{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--haze)}
 .stats strong{font-size:18px}
 .share{border:1px dashed var(--line);border-radius:4px;padding:10px;display:grid;gap:8px}
-.share q{font-family:var(--display);font-size:16px;line-height:1.3;quotes:none;color:var(--ink)}
+.share q{font-family:var(--display);font-size:16px;line-height:1.3;quotes:none;color:var(--ink);overflow-wrap:anywhere}
+/* Cards never grow wider than the screen: long unbreakable text (like a web address) wraps instead. */
+.card{grid-template-columns:minmax(0,1fr)}
+.card p,.card b,.card h2{overflow-wrap:break-word}
 .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .btn,.link{font-family:var(--body);font-size:14.5px;font-weight:600;border-radius:4px;padding:10px 16px;cursor:pointer;text-decoration:none;display:inline-block;touch-action:manipulation}
 .btn{background:var(--gold);color:var(--night);border:1px solid var(--gold)}
@@ -115,6 +137,8 @@ h3{font-size:16px;color:var(--gold-soft)}
 .book-link b{font-weight:600;color:var(--gold)}
 .book-link:hover,.book-link:focus-visible{border-color:var(--gold);background:rgba(217,169,62,.16)}
 .link.book{color:var(--gold-soft)}
+.help-link{justify-self:start;display:inline-block;margin-top:2px;padding:10px 0;font-size:13.5px;color:var(--gold);text-decoration:underline;text-underline-offset:3px;touch-action:manipulation} /* padding gives a ~40px tap target */
+.help-link:hover,.help-link:focus-visible{color:var(--gold-soft)}
 .note{font-size:11.5px;color:var(--mint);min-height:1em}
 
 /* While any menu or card is open, keep Sound and Help clickable above it; hide the in-run readouts and buttons. */
@@ -155,6 +179,9 @@ h3{font-size:16px;color:var(--gold-soft)}
 .vs-panel.p0{left:max(12px, env(safe-area-inset-left,0px));border-left:3px solid var(--p0)}
 .vs-panel.p1{right:max(12px, env(safe-area-inset-right,0px));border-left:3px solid var(--p1)}
 .stage.vs-portrait .vs-panel.p1{right:auto;top:auto;left:max(12px, env(safe-area-inset-left,0px));bottom:max(12px, env(safe-area-inset-bottom,0px))}
+.vs-panel.pulsed{animation:vsPulsed .7s ease-out}
+@keyframes vsPulsed{0%{box-shadow:0 0 0 2px var(--gold),0 0 22px rgba(217,169,62,.8)}100%{box-shadow:0 0 0 0 transparent}}
+@media (prefers-reduced-motion: reduce){ .vs-panel.pulsed{animation:none;box-shadow:0 0 0 2px var(--gold)} }
 .vs-tag{font-size:11px;font-weight:700;letter-spacing:.14em}
 .vs-tag small{font-weight:500;color:var(--haze);letter-spacing:.06em;margin-left:4px}
 .p0 .vs-tag{color:var(--p0)} .p1 .vs-tag{color:var(--p1)}

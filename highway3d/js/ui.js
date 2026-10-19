@@ -37,6 +37,8 @@ export function updateHud(S){
   const score=Math.floor(S.score).toLocaleString(), speed=Math.round((S.running?S.v:0)*6.2)+' mph'+(S.throttle && S.throttle!==1 ? ` ×${S.throttle.toFixed(1)}` : '');
   const C=S.camp;
   let label='Answered', q = S.loop ? `${S.answered} total` : `${S.answered} / ${GOAL}`;
+  // After reaching Dhyāna the goal is met, so count onward instead of showing 14 / 10.
+  if(S.arrived && !C){ label='Beyond Dhyāna'; q=`${Math.max(0, S.answered-(S.arrivedAt ?? GOAL))} more`; }
   if(C){
     label=`Chapter ${C.ch+1}`;
     q = C.boss ? `BOSS ${'●'.repeat(C.boss.hits)}${'✕'.repeat(C.boss.misses)}${'○'.repeat(Math.max(0,3-C.boss.hits-C.boss.misses))}` : `${C.correct} / ${C.def.goal} gates`;
@@ -49,10 +51,10 @@ export function updateHud(S){
   apb(S);
 }
 
-export function showQuiz(text, chips, eyebrow=null){
+export function showQuiz(text, chips, eyebrow=null, boss=false){
   $('qtext').textContent=text;
   $('qeyebrow').textContent = eyebrow || 'Toll gate ahead · steer into the answer';
-  $('quiz').classList.toggle('boss', !!eyebrow);
+  $('quiz').classList.toggle('boss', boss); // red styling only for boss gates (not race or reflection headings)
   [...$('qchips').children].forEach((c,i)=>c.textContent=chips[i]);
   $('lesson').hidden=true; $('quiz').hidden=false;
 }
@@ -65,4 +67,16 @@ export function lesson(ok, q, streak, eyebrow=null){
   el.hidden=false; lessonT = ok ? 3.6 : 4.6;
 }
 export function tickLesson(dt){ if(lessonT>0){ lessonT-=dt; if(lessonT<=0) $('lesson').hidden=true; } }
-export function hidePrompts(){ $('quiz').hidden=true; $('lesson').hidden=true; lessonT=0; }
+export function hidePrompts(){ $('quiz').hidden=true; $('lesson').hidden=true; lessonT=0; hideBanner(); }
+
+// Big stage-change banner. kind 'fsd' (mint, headline) or 'assist' (gold, shorter). seconds = how long it stays.
+let bannerTimer = null;
+export function stageBanner(kind, eyebrow, title, sub, seconds){
+  const el=$('stageBanner'); if(!el) return;
+  $('sbEyebrow').textContent=eyebrow; $('sbTitle').textContent=title; $('sbSub').textContent=sub;
+  el.classList.toggle('assist', kind==='assist');
+  el.style.setProperty('--sb-dur', seconds+'s');
+  el.hidden=true; void el.offsetWidth; el.hidden=false; // restart the animation
+  clearTimeout(bannerTimer); bannerTimer=setTimeout(hideBanner, seconds*1000);
+}
+export function hideBanner(){ clearTimeout(bannerTimer); const el=$('stageBanner'); if(el) el.hidden=true; }

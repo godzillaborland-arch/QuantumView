@@ -1,4 +1,4 @@
-import { QUESTIONS, ENDLESS_PROMPTS, TIERED_VRITTIS, BILLBOARDS, GOAL, MODES, ZMAX, CARZ } from './data.js';
+import { QUESTIONS, ENDLESS_PROMPTS, REFLECTIONS, TIERED_VRITTIS, BILLBOARDS, GOAL, MODES, ZMAX, CARZ } from './data.js';
 import { CHAPTERS, BOSS_GATES, BOSS_WINS, starsFor } from './campaign.js';
 import { $, store, shuffle, pick, coarse } from './util.js';
 import { Snd } from './audio.js';
@@ -179,7 +179,7 @@ function chapterClear(){
   G.world.bossDefeated(); Snd.arrive(); S.calmTarget=Math.min(1, S.calmTarget+0.2);
   const stars=starsFor(C.misses); if(!G.perpetual) saveCampProgress(C.ch, stars);
   UI.toast(`${C.def.boss.name} dissolves`, false, 2.2);
-  if(C.ch===CHAPTERS.length-1){ S.arrived=true; setStageNow(3); return arrive(true); }
+  if(C.ch===CHAPTERS.length-1){ S.arrived=true; S.arrivedAt=S.answered; setStageNow(3); return arrive(true); }
   showResult({ cleared:true, title:C.def.title+' · complete', text:`${C.def.boss.name} is behind you. ${stars===3?'A flawless drive.':stars===2?'One wrong gate. Close to flawless.':'Cleared. Replay for more stars.'}` });
 }
 
@@ -283,15 +283,16 @@ function nextCampQuestion(){
 function spawnQuiz(){
   const S=G.S, C=S.camp;
   if(!C && S.qi>=QUESTIONS.length){
-    const prompt=nextEndlessPrompt();
-    S.quiz={ q:{q:prompt, a:[prompt,prompt,prompt], why:'The journey continues in stillness.'}, lanes:[-1,0,1], phase:'read', t:2, gate:null, endless:true };
-    UI.showQuiz(prompt, ['STEER HERE','STEER HERE','STEER HERE']);
+    // Reflection portal: three different words, and any lane counts.
+    const prompt=nextEndlessPrompt(), words=shuffle([...REFLECTIONS]).slice(0,3);
+    S.quiz={ q:{q:prompt, a:words, why:'The journey continues in stillness.'}, lanes:[-1,0,1], phase:'read', t:2, gate:null, endless:true };
+    UI.showQuiz(prompt, words, 'Reflection portal · every lane is right');
   } else {
     const idx = C ? nextCampQuestion() : S.order[S.qi++], q=QUESTIONS[idx], pos=shuffle([-1,0,1]);
     const words=(q.q+' '+q.a.join(' ')).split(/\s+/).length;
     const boss = !!(C && C.boss);
     S.quiz={ q, idx, lanes:pos, phase:'read', t:(MODES[G.mode].read+words*0.07)*(boss?0.9:1), gate:null, boss, bossName: boss ? C.def.boss.name : '' };
-    UI.showQuiz(q.q, [-1,0,1].map(ln=>q.a[pos.indexOf(ln)]), boss ? `Boss gate · ${C.def.boss.name} · ${C.boss.hits+C.boss.misses+1} of ${BOSS_GATES}` : null);
+    UI.showQuiz(q.q, [-1,0,1].map(ln=>q.a[pos.indexOf(ln)]), boss ? `Boss gate · ${C.def.boss.name} · ${C.boss.hits+C.boss.misses+1} of ${BOSS_GATES}` : null, boss);
   }
   for(let i=S.objs.length-1;i>=0;i--) if(S.objs[i].z<9) S.objs.splice(i,1);
 }
@@ -299,8 +300,9 @@ function spawnQuiz(){
 function setStageNow(n){ const S=G.S; S.stage=n; UI.hudMode(S); }
 function setStage(n){
   const S=G.S; if(n===S.stage) return; setStageNow(n); Snd.stage();
-  if(n===2) UI.toast('Lane assist engaged. The car begins to help.', false, 2.2);
-  if(n===3) UI.toast('Full Self-Driving engaged. Let go of the wheel.', false, 2.6);
+  UI.toast('', false, 0.01); // the banner replaces the small message line
+  if(n===2) UI.stageBanner('assist', 'Stage 2 of 3', 'Lane assist engaged', 'The car begins to help you steer.', 3.5);
+  if(n===3) UI.stageBanner('fsd', 'Stage 3 of 3 · Dhyāna', 'Full Self-Driving engaged', 'Let go of the wheel. The car is driving.', 6);
 }
 
 function startBoss(){
@@ -339,7 +341,7 @@ function resolveGate(Q){
     }
     S.quizT=8.5-Math.min(3, S.answered*0.2);
     setStage(stageFor(S.answered));
-    if(!S.arrived && S.answered>=GOAL){ S.arrived=true; UI.updateHud(S); arrive(); }
+    if(!S.arrived && S.answered>=GOAL){ S.arrived=true; S.arrivedAt=S.answered; UI.updateHud(S); arrive(); }
     return;
   }
 
