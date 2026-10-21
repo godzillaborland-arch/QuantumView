@@ -24,11 +24,26 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=2">
+<!-- Cache busting: the site lets browsers keep files for hours, so a new upload could mix with old saved copies.
+     Each game file is loaded as file.js?v=N. After changing any file, raise N here (all ?v= in this file). -->
 <script type="importmap">
 { "imports": {
   "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+  "./js/audio.js": "./js/audio.js?v=2",
+  "./js/campaign.js": "./js/campaign.js?v=2",
+  "./js/car.js": "./js/car.js?v=2",
+  "./js/data.js": "./js/data.js?v=2",
+  "./js/fx.js": "./js/fx.js?v=2",
+  "./js/game.js": "./js/game.js?v=2",
+  "./js/gamepad.js": "./js/gamepad.js?v=2",
+  "./js/perpetual.js": "./js/perpetual.js?v=2",
+  "./js/readers.js": "./js/readers.js?v=2",
+  "./js/ui.js": "./js/ui.js?v=2",
+  "./js/util.js": "./js/util.js?v=2",
+  "./js/versus.js": "./js/versus.js?v=2",
+  "./js/world.js": "./js/world.js?v=2"
 } }
 </script>
 </head>
@@ -319,6 +334,6 @@
   }, 20000);
 })();
 </script>
-<script type="module" src="js/main.js" onerror="window.__htdFail && window.__htdFail('Part of the game failed to download. Check the internet connection (the 3D engine comes from cdn.jsdelivr.net) and reload the page.')"></script>
+<script type="module" src="js/main.js?v=2"onerror="window.__htdFail && window.__htdFail('Part of the game failed to download. Check the internet connection (the 3D engine comes from cdn.jsdelivr.net) and reload the page.')"></script>
 </body>
 </html>
