@@ -4,7 +4,7 @@ import { TIERED_VRITTIS } from './data.js';
 // stages[n] is the drive stage after n correct road gates (1 manual, 2 lane assist, 3 FSD).
 export const BOSS_GATES = 3, BOSS_WINS = 2;
 
-export const CHAPTERS = [
+export const FREE_CHAPTERS = [
   {
     tier: 1, theme: 'city', title: 'The Restless City', place: 'Guindy, 1978',
     blurb: 'Quantum, the skeptical rationalist, drives through a city that never stops pinging. Learn why the restless mind is the first obstacle, and why minutes on a timer are not the measure.',
@@ -31,5 +31,9 @@ export const CHAPTERS = [
     boss: { name: 'SPIRITUAL PRIDE', line: 'The last vṛtti is the pride of having come this far. Not this. Not this.' }
   }
 ];
+
+// The campaign being played. The Reader's Edition swaps in its own chapters; importers see the live binding.
+export let CHAPTERS = FREE_CHAPTERS, EDITION = 'free';
+export function useChapters(list=FREE_CHAPTERS, edition='free'){ CHAPTERS = list; EDITION = edition; }
 
 export function starsFor(misses){ return misses===0 ? 3 : misses<=1 ? 2 : 1; }

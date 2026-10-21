@@ -4,7 +4,7 @@ import { Snd } from './audio.js';
 import * as UI from './ui.js';
 import { G, fresh, start, startChapter, showChapterIntro, resultAction, campProgress, steer, firePulse, throttle, setPaused, showBest, keepDriving, startDemo, exitDemo, update } from './game.js';
 import { startVersus, exitVersus, updateVersus, setVersusLayout, vsSteer, vsPulse } from './versus.js';
-import { CHAPTERS } from './campaign.js';
+import { CHAPTERS, EDITION, useChapters } from './campaign.js';
 import { createWorld } from './world.js';
 import { createFx } from './fx.js';
 import { pollGamepads, connectedPads } from './gamepad.js';
@@ -160,8 +160,8 @@ function bindUI(){
 
   const toMenu = () => {
     if(G.S.versus) exitVersus();
-    G.S = fresh(); G.world.reset(); G.world.setTheme('free'); UI.hidePrompts(); $('pads').hidden = true;
-    ['endOv','arriveOv','campOv','chapOv','resultOv','vsOv','vsEndOv','pauseOv'].forEach(id=>$(id).hidden=true);
+    G.S = fresh(); G.world.reset(); G.world.setTheme('free'); UI.hidePrompts(); $('pads').hidden = true; useChapters();
+    ['endOv','arriveOv','campOv','chapOv','resultOv','vsOv','vsEndOv','pauseOv','readersOv'].forEach(id=>$(id).hidden=true);
     UI.hudMode(G.S); UI.hudSensors(G.S); UI.updateHud(G.S);
     $('startOv').hidden = false; showBest(); $('campBtn').focus();
   };
@@ -180,6 +180,9 @@ function bindUI(){
     ['startOv','chapOv','resultOv','endOv','arriveOv'].forEach(id=>$(id).hidden=true);
     const p = campProgress(), list = $('chapterList'); list.innerHTML = '';
     $('campMode').textContent = MODES[G.mode].name;
+    const readers = EDITION==='readers';
+    $('campName').textContent = readers ? "Reader's Edition" : 'Campaign';
+    $('campTitle').textContent = readers ? 'Three new chapters, three new bosses' : 'Three chapters, three bosses';
     CHAPTERS.forEach((ch, i) => {
       const locked = i+1 > p.unlocked, b = document.createElement('button');
       b.type='button'; b.className='chapter'; b.disabled=locked;
@@ -195,7 +198,32 @@ function bindUI(){
     $('campOv').hidden = false; (list.querySelector('button:not(:disabled):last-of-type') || $('campBack')).focus();
   };
   $('campBtn').onclick = showCampaign;
-  $('campBack').onclick = () => { $('campOv').hidden=true; G.world.setTheme('free'); $('startOv').hidden=false; $('campBtn').focus(); };
+  $('campBack').onclick = () => { $('campOv').hidden=true; G.world.setTheme('free'); $('startOv').hidden=false; (EDITION==='readers' ? $('readersBtn') : $('campBtn')).focus(); useChapters(); };
+
+  // Reader's Edition: a pre-order bonus. A link with ?edition=<code>, or the code typed on its card, unlocks it
+  // on this device. Its questions live in readers.js, which only loads once it is unlocked.
+  const READERS_CODE = 'lifetime';
+  const readersUnlocked = () => store.get('htd3d-readers')==='1';
+  const tryCode = c => { if(String(c||'').trim().toLowerCase()!==READERS_CODE) return false; store.set('htd3d-readers','1'); return true; };
+  const openReaders = async () => {
+    if(!readersUnlocked()){ $('startOv').hidden=true; $('codeNote').textContent=''; $('readersOv').hidden=false; $('codeIn').focus(); return; }
+    try { const { READERS_CHAPTERS } = await import('./readers.js'); useChapters(READERS_CHAPTERS, 'readers'); }
+    catch(e){ console.error(e); $('codeNote').textContent="The Reader's Edition didn't load. Check your connection and try again."; return; }
+    $('readersOv').hidden=true; showCampaign();
+  };
+  $('readersBtn').onclick = openReaders;
+  $('readersBack').onclick = () => { $('readersOv').hidden=true; $('startOv').hidden=false; $('readersBtn').focus(); };
+  $('codeForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    if(tryCode($('codeIn').value)){ $('codeIn').value=''; openReaders(); }
+    else { $('codeNote').textContent="That code didn't work. Check the spelling and try again."; $('codeIn').select(); }
+  });
+  { const qp = new URLSearchParams(location.search);
+    if(qp.has('edition')){
+      const ok = tryCode(qp.get('edition')); qp.delete('edition');
+      history.replaceState(null, '', location.pathname+(qp.toString() ? '?'+qp : '')+location.hash); // don't leave the code in the address bar
+      if(ok) setTimeout(()=>UI.toast("Reader's Edition unlocked. Thank you for pre-ordering.", false, 4), 700);
+    } }
   $('chapBegin').onclick = () => startChapter(+$('chapBegin').dataset.ch);
   $('chapBack').onclick = showCampaign;
   $('resNext').onclick = resultAction;
@@ -249,6 +277,7 @@ function bindUI(){
   // Secret: typing "dhyana" anywhere toggles the perpetual demo. While it runs, every other key is ignored.
   let secret = '';
   window.addEventListener('keydown', e=>{
+    if(e.target.id==='codeIn') return; // typing a code is not steering or a secret word
     if(e.key.length===1){
       secret = (secret + e.key.toLowerCase()).slice(-6);
       if(secret==='dhyana'){ secret=''; e.preventDefault(); Snd.init(); togglePerpetual(); return; }

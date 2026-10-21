@@ -122,6 +122,7 @@
       </fieldset>
       <div class="actions">
         <button class="btn" id="campBtn" type="button">Campaign</button>
+        <button class="link book" id="readersBtn" type="button">Reader's Edition</button>
         <button class="link" id="startBtn" type="button">Free drive</button>
         <button class="link" id="vsBtn" type="button">2 players</button>
         <button class="link" id="howBtn" type="button">How to play</button>
@@ -198,10 +199,30 @@
     </div>
   </div>
 
+  <div class="overlay" id="readersOv" hidden>
+    <div class="card">
+      <div class="eyebrow">Reader's Edition · pre-order bonus</div>
+      <h2>40 more questions from the book</h2>
+      <p>Three new chapters and three new bosses, from the Tokyo passport to the two birds on the tree. Free for everyone who pre-orders <b>The Self-Driving Mind</b>.</p>
+      <ol class="howto">
+        <li><b>Pre-order the book</b><a class="help-link" href="https://www.barnesandnoble.com/w/the-self-driving-mind-sundar-rajan/1151506645?ean=9798895741986" target="_blank" rel="noopener">Pre-order at Barnes &amp; Noble</a></li>
+        <li><b>Send your order confirmation</b><span class="foot" id="claimTo">Email a screenshot or the receipt to <a href="mailto:selfdrivingmind.receipt@gmail.com?subject=Reader's%20Edition" style="color:var(--gold)">selfdrivingmind.receipt@gmail.com</a></span></li>
+        <li><b>Open the link you get back</b><span class="foot">It unlocks the Reader's Edition on that device.</span></li>
+      </ol>
+      <form class="code-row" id="codeForm" autocomplete="off">
+        <label for="codeIn">Have a code?</label>
+        <input id="codeIn" type="text" spellcheck="false" autocapitalize="off" placeholder="Enter code">
+        <button class="btn" type="submit">Unlock</button>
+      </form>
+      <div class="foot" id="codeNote" role="status"></div>
+      <div class="actions"><button class="link" id="readersBack" type="button" data-back>Back</button></div>
+    </div>
+  </div>
+
   <div class="overlay" id="campOv" hidden>
     <div class="card">
-      <div class="eyebrow">Campaign · <span id="campMode">Discovery</span></div>
-      <h2>Three chapters, three bosses</h2>
+      <div class="eyebrow"><span id="campName">Campaign</span> · <span id="campMode">Discovery</span></div>
+      <h2 id="campTitle">Three chapters, three bosses</h2>
       <p style="color:var(--haze);font-size:13px">Each chapter draws its toll gates from one part of the book. Clear its gates, then win two of three boss gates to unlock the next.</p>
       <div class="chapters" id="chapterList"></div>
       <div class="actions"><button class="link" id="campBack" type="button" data-back>Back</button></div>

@@ -1,5 +1,5 @@
 import { QUESTIONS, ENDLESS_PROMPTS, REFLECTIONS, TIERED_VRITTIS, BILLBOARDS, GOAL, MODES, ZMAX, CARZ } from './data.js';
-import { CHAPTERS, BOSS_GATES, BOSS_WINS, starsFor } from './campaign.js';
+import { CHAPTERS, EDITION, BOSS_GATES, BOSS_WINS, starsFor } from './campaign.js';
 import { $, store, shuffle, pick, coarse } from './util.js';
 import { Snd } from './audio.js';
 import * as UI from './ui.js';
@@ -13,13 +13,15 @@ export const G = {
 };
 
 // ---------- Campaign progress (per difficulty) ----------
+// The Reader's Edition keeps its own stars ('htd-camp-readers-<mode>').
+const campKey = mode => 'htd-camp-'+(EDITION==='free' ? '' : EDITION+'-')+mode;
 export function campProgress(mode=G.mode){
-  try{ const p=JSON.parse(store.get('htd-camp-'+mode)); if(p && Array.isArray(p.stars)) return p; }catch(e){}
+  try{ const p=JSON.parse(store.get(campKey(mode))); if(p && Array.isArray(p.stars)) return p; }catch(e){}
   return { unlocked:1, stars:CHAPTERS.map(()=>0) };
 }
 function saveCampProgress(ch, stars){
   const p=campProgress(); p.stars[ch]=Math.max(p.stars[ch]||0, stars); p.unlocked=Math.max(p.unlocked, Math.min(CHAPTERS.length, ch+2));
-  store.set('htd-camp-'+G.mode, JSON.stringify(p)); return p;
+  store.set(campKey(G.mode), JSON.stringify(p)); return p;
 }
 
 let endlessBag = [];
@@ -85,7 +87,7 @@ export function setPaused(p, why){
 
 export function showBest(){
   const b=G.bestOf(G.mode);
-  $('bestLine').textContent = b ? `Best ${MODES[G.mode].name} free-drive score on this device: ${b.toLocaleString()}` : `${QUESTIONS.length} questions from the book. Three chapters, three bosses.`;
+  $('bestLine').textContent = b ? `Best ${MODES[G.mode].name} free-drive score on this device: ${b.toLocaleString()}` : `${QUESTIONS.filter(q=>q.t<=3).length} questions from the book. Three chapters, three bosses.`;
 }
 
 const OVERLAYS = ['startOv','endOv','arriveOv','helpOv','pauseOv','campOv','chapOv','resultOv'];
@@ -137,14 +139,18 @@ let demoTimer=null;
 function arrive(campaign=false){
   const S=G.S; S.running=false; UI.hidePrompts(); $('pads').hidden=true; Snd.arrive();
   const sc=saveBest(), name=MODES[G.mode].name;
-  $('arrTitle').textContent = campaign ? 'Campaign complete. The car has always been self-driving.' : 'The car has always been self-driving.';
-  $('arrText').textContent = campaign
+  const readers = campaign && EDITION==='readers';
+  $('arrTitle').textContent = readers ? "Reader's Edition complete. The birds were never two."
+    : campaign ? 'Campaign complete. The car has always been self-driving.' : 'The car has always been self-driving.';
+  $('arrText').textContent = readers
+    ? 'The obstinate mind, the thought barrier and the last bewilderment are behind you. Not earned. Not forced. Given. What remains is recognizing the driver.'
+    : campaign
     ? 'Three chapters, three bosses. The restless city, the muddy lens and the last mirage of pride are behind you. The fuel was always infinite and the destination always set.'
     : 'Ten gates, cleared. The fuel has always been infinite, and the destination has always been set. You just needed to understand the system well enough to let go of the wheel.';
   $('arrScore').textContent=sc.toLocaleString(); $('arrSens').textContent=S.sensors; $('arrMode').textContent=name;
   const stars = campaign ? campProgress().stars.reduce((a,b)=>a+b,0) : 0;
   $('shareText').textContent = campaign
-    ? `I finished the Highway to Dhyāna campaign in ${name} mode with ${stars} of ${CHAPTERS.length*3} stars. Can you? https://theselfdrivingmind.com/highway3d/`
+    ? `I finished the Highway to Dhyāna ${readers ? "Reader's Edition" : 'campaign'} in ${name} mode with ${stars} of ${CHAPTERS.length*3} stars. Can you? https://theselfdrivingmind.com/highway3d/`
     : `I reached Dhyāna on Highway to Dhyāna: ${sc.toLocaleString()} points in ${name} mode. Can you? https://theselfdrivingmind.com/highway3d/`;
   $('shareNote').textContent='';
   setTimeout(()=>{ $('arriveOv').hidden=false; if(!G.demo) $('shareBtn').focus(); }, 1400);
@@ -282,7 +288,7 @@ function nextCampQuestion(){
 
 function spawnQuiz(){
   const S=G.S, C=S.camp;
-  if(!C && S.qi>=QUESTIONS.length){
+  if(!C && S.qi>=S.order.length){
     // Reflection portal: three different words, and any lane counts.
     const prompt=nextEndlessPrompt(), words=shuffle([...REFLECTIONS]).slice(0,3);
     S.quiz={ q:{q:prompt, a:words, why:'The journey continues in stillness.'}, lanes:[-1,0,1], phase:'read', t:2, gate:null, endless:true };
