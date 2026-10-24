@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Self-Driving Mind: A Skeptic Encounters Grace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Plausible -->
+    <script defer data-domain="godzillaborland-arch.github.io" src="https://plausible.io/js/script.js"></script>
+    <style>
+        :root {
+            --midnight: #0d1b2a;
+            --slate: #1b263b;
+            --steel: #415a77;
+            --silver: #778da9;
+            --pearl: #e0e1dd;
+            --gold: #d4a574;
+            --copper: #c77d51;
+            --electric: #00d9ff;
+        }
+
+        html {
+            background: #0d1b2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: #0d1b2a !important;
+            color: #e0e1dd;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 217, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(212, 165, 116, 0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a1b2a 0%, #1b263b 50%, #2d3e5f 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 30% 50%, rgba(0, 217, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(212, 165, 116, 0.15) 0%, transparent 50%),
+                url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            text-align: center;
+        }
+
+        .hero-label {
+            font-family: 'Work Sans', sans-serif;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: #00d9ff;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            animation: fadeIn 1s ease-out;
+            text-shadow: 0 2px 20px rgba(0, 217, 255, 0.5);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 6vw, 3.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #d4a574 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeIn 1.2s ease-out 0.2s backwards;
+            filter: drop-shadow(0 4px 20px rgba(212, 165, 116, 0.3));
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: #c7d5e8;
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+            animation: fadeIn 1.4s ease-out 0.4s backwards;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-cta {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: #00d9ff;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            animation: fadeIn 1.6s ease-out 0.6s backwards;
+            text-shadow: 0 2px 15px rgba(0, 217, 255, 0.5);
+        }
+
+        /* Main Content */
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        /* Story Section */
+        .story-intro {
+            margin-bottom: 6rem;
+        }
+
+        .story-intro h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .lead-text {
+            font-size: clamp(1.05rem, 2vw, 1.15rem);
+            color: #b0bfd1;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        p {
+            font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+            color: #dce3ed !important;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        /* Quote Callout */
+        .quote-callout {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.05), rgba(212, 165, 116, 0.05));
+            border-left: 4px solid var(--electric);
+            padding: 3rem;
+            margin: 4rem 0;
+            border-radius: 0 20px 20px 0;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quote-callout::before {
+            content: '"';
+            position: absolute;
+            top: -1rem;
+            left: 1rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 12rem;
+            color: var(--electric);
+            opacity: 0.08;
+            line-height: 1;
+        }
+
+        .quote-callout p {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            font-style: italic;
+            color: var(--electric);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* The Paradox Grid */
+        .paradox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 3rem;
+            margin: 5rem 0;
+        }
+
+        .paradox-card {
+            background: linear-gradient(135deg, var(--slate), var(--midnight));
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(119, 141, 169, 0.2);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .paradox-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--electric), var(--gold));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .paradox-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 217, 255, 0.15);
+        }
+
+        .paradox-card:hover::before {
+            opacity: 1;
+        }
+
+        .paradox-label {
+            font-family: 'Work Sans', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--electric);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .paradox-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .paradox-card p {
+            font-size: 1.05rem;
+            color: var(--silver);
+            line-height: 1.7;
+        }
+
+        /* Visual Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--steel), transparent);
+            margin: 6rem 0;
+        }
+
+        /* The Origin Story */
+        .origin-story {
+            background: linear-gradient(135deg, var(--slate) 0%, var(--midnight) 100%);
+            padding: 5rem 3rem;
+            border-radius: 30px;
+            margin: 6rem 0;
+            border: 1px solid rgba(119, 141, 169, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .origin-story::before {
+            content: '⚡';
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 8rem;
+            opacity: 0.05;
+        }
+
+        .origin-story h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .origin-detail {
+            background: rgba(0, 217, 255, 0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border-left: 3px solid var(--electric);
+        }
+
+        .origin-detail strong {
+            color: var(--electric);
+            font-weight: 600;
+        }
+
+        /* The Two Methods */
+        .methods-section {
+            margin: 6rem 0;
+        }
+
+        .methods-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 700;
+        }
+
+        .method-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+
+        .method-box {
+            padding: 3rem;
+            border-radius: 25px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .method-box:hover {
+            transform: scale(1.03);
+        }
+
+        .method-a {
+            background: linear-gradient(135deg, rgba(199, 125, 81, 0.1), rgba(212, 165, 116, 0.05));
+            border: 2px solid var(--copper);
+        }
+
+        .method-b {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(0, 217, 255, 0.05));
+            border: 2px solid var(--electric);
+        }
+
+        .method-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .method-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .method-a .method-title {
+            color: var(--copper);
+        }
+
+        .method-b .method-title {
+            color: var(--electric);
+        }
+
+        .method-desc {
+            font-size: 1.1rem;
+            color: var(--silver);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .method-example {
+            font-style: italic;
+            color: var(--pearl);
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-top: 1.5rem;
+        }
+
+        /* Tesla Metaphor */
+        .tesla-section {
+            background: linear-gradient(135deg, var(--midnight), var(--slate));
+            padding: 5rem 3rem;
+            border-radius: 30px;
+            margin: 6rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tesla-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--electric), var(--gold), var(--electric));
+        }
+
+        .tesla-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-weight: 900;
+        }
+
+        .tesla-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .tesla-item {
+            background: rgba(0, 217, 255, 0.05);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .tesla-item:hover {
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .tesla-item h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--electric);
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .tesla-item p {
+            font-size: 1.05rem;
+            color: var(--silver);
+        }
+
+        /* Key Insight Box */
+        .insight-box {
+            background: linear-gradient(135deg, var(--steel), var(--slate));
+            padding: 4rem 3rem;
+            border-radius: 25px;
+            margin: 6rem 0;
+            border: 2px solid var(--gold);
+            position: relative;
+        }
+
+        .insight-box::before {
+            content: '💡';
+            position: absolute;
+            top: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4rem;
+            background: var(--midnight);
+            padding: 1rem 1.5rem;
+            border-radius: 50%;
+        }
+
+        .insight-box h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .insight-box p {
+            font-size: clamp(1rem, 1.8vw, 1.1rem);
+            color: var(--pearl);
+            text-align: center;
+            line-height: 1.7;
+        }
+
+        /* The Mentor Section */
+        .mentor-section {
+            margin: 6rem 0;
+            padding: 4rem 3rem;
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.05), rgba(0, 217, 255, 0.05));
+            border-radius: 25px;
+        }
+
+        .mentor-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .mentor-visual {
+            text-align: center;
+            font-size: 5rem;
+            margin: 3rem 0;
+            opacity: 0.7;
+        }
+
+        /* Final Message */
+        .final-message {
+            background: linear-gradient(135deg, var(--midnight) 0%, var(--slate) 50%, var(--steel) 100%);
+            padding: 6rem 3rem;
+            border-radius: 30px;
+            margin: 6rem -2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-message::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 30% 50%, rgba(0, 217, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(212, 165, 116, 0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .final-message-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .final-message h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-weight: 900;
+        }
+
+        .final-message p {
+            font-size: clamp(1rem, 2vw, 1.15rem);
+            color: var(--pearl);
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.7;
+        }
+
+        .final-question {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+            color: var(--electric);
+            font-weight: 700;
+            margin-top: 2rem;
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 80vh;
+                padding: 3rem 1.5rem;
+            }
+
+            .content {
+                padding: 4rem 1.5rem;
+            }
+
+            .paradox-grid,
+            .method-comparison,
+            .tesla-comparison {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .origin-story,
+            .tesla-section,
+            .mentor-section {
+                padding: 3rem 2rem;
+            }
+
+            .final-message {
+                padding: 4rem 2rem;
+                margin: 4rem -1.5rem 0;
+            }
+
+            .quote-callout {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Hero actions: one solid buy button, one gold outline, quiet text links */
+        .hero-actions { margin-top: 3rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn-buy, .btn-outline { font-family: 'Work Sans', sans-serif; font-size: 1.05rem; font-weight: 600; text-decoration: none; padding: 0.95rem 1.9rem; border-radius: 999px; transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn-buy { background: #1d7a3b; color: #fff; border: 2px solid #1d7a3b; box-shadow: 0 6px 20px rgba(29, 122, 59, 0.35); }
+        .btn-buy:hover { background: #22914a; transform: translateY(-2px); box-shadow: 0 10px 26px rgba(29, 122, 59, 0.45); }
+        .btn-outline { color: var(--gold); border: 2px solid var(--gold); background: transparent; }
+        .btn-outline:hover { background: var(--gold); color: var(--midnight); transform: translateY(-2px); }
+        .hero-links { margin-top: 1.6rem; display: flex; gap: 0.4rem 1.4rem; justify-content: center; flex-wrap: wrap; font-family: 'Work Sans', sans-serif; font-size: 0.95rem; }
+        .hero-links a { color: var(--pearl); opacity: 0.8; text-decoration: none; border-bottom: 1px solid transparent; padding: 0.35rem 0; transition: opacity 0.2s ease, border-color 0.2s ease; }
+        .hero-links a:hover { opacity: 1; border-bottom-color: var(--gold); }
+        .btn-buy:focus-visible, .btn-outline:focus-visible, .hero-links a:focus-visible { outline: 3px solid var(--electric); outline-offset: 3px; }
+
+        /* Selection */
+        ::selection {
+            background: var(--electric);
+            color: var(--midnight);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-label">From Effort to Effortless Awareness</div>
+            <h1>The Self-Driving Mind</h1>
+            <p class="hero-subtitle">
+                What if spiritual connection wasn't a subscription you pay for with willpower,<br>but an asset you actually own?
+            </p>
+            <div class="hero-cta">Stop Renting. Start Owning.</div>
+
+            <!-- Navigation Links -->
+            <div class="hero-actions">
+                <a class="btn-buy" href="/book/?ref=qr">🛒 Pre-order + bonuses</a>
+                <a class="btn-outline" href="/games.html">🎮 Play the free games</a>
+            </div>
+            <nav class="hero-links" aria-label="On this page">
+                <a href="#about-book">About the Book</a>
+                <a href="#book-outline">Book Outline</a>
+                <a href="#listen">🎧 Listen</a>
+                <a href="https://selfdrivingmind.substack.com/" target="_blank" rel="noopener">⚡ The Current</a>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="content">
+        <!-- Introduction -->
+        <section class="story-intro">
+            <h2>Subscription Fatigue</h2>
+            <p class="lead-text">
+                You look at your bank statement and it's just this endless list of things you have to keep paying for every month. Software, streaming, gym memberships. The moment you stop paying, the service cuts off. You lose access.
+            </p>
+            <p>
+                But we don't just apply this model to our wallets. We apply it to our own psychology. We treat self-improvement like a subscription service. If I want to be calm, I have to pay with daily meditation. If I want to be fit, I have to pay with hours at the gym. And if I stop paying that discipline tax for even a week, I lose the asset. It's gone.
+            </p>
+            <p>
+                It's an incredibly exhausting way to live. It implies that your baseline state is somehow broken and you have to constantly rent a better version of yourself.
+            </p>
+        </section>
+
+        <div class="quote-callout">
+            <p>
+                What if spiritual connection wasn't a subscription you pay for with willpower, but an asset you actually own? Like buying a car with lifetime charging included.
+            </p>
+        </div>
+
+        <!-- The Paradox -->
+        <section>
+            <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem); color: var(--gold); margin-bottom: 3rem; font-weight: 700;">The Meditation Paradox</h2>
+
+            <div class="paradox-grid">
+                <div class="paradox-card">
+                    <div class="paradox-label">Subject A</div>
+                    <h3>Maximum Discipline<br>Zero Connection</h3>
+                    <p>
+                        She's the ultimate super-user of life. Highly disciplined, extremely organized, an efficiency machine. Color-coded calendars, to-do lists for her to-do lists. She manages household, finances, career—everything with absolute precision.
+                    </p>
+                    <p style="margin-top: 1.5rem; font-style: italic; color: var(--copper);">
+                        "I can't for the life of me get meditation. Even when I sit down, the connection just isn't there."
+                    </p>
+                </div>
+
+                <div class="paradox-card">
+                    <div class="paradox-label">Subject B</div>
+                    <h3>Minimum Discipline<br>Consistent Connection</h3>
+                    <p>
+                        Disorganized, pretty random. Discipline is definitely not his strength. If life was a subscription service, his payments would be bouncing every month. He's chaotic.
+                    </p>
+                    <p style="margin-top: 1.5rem; font-style: italic; color: var(--electric);">
+                        "I've been able to meditate for 45 years. I never found it too hard to connect when I wanted to. The access was always there."
+                    </p>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <h3>The Equation Breaks Down</h3>
+                <p>
+                    Subject A has maximum discipline and zero connection. Subject B has minimum discipline and consistent connection. If you look at these two data points side-by-side, the equation <em>discipline = results</em> completely breaks down.
+                </p>
+                <p style="margin-top: 1.5rem; color: var(--electric);">
+                    There has to be a missing variable.
+                </p>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- The Origin Story -->
+        <section class="origin-story">
+            <h2>Guindy Engineering: The Catalyst</h2>
+            <p style="font-size: 1.2rem; color: var(--silver); margin-bottom: 2rem;">
+                College of Engineering, Guindy, India — 1978
+            </p>
+
+            <div class="origin-detail">
+                <p>
+                    <strong>The Skeptic:</strong> An 18-year-old nicknamed "Quantum." Obsessed with Richard Feynman, quantum mechanics, electron spin. A fierce rationalist who believed the universe was purely mechanical. If you couldn't measure it with a ruler or an equation, it didn't exist. He had specific disdain for religious markings—saw them as signs of illogical, weak minds.
+                </p>
+            </div>
+
+            <div class="origin-detail">
+                <p>
+                    <strong>The Mentor:</strong> A young PhD candidate standing next to a Royal Enfield motorcycle. Tall, good-looking, clean-shaven face literally shining. Wearing an immaculate well-ironed white half-sleeve shirt and full white pants. But here's the twist—he wore <em>Pattai Vibhuti</em>, those prominent religious ash stripes on his forehead.
+                </p>
+            </div>
+
+            <p style="margin-top: 2rem;">
+                The arrogant teenager decided to poke holes in this "religious guy's" worldview. He wanted to mock him, destroy him with facts and logic.
+            </p>
+
+            <p style="font-size: 1.3rem; color: var(--electric); font-weight: 600; margin-top: 2rem;">
+                But the PhD candidate didn't quote scripture. He didn't say "you just have to have faith."
+            </p>
+
+            <p>
+                Instead, he met the skeptic exactly where he was. He answered every single question using pure logic. He dismantled the author's arguments using the author's own toolset: rationality and engineering principles. It was like a master engineer talking to a mechanic.
+            </p>
+
+            <p style="margin-top: 2rem; font-style: italic; color: var(--gold);">
+                The bubble burst. This person in the white shirt and ash wasn't illogical—he was operating on a level of logic the teenager hadn't even accessed yet.
+            </p>
+
+            <div class="mentor-visual">🏍️ ⚡ 🕉️</div>
+
+            <p style="font-size: 1.2rem; text-align: center; color: var(--pearl);">
+                <strong>The mentor was a <em>Siddha Purusha</em></strong>—a perfected being, a realized soul. Someone who had completed the game. He could drop into <em>Samadhi</em> at will, like flipping a light switch. His challenge wasn't entering peace; it was coming out of it to do normal chores.
+            </p>
+        </section>
+
+        <!-- The Two Methods -->
+        <section class="methods-section">
+            <h2>Two Ways to Move the Mind</h2>
+
+            <div class="method-comparison">
+                <div class="method-box method-a">
+                    <span class="method-icon">🐑</span>
+                    <h3 class="method-title">Method A: The Shepherd</h3>
+                    <p class="method-desc">
+                        Like a shepherd driving sheep into a pen. You have to bark orders, use a stick, force the sheep to go where they don't want to go. The moment you look away, the sheep scatter.
+                    </p>
+                    <div class="method-example">
+                        "This is Method A discipline. An adversarial relationship with your own brain. You're trying to force the mind into stillness, but it keeps trying to run away to the next to-do list item."
+                    </div>
+                </div>
+
+                <div class="method-box method-b">
+                    <span class="method-icon">🕊️</span>
+                    <h3 class="method-title">Method B: The Bird</h3>
+                    <p class="method-desc">
+                        Like a bird coming to roost in its own nest. Do you have to force a bird to go home at sunset? No, it wants to go there. The bird isn't forced; it's pulled. It's a magnetic attraction to home.
+                    </p>
+                    <div class="method-example">
+                        "This is <em>Pratyak Pravahata</em>—natural inwardness. There's a higher center in you. When that center is activated, it acts like a giant magnet, pulling the mind inward. You don't drive the meditation; the meditation drives you."
+                    </div>
+                </div>
+            </div>
+
+            <p style="text-align: center; font-size: 1.3rem; color: var(--gold); margin-top: 4rem; font-weight: 600;">
+                Subject A is working hard to push the river.<br>
+                Subject B found the current and is floating.
+            </p>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Tesla Metaphor -->
+        <section class="tesla-section">
+            <h2>The Tesla Metaphor</h2>
+            <p style="font-size: 1.3rem; color: var(--silver); max-width: 700px; margin: 0 auto 3rem;">
+                The early Tesla models came with lifetime supercharging. You pay for the car once—or in this case, you receive the grace—and the energy is free forever.
+            </p>
+
+            <div class="tesla-comparison">
+                <div class="tesla-item">
+                    <h3>Subscription Model</h3>
+                    <p>Pay monthly with discipline. Miss a payment, lose access. Constant maintenance required. Anxiety about slipping up.</p>
+                </div>
+
+                <div class="tesla-item">
+                    <h3>Lifetime Charging</h3>
+                    <p>One-time installation. Energy flows freely. Can be neglected for years. Signal never dies. An owned asset.</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem; padding: 3rem; background: rgba(0, 217, 255, 0.08); border-radius: 20px;">
+                <p style="font-size: 1.2rem; color: var(--electric); margin-bottom: 1.5rem;">
+                    <strong>The 45-Year Stress Test:</strong>
+                </p>
+                <p style="color: var(--pearl);">
+                    The author admits he wasn't a perfect yogi. He "drove the car to Vegas," stopped practicing for years at a time, was inconsistent. He did all the things that in a subscription model would result in losing access.
+                </p>
+                <p style="margin-top: 1.5rem; font-size: 1.3rem; color: var(--electric); font-weight: 600;">
+                    But the signal never died. 45 years later, it's still there.
+                </p>
+            </div>
+        </section>
+
+        <!-- The Mechanism -->
+        <section style="margin: 6rem 0;">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem); color: var(--gold); margin-bottom: 3rem; font-weight: 700; text-align: center;">The Missing Variable</h2>
+
+            <div style="background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(212, 165, 116, 0.1)); padding: 4rem 3rem; border-radius: 25px; margin: 3rem 0;">
+                <p style="font-size: 1.3rem; color: var(--pearl); text-align: center; margin-bottom: 2rem;">
+                    During those hangouts by the Royal Enfield, something happened. The skeptic didn't just learn logic—he got <em>activated</em>.
+                </p>
+                <p style="font-size: 1.5rem; color: var(--electric); text-align: center; font-weight: 600;">
+                    He received a charge. A transmission.
+                </p>
+                <p style="font-size: 1.2rem; color: var(--silver); text-align: center; margin-top: 2rem;">
+                    In the tradition, they call it <em>Krupa</em>—Grace.
+                </p>
+            </div>
+
+            <p style="margin-top: 3rem;">
+                Once that higher center was opened, the pull began. That's why he never found it too hard to meditate for the next 45 years. He wasn't pushing the sheep; he was just letting the bird fly home.
+            </p>
+
+            <p style="font-size: 1.3rem; color: var(--gold); font-weight: 600; margin-top: 2rem;">
+                The ability to connect isn't something you do. It's something you have.
+            </p>
+        </section>
+
+        <!-- The Anonymous Mentor -->
+        <section class="mentor-section">
+            <h2>The Anonymous Siddha</h2>
+
+            <p>
+                This mentor, this <em>Siddha Purusha</em>, has absolutely zero digital footprint. No Facebook, no Instagram, no LinkedIn, no photos online. In 2026, that's basically being a ghost. He remains completely anonymous. He doesn't want the fame.
+            </p>
+
+            <p style="margin-top: 2rem; font-size: 1.2rem; color: var(--electric);">
+                So how does someone access this transmission if they can't hang out by a Royal Enfield in India in 1978?
+            </p>
+
+            <p>
+                The mentor wrote one book: <strong><em>Yoga, Enlightenment and Perfection</em></strong>. Interestingly, it's not about himself—it's about his own guru.
+            </p>
+
+            <div style="background: rgba(0, 217, 255, 0.05); padding: 2.5rem; border-radius: 20px; margin: 3rem 0; border-left: 4px solid var(--electric);">
+                <p style="font-size: 1.2rem; color: var(--pearl); margin-bottom: 1.5rem;">
+                    <strong>The Railway Track Protocol:</strong>
+                </p>
+                <p>
+                    Years later, the author gave this book to another young engineer—someone who never met the mentor, never saw the Royal Enfield, never got the physical presence. He just had the text.
+                </p>
+                <p style="margin-top: 1.5rem; color: var(--electric);">
+                    That student described the book as "the railway track he runs his spiritual life on." He became a spiritual teacher himself, all guided by this one book from an anonymous author.
+                </p>
+            </div>
+
+            <p style="font-size: 1.2rem; font-style: italic; color: var(--gold); text-align: center; margin-top: 3rem;">
+                The charge can transmit remotely. It can be encoded in words. The text acts as the carrier wave for the transmission.
+            </p>
+        </section>
+
+        <!-- About the Book -->
+        <section id="about-book" style="margin: 6rem 0; scroll-margin-top: 2rem;">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--gold); margin-bottom: 2rem; font-weight: 700; text-align: center;">About the Book</h2>
+
+            <div style="background: linear-gradient(135deg, var(--slate), var(--midnight)); padding: 3rem; border-radius: 25px; border: 2px solid var(--gold); margin-bottom: 3rem;">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: clamp(1.5rem, 3vw, 2rem); color: var(--electric); margin-bottom: 1.5rem; text-align: center; font-weight: 700;">The Self-Driving Mind: A Skeptic Encounters Grace</h3>
+
+                <p style="font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; color: #dce3ed; font-style: italic;">
+                    What if meditation is not something you force the mind to do — but something the mind naturally begins to do when the right conditions are in place?
+                </p>
+
+                <p style="font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; color: #dce3ed;">
+                    This is the story of a reluctant skeptic who discovers a spiritual path not by seeking one, but through an unexpected encounter with Grace.
+                </p>
+
+                <p style="font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; color: #dce3ed;">
+                    In the spirit of <em>Zen and the Art of Motorcycle Maintenance</em>, <em>The Self-Driving Mind</em> bridges the perceived chasm between high technology and ancient inquiry. Written by a veteran technologist and project management leader, this narrative follows a self-described "Quantum Skeptic" — a rationalist engineering student obsessed with Feynman and logic — whose world is irrevocably altered by a chance encounter with a Siddha Purusha beside a Royal Enfield motorcycle.
+                </p>
+
+                <p style="font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; color: #dce3ed;">
+                    Decades later, a hands-free epiphany on the chaotic I-405 freeway provides the precise engineering vocabulary to decode what that encounter had set in motion. The journey tackles the High-Functioning Executive Paradox: why the same willpower that drives worldly success can actively sabotage inner stillness.
+                </p>
+
+                <p style="font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; color: #dce3ed;">
+                    Replacing the stopwatch, the author's own discovery of an internal compass for meditation — Absorption, Peace, and Bliss — reveals that the mind, much like a Tesla, possesses an inherent, autonomous capacity for stillness once the destination is set and the ego loosens its grip on the wheel.
+                </p>
+
+                <p style="font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; color: #dce3ed;">
+                    At the heart of the book is a radical central thesis: spiritual awareness is not a labor-intensive "maintenance" project, but a Lifetime Charge of Grace that survives interruption, neglect, and even death.
+                </p>
+
+                <p style="font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; color: #dce3ed;">
+                    By contrasting the biological outward-wiring of the mind with the seamless efficiency of Full Self-Driving (FSD) technology, the author explores how meditation evolves from a forced struggle into a natural, effortless inward pull known as Pratyak Pravahata.
+                </p>
+
+                <p style="font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; color: #dce3ed;">
+                    Tracing this principle across history — from a 14th-century transmission that launched the Vijayanagara Empire, to the lifelong musical purity of D.K. Pattammal, to the inspiration behind Marc Benioff's charity framework — and translating Hollywood's <em>City Slickers</em> burnout diagnosis into an eighth-century blueprint by Adi Shankara, <em>The Self-Driving Mind</em> offers a provocative possibility:
+                </p>
+
+                <p style="font-size: 1.1rem; line-height: 1.7; color: var(--gold); font-style: italic; text-align: center; font-family: 'Playfair Display', serif;">
+                    The ultimate path is powered by Grace, guided by the timeless wisdom of the Upanishads — and the vehicle may already know how to drive.
+                </p>
+            </div>
+
+            <!-- Pre-order box: sends readers to the book's sales page -->
+            <div style="text-align: center; padding: 2rem 1.5rem; border-radius: 20px; border: 2px solid #1d7a3b; background: rgba(29, 122, 59, 0.12);">
+                <p style="font-family: 'Playfair Display', serif; font-size: clamp(1.3rem, 3vw, 1.7rem); color: #fff; margin-bottom: 0.75rem;">Pre-order the book, get two bonuses</p>
+                <p style="font-size: 1rem; color: #dce3ed; margin-bottom: 1.5rem; max-width: 560px; margin-left: auto; margin-right: auto;">The Attention Lab (8 interactive experiences and a 30-Day Practice Guide) and the Reader's Edition of the Highway to Dhyāna game.</p>
+                <a href="/book/?ref=qr" style="display: inline-block; background: #1d7a3b; color: #fff; padding: 0.9rem 2.2rem; border-radius: 50px; text-decoration: none; font-family: 'Work Sans', sans-serif; font-weight: 600; font-size: 1.05rem;">See the book and bonuses →</a>
+            </div>
+        </section>
+
+        <!-- Book Outline -->
+        <section id="book-outline" style="margin: 6rem 0; scroll-margin-top: 2rem;">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--gold); margin-bottom: 3rem; font-weight: 700; text-align: center;">Book Outline</h2>
+
+            <div style="display: grid; gap: 2rem;">
+
+                <!-- Part I -->
+                <div style="background: rgba(0, 217, 255, 0.05); padding: 2.5rem; border-radius: 20px; border-left: 4px solid var(--electric);">
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--electric); margin-bottom: 0.5rem; font-weight: 700;">Part I: The Setup — Man, Machine, and Metaphor</h3>
+                    <p style="font-size: 0.95rem; color: var(--silver); margin-bottom: 1.5rem; font-style: italic;">Establishes the lived mystery, the physical catalyst, and the formal theory.</p>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative; font-size: 0.95rem; color: #dce3ed;">
+                            <span style="position: absolute; left: 0; color: var(--electric);">▸</span>
+                            <strong>Chapter 1:</strong> The Installed Capacity <span style="color: var(--silver); font-style: italic;">(The High-Functioning Executive Paradox and the 1978 Download)</span>
+                        </li>
+                        <li style="margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative; font-size: 0.95rem; color: #dce3ed;">
+                            <span style="position: absolute; left: 0; color: var(--electric);">▸</span>
+                            <strong>Chapter 2:</strong> The Test Drive <span style="color: var(--silver); font-style: italic;">(The I-405 Epiphany)</span>
+                        </li>
+                        <li style="margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative; font-size: 0.95rem; color: #dce3ed;">
+                            <span style="position: absolute; left: 0; color: var(--electric);">▸</span>
+                            <strong>Chapter 3:</strong> The Equation Explained <span style="color: var(--silver); font-style: italic;">(Tesla = Dhyāna)</span>
+                        </li>
+                        <li style="margin-bottom: 0; padding-left: 1.5rem; position: relative; font-size: 0.95rem; color: #dce3ed;">
+                            <span style="position: absolute; left: 0; color: var(--electric);">▸</span>
+                            <strong>Chapter 4:</strong> The Stress Test <span style="color: var(--silver); font-style: italic;">(Objections and Responses)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Part II -->
+                <div style="background: rgba(212, 165, 116, 0.05); padding: 2.5rem; border-radius: 20px; border-left: 4px solid var(--gold);">
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); margin-bottom: 0.5rem; font-weight: 700;">Part II: The Dashboard — What Changes (and What Doesn't)</h3>
+                    <p style="font-size: 0.95rem; color: var(--silver); margin-bottom: 1.5rem; font-style: italic;">Separates genuine inner maturation from surface-level practice.</p>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative; font-size: 0.95rem; color: #dce3ed;">
+                            <span style="position: absolute; left: 0; color: var(--gold);">▸</span>
+                            <strong>Chapter 5:</strong> The Shankara Algorithm <span style="color: var(--silver); font-style: italic;">(Yoga ≠ Yoga; Meditation ≠ Meditation)</span>
+                        </li>
+                        <li style="margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative; font-size: 0.95rem; color: #dce3ed;">
+                            <span style="position: absolute; left: 0; color: var(--gold);">▸</span>
+                            <strong>Chapter 6:</strong> Can You Measure Meditation? <span style="color: var(--silver); font-style: italic;">(The A-P-B Compass)</span>
+                        </li>
+                        <li style="margin-bottom: 0; padding-left: 1.5rem; position: relative; font-size: 0.95rem; color: #dce3ed;">
+                            <span style="position: absolute; left: 0; color: var(--gold);">▸</span>
+                            <strong>Chapter 7:</strong> Vibe Coding <span style="color: var(--silver); font-style: italic;">(When AI Becomes Your Meditation Teacher)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Part III -->
+                <div style="background: rgba(0, 217, 255, 0.05); padding: 2.5rem; border-radius: 20px; border-left: 4px solid var(--electric);">
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--electric); margin-bottom: 0.5rem; font-weight: 700;">Part III: The Journey &amp; The Hinge — Resistance, Doubt, and Assurance</h3>
+                    <p style="font-size: 0.95rem; color: var(--silver); margin-bottom: 1.5rem; font-style: italic;">Explores why practice feels difficult, establishing the gap that effort cannot cross.</p>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative; font-size: 0.95rem; color: #dce3ed;">
+                            <span style="position: absolute; left: 0; color: var(--electric);">▸</span>
+                            <strong>Chapter 8:</strong> The Universal Challenge <span style="color: var(--silver); font-style: italic;">(Why Is Meditation Hard? — Arjuna and Yuval Noah Harari)</span>
+                        </li>
+                        <li style="margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative; font-size: 0.95rem; color: #dce3ed;">
+                            <span style="position: absolute; left: 0; color: var(--electric);">▸</span>
+                            <strong>Chapter 9:</strong> Who Doesn't Have Arjuna's Question? <span style="color: var(--silver); font-style: italic;">(The Unbridgeable Gulf)</span>
+                        </li>
+                        <li style="margin-bottom: 0; padding-left: 1.5rem; position: relative; font-size: 0.95rem; color: #dce3ed;">
+                            <span style="position: absolute; left: 0; color: var(--electric);">▸</span>
+                            <strong>Chapter 10:</strong> The Cloud Behind the Windshield <span style="color: var(--silver); font-style: italic;">(The Hinge — The Gap That Effort Cannot Cross)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Part IV -->
+                <div style="background: rgba(212, 165, 116, 0.05); padding: 2.5rem; border-radius: 20px; border-left: 4px solid var(--gold);">
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); margin-bottom: 0.5rem; font-weight: 700;">Part IV: The Proof — Grace in Action</h3>
+                    <p style="font-size: 0.95rem; color: var(--silver); margin-bottom: 1.5rem; font-style: italic;">Provides empirical and theological proof that the "System Override" functions in reality.</p>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative; font-size: 0.95rem; color: #dce3ed;">
+                            <span style="position: absolute; left: 0; color: var(--gold);">▸</span>
+                            <strong>Chapter 11:</strong> Lifetime Charging in the Real World <span style="color: var(--silver); font-style: italic;">(Pattammal · Benioff · Vijayanagara)</span>
+                        </li>
+                        <li style="margin-bottom: 0; padding-left: 1.5rem; position: relative; font-size: 0.95rem; color: #dce3ed;">
+                            <span style="position: absolute; left: 0; color: var(--gold);">▸</span>
+                            <strong>Chapter 12:</strong> The Failed Yogi <span style="color: var(--silver); font-style: italic;">(Yoga Bhrashta — Spiritual Momentum Survives Death)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Part V -->
+                <div style="background: rgba(0, 217, 255, 0.05); padding: 2.5rem; border-radius: 20px; border-left: 4px solid var(--electric);">
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--electric); margin-bottom: 0.5rem; font-weight: 700;">Part V: The Destination — Ancient Clarity, Modern Language</h3>
+                    <p style="font-size: 0.95rem; color: var(--silver); margin-bottom: 1.5rem; font-style: italic;">The metaphor dissolves into what it was pointing toward.</p>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0; padding-left: 1.5rem; position: relative; font-size: 0.95rem; color: #dce3ed;">
+                            <span style="position: absolute; left: 0; color: var(--electric);">▸</span>
+                            <strong>Chapter 13:</strong> The Promise Fulfilled <span style="color: var(--silver); font-style: italic;">(The Guru's Tesla — City Slickers meets the Muṇḍaka Upaniṣad)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Conclusion -->
+                <div style="background: linear-gradient(135deg, rgba(212, 165, 116, 0.08), rgba(0, 217, 255, 0.05)); padding: 2.5rem; border-radius: 20px; border: 1px solid rgba(212, 165, 116, 0.3);">
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); margin-bottom: 0.5rem; font-weight: 700;">Conclusion: The Silent Driver</h3>
+                    <p style="font-size: 0.95rem; color: var(--silver); margin-bottom: 0; font-style: italic; line-height: 1.7;">Effort recedes. Trust remains. The book comes full circle to the 1978 Royal Enfield — the Tesla metaphor dissolves entirely, leaving the reader with the realization that the car is already moving, the destination is set, and the silent driver was never the technology, but always the Grace.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Listen Section -->
+        <section id="listen" style="margin: 6rem 0; scroll-margin-top: 2rem;">
+            <div style="background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(212, 165, 116, 0.1)); padding: 4rem 3rem; border-radius: 25px; text-align: center; border: 2px solid var(--electric);">
+                <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--gold); margin-bottom: 1.5rem; font-weight: 700;">Listen to Chapter One</h2>
+
+                <p style="font-size: 1.1rem; color: #dce3ed; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+                    Experience a deep dive into the first chapter—a podcast conversation exploring the meditation paradox, the Quantum Skeptic's journey, and the lifetime charging metaphor. Perfect for your commute or quiet reflection time.
+                </p>
+
+                <a href="https://open.spotify.com/episode/3bIOK9EpGhyrnXMza34MW2?si=058b729d14f24bec"
+                   target="_blank"
+                   style="display: inline-block; background: linear-gradient(135deg, #1DB954, #1ed760); color: white; padding: 1rem 3rem; border-radius: 50px; text-decoration: none; font-family: 'Work Sans', sans-serif; font-weight: 600; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(29, 185, 84, 0.3);">
+                    🎧 Listen on Spotify
+                </a>
+
+                <p style="font-size: 0.9rem; color: var(--silver); margin-top: 2rem; font-style: italic;">
+                    Two voices diving deep into the paradox: Why do the disciplined struggle while the chaotic connect effortlessly?
+                </p>
+            </div>
+        </section>
+
+        <!-- Final Message -->
+        <section class="final-message">
+            <div class="final-message-content">
+                <h2>Stop Pushing the River</h2>
+
+                <p>
+                    We might be approaching our inner lives with the wrong business model. We're trying to subscribe to peace through sheer force of will. We're trying to drive the sheep into the pen, day after day, getting exhausted, feeling guilty when we fail.
+                </p>
+
+                <p>
+                    But this story suggests there's another way. A quantum rationalist was hacked by a realized soul using pure logic. He received a battery charge that has outlasted 45 years of wear and tear.
+                </p>
+
+                <p style="font-size: 1.4rem; color: var(--electric); font-weight: 600; margin-top: 3rem;">
+                    The goal isn't to work harder at the discipline.
+                </p>
+
+                <p style="font-size: 1.4rem; color: var(--gold); font-weight: 600;">
+                    The goal is to find the source that makes the hard work unnecessary.
+                </p>
+
+                <p class="final-question">
+                    Maybe we just need to find the current.
+                </p>
+
+                <div style="margin-top: 4rem; padding-top: 3rem; border-top: 1px solid rgba(119, 141, 169, 0.3);">
+                    <p style="font-size: 1rem; color: var(--silver); font-style: italic;">
+                        If you're feeling that subscription fatigue, maybe it's time to stop renting and look for a lifetime asset.
+                    </p>
+                    <a href="/book/?ref=qr" style="display: inline-block; margin-top: 1.75rem; background: #1d7a3b; color: #fff; padding: 0.9rem 2.2rem; border-radius: 50px; text-decoration: none; font-family: 'Work Sans', sans-serif; font-weight: 600; font-size: 1.05rem;">Pre-order The Self-Driving Mind →</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<!-- ═══════════════════════════════════════════════
+     B&N PRE-ORDER POPUP WITH VIDEO CAROUSEL
+     ═══════════════════════════════════════════════ -->
+<style>
+/* ── Overlay ── */
+#bn-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: bnFadeIn 0.3s ease;
+}
+@keyframes bnFadeIn { from{opacity:0} to{opacity:1} }
+
+.bn-card {
+  background: #0f1e2e;
+  border: 1px solid rgba(201,168,76,0.4);
+  border-radius: 14px;
+  max-width: 400px;
+  width: 100%;
+  padding: 1.75rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.9rem;
+  position: relative;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.75), 0 0 0 1px rgba(201,168,76,0.1);
+  animation: bnSlideUp 0.35s cubic-bezier(0.22,1,0.36,1);
+}
+@keyframes bnSlideUp { from{transform:translateY(18px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+.bn-close {
+  position: absolute;
+  top: 0.7rem; right: 0.85rem;
+  background: none; border: none;
+  color: #8fa4bc;
+  font-size: 1.3rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.2rem 0.4rem;
+  transition: color 0.15s;
+}
+.bn-close:hover { color: #dce3ed; }
+
+.bn-top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  text-align: left;
+}
+
+.bn-cover {
+  width: 60px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+}
+
+.bn-title-block { flex: 1; min-width: 0; }
+.bn-eyebrow {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #9a7a32;
+  margin: 0 0 0.25rem;
+  font-family: 'Work Sans', sans-serif;
+}
+.bn-headline {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #dce3ed;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.bn-carousel { width: 100%; position: relative; }
+.bn-track {
+  display: flex;
+  overflow: hidden;
+  border-radius: 8px;
+  position: relative;
+}
+.bn-video-card {
+  flex: 0 0 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s;
+  position: absolute;
+  width: 100%;
+}
+.bn-video-card:hover { border-color: rgba(201,168,76,0.5); }
+.bn-thumb {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #0a1520;
+  overflow: hidden;
+}
+.bn-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bn-play-overlay {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.32);
+  transition: background 0.2s;
+}
+.bn-video-card:hover .bn-play-overlay { background: rgba(0,0,0,0.12); }
+.bn-play-btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.92);
+  display: flex; align-items: center; justify-content: center;
+}
+.bn-play-btn svg { margin-left: 2px; }
+.bn-vlabel {
+  padding: 0.5rem 0.7rem;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 0.75rem;
+  color: #dce3ed;
+  line-height: 1.4;
+  text-align: left;
+}
+.bn-vlabel span { display: block; font-size: 0.65rem; color: #8fa4bc; margin-top: 0.1rem; }
+
+.bn-arr {
+  position: absolute;
+  top: 30%; transform: translateY(-50%);
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: rgba(10,21,32,0.9);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: #c9a84c;
+  font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  z-index: 2;
+}
+.bn-arr:hover { background: rgba(201,168,76,0.15); }
+.bn-arr-prev { left: -12px; }
+.bn-arr-next { right: -12px; }
+
+.bn-dots { display: flex; justify-content: center; gap: 5px; margin-top: 0.5rem; }
+.bn-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.3);
+  border: none; cursor: pointer; padding: 0;
+  transition: background 0.2s;
+}
+.bn-dot.active { background: #c9a84c; }
+
+.bn-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  background: #1d7a3b;
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.7rem 1.25rem;
+  border-radius: 7px;
+  width: 100%;
+  transition: background 0.2s, transform 0.15s;
+}
+.bn-btn:hover { background: #155c2c; transform: translateY(-1px); }
+
+.bn-dismiss {
+  background: none; border: none;
+  color: #8fa4bc;
+  font-size: 0.75rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-family: 'Work Sans', sans-serif;
+  transition: color 0.15s;
+  padding: 0;
+}
+.bn-dismiss:hover { color: #dce3ed; }
+
+/* ── Orange banner strip ── */
+.bn-banner {
+  width: calc(100% + 3rem);
+  margin: -1.75rem -1.5rem 0;
+  background: linear-gradient(90deg, #f97316 0%, #db2777 100%);
+  padding: 0.6rem 1.25rem;
+  border-radius: 14px 14px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.bn-live-pill {
+  background: rgba(0,0,0,0.25);
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.5rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+  font-family: 'Work Sans', sans-serif;
+}
+.bn-live-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  display: inline-block;
+  animation: bnPulse 1.2s ease-in-out infinite;
+}
+@keyframes bnPulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+.bn-banner-text {
+  color: #fff;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── Video card — orange border ── */
+.bn-video-card { border: 2px solid rgba(249,115,22,0.55) !important; }
+.bn-video-card:hover { border-color: rgba(249,115,22,0.9) !important; }
+
+/* ── CTA button — gold/amber ── */
+.bn-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  color: #1a0800 !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 20px rgba(245,158,11,0.4);
+}
+.bn-btn:hover { background: linear-gradient(135deg, #fbbf24, #f59e0b) !important; transform: translateY(-2px) !important; box-shadow: 0 8px 28px rgba(245,158,11,0.5) !important; }
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  #bn-overlay { padding: 0.75rem; align-items: flex-end; }
+  .bn-card {
+    max-width: 100%;
+    border-radius: 18px 18px 12px 12px;
+    padding: 1.4rem 1.1rem 1.2rem;
+    gap: 0.7rem;
+  }
+  .bn-banner {
+    width: calc(100% + 2.2rem);
+    margin: -1.4rem -1.1rem 0;
+    padding: 0.5rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .bn-banner-text { font-size: 0.72rem; }
+  .bn-headline { font-size: 0.9rem; }
+  .bn-cover { width: 48px; }
+  .bn-btn { font-size: 0.88rem !important; padding: 0.7rem 1rem !important; }
+}
+</style>
+
+<div id="bn-overlay" role="dialog" aria-modal="true" aria-label="Pre-order The Self-Driving Mind">
+  <div class="bn-card">
+
+    <!-- Orange banner -->
+    <div class="bn-banner">
+      <span class="bn-live-pill"><span class="bn-live-dot"></span>Pre-order now</span>
+      <span class="bn-banner-text">The Self-Driving Mind — Early 2027</span>
+    </div>
+
+    <button class="bn-close" onclick="closeBnPopup()" aria-label="Close">✕</button>
+
+    <div class="bn-top">
+      <svg class="bn-cover" viewBox="0 0 300 450" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="bnbg" cx="50%" cy="45%" r="60%">
+            <stop offset="0%" stop-color="#1a2a4a"/>
+            <stop offset="100%" stop-color="#050c18"/>
+          </radialGradient>
+          <radialGradient id="bnglow" cx="50%" cy="42%" r="35%">
+            <stop offset="0%" stop-color="#4a7abf" stop-opacity="0.45"/>
+            <stop offset="100%" stop-color="#050c18" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="300" height="450" fill="url(#bnbg)"/>
+        <rect width="300" height="450" fill="url(#bnglow)"/>
+        <g fill="#fff" opacity="0.5">
+          <circle cx="28" cy="22" r="1"/><circle cx="71" cy="55" r="0.8"/>
+          <circle cx="240" cy="30" r="1"/><circle cx="198" cy="18" r="0.7"/>
+          <circle cx="260" cy="78" r="0.9"/><circle cx="15" cy="200" r="0.9"/>
+        </g>
+        <g stroke="#c9a84c" stroke-opacity="0.12" stroke-width="0.5">
+          <line x1="150" y1="190" x2="0" y2="0"/><line x1="150" y1="190" x2="300" y2="0"/>
+          <line x1="150" y1="190" x2="0" y2="450"/><line x1="150" y1="190" x2="300" y2="450"/>
+        </g>
+        <circle cx="150" cy="190" r="55" fill="none" stroke="#4a7abf" stroke-width="1" opacity="0.5"/>
+        <circle cx="150" cy="190" r="80" fill="none" stroke="#4a7abf" stroke-width="0.6" opacity="0.3"/>
+        <path d="M162 120 L140 180 L158 180 L138 250 L172 175 L153 175 Z" fill="#c9a84c" opacity="0.9"/>
+        <ellipse cx="150" cy="218" rx="14" ry="5" fill="#7aafdf" opacity="0.7"/>
+        <path d="M136 213 Q150 205 164 213" fill="#7aafdf" opacity="0.65"/>
+        <circle cx="150" cy="200" r="7" fill="#7aafdf" opacity="0.7"/>
+        <text x="150" y="288" font-family="Georgia,serif" font-size="18" font-weight="bold" fill="#c9a84c" text-anchor="middle">THE SELF-DRIVING</text>
+        <text x="150" y="308" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#c9a84c" text-anchor="middle" letter-spacing="1">MIND</text>
+        <line x1="60" y1="318" x2="240" y2="318" stroke="#c9a84c" stroke-width="0.8" opacity="0.5"/>
+        <text x="150" y="334" font-family="Georgia,serif" font-size="9" font-style="italic" fill="#8fa4bc" text-anchor="middle">A Skeptic Encounters Grace</text>
+        <text x="150" y="380" font-family="Georgia,serif" font-size="10" fill="#8fa4bc" text-anchor="middle" letter-spacing="1.5">SUNDAR RAJAN</text>
+      </svg>
+      <div class="bn-title-block">
+        <p class="bn-eyebrow">Now available for pre-order</p>
+        <h2 class="bn-headline">Watch the story behind the book</h2>
+      </div>
+    </div>
+
+    <div class="bn-carousel">
+      <div class="bn-track" id="bn-track">
+        <!-- Card 1 -->
+        <a class="bn-video-card" href="https://youtube.com/shorts/NUDUmu_h3Jk" target="_blank" rel="noopener">
+          <div class="bn-thumb">
+            <img src="https://i.ytimg.com/vi/NUDUmu_h3Jk/hqdefault.jpg" alt="The Self-Driving Mind" loading="lazy">
+            <div class="bn-play-overlay">
+              <div class="bn-play-btn">
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="#0a1520"><polygon points="2,1 10,5.5 2,10"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="bn-vlabel">The Self-Driving Mind<span>Watch the short</span></div>
+        </a>
+        <!-- Card 2 -->
+        <a class="bn-video-card" href="https://youtube.com/shorts/4GXirEfOFss" target="_blank" rel="noopener">
+          <div class="bn-thumb">
+            <img src="https://i.ytimg.com/vi/4GXirEfOFss/hqdefault.jpg" alt="The Self-Driving Mind" loading="lazy">
+            <div class="bn-play-overlay">
+              <div class="bn-play-btn">
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="#0a1520"><polygon points="2,1 10,5.5 2,10"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="bn-vlabel">The Self-Driving Mind<span>Watch the short</span></div>
+        </a>
+      </div>
+      <button class="bn-arr bn-arr-prev" id="bn-prev" onclick="bnCarousel(-1)" aria-label="Previous">‹</button>
+      <button class="bn-arr bn-arr-next" id="bn-next" onclick="bnCarousel(1)" aria-label="Next">›</button>
+      <div class="bn-dots">
+        <button class="bn-dot active" onclick="bnGo(0)" aria-label="Video 1"></button>
+        <button class="bn-dot"        onclick="bnGo(1)" aria-label="Video 2"></button>
+      </div>
+    </div>
+
+    <div style="background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3); border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 0.75rem; text-align: center;">
+      <div style="font-family: 'Work Sans', sans-serif; font-size: 0.78rem; font-weight: 700; color: #f97316; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 0.3rem;">🎁 Bonus with every pre-order</div>
+      <div style="font-family: 'Work Sans', sans-serif; font-size: 0.85rem; color: #e0e1dd; line-height: 1.4;">The Attention Lab — 8 interactive experiences<br>+ a 30-Day Practice Guide<br>+ the Reader's Edition of Highway to Dhyāna</div>
+    </div>
+
+    <a class="bn-btn"
+       href="/book/?ref=popup">
+      See the book and bonuses →
+    </a>
+
+    <div style="text-align: center; margin-top: 0.6rem; font-family: 'Work Sans', sans-serif; font-size: 0.78rem; color: #778da9; line-height: 1.5;">
+      After you pre-order, email your receipt to<br>
+      <a href="mailto:selfdrivingmind.receipt@gmail.com" style="color: #f97316; font-weight: 600; text-decoration: none;">selfdrivingmind.receipt@gmail.com</a><br>
+      <span style="font-size: 0.72rem; opacity: 0.8;">and we'll send your bonus access</span>
+    </div>
+
+    <button class="bn-dismiss" onclick="closeBnPopup()">No thanks, I'll find it later</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  /* Session-based: shows once per browser session, resets on new visit */
+  var KEY = 'sdm_bn_seen';
+  function shouldShow() { try { return !sessionStorage.getItem(KEY); } catch(e) { return true; } }
+  function showPopup() {
+    if (!shouldShow()) return;
+    document.getElementById('bn-overlay').style.display = 'flex';
+    requestAnimationFrame(function(){ requestAnimationFrame(initCards); });
+  }
+
+  window.closeBnPopup = function () {
+    document.getElementById('bn-overlay').style.display = 'none';
+    try { sessionStorage.setItem(KEY, '1'); } catch(e) {}
+  };
+
+  /* Triggers */
+  document.addEventListener('mouseleave', function(e) { if (e.clientY < 10) showPopup(); });
+  // Phones get longer to read first: a popup covering the screen early gets closed unread.
+  var isPhone = window.matchMedia && window.matchMedia('(max-width: 700px)').matches;
+  setTimeout(showPopup, isPhone ? 25000 : 10000);
+  document.getElementById('bn-overlay').addEventListener('click', function(e) { if (e.target === this) closeBnPopup(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeBnPopup(); });
+
+  /* ── Carousel ── */
+  var cards = Array.from(document.getElementById('bn-track').children);
+  var bnIdx = 0, TOTAL = cards.length;
+
+  function initCards() {
+    var track = document.getElementById('bn-track');
+    var h = cards[0].querySelector('.bn-thumb').offsetHeight
+          + cards[0].querySelector('.bn-vlabel').offsetHeight;
+    track.style.height = h + 'px';
+    cards.forEach(function(c, i) {
+      c.style.transition = 'none';
+      c.style.transform = 'translateX(' + (i * 100) + '%)';
+    });
+    document.getElementById('bn-prev').style.visibility = 'hidden';
+    document.getElementById('bn-next').style.visibility = 'visible';
+  }
+
+  window.bnGo = function(idx) {
+    bnIdx = idx;
+    cards.forEach(function(c, i) {
+      c.style.transition = 'transform 0.35s cubic-bezier(0.22,1,0.36,1)';
+      c.style.transform  = 'translateX(' + ((i - idx) * 100) + '%)';
+    });
+    document.querySelectorAll('.bn-dot').forEach(function(d, i) {
+      d.classList.toggle('active', i === idx);
+    });
+    document.getElementById('bn-prev').style.visibility = idx === 0        ? 'hidden' : 'visible';
+    document.getElementById('bn-next').style.visibility = idx === TOTAL - 1 ? 'hidden' : 'visible';
+  };
+
+  window.bnCarousel = function(dir) {
+    var n = bnIdx + dir;
+    if (n >= 0 && n < TOTAL) bnGo(n);
+  };
+
+  /* Touch swipe */
+  var sx = 0;
+  var track = document.getElementById('bn-track');
+  track.addEventListener('touchstart', function(e) { sx = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend',   function(e) {
+    var dx = e.changedTouches[0].clientX - sx;
+    if (dx < -40) bnCarousel(1);
+    else if (dx > 40) bnCarousel(-1);
+  });
+})();
+</script>
+
+</body>
+</html>

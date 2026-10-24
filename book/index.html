@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Self-Driving Mind | Sundar Rajan</title>
+<meta name="description" content="The Self-Driving Mind: A Skeptic Encounters Grace by Sundar Rajan (Morgan James, out early 2027). An engineer explains meditation with a self-driving car. Pre-order at Barnes & Noble.">
+<meta property="og:title" content="The Self-Driving Mind: A Skeptic Encounters Grace">
+<meta property="og:description" content="An engineer explains meditation with a self-driving car. Pre-order and unlock the Attention Lab and the Reader's Edition of Highway to Dhyāna.">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://theselfdrivingmind.com/book/">
+<meta property="og:image" content="https://theselfdrivingmind.com/book/book-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://theselfdrivingmind.com/book/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* The brand from the QR page: night-blue hero and footer, cream-to-gold titles, cyan labels on dark,
+   green only for buying. Long reading sits on warm cream, with deep gold headings for contrast. */
+:root{
+  --surface-0:#F7F3EC; --surface-1:#EFE7DA; --white:#FFFDF9;
+  --ink:#1B2433; --ink-2:#5B6474; --navy:#0D1B2A; --navy-2:#1B263B; --steel:#2E3A4F;
+  --gold:#D4A574; --gold-ink:#94652B; --cream:#F3E3CC; --cyan:#00D9FF; --pearl:#E0E1DD; --silver:#9AABC2;
+  --action:#1D7A3B; --action-hover:#22914A;
+  --border:#E3D9C8;
+  --serif:"Playfair Display", Georgia, "Times New Roman", serif;
+  --sans:"Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --wrap:1120px; --gutter:max(20px, env(safe-area-inset-left, 0px));
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{margin:0;background:var(--surface-0);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.65}
+img{max-width:100%;display:block}
+a{color:var(--navy)}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-left:var(--gutter);padding-right:max(20px, env(safe-area-inset-right, 0px))}
+h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.01em;line-height:1.15;text-wrap:balance;margin:0}
+h2{color:var(--navy)}
+h2{font-size:clamp(30px,4vw,44px)}
+h3{font-size:22px;line-height:1.25}
+p{margin:0}
+.eyebrow{font-size:12.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-ink)}
+.lede{font-size:clamp(17px,1.6vw,19px);color:var(--ink-2);max-width:62ch}
+section{padding-block:clamp(64px,9vw,112px)}
+.rule{border-top:1px solid var(--border)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 15.5px/1 var(--sans);text-decoration:none;border-radius:999px;padding:15px 24px;border:1px solid transparent;cursor:pointer;transition:transform .15s ease, box-shadow .15s ease, background .15s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn:focus-visible,.link:focus-visible,summary:focus-visible,.nav a:focus-visible{outline:3px solid var(--gold-ink);outline-offset:3px}
+.btn-primary{background:var(--action);color:#fff;box-shadow:0 6px 18px rgba(29,122,59,.3)}
+.btn-primary:hover{background:var(--action-hover);box-shadow:0 10px 24px rgba(29,122,59,.38)}
+.btn-ghost{background:transparent;color:var(--gold);border-color:var(--gold)}
+.btn-ghost:hover{background:var(--gold);color:var(--navy)}
+.btn-sm{padding:10px 16px;font-size:14px}
+.link{font-weight:600;color:var(--navy);text-underline-offset:4px}
+
+/* Header */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(13,27,42,.88);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid rgba(212,165,116,.18)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--navy)}
+.nav .wrap{display:flex;align-items:center;gap:24px;min-height:64px}
+.brand{font-family:var(--serif);font-size:19px;font-weight:600;color:var(--cream);text-decoration:none;white-space:nowrap}
+.brand span{font-family:var(--sans);font-weight:500;font-size:14px;color:var(--silver);margin-left:6px}
+.nav ul{display:flex;gap:24px;list-style:none;margin:0 0 0 auto;padding:0}
+.nav ul a{font-size:14.5px;font-weight:500;color:var(--pearl);opacity:.82;text-decoration:none}
+.nav ul a:hover{opacity:1;color:var(--gold)}
+@media (max-width:860px){.nav ul{display:none}.nav .btn{margin-left:auto}.brand span{display:none}}
+@media (max-width:400px){.nav .btn{padding:9px 13px;font-size:13px}}
+
+/* Hero */
+.hero{padding-block:clamp(48px,7vw,96px);background:linear-gradient(135deg,#0F2A3D 0%,var(--navy-2) 55%,#3A4256 100%);color:var(--pearl)}
+.hero h1{background:linear-gradient(100deg,var(--cream) 0%,var(--gold) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .lede{color:#C9D3E0}
+.hero .micro{color:var(--silver)}
+.hero .label{display:block;font-size:12.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.9fr);gap:clamp(32px,6vw,80px);align-items:center}
+@media (max-width:860px){.hero .wrap{grid-template-columns:minmax(0,1fr)}.book-stage{order:-1}}
+.badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.12em;color:var(--gold);border:1px solid rgba(212,165,116,.45);background:rgba(212,165,116,.08);border-radius:999px;padding:7px 14px;margin-top:14px}
+.hero h1{font-size:clamp(34px,5vw,56px);margin-top:20px}
+.hero .lede{margin-top:20px}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.micro{margin-top:18px;font-size:14px;color:var(--ink-2);display:flex;gap:8px;align-items:flex-start}
+.micro svg{flex:none;margin-top:3px}
+
+/* 3D book */
+.book-stage{display:flex;justify-content:center;perspective:1600px}
+.book{position:relative;width:min(300px,64vw);aspect-ratio:1333/2000;transform-style:preserve-3d;transform:rotateY(-24deg) rotateX(4deg);transition:transform .6s ease}
+.book:hover{transform:rotateY(-12deg) rotateX(2deg)}
+.book .front{position:absolute;inset:0;border-radius:2px 4px 4px 2px;overflow:hidden;transform:translateZ(14px);box-shadow:inset 3px 0 6px rgba(255,255,255,.18)}
+.book .front img{width:100%;height:100%;object-fit:cover}
+.book .front::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.28) 0,rgba(255,255,255,.08) 2.5%,rgba(0,0,0,0) 6%,rgba(0,0,0,0) 100%)}
+.book .spine{position:absolute;top:0;left:0;width:28px;height:100%;background:linear-gradient(90deg,#060c1a,#13234a 60%,#0a1530);transform:rotateY(-90deg) translateZ(14px) translateX(-14px);transform-origin:left}
+.book .pages{position:absolute;top:1.5%;right:0;width:26px;height:97%;background:repeating-linear-gradient(90deg,#f4f1ea 0 2px,#e4dfd3 2px 3px);transform:rotateY(90deg) translateZ(-12px) translateX(13px);transform-origin:right}
+.book .back{position:absolute;inset:0;background:#0b1530;transform:translateZ(-14px);border-radius:2px}
+.book-shadow{position:absolute;left:8%;right:-6%;bottom:-26px;height:30px;background:radial-gradient(ellipse at center,rgba(0,0,0,.5),rgba(0,0,0,0) 70%);filter:blur(4px);transform:translateZ(-40px)}
+.book-stage{position:relative}
+.book-stage::before{content:"";position:absolute;width:min(420px,90vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(0,217,255,.16),rgba(0,217,255,0) 65%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+
+/* Endorsement bar */
+.proof{background:var(--surface-1);border-block:1px solid var(--border);padding-block:clamp(48px,6vw,72px)}
+.proof blockquote{margin:0 auto;max-width:860px;text-align:center}
+.proof blockquote p{font-family:var(--serif);font-style:italic;font-size:clamp(21px,2.4vw,28px);line-height:1.45;color:var(--ink)}
+.proof cite{display:block;margin-top:22px;font-style:normal;font-size:15px;color:var(--ink-2)}
+.proof cite b{color:var(--ink);font-weight:600}
+
+/* Bonus */
+.bonus-head{display:grid;gap:16px;max-width:760px}
+.assets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:44px}
+@media (max-width:860px){.assets{grid-template-columns:minmax(0,1fr)}}
+.asset{background:linear-gradient(150deg,var(--navy-2),var(--navy));color:#EDEFF4;border:1px solid rgba(212,165,116,.35);border-radius:18px;padding:clamp(26px,3.5vw,40px);display:flex;flex-direction:column;gap:16px}
+.asset .eyebrow{color:var(--cyan)}
+.asset h3{color:var(--cream);font-size:clamp(23px,2.5vw,28px)}
+.asset p{color:#C9D3E0}
+.asset ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.asset li{display:flex;gap:10px;color:#E3E7EF;font-size:15.5px}
+.asset li svg{flex:none;margin-top:4px}
+.asset .link{color:var(--gold);margin-top:auto}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:20px}
+@media (max-width:860px){.steps{grid-template-columns:minmax(0,1fr)}}
+.step{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:20px 22px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 16px;align-items:start;align-content:start}
+.step .n{grid-row:span 2;width:36px;height:36px;border-radius:50%;background:var(--navy);display:grid;place-items:center;font-family:var(--serif);font-size:18px;font-weight:600;color:var(--gold)}
+.step b{font-size:16px}
+.step p{font-size:15px;color:var(--ink-2);overflow-wrap:break-word}
+.step code{font-family:inherit;font-weight:600;color:var(--ink)}
+.bonus-cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;margin-top:28px}
+.bonus-cta small{color:var(--ink-2);font-size:14px}
+
+/* Story */
+.story .wrap{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(32px,6vw,88px)}
+@media (max-width:860px){.story .wrap{grid-template-columns:minmax(0,1fr)}}
+.story aside{position:sticky;top:96px;align-self:start;display:grid;gap:18px}
+@media (max-width:860px){.story aside{position:static}}
+.beats{display:grid;gap:34px}
+.beat{display:grid;gap:8px;padding-left:22px;border-left:1px solid var(--border)}
+.beat .k{font-size:12.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.beat p{font-size:17.5px}
+.beat.q{border-left:2px solid var(--gold)}
+.story .ways-wrap{display:block;margin-top:clamp(48px,6vw,72px)}
+.ways-title{font-size:clamp(24px,2.8vw,32px);color:var(--navy);text-align:center}
+.ways{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:24px}
+@media (max-width:720px){.ways{grid-template-columns:minmax(0,1fr)}}
+.way{border-radius:16px;padding:26px 28px;display:grid;gap:12px;align-content:start;background:var(--white);border:1px solid var(--border)}
+.way-b{background:linear-gradient(150deg,var(--navy-2),var(--navy));border-color:rgba(0,217,255,.35);color:var(--pearl)}
+.way-k{font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-ink)}
+.way-b .way-k{color:var(--cyan)}
+.way p{font-size:16.5px}
+.way-note{font-family:var(--serif);font-style:italic;font-size:17px!important;color:var(--ink-2);border-top:1px solid var(--border);padding-top:12px}
+.way-b .way-note{color:var(--cream);border-top-color:rgba(212,165,116,.25)}
+.beat.q p{font-family:var(--serif);font-style:italic;font-size:clamp(22px,2.4vw,27px);line-height:1.4}
+
+/* Inside */
+.inside{background:var(--white);border-block:1px solid var(--border)}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:44px}
+@media (max-width:720px){.cards{grid-template-columns:minmax(0,1fr)}}
+.card{border:1px solid var(--border);border-radius:16px;padding:28px;background:var(--surface-0);display:grid;gap:10px;transition:border-color .2s ease, transform .2s ease}
+.card:hover{border-color:#C9C4B7;transform:translateY(-2px)}
+.card .ch{font-size:12.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-ink)}
+.card p{color:var(--ink-2);font-size:16px}
+details.toc{margin-top:28px;border:1px solid var(--border);border-radius:14px;background:var(--surface-0)}
+details.toc summary,.faq summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;font-weight:600}
+details.toc summary{padding:20px 24px}
+summary::-webkit-details-marker{display:none}
+.plus{flex:none;width:22px;height:22px;position:relative}
+.plus::before,.plus::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:2px;background:var(--navy);transform:translate(-50%,-50%);transition:transform .2s ease}
+.plus::after{transform:translate(-50%,-50%) rotate(90deg)}
+details[open] > summary .plus::after{transform:translate(-50%,-50%) rotate(0deg)}
+.toc ol{margin:0;padding:0 24px 22px;list-style:none;display:grid;gap:0}
+.toc li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;padding:11px 0;border-top:1px solid var(--border);font-size:15.5px}
+.toc li span:last-child{color:var(--ink-2);font-variant-numeric:tabular-nums}
+.toc li b{font-weight:600;color:var(--ink-2);margin-right:8px}
+
+/* Preview */
+.previews{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px}
+@media (max-width:860px){.previews{grid-template-columns:minmax(0,1fr)}}
+a.pv{text-decoration:none;color:inherit;transition:border-color .2s ease, transform .2s ease}
+a.pv:hover{border-color:var(--gold);transform:translateY(-2px)}
+a.pv:focus-visible{outline:3px solid var(--gold-ink);outline-offset:3px}
+/* Read / Listen pair */
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:44px;scroll-margin-top:90px}
+@media (max-width:860px){.duo{grid-template-columns:minmax(0,1fr)}}
+.duo-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:clamp(24px,3vw,34px);display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+.duo-card h3{font-size:clamp(22px,2.4vw,27px);color:var(--navy)}
+.duo-card p{color:var(--ink-2);font-size:16px}
+.duo-card small{color:var(--ink-2);font-size:13.5px}
+.duo-card .spotify{width:100%;border:0;border-radius:12px;background:var(--surface-1)}
+.btn-outline-dark{background:transparent;color:var(--navy);border:1.5px solid var(--navy);border-radius:10px;padding:14px 20px;margin-top:4px}
+.btn-outline-dark:hover{background:var(--navy);color:var(--cream)}
+/* Book overview popup */
+dialog.overview{width:min(760px,calc(100% - 32px));max-height:calc(100% - 48px);border:0;border-radius:18px;padding:0;background:var(--white);color:var(--ink);box-shadow:0 30px 80px rgba(13,27,42,.45)}
+dialog.overview::backdrop{background:rgba(13,27,42,.72);backdrop-filter:blur(3px)}
+.ov-head{background:linear-gradient(135deg,#0F2A3D 0%,var(--navy-2) 60%,#3A4256 100%);padding:26px clamp(22px,4vw,40px) 30px;position:relative}
+.ov-head .k{font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan)}
+.ov-head h2{margin-top:12px;font-size:clamp(30px,5vw,46px);background:linear-gradient(100deg,var(--cream),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.ov-close{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(212,165,116,.4);background:transparent;color:var(--cream);font-size:20px;line-height:1;cursor:pointer}
+.ov-close:hover{background:rgba(212,165,116,.15)}
+.ov-body{padding:8px clamp(22px,4vw,40px) 30px}
+.ov-tabs{display:flex;gap:28px;border-bottom:1px solid var(--border)}
+.ov-tabs button{font:500 17px/1 var(--sans);background:none;border:0;padding:18px 0 14px;color:var(--ink-2);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.ov-tabs button[aria-selected="true"]{color:var(--navy);border-bottom-color:var(--gold)}
+.ov-tabs button:focus-visible,.ov-close:focus-visible{outline:3px solid var(--gold-ink);outline-offset:2px}
+.ov-panel{padding-top:20px;display:grid;gap:14px;font-size:17px;line-height:1.65}
+[hidden]{display:none!important}
+.ov-panel .pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:560px){.ov-panel .pair{grid-template-columns:minmax(0,1fr)}}
+.ov-panel .who{background:var(--surface-0);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-size:15.5px}
+.ov-panel .who b{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-ink);margin-bottom:4px}
+.ov-panel .who i{display:block;margin-top:8px;color:var(--ink-2)}
+.ov-note{margin-top:22px;padding-top:16px;border-top:1px solid var(--border);font-size:13.5px;color:var(--ink-2)}
+.ov-cta{margin-top:16px;display:flex;flex-wrap:wrap;gap:12px}
+.btn-gold{background:var(--gold);color:var(--navy);border-radius:10px}
+.btn-gold:hover{background:#E0B98C}
+/* Trailers: vertical Shorts; the YouTube player loads only when tapped */
+.videos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:44px}
+@media (max-width:720px){.videos{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;padding-bottom:8px;margin-right:calc(-1 * max(20px, env(safe-area-inset-right, 0px)))}.vid{flex:0 0 68%;scroll-snap-align:start}}
+.vid{margin:0;display:grid;gap:12px}
+.vid-btn,.vid iframe{display:block;width:100%;aspect-ratio:9/16;border:0;border-radius:16px;overflow:hidden;background:var(--navy)}
+.vid-btn{position:relative;padding:0;cursor:pointer;box-shadow:0 8px 24px rgba(15,30,54,.15)}
+.vid-btn img{width:100%;height:100%;object-fit:cover;transition:transform .3s ease}
+.vid-btn:hover img{transform:scale(1.03)}
+.vid-btn:focus-visible{outline:3px solid var(--gold-ink);outline-offset:3px}
+.vid-play{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:var(--gold);color:var(--navy);display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.3);transition:transform .2s ease}
+.vid-btn:hover .vid-play{transform:scale(1.08)}
+.vid figcaption{font-size:14.5px;color:var(--ink-2)}
+.vid figcaption b{display:block;color:var(--ink);font-size:16px;font-weight:600}
+.pv{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:12px}
+.pv .ico{width:44px;height:44px;border-radius:12px;background:var(--surface-1);display:grid;place-items:center}
+.pv p{color:var(--ink-2);font-size:16px}
+.pv .link{margin-top:auto}
+
+/* Voices */
+.voices{background:var(--surface-1);border-block:1px solid var(--border)}
+.vgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:44px}
+@media (max-width:900px){.vgrid{grid-template-columns:minmax(0,1fr)}}
+.v{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:18px}
+.v .tag{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.v blockquote{margin:0;font-family:var(--serif);font-size:19.5px;line-height:1.5}
+.v cite{margin-top:auto;font-style:normal;font-size:14.5px;color:var(--ink-2)}
+.v cite b{display:block;color:var(--ink);font-size:15.5px}
+
+/* FAQ */
+.faq{max-width:820px;margin:40px auto 0;border-top:1px solid var(--border)}
+.faq details{border-bottom:1px solid var(--border)}
+.faq summary{padding:22px 0;font-size:18px;font-family:var(--serif);font-weight:500}
+.faq .a{padding:0 0 22px;color:var(--ink-2);max-width:68ch}
+.center{text-align:center}
+.center .lede{margin-inline:auto}
+
+/* Final */
+.final{background:linear-gradient(135deg,#0F2A3D 0%,var(--navy-2) 55%,#3A4256 100%);color:#fff;text-align:center}
+.final h2{font-size:clamp(32px,4.8vw,52px);background:linear-gradient(100deg,var(--cream),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.final .lede{color:#C9D3E0;margin:18px auto 0}
+.final .ctas{justify-content:center}
+.final .link{color:var(--gold)}
+footer{background:var(--navy);color:var(--silver);font-size:13.5px;border-top:1px solid rgba(212,165,116,.15);padding-block:26px calc(26px + env(safe-area-inset-bottom,0px))}
+footer .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+footer a{color:var(--pearl)}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top">The Self-Driving Mind <span>Sundar Rajan</span></a>
+    <ul>
+      <li><a href="#premise">The Premise</a></li>
+      <li><a href="#bonus">Pre-Order Bonus</a></li>
+      <li><a href="#inside">Inside the Book</a></li>
+      <li><a href="#listen">Listen</a></li>
+    </ul>
+    <a class="btn btn-primary btn-sm" href="https://www.barnesandnoble.com/w/the-self-driving-mind-sundar-rajan/1151506645?ean=9798895741986" target="_blank" rel="noopener">Pre-order on B&amp;N · $22.95</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- Hero -->
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="label">From effort to effortless awareness</span>
+      <span class="badge">MORGAN JAMES PUBLISHING · OUT EARLY 2027</span>
+      <h1>You've learned to solve difficult problems. Why is a quiet mind still so elusive?</h1>
+      <p class="lede">Engineer Sundar Rajan explains meditation with a self-driving car: why effort gets you started, why trying harder stops working, and what finally lets you take your hands off the wheel.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="#bonus">Pre-order and unlock the bonuses <span aria-hidden="true">→</span></a>
+        <a class="btn btn-ghost" href="#preview">Try it free first</a>
+      </div>
+      <p class="micro"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg><span>Our goal: 300 pre-orders at Barnes &amp; Noble, to put the book on store shelves nationwide.</span></p>
+    </div>
+    <div class="book-stage" aria-hidden="true">
+      <div class="book">
+        <div class="back"></div>
+        <div class="spine"></div>
+        <div class="pages"></div>
+        <div class="front"><img src="book-cover.jpg" alt="" width="600" height="900"></div>
+        <div class="book-shadow"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Endorsement -->
+<div class="proof">
+  <div class="wrap">
+    <blockquote>
+      <p>“…this book bridges ancient insight with modern life in a way that is profoundly practical, deeply encouraging, and radically original.”</p>
+      <cite><b>Dr. Jeffery D. Long</b> · Professor of Religion, Philosophy &amp; Asian Studies, Elizabethtown College · Excerpt from his book endorsement.</cite>
+    </blockquote>
+  </div>
+</div>
+
+<!-- Bonus -->
+<section id="bonus">
+  <div class="wrap">
+    <div class="bonus-head">
+      <span class="eyebrow">Complimentary pre-order bonus</span>
+      <h2>Go beyond reading. Experience the ideas.</h2>
+      <p class="lede">Every pre-order unlocks two companions to the book, available right away. They turn the book's ideas into something you can try for yourself.</p>
+    </div>
+    <div class="assets">
+      <div class="asset">
+        <span class="eyebrow">Bonus 1 · The Attention Lab</span>
+        <h3>8 interactive experiences and a 30-Day Practice Guide</h3>
+        <p>Six experiments trace the passage from reactive effort to effortless presence, plus two story worlds that extend the inquiry through play.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4A574" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Monkey Mind, the Srirangam Corridor and the Freeway Navigator</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4A574" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Neti Neti, the APB Compass glider and Aether</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4A574" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>The 30-Day Practice Guide: daily written practices, a Day 1 video and audio lesson, and a reflection journal</li>
+        </ul>
+      </div>
+      <div class="asset">
+        <span class="eyebrow">Bonus 2 · The Reader's Edition</span>
+        <h3>40 more questions in Highway to Dhyāna</h3>
+        <p>The free 3D driving game covers the opening ideas. The Reader's Edition adds three new chapters that go all the way to the book's final answers.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4A574" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Three new campaign chapters, each with its own boss</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4A574" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>From the lost passport in Tokyo to the two birds on the tree</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4A574" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Plays in any browser, on a computer or a phone</li>
+        </ul>
+        <a class="link" href="https://theselfdrivingmind.com/highway3d/" target="_blank" rel="noopener">Try the free game first →</a>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><b>Pre-order the book</b><p>At Barnes &amp; Noble: paperback, $22.95. ISBN 9798895741986.</p></div>
+      <div class="step"><span class="n">2</span><b>Email your receipt</b><p>Send your order confirmation, or a screenshot of it, to <code>selfdrivingmind.receipt@<wbr>gmail.com</code></p></div>
+      <div class="step"><span class="n">3</span><b>Get your access</b><p>We reply with your links to the Attention Lab and the Reader's Edition.</p></div>
+    </div>
+    <div class="bonus-cta">
+      <a class="btn btn-primary" href="https://www.barnesandnoble.com/w/the-self-driving-mind-sundar-rajan/1151506645?ean=9798895741986" target="_blank" rel="noopener">Pre-order on Barnes &amp; Noble <span aria-hidden="true">→</span></a>
+      <small>Prefer Amazon? <a class="link" href="https://www.amazon.com/s?k=9798895741986" target="_blank" rel="noopener">Amazon orders</a> qualify too.</small>
+    </div>
+  </div>
+</section>
+
+<!-- Story -->
+<section class="story rule" id="premise">
+  <div class="wrap">
+    <aside>
+      <span class="eyebrow">The puzzle that started this book</span>
+      <h2>A skeptic, a tree at Guindy, and a car that drove itself.</h2>
+    </aside>
+    <div class="beats">
+      <div class="beat"><span class="k">The engineer</span><p>At the College of Engineering, Guindy, Sundar trusted only what a slide rule could measure. His friends called him Quantum. Meditation was something for other people.</p></div>
+      <div class="beat"><span class="k">The encounter</span><p>Then a young PhD candidate, a scholar who knew more quantum mechanics than the lecturers, quietly took his arguments apart. Behind the engineering block, under a tree, something was passed on that Sundar never earned and couldn't explain.</p></div>
+      <div class="beat"><span class="k">The decades</span><p>A career in technology followed. So did a calm that friends noticed before he did. Meanwhile, people around him with far more discipline struggled to sit still for ten minutes. Why?</p></div>
+      <div class="beat"><span class="k">The missing variable</span><p>The answer arrived on a Los Angeles freeway, the day he finally let his Tesla drive. It clicked at a Supercharger on Guru Pūrṇimā.</p></div>
+      <div class="beat q"><p>What if meditation isn't something you force, but something you allow, like a car that was always able to drive itself?</p></div>
+    </div>
+  </div>
+  <div class="wrap ways-wrap">
+    <h3 class="ways-title">Two ways to move the mind</h3>
+    <div class="ways">
+      <div class="way">
+        <span class="way-k">Method A · The shepherd</span>
+        <p>Like a shepherd driving sheep into a pen. You bark orders, use a stick, force the sheep where they don't want to go. The moment you look away, they scatter.</p>
+        <p class="way-note">This is Dhāraṇā: effortful concentration, an adversarial relationship with your own mind.</p>
+      </div>
+      <div class="way way-b">
+        <span class="way-k">Method B · The bird</span>
+        <p>Like a bird coming home to roost at sunset. Nobody has to force it. It wants to go there. The bird isn't pushed; it's pulled.</p>
+        <p class="way-note">This is Dhyāna, Pratyak Pravāhatā: the mind's natural flow inward. You don't drive the meditation; the meditation drives you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Inside -->
+<section class="inside" id="inside">
+  <div class="wrap">
+    <span class="eyebrow">Inside the book</span>
+    <h2 style="margin-top:14px">Four questions the book answers</h2>
+    <div class="cards">
+      <div class="card"><span class="ch">Chapter 8</span><h3>Why does stillness defeat mastery?</h3><p>Why the most successful, disciplined people often struggle most with meditation, and why discipline alone fails.</p></div>
+      <div class="card"><span class="ch">Chapter 6</span><h3>Can you measure meditation?</h3><p>Absorption, Peace and Bliss: the author's APB Compass turns ancient signposts into a modern way to know whether a session was good.</p></div>
+      <div class="card"><span class="ch">Chapter 7</span><h3>Can AI be a meditation teacher?</h3><p>Vibe coding, and what building software by describing it reveals about setting a clear intention for the mind.</p></div>
+      <div class="card"><span class="ch">Chapter 11</span><h3>What is lifetime charging?</h3><p>The difference between running on your own effort and running on grace, told through real lives, from a Carnatic singer to Salesforce.</p></div>
+    </div>
+    <details class="toc">
+      <summary>View the full table of contents <span class="plus" aria-hidden="true"></span></summary>
+      <ol>
+        <li><span><b>1</b>The Missing Variable</span><span>1</span></li>
+        <li><span><b>2</b>How I Came Up with the Analogy</span><span>13</span></li>
+        <li><span><b>3</b>Tesla = Dhyāna</span><span>19</span></li>
+        <li><span><b>4</b>Tesla = Dhyāna: Why the Analogy Holds</span><span>31</span></li>
+        <li><span><b>5</b>The Śaṅkara Algorithm</span><span>41</span></li>
+        <li><span><b>6</b>Can You Measure Meditation?</span><span>51</span></li>
+        <li><span><b>7</b>Vibe Coding: When AI Becomes Your Meditation Teacher</span><span>69</span></li>
+        <li><span><b>8</b>The Universal Challenge: Why Stillness Defeats Mastery</span><span>89</span></li>
+        <li><span><b>9</b>Who Doesn't Have Arjuna's Question?</span><span>105</span></li>
+        <li><span><b>10</b>The Cloud Behind the Windshield</span><span>119</span></li>
+        <li><span><b>11</b>Lifetime Charging in the Real World</span><span>137</span></li>
+        <li><span><b>12</b>The Failed Yogi</span><span>163</span></li>
+        <li><span><b>13</b>The Promise Fulfilled</span><span>175</span></li>
+        <li><span>Conclusion: The Silent Driver</span><span>191</span></li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<!-- Preview -->
+<section id="preview">
+  <div class="wrap center">
+    <span class="eyebrow">Not ready to order?</span>
+    <h2 style="margin-top:14px">Start here, free</h2>
+    <p class="lede" style="margin-top:14px">Watch, read, listen or play before you buy.</p>
+  </div>
+  <div class="wrap">
+    <div class="videos">
+      <figure class="vid">
+        <button class="vid-btn" type="button" data-id="4GXirEfOFss" aria-label="Play the book trailer">
+          <img src="https://i.ytimg.com/vi/4GXirEfOFss/oardefault.jpg" alt="" loading="lazy" onerror="this.src='https://i.ytimg.com/vi/4GXirEfOFss/hqdefault.jpg'">
+          <span class="vid-play" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+        </button>
+        <figcaption><b>The book trailer</b>What the book is about</figcaption>
+      </figure>
+      <figure class="vid">
+        <button class="vid-btn" type="button" data-id="Y_agTY3ybco" aria-label="Play The Good Spell">
+          <img src="https://i.ytimg.com/vi/Y_agTY3ybco/maxresdefault.jpg" alt="" loading="lazy" style="object-position:62% center">
+          <span class="vid-play" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+        </button>
+        <figcaption><b>The Good Spell</b>An animated short</figcaption>
+      </figure>
+      <figure class="vid">
+        <button class="vid-btn" type="button" data-id="NUDUmu_h3Jk" aria-label="Play a short from the book">
+          <img src="https://i.ytimg.com/vi/NUDUmu_h3Jk/oardefault.jpg" alt="" loading="lazy" onerror="this.src='https://i.ytimg.com/vi/NUDUmu_h3Jk/hqdefault.jpg'">
+          <span class="vid-play" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+        </button>
+        <figcaption><b>A short from the book</b>Watch on YouTube</figcaption>
+      </figure>
+    </div>
+    <!-- Read / Listen -->
+    <div class="duo" id="listen">
+      <div class="duo-card">
+        <span class="eyebrow">Read / Explore</span>
+        <h3>A skeptic's starting point</h3>
+        <p>Preview the book's opening story and the question behind it. Explore before you decide.</p>
+        <button class="btn btn-outline-dark" type="button" id="overviewBtn">Explore the book overview <span aria-hidden="true">→</span></button>
+        <small>No email required. This is an overview, not a manuscript excerpt.</small>
+      </div>
+      <div class="duo-card">
+        <span class="eyebrow">Listen / Reflect</span>
+        <h3>A conversation about Chapter One</h3>
+        <p>Two voices explore the meditation paradox, the skeptical engineer's journey, and the lifetime-charging metaphor.</p>
+        <iframe class="spotify" title="Listen to a conversation about Chapter One on Spotify" src="https://open.spotify.com/embed/episode/3bIOK9EpGhyrnXMza34MW2?theme=0" height="152" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+        <a class="link" href="https://open.spotify.com/episode/3bIOK9EpGhyrnXMza34MW2" target="_blank" rel="noopener">Listen on Spotify ↗</a>
+        <small>A discussion of the chapter, not an audiobook reading.</small>
+      </div>
+    </div>
+
+    <!-- More free ways in -->
+    <div class="previews">
+      <a class="pv" href="https://theselfdrivingmind.com/highway3d/" target="_blank" rel="noopener">
+        <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#94652B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/></svg></span>
+        <h3>Play Highway to Dhyāna</h3>
+        <p>The free 3D game. Steer into the right answers until the car drives itself. No download.</p>
+        <span class="link">Play now →</span>
+      </a>
+      <a class="pv" href="https://theselfdrivingmind.com/games.html" target="_blank" rel="noopener">
+        <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#94652B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.4 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z"/></svg></span>
+        <h3>Interactive Experiences</h3>
+        <p>More free games inspired by the book, from the Tokyo passport race to Vijayanagara.</p>
+        <span class="link">Choose a game →</span>
+      </a>
+      <a class="pv" href="https://selfdrivingmind.substack.com/" target="_blank" rel="noopener">
+        <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#94652B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span>
+        <h3>The Current</h3>
+        <p>Sundar's newsletter on Substack: new essays on the mind, grace, and technology, by email.</p>
+        <span class="link">Subscribe free →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Voices -->
+<section class="voices">
+  <div class="wrap center">
+    <span class="eyebrow">Early readers</span>
+    <h2 style="margin-top:14px">What readers are saying</h2>
+  </div>
+  <div class="wrap">
+    <div class="vgrid">
+      <div class="v">
+        <span class="tag">The author</span>
+        <blockquote>“Sundar Rajan is a thoughtful writer whose book sits at the intersection of Eastern spiritual wisdom, neuroscience, and modern technology… his prose is quite lovely.”</blockquote>
+        <cite><b>MeiMei Fox</b>2x New York Times bestselling author and Forbes contributor</cite>
+      </div>
+      <div class="v">
+        <span class="tag">The old friend</span>
+        <blockquote>“I've known Sundar Rajan for over thirty years, and he has always had a curious mind and a way of looking at familiar things from a different angle… Typical Sundar—inviting us to see the mind differently.”</blockquote>
+        <cite><b>Krishnamachari ‘Kris’ Srikkanth</b>1983 Cricket World Cup winner and former Indian cricket captain</cite>
+      </div>
+      <div class="v">
+        <span class="tag">The practitioner</span>
+        <blockquote>“Instead of trying to force or control the mind, Sundar invites us to observe our thoughts and feelings with greater clarity and ease… I recommend reading this book—and putting its ideas into practice. I'm doing exactly that myself!”</blockquote>
+        <cite><b>Adriana Pagotti D'Angelo</b>IT Initiatives &amp; Projects Specialist, PMP®, São Paulo, Brazil</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="wrap center">
+    <span class="eyebrow">Questions</span>
+    <h2 style="margin-top:14px">Frequently asked</h2>
+  </div>
+  <div class="wrap">
+    <div class="faq">
+      <details>
+        <summary>Why order through Barnes &amp; Noble instead of Amazon? <span class="plus" aria-hidden="true"></span></summary>
+        <p class="a">Pre-orders at Barnes &amp; Noble help decide whether the book is stocked on physical shelves. Our goal is 300, enough to put it in stores nationwide. Amazon orders still qualify for the bonus.</p>
+      </details>
+      <details>
+        <summary>How do I claim the bonuses? <span class="plus" aria-hidden="true"></span></summary>
+        <p class="a">Email your order confirmation, or a screenshot of it, to selfdrivingmind.receipt@gmail.com. We'll reply with your reader access to the Attention Lab, including the 30-Day Practice Guide, and a personal link that unlocks the Reader's Edition of Highway to Dhyāna. Open the same link on any other device you play on.</p>
+      </details>
+      <details>
+        <summary>Is this book religious? <span class="plus" aria-hidden="true"></span></summary>
+        <p class="a">It draws openly on the Vedanta tradition and on the author's own teacher, but it isn't preaching. It's written by a skeptic, for curious and analytical minds, and it connects classical contemplative ideas with technology and everyday experience.</p>
+      </details>
+      <details>
+        <summary>Do I need to meditate already? <span class="plus" aria-hidden="true"></span></summary>
+        <p class="a">No. The book starts from the most common experience of all: sitting down to be still and finding the mind won't cooperate.</p>
+      </details>
+      <details>
+        <summary>When does it come out? <span class="plus" aria-hidden="true"></span></summary>
+        <p class="a">Out Early 2027, from Morgan James Publishing, in paperback. Pre-orders are delivered when the book is released.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- Final -->
+<section class="final">
+  <div class="wrap">
+    <h2>The car has always been self-driving.</h2>
+    <p class="lede">Pre-order your copy, help put the book on store shelves, and unlock the Attention Lab and the Reader's Edition of the game.</p>
+    <div class="ctas">
+      <a class="btn btn-primary" href="https://www.barnesandnoble.com/w/the-self-driving-mind-sundar-rajan/1151506645?ean=9798895741986" target="_blank" rel="noopener">Pre-order on Barnes &amp; Noble <span aria-hidden="true">→</span></a>
+    </div>
+    <p style="margin-top:18px;font-size:15px;color:#C9D3E0">or <a class="link" href="https://www.amazon.com/s?k=9798895741986" target="_blank" rel="noopener">order on Amazon</a></p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2027 Sundar Rajan. Published by Morgan James Publishing.</span>
+    <span><a href="/">The Sanctuary</a> · <a href="https://selfdrivingmind.substack.com/">The Current</a> · <a href="/games.html">Free games</a> · <a href="mailto:selfdrivingmind.receipt@gmail.com">selfdrivingmind.receipt@gmail.com</a></span>
+  </div>
+</footer>
+
+<dialog class="overview" id="overview" aria-labelledby="ovTitle">
+  <div class="ov-head">
+    <span class="k">The Self-Driving Mind / Book overview</span>
+    <h2 id="ovTitle">An unexpected beginning.</h2>
+    <button class="ov-close" type="button" id="ovClose" aria-label="Close">✕</button>
+  </div>
+  <div class="ov-body">
+    <div class="ov-tabs" role="tablist">
+      <button type="button" role="tab" id="tab-enc" aria-controls="pan-enc" aria-selected="true">The encounter</button>
+      <button type="button" role="tab" id="tab-q" aria-controls="pan-q" aria-selected="false" tabindex="-1">The question</button>
+    </div>
+    <div class="ov-panel" role="tabpanel" id="pan-enc" aria-labelledby="tab-enc">
+      <p>College of Engineering, Guindy. A skeptical student nicknamed “Quantum”, obsessed with Feynman and pure logic, meets a young PhD candidate beside a Royal Enfield motorcycle.</p>
+      <p>The student expects a debate about religion. Instead, he meets someone who answers every objection with logic, on the student's own terms. That meeting begins a lifelong inquiry into meditation and grace.</p>
+    </div>
+    <div class="ov-panel" role="tabpanel" id="pan-q" aria-labelledby="tab-q" hidden>
+      <p>Two people. One has every advantage discipline can buy. The other has almost none.</p>
+      <div class="pair">
+        <div class="who"><b>Subject A</b>Maximum discipline. Color-coded calendars, everything managed with precision.<i>“Even when I sit down, the connection just isn't there.”</i></div>
+        <div class="who"><b>Subject B</b>Minimum discipline. Disorganized, pretty random.<i>“I never found it too hard to connect when I wanted to.”</i></div>
+      </div>
+      <p>If discipline equals results, this can't be true. There has to be a missing variable. The book is the search for it.</p>
+    </div>
+    <p class="ov-note">This is an editorial overview based on the author's book page. It is not an excerpt from the manuscript.</p>
+    <div class="ov-cta">
+      <a class="btn btn-gold" href="/tesla-dhyana-blog.html?ref=book">Read the author's longer introduction ↗</a>
+    </div>
+  </div>
+</dialog>
+
+<script>
+// Book overview popup with two tabs
+(function () {
+  var dlg = document.getElementById('overview');
+  if (!dlg || !dlg.showModal) return;
+  document.getElementById('overviewBtn').addEventListener('click', function () { dlg.showModal(); });
+  document.getElementById('ovClose').addEventListener('click', function () { dlg.close(); });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  var tabs = [].slice.call(dlg.querySelectorAll('[role=tab]'));
+  function select(t) {
+    tabs.forEach(function (x) {
+      var on = x === t;
+      x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1;
+      document.getElementById(x.getAttribute('aria-controls')).hidden = !on;
+    });
+    t.focus();
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { select(t); });
+    t.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); select(tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length]); }
+    });
+  });
+})();
+
+// Swap a trailer's thumbnail for the YouTube player only when it's tapped.
+document.querySelectorAll('.vid-btn').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + btn.dataset.id + '?autoplay=1&rel=0&playsinline=1';
+    f.title = btn.getAttribute('aria-label').replace(/^Play /, '');
+    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.allowFullscreen = true;
+    btn.replaceWith(f);
+  });
+});
+</script>
+
+<!-- Plausible (same site as the homepage); ?ref= tags show which channel sent each visitor -->
+<script async src="https://plausible.io/js/pa-Nj2nSV8L4u6iRao34TF3q.js"></script>
+<script>
+  window.plausible = window.plausible || function(){(plausible.q=plausible.q||[]).push(arguments)};
+  plausible.init = plausible.init || function(i){plausible.o = i || {}};
+  plausible.init();
+</script>
+</body>
+</html>
