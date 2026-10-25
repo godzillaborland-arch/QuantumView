@@ -294,7 +294,7 @@ footer a{color:var(--pearl)}
         <div class="back"></div>
         <div class="spine"></div>
         <div class="pages"></div>
-        <div class="front"><img src="book-cover.jpg" alt="" width="600" height="900"></div>
+        <div class="front"><img src="/book/book-cover.jpg" alt="" width="600" height="900"></div>
         <div class="book-shadow"></div>
       </div>
     </div>
@@ -367,6 +367,7 @@ footer a{color:var(--pearl)}
       <div class="beat"><span class="k">The decades</span><p>A career in technology followed. So did a calm that friends noticed before he did. Meanwhile, people around him with far more discipline struggled to sit still for ten minutes. Why?</p></div>
       <div class="beat"><span class="k">The missing variable</span><p>The answer arrived on a Los Angeles freeway, the day he finally let his Tesla drive. It clicked at a Supercharger on Guru Pūrṇimā.</p></div>
       <div class="beat q"><p>What if meditation isn't something you force, but something you allow, like a car that was always able to drive itself?</p></div>
+      <a class="link" href="/story.html">Read the full story →</a>
     </div>
   </div>
   <div class="wrap ways-wrap">
@@ -569,7 +570,7 @@ footer a{color:var(--pearl)}
 <footer>
   <div class="wrap">
     <span>© 2027 Sundar Rajan. Published by Morgan James Publishing.</span>
-    <span><a href="/">The Sanctuary</a> · <a href="https://selfdrivingmind.substack.com/">The Current</a> · <a href="/games.html">Free games</a> · <a href="mailto:selfdrivingmind.receipt@gmail.com">selfdrivingmind.receipt@gmail.com</a></span>
+    <span><a href="/">The Sanctuary</a> · <a href="/story.html">The Story</a> ·<a href="https://selfdrivingmind.substack.com/">The Current</a> · <a href="/games.html">Free games</a> · <a href="mailto:selfdrivingmind.receipt@gmail.com">selfdrivingmind.receipt@gmail.com</a></span>
   </div>
 </footer>
 
@@ -598,7 +599,7 @@ footer a{color:var(--pearl)}
     </div>
     <p class="ov-note">This is an editorial overview based on the author's book page. It is not an excerpt from the manuscript.</p>
     <div class="ov-cta">
-      <a class="btn btn-gold" href="/tesla-dhyana-blog.html?ref=book">Read the author's longer introduction ↗</a>
+      <a class="btn btn-gold" href="/story.html">Read the author's longer introduction ↗</a>
     </div>
   </div>
 </dialog>
@@ -641,12 +642,25 @@ document.querySelectorAll('.vid-btn').forEach(function (btn) {
 });
 </script>
 
-<!-- Plausible (same site as the homepage); ?ref= tags show which channel sent each visitor -->
+<!-- Plausible (same site as the homepage) -->
 <script async src="https://plausible.io/js/pa-Nj2nSV8L4u6iRao34TF3q.js"></script>
 <script>
   window.plausible = window.plausible || function(){(plausible.q=plausible.q||[]).push(arguments)};
   plausible.init = plausible.init || function(i){plausible.o = i || {}};
   plausible.init();
+
+  // Goal "Pre-order click": counts every click on a Barnes & Noble or Amazon button,
+  // with the store and the page section it came from.
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href*="barnesandnoble.com"], a[href*="amazon.com"]');
+    if (!a) return;
+    var section = a.closest('section, header, .proof');
+    plausible('Pre-order click', { props: {
+      store: a.href.indexOf('amazon.com') > -1 ? 'Amazon' : 'Barnes & Noble',
+      section: (section && (section.id || section.className.split(' ')[0])) || 'page',
+      page: location.pathname
+    } });
+  });
 </script>
 </body>
 </html>
