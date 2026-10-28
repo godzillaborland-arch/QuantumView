@@ -228,6 +228,19 @@ dialog.overview::backdrop{background:rgba(13,27,42,.72);backdrop-filter:blur(3px
 .pv .ico{width:44px;height:44px;border-radius:12px;background:var(--surface-1);display:grid;place-items:center}
 .pv p{color:var(--ink-2);font-size:16px}
 .pv .link{margin-top:auto}
+.previews.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:860px){.previews.two{grid-template-columns:minmax(0,1fr)}}
+.play{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);background:var(--navy);color:var(--cream);border-radius:20px;overflow:hidden;margin-top:40px;scroll-margin-top:90px;box-shadow:0 20px 50px rgba(13,27,42,.25)}
+.play:target{outline:3px solid var(--gold);outline-offset:4px}
+.play-shot{display:block;background:#0b1320}
+.play-shot img{width:100%;height:100%;object-fit:cover;object-position:left center;display:block;aspect-ratio:1200/630}
+.play-body{padding:clamp(24px,3.4vw,40px);display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.play-body .eyebrow{color:var(--cyan)}
+.play-body h3{color:#fff;font-size:clamp(26px,2.8vw,34px)}
+.play-body p{color:rgba(243,227,204,.85);font-size:16px}
+.play-body small{color:rgba(243,227,204,.7);font-size:14px}
+.play-body small a{color:var(--gold)}
+@media (max-width:860px){.play{grid-template-columns:minmax(0,1fr)}}
 
 /* Voices */
 .voices{background:var(--surface-1);border-block:1px solid var(--border)}
@@ -285,7 +298,7 @@ footer a{color:var(--pearl)}
       <p class="lede">Engineer Sundar Rajan explains meditation with a self-driving car: why effort gets you started, why trying harder stops working, and what finally lets you take your hands off the wheel.</p>
       <div class="ctas">
         <a class="btn btn-primary" href="#bonus">Pre-order and unlock the bonuses <span aria-hidden="true">→</span></a>
-        <a class="btn btn-ghost" href="#preview">Try it free first</a>
+        <a class="btn btn-ghost" href="#play"><span aria-hidden="true">🎮</span> Play the free game</a>
       </div>
       <p class="micro"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg><span>Our goal: 300 pre-orders at Barnes &amp; Noble, to put the book on store shelves nationwide.</span></p>
     </div>
@@ -428,6 +441,19 @@ footer a{color:var(--pearl)}
     <p class="lede" style="margin-top:14px">Watch, read, listen or play before you buy.</p>
   </div>
   <div class="wrap">
+    <!-- Featured game: shareable as /book/#play -->
+    <div class="play" id="play">
+      <a class="play-shot" href="https://theselfdrivingmind.com/highway3d/" target="_blank" rel="noopener" aria-label="Play Highway to Dhyāna in a new tab">
+        <img src="https://theselfdrivingmind.com/highway3d/og.jpg" alt="Highway to Dhyāna: a car drives down a night highway past flashing billboards" loading="lazy">
+      </a>
+      <div class="play-body">
+        <span class="eyebrow">Free 3D game · from the book</span>
+        <h3>Highway to Dhyāna</h3>
+        <p>Drive through a city of distractions. Steer into the right answers, beat the bosses, and feel the moment the car starts driving itself. Plays in your browser, no download.</p>
+        <a class="btn btn-ghost" href="https://theselfdrivingmind.com/highway3d/" target="_blank" rel="noopener">Play now, free <span aria-hidden="true">↗</span></a>
+        <small>Opens in a new tab, so this page stays here. Pre-order the book to unlock the 40-question <a href="#bonus">Reader's Edition</a>.</small>
+      </div>
+    </div>
     <div class="videos">
       <figure class="vid">
         <button class="vid-btn" type="button" data-id="4GXirEfOFss" aria-label="Play the book trailer">
@@ -471,13 +497,7 @@ footer a{color:var(--pearl)}
     </div>
 
     <!-- More free ways in -->
-    <div class="previews">
-      <a class="pv" href="https://theselfdrivingmind.com/highway3d/" target="_blank" rel="noopener">
-        <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#94652B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/></svg></span>
-        <h3>Play Highway to Dhyāna</h3>
-        <p>The free 3D game. Steer into the right answers until the car drives itself. No download.</p>
-        <span class="link">Play now →</span>
-      </a>
+    <div class="previews two">
       <a class="pv" href="https://theselfdrivingmind.com/games.html" target="_blank" rel="noopener">
         <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#94652B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.4 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z"/></svg></span>
         <h3>Interactive Experiences</h3>
