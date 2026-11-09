@@ -1,730 +1,1492 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-input="key">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111726">
+<meta name="theme-color" content="#101728">
 <title>The Freeway Navigator: Subscription vs. Endowment</title>
+<meta name="description" content="Three miles of coastal freeway, two ways to drive it. Grip the wheel and pay for every correction, or let go and let the route carry you. A four-minute playable metaphor from The Self-Driving Mind.">
+<link rel="canonical" href="https://theselfdrivingmind.com/book-funnel/freeway-navigator.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Self-Driving Mind">
+<meta property="og:title" content="The Freeway Navigator: Subscription vs. Endowment">
+<meta property="og:description" content="Three miles of coastal freeway, two ways to drive it. Grip the wheel, or let go and let the route carry you. Four minutes, best with sound on.">
+<meta property="og:url" content="https://theselfdrivingmind.com/book-funnel/freeway-navigator.html">
+<meta property="og:image" content="https://theselfdrivingmind.com/book-funnel/freeway-navigator-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A white car on a three-lane coastal freeway at dusk, a glowing guidance line ahead of it">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Freeway Navigator: Subscription vs. Endowment">
+<meta name="twitter:description" content="Three miles of coastal freeway, two ways to drive it. Grip the wheel, or let go and let the route carry you.">
+<meta name="twitter:image" content="https://theselfdrivingmind.com/book-funnel/freeway-navigator-og.jpg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Freeway">
+<meta name="format-detection" content="telephone=no">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23101728'/%3E%3Cpath d='M26 10 14 54M38 10l12 44' stroke='%23c9d6e7' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M32 14v8M32 30v8M32 46v6' stroke='%2379eadb' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
-:root{color-scheme:dark;--cyan:#79eadb;--amber:#ffbf81;--ink:#101728}
-*{box-sizing:border-box}
-body{margin:0;overflow:hidden;background:var(--ink);color:#eef4ff;font:15px system-ui,sans-serif}
-canvas{display:block}
-button{font:inherit;color:inherit;border:1px solid #ffffff35;border-radius:12px;background:#253348;padding:12px 16px;cursor:pointer;touch-action:manipulation}
-button:hover{background:#33455e}
-button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
-button.primary{background:#20544f;border-color:#79eadb80}
-button:disabled{opacity:.45;cursor:default}
-.panel{background:#101827dd;border:1px solid #ffffff20;border-radius:18px;box-shadow:0 16px 60px #0005;backdrop-filter:blur(12px)}
-#hud{position:fixed;inset:18px 18px auto;display:flex;justify-content:space-between;gap:14px;pointer-events:none}
-#instruments{padding:16px;width:300px}
-.eyebrow{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:#bac9dd}
-#mode{font-size:18px;font-weight:700;margin:6px 0 12px;color:var(--amber)}
-.meter{margin-top:10px}
-.meter-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
-.track{height:7px;background:#ffffff16;border-radius:10px;overflow:hidden}
-.fill{height:100%;width:100%;transition:width .12s linear;background:var(--cyan)}
-#frictionFill{background:#ffb879}
-#journey{padding:16px;text-align:right;min-width:230px}
-#phase{font-size:17px;font-weight:650;margin:6px 0}
-#distance{color:#bdcde1}
-#progress{margin-top:12px}
-#controls{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;max-width:95vw}
-#notice{position:fixed;top:190px;left:50%;transform:translateX(-50%);padding:12px 20px;max-width:560px;width:max-content;text-align:center;pointer-events:none;opacity:0;transition:opacity .3s}
-#notice.show{opacity:1}
-#help{position:fixed;bottom:86px;width:100%;text-align:center;color:#d2dcec;font-size:12px;pointer-events:none}
-#touch{position:fixed;bottom:110px;left:16px;right:16px;display:none;justify-content:space-between;pointer-events:none}
-.touch-group{display:flex;gap:8px;pointer-events:auto}
-.touch-button{width:54px;height:54px;padding:0;touch-action:none;background:#172337d9;font-size:23px;user-select:none}
-.overlay{position:fixed;inset:0;display:grid;place-items:center;background:#080f1bcc;padding:20px;z-index:10;overflow:auto}
-.card{width:min(760px,100%);padding:30px}
-h1{font-size:clamp(26px,5vw,42px);line-height:1.08;margin:12px 0 20px}
-h2{font-size:26px;margin:8px 0 16px}
-p{line-height:1.6;color:#c9d6e7}
-.instructions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0}
-.instructions>div{padding:14px;border-radius:12px;background:#ffffff06;line-height:1.55}
-.instructions strong{display:block;margin-bottom:6px}
-.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:20px}
-label{display:inline-flex;gap:8px;align-items:center;color:#c9d6e7;font-size:13px}
-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
-th,td{padding:12px 8px;text-align:left;border-bottom:1px solid #ffffff17}
-th{color:var(--cyan);font-weight:600}
-th:first-child{color:#c9d6e7}
-.small{font-size:12px;color:#aabbd1}
+/* Tokens: the original Freeway palette (cyan = endowment, amber = subscription, ink) plus the suite's display serif. */
+:root{
+ color-scheme:dark;
+ --cyan:#79eadb;--amber:#ffbf81;--ink:#101728;--rose:#ff9d8a;
+ --text:#eef4ff;--muted:#c9d6e7;--dim:#a3b3c9;
+ --panel:rgba(16,24,39,.86);--panel-solid:#162033;--line:rgba(255,255,255,.14);
+ --display:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+ --body:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+ --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px);
+}
 [hidden]{display:none!important}
-@media(pointer:coarse){#touch{display:flex}#help{bottom:180px}}
-@media(max-width:620px){
-#hud{inset:max(10px,env(safe-area-inset-top)) 10px auto;gap:8px;align-items:flex-start}
-#instruments{width:52%;padding:12px}
-#journey{min-width:0;width:48%;padding:12px}
-#phase{font-size:13px}#mode{font-size:14px}
-#notice{top:196px;max-width:92vw;width:92vw;font-size:13px}
-.card{padding:22px}.instructions{grid-template-columns:1fr}
-#controls button{padding:12px 10px;font-size:13px}
-th,td{font-size:12px;padding:10px 5px}
-}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--ink);color:var(--text);font:15px/1.5 var(--body);overflow:hidden;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;overscroll-behavior:none}
+#stage{position:fixed;inset:0;touch-action:none}
+#stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+a{color:var(--cyan)}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.eyebrow{margin:0;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);font-weight:600}
+.amber{color:var(--amber)}.cyan{color:var(--cyan)}
+.primary{border:0;border-radius:999px;padding:14px 28px;min-height:50px;background:var(--cyan);color:#0d2a27;font-weight:700;font-size:16px;box-shadow:0 0 0 6px rgba(121,234,219,.14),0 10px 30px rgba(121,234,219,.18);transition:transform .15s ease,opacity .3s}
+.primary:hover{transform:translateY(-1px)}
+.primary:disabled{opacity:.7;cursor:progress;transform:none;background:#2a3d52;color:var(--muted);box-shadow:none}
+.ghost{border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);padding:11px 16px;min-height:44px}
+.ghost:hover{background:rgba(255,255,255,.1)}
+.icon{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--panel);display:grid;place-items:center;padding:0}
+.icon svg{width:19px;height:19px}
+.link{background:none;border:0;padding:6px 4px;color:var(--dim);text-decoration:underline;text-underline-offset:3px;font-size:13px;min-height:32px}
+kbd{font:600 11px var(--body);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;background:rgba(255,255,255,.06);color:var(--muted)}
+[data-input=touch] .kbd{display:none!important}
+html:not([data-input=touch]) .touchonly{display:none!important}
 
-@media(max-width:620px){
-#instruments,#journey{padding:10px;border-radius:12px}
-#instruments .eyebrow,#journey .eyebrow{font-size:9px}
-.meter{margin-top:6px}.meter-label{font-size:11px}
-#mode{margin:4px 0 8px}#phase{margin:4px 0}
-#notice{top:180px;padding:9px 12px}
-#controls{bottom:max(12px,env(safe-area-inset-bottom));left:10px;right:10px;transform:none;max-width:none;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 44px 44px;gap:6px}
-#controls button{min-height:48px;padding:8px 5px;font-size:11px}
-#help{display:none}#touch{display:flex;bottom:max(84px,calc(env(safe-area-inset-bottom) + 76px));left:12px;right:12px}
+/* Atmosphere overlays: tunnel vision (manual) and road grime (obscured perception) */
+#vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 56% at 50% 56%,transparent 32%,rgba(8,10,20,.6) 72%,rgba(5,6,14,.95));opacity:0}
+#grime{position:fixed;inset:0;pointer-events:none;opacity:0;background-size:cover;background-position:center}
+#grime.wiping{transition:opacity .45s ease}
+#squeegee{position:fixed;top:0;bottom:0;width:30vw;left:-30vw;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18) 45%,rgba(255,255,255,.32) 50%,transparent);opacity:0}
+#squeegee.go{animation:sweep .5s ease-out}
+@keyframes sweep{0%{left:-30vw;opacity:1}100%{left:100vw;opacity:.6}}
+#fade{position:fixed;inset:0;background:#05070d;pointer-events:none;opacity:0;transition:opacity .45s ease;z-index:25}
+#fade.on{opacity:1}
+
+/* Entrance */
+#intro{position:fixed;inset:0;z-index:20;display:grid;place-items:center;text-align:center;overflow:auto;
+ padding:calc(24px + var(--sat)) calc(18px + var(--sar)) calc(24px + var(--sab)) calc(18px + var(--sal));
+ background:radial-gradient(90% 65% at 50% 46%,rgba(10,14,26,.66),rgba(10,14,26,.38) 62%,rgba(10,14,26,.82));transition:opacity .9s ease}
+#intro.leaving{opacity:0;pointer-events:none}
+.introCard{max-width:30rem;display:grid;gap:14px;justify-items:center}
+#intro h1{margin:0;font:400 clamp(38px,10vw,60px)/1.02 var(--display);letter-spacing:-.01em;text-wrap:balance;text-shadow:0 2px 30px rgba(255,191,129,.35)}
+#intro .sub{margin:-6px 0 0;font:italic 400 clamp(18px,4.8vw,23px)/1.2 var(--display);color:var(--cyan)}
+#intro .lede{margin:0;color:#f2f6ff;max-width:36ch;text-shadow:0 1px 14px rgba(0,0,0,.7);font-size:16px}
+#intro .lede b{font-weight:650}
+#intro .meta{margin:0;font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap}
+#intro .meta svg{width:15px;height:15px;vertical-align:-2px}
+#loadLine{margin:-4px 0 0;min-height:20px;font-size:13px;color:var(--dim);font-style:italic}
+#loadBar{width:160px;height:3px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:-8px}
+#loadBar i{display:block;height:100%;width:0;background:var(--cyan);transition:width .3s}
+.opts{display:grid;gap:6px;justify-items:start;font-size:13px;color:var(--muted);background:rgba(10,14,26,.55);border:1px solid var(--line);border-radius:14px;padding:10px 14px;text-align:left}
+.opts label{display:flex;gap:9px;align-items:center;min-height:30px;cursor:pointer}
+input[type=checkbox]{width:20px;height:20px;accent-color:var(--cyan);flex:none;margin:0}
+#intro .honest{margin:0;font-size:12px;color:var(--dim);max-width:40ch;text-shadow:0 1px 10px #000}
+
+/* Top-right icons */
+#mute,#pauseBtn{position:fixed;z-index:30;top:calc(12px + var(--sat))}
+#mute{right:calc(12px + var(--sar))}
+#pauseBtn{right:calc(64px + var(--sar))}
+
+/* HUD */
+#hud{position:fixed;z-index:6;top:calc(12px + var(--sat));left:calc(12px + var(--sal));width:min(330px,calc(100% - 136px - var(--sal) - var(--sar)));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px 12px;pointer-events:none;transition:opacity .6s,border-color .6s}
+#hud.calm{border-color:rgba(121,234,219,.35)}
+#modeRow{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:var(--amber);transition:color .6s}
+#modeRow i{width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 10px currentColor;flex:none}
+#hud.calm #modeRow{color:var(--cyan)}
+.meter{display:grid;grid-template-columns:78px 1fr 36px;gap:2px 8px;align-items:center;margin-top:7px;font-size:12px;border-radius:8px;transition:background .4s,box-shadow .4s}
+.meter .lab{color:var(--muted)}
+.meter .val{text-align:right;font-variant-numeric:tabular-nums}
+.track{height:7px;background:rgba(255,255,255,.12);border-radius:10px;overflow:hidden}
+.track i{display:block;height:100%;width:0;border-radius:inherit;background:var(--cyan);transition:width .15s linear,background .4s}
+#frictionFill{background:var(--amber)}
+.meter small{grid-column:1/-1;display:none;font-size:11.5px;line-height:1.35;color:var(--dim)}
+#hud.glossy .meter small{display:block}
+.meter.spot{background:rgba(121,234,219,.1);box-shadow:0 0 0 6px rgba(121,234,219,.1)}
+.meter.spot small{display:block;color:var(--text)}
+#trip{margin-top:9px;padding-top:8px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+#trip b{color:var(--text);font-weight:600}
+#tripTrack{flex-basis:100%;height:4px}
+#tripFill{background:linear-gradient(90deg,var(--amber),var(--cyan))}
+
+#notice{position:fixed;z-index:7;left:50%;top:calc(196px + var(--sat));transform:translateX(-50%);width:max-content;max-width:min(560px,calc(100% - 28px));padding:10px 18px;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;opacity:0;transition:opacity .4s;pointer-events:none;font-size:15px}
+#notice.show{opacity:1}
+
+/* Lesson coach */
+#coach{position:fixed;z-index:8;left:50%;transform:translateX(-50%);top:calc(16px + var(--sat));width:min(420px,calc(100% - 24px));background:rgba(14,22,38,.94);border:1px solid rgba(121,234,219,.45);border-radius:18px;padding:14px 16px 10px;text-align:center;box-shadow:0 18px 60px rgba(0,0,0,.5);animation:rise .4s ease both}
+#coach h2{margin:4px 0 4px;font:400 24px/1.15 var(--display)}
+#coach p{margin:0;color:var(--muted);font-size:15px}
+#coachDots{display:flex;gap:6px;justify-content:center;margin-top:8px}
+#coachDots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.18)}
+#coachDots i.on{background:var(--cyan)}
+#coachDots i.done{background:rgba(121,234,219,.5)}
+@keyframes rise{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+
+/* Controls: one thumb. Drag the road to steer; pedals at the corners; the big button lets go or takes back the wheel. */
+#controls{position:fixed;z-index:9;left:0;right:0;bottom:calc(14px + var(--sab));display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:10px;padding:0 calc(14px + var(--sar)) 0 calc(14px + var(--sal));pointer-events:none}
+#controls > *{pointer-events:auto}
+.pedal{width:74px;height:74px;border-radius:20px;border:1px solid var(--line);background:var(--panel);display:grid;place-content:center;font-weight:600;font-size:14px;line-height:1.15;touch-action:none;transition:opacity .4s,background .15s}
+.pedal small{display:block;font-weight:400;font-size:11px;color:var(--dim);margin-top:3px}
+.pedal.down{background:#2b3e58}
+#brakeBtn{justify-self:start}
+#gasBtn{justify-self:end}
+.auto .pedal{opacity:.45}
+#centerCol{display:grid;gap:10px;justify-items:center}
+#modeBtn{min-width:176px;min-height:64px;border-radius:999px;border:2px solid rgba(121,234,219,.7);background:linear-gradient(180deg,#1f5a54,#174640);color:#eafffb;font-weight:700;font-size:17px;padding:8px 22px;line-height:1.15;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+#modeBtn small{display:block;font-weight:400;font-size:12px;color:#bfeee6;margin-top:2px}
+.auto #modeBtn{border-color:rgba(255,191,129,.7);background:linear-gradient(180deg,#4a3a2a,#3a2d22);color:#fff3e6}
+.auto #modeBtn small{color:#f3d4b4}
+#modeBtn.pulse{animation:glow 1.6s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 0 8px rgba(121,234,219,.22),0 0 36px rgba(121,234,219,.55)}}
+#wipeBtn{min-height:56px;border-radius:999px;border:2px solid var(--amber);background:rgba(58,40,22,.92);color:#ffe7cf;font-weight:700;font-size:16px;padding:8px 22px;animation:glowA 1.2s ease-in-out infinite}
+#wipeBtn small{font-weight:400;font-size:12px;color:#f3d4b4;margin-left:6px}
+@keyframes glowA{50%{box-shadow:0 0 0 8px rgba(255,191,129,.2),0 0 30px rgba(255,191,129,.5)}}
+#laneBtns{position:fixed;z-index:9;left:0;right:0;bottom:calc(104px + var(--sab));display:flex;justify-content:space-between;padding:0 calc(14px + var(--sar)) 0 calc(14px + var(--sal));pointer-events:none}
+#laneBtns button{pointer-events:auto;width:64px;height:56px;border-radius:16px;border:1px solid var(--line);background:var(--panel);font-size:14px;font-weight:600}
+#steerHint{position:fixed;z-index:5;left:50%;transform:translateX(-50%);top:46%;font-size:12px;color:var(--text);background:rgba(16,24,39,.7);border-radius:999px;padding:4px 12px;pointer-events:none;transition:opacity .8s}
+#wheel{position:fixed;z-index:5;left:0;top:0;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;border:3px solid rgba(255,191,129,.8);pointer-events:none;opacity:0;transition:opacity .2s}
+#wheel::after{content:"";position:absolute;left:50%;top:4px;width:3px;height:22px;margin-left:-1.5px;background:var(--amber);border-radius:2px}
+#wheel.on{opacity:.9}
+/* Roadside notes: the book's take, readable only when you have attention to spare */
+#roadnote{position:fixed;z-index:6;right:calc(16px + var(--sar));top:30%;width:min(340px,calc(100% - 32px));background:rgba(12,52,40,.93);border:2px solid rgba(240,248,240,.82);outline:1px solid rgba(12,52,40,.93);border-radius:10px;padding:12px 16px 12px;box-shadow:0 18px 50px rgba(0,0,0,.45);pointer-events:none;opacity:0;transform:translateY(8px);transition:opacity .6s,transform .6s}
+#roadnote.show{opacity:1;transform:none}
+#roadnote .eyebrow{color:#b9d8c8;font-size:11px}
+#roadnote b{display:block;margin:4px 0 6px;font:800 17px/1.15 var(--body);letter-spacing:.06em;text-transform:uppercase;color:#f4fbf6}
+#roadnote p{margin:0;font:16px/1.45 var(--display);color:#e6f2ea}
+#roadnote p.ctx,ol.notes p.ctx{margin-top:8px;padding-top:8px;border-top:1px solid rgba(240,248,240,.22);font:14px/1.4 var(--body);color:#d2e8dc}
+.ctx span:first-child{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--cyan);margin-bottom:2px}
+ol.notes p.ctx{color:var(--muted);border-top-color:var(--line)}
+ol.notes{margin:8px 0 2px;padding:0;list-style:none;display:grid;gap:10px}
+ol.notes li{border-left:3px solid rgba(240,248,240,.5);padding:2px 0 2px 12px}
+ol.notes li.read{border-left-color:var(--cyan)}
+ol.notes b{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
+ol.notes .tag{font-size:12px;color:var(--dim);margin-left:6px}
+ol.notes p{margin:3px 0 0;font:15px/1.45 var(--display);color:var(--muted)}
+ol.notes cite{font-style:normal;font-size:12px;color:var(--dim)}
+
+/* Dialogs */
+.overlay{position:fixed;inset:0;z-index:15;display:grid;place-items:center;overflow:auto;background:rgba(8,12,22,.66);
+ padding:calc(20px + var(--sat)) calc(14px + var(--sar)) calc(20px + var(--sab)) calc(14px + var(--sal));animation:fadein .4s ease both}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.card{width:min(540px,100%);background:linear-gradient(180deg,rgba(26,36,56,.97),rgba(16,24,39,.98));border:1px solid var(--line);border-radius:22px;padding:24px 22px;box-shadow:0 24px 90px rgba(0,0,0,.55);display:grid;gap:12px}
+.card h2{margin:0;font:400 28px/1.15 var(--display)}
+.card h3{margin:6px 0 0;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);font-weight:600}
+.card p{margin:0;color:var(--muted)}
+.card small{font-size:12.5px;color:var(--dim);display:block}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.set{display:grid;gap:8px}
+.set label{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--text);cursor:pointer;min-height:30px}
+.set label span small{display:block}
+dl.gloss{margin:0;display:grid;gap:8px;font-size:14px}
+dl.gloss dt{font-weight:650;color:var(--text)}
+dl.gloss dt.amber{color:var(--amber)}dl.gloss dt.cyan{color:var(--cyan)}
+dl.gloss dd{margin:0;color:var(--muted)}
+details{border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+summary{cursor:pointer;font-weight:600;min-height:28px;display:flex;align-items:center}
+
+/* Results */
+#report .card{width:min(680px,100%);user-select:text;-webkit-user-select:text}
+#reportTitle{font-size:clamp(26px,6vw,32px)!important}
+#chart{width:100%;height:auto;display:block}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.col{border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:4px;align-content:start;font-size:14px}
+.col h4{margin:0 0 4px;font-size:14px}
+.col.m h4{color:var(--amber)}.col.a h4{color:var(--cyan)}
+.col.m{border-color:rgba(255,191,129,.35)}.col.a{border-color:rgba(121,234,219,.35)}
+.col .row{display:flex;justify-content:space-between;gap:8px;color:var(--muted)}
+.col .row b{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+.col.none{border-style:dashed;color:var(--dim)}
+.col.none p{font-size:14px}
+.reflect{font:italic 18px/1.45 var(--display);color:var(--text)!important;border-left:2px solid var(--cyan);padding-left:12px}
+.book{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;background:rgba(121,234,219,.06);border:1px solid rgba(121,234,219,.22);border-radius:14px;padding:12px}
+.book .cover{width:46px;height:66px;border-radius:3px;background:linear-gradient(160deg,#2a3a4f,#141c27);border:1px solid rgba(255,191,129,.5);display:grid;place-items:center;font:600 8px/1.15 var(--body);color:var(--amber);text-align:center;padding:4px;letter-spacing:.04em}
+.book p{font-size:14px}
+.book a{color:var(--cyan);font-weight:650}
+.shareRow{display:flex;gap:8px}
+.shareRow input{flex:1;min-width:0;border-radius:10px;border:1px solid var(--line);background:rgba(0,0,0,.3);color:var(--text);padding:11px 12px;font:inherit;font-size:16px;user-select:text;-webkit-user-select:text}
+.shareRow button,.btnc{border-radius:10px;border:0;padding:11px 14px;font-weight:650;background:var(--cyan);color:#0d2a27;white-space:nowrap;min-height:44px}
+#cardImg{width:100%;border-radius:12px;border:1px solid var(--line)}
+#copyStatus:empty{display:none}
+
+@media (max-width:900px) and (min-width:641px){
+ #coach{left:auto;right:12px;transform:none;top:calc(64px + var(--sat));width:min(320px,calc(100% - 372px));animation:none}
 }
-@media(max-height:500px) and (max-width:920px){#hud{inset:8px 8px auto;align-items:flex-start}#instruments{width:210px;padding:8px}#journey{padding:8px}.meter{margin-top:4px}#notice{top:150px}#help{display:none}}
+@media (max-width:640px){
+ #coach{top:calc(178px + var(--sat))}
+ #hud.glossy .meter small{display:none}
+ #hud.glossy .meter.spot small{display:block}
+ #hud{padding:8px 10px;border-radius:14px}
+ #modeRow{font-size:13.5px}
+ .meter{grid-template-columns:64px 1fr 32px;margin-top:5px;font-size:11.5px}
+ #trip{font-size:11.5px;margin-top:7px;padding-top:6px}
+ #notice{top:calc(178px + var(--sat));font-size:14px;padding:9px 14px}
+ #coach h2{font-size:21px}#coach p{font-size:14px}
+ #coach{padding:10px 14px 6px}
+ .pedal{width:66px;height:66px;border-radius:18px}
+ #modeBtn{min-width:150px;min-height:60px;font-size:16px;padding:8px 16px}
+ .cols{grid-template-columns:1fr}
+ .card{padding:20px 16px}
+ .overlay{padding-top:calc(64px + var(--sat))}
+ #roadnote{left:calc(12px + var(--sal));right:calc(12px + var(--sar));width:auto;top:calc(178px + var(--sat));padding:10px 14px}
+ #roadnote b{font-size:15px}#roadnote p{font-size:15px}
+}
+@media (max-height:520px) and (min-width:560px){
+ #hud{width:270px}.meter small{display:none!important}
+ #notice{top:calc(12px + var(--sat))}
+ #roadnote{top:calc(64px + var(--sat));bottom:auto;left:auto;right:calc(12px + var(--sar));width:300px;padding:8px 12px}
+ #roadnote p{font-size:14px}
+ #coach{top:calc(64px + var(--sat));left:auto;right:12px;transform:none;width:300px;animation:none}
+ #laneBtns{bottom:calc(96px + var(--sab))}
+}
+@media (prefers-reduced-motion:reduce){
+ *{animation-duration:.01ms!important;animation-iteration-count:1!important}
+}
 </style>
 </head>
 <body>
-<div id="hud" hidden>
-  <div id="instruments" class="panel">
-    <div class="eyebrow">Driving relationship</div>
-    <div id="mode">Manual · Subscription</div>
-    <div class="meter">
-      <div class="meter-label"><span>Ego Energy / Battery</span><span id="batteryText">100%</span></div>
-      <div class="track"><div class="fill" id="batteryFill"></div></div>
-    </div>
-    <div class="meter">
-      <div class="meter-label"><span>Cognitive Friction</span><span id="frictionText">0%</span></div>
-      <div class="track"><div class="fill" id="frictionFill"></div></div>
-    </div>
-    <div class="meter">
-      <div class="meter-label"><span>Optical Clarity</span><span id="sensorText">100%</span></div>
-      <div class="track"><div class="fill" id="sensorFill"></div></div>
-    </div>
-  </div>
-  <div id="journey" class="panel">
-    <div class="eyebrow">Destination already set</div>
-    <div id="phase">Free Flowing Highway</div>
-    <div id="distance">0.00 / 3.00 miles</div>
-    <div id="speed">0 mph</div>
-    <div class="track" id="progress"><div class="fill" id="progressFill" style="width:0"></div></div>
-  </div>
+<div id="stage" aria-hidden="true"><canvas id="gl"></canvas></div>
+<div id="vignette" aria-hidden="true"></div>
+<div id="grime" aria-hidden="true"></div>
+<div id="squeegee" aria-hidden="true"></div>
+<div id="wheel" aria-hidden="true"></div>
+<div id="sr" class="sr-only" role="status" aria-live="polite"></div>
+
+<header id="hud" hidden aria-label="Dashboard">
+ <div id="modeRow"><i></i><span id="modeName">Manual · Subscription</span></div>
+ <div class="meter" id="mEnergy" role="meter" aria-label="Ego energy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="90">
+  <span class="lab">Ego energy</span><span class="track"><i id="energyFill"></i></span><span class="val" id="energyVal">90%</span>
+  <small>Your willpower battery. Steering, braking and tailgating spend it; letting go refills it.</small>
+ </div>
+ <div class="meter" id="mFriction" role="meter" aria-label="Friction" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+  <span class="lab">Friction</span><span class="track"><i id="frictionFill"></i></span><span class="val" id="frictionVal">0%</span>
+  <small>How tense the road feels: close cars and jerky corrections. High friction drains energy faster.</small>
+ </div>
+ <div class="meter" id="mClarity" role="meter" aria-label="Clarity" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+  <span class="lab">Clarity</span><span class="track"><i id="clarityFill"></i></span><span class="val" id="clarityVal">100%</span>
+  <small>How clearly the guidance can see. Road grime clouds it; a wipe brings it back.</small>
+ </div>
+ <div id="trip"><b id="segName">Free-flowing highway</b><span id="tripVal">0.0 of 3 mi · 0 mph</span><span class="track" id="tripTrack"><i id="tripFill"></i></span></div>
+</header>
+
+<div id="notice" aria-hidden="true"></div>
+<aside id="roadnote" aria-hidden="true"><p class="eyebrow" id="rnSrc"></p><b id="rnSign"></b><p id="rnText"></p><p class="ctx"><span>On this road</span><span id="rnCtx"></span></p></aside>
+
+<button id="mute" class="icon" type="button" aria-label="Mute sound" aria-pressed="false">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path id="waves" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path id="cross" d="M16 9l6 6M22 9l-6 6" hidden/></svg>
+</button>
+<button id="pauseBtn" class="icon" type="button" aria-label="Pause, settings and what the meters mean" hidden>
+ <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+</button>
+
+<div id="coach" hidden aria-labelledby="coachTitle">
+ <p class="eyebrow" id="coachStep">Lesson · 1 of 3</p>
+ <h2 id="coachTitle"></h2>
+ <p id="coachText"></p>
+ <div id="coachDots" aria-hidden="true"><i></i><i></i><i></i></div>
+ <button class="link" id="skipLesson" type="button">Skip the lesson</button>
 </div>
-<div id="notice" class="panel" role="status" aria-live="polite"></div>
-<div id="help" hidden>← → / A D steer · ↑ ↓ / W S speed · Space release/take over · C clean · P pause</div>
+
+<div id="steerHint" hidden aria-hidden="true"><span class="touchonly">Drag the road to steer</span><span class="kbd">← → or A D to steer</span></div>
+<div id="laneBtns" hidden>
+ <button id="laneL" type="button" aria-label="Move one lane left">‹ Lane</button>
+ <button id="laneR" type="button" aria-label="Move one lane right">Lane ›</button>
+</div>
 <div id="controls" hidden>
-  <button id="modeButton" class="primary">Engage FSD</button>
-  <button id="cleanButton">Clean Sensor · C</button>
-  <button id="pauseButton" aria-label="Pause commute">Ⅱ</button>
-  <button id="soundButton" aria-label="Mute sound">♫</button>
+ <button id="brakeBtn" class="pedal" type="button" aria-label="Brake. Hold to slow down. In autonomous mode, braking takes the wheel back.">Brake<small class="kbd">↓ / S</small><small class="touchonly">hold</small></button>
+ <div id="centerCol">
+  <button id="wipeBtn" type="button" hidden>Wipe the glass<small class="kbd">C</small></button>
+  <button id="modeBtn" type="button"><span id="modeBtnLabel">Let go</span><small id="modeBtnSub"><span class="kbd">Space · </span>guidance drives</small></button>
+ </div>
+ <button id="gasBtn" class="pedal" type="button" aria-label="Gas. Hold to speed up.">Gas<small class="kbd">↑ / W</small><small class="touchonly">hold</small></button>
 </div>
-<div id="touch" hidden>
-  <div class="touch-group">
-    <button class="touch-button" data-input="left" aria-label="Steer left">←</button>
-    <button class="touch-button" data-input="right" aria-label="Steer right">→</button>
+
+<section id="intro" aria-labelledby="introTitle">
+ <div class="introCard">
+  <p class="eyebrow" id="introEyebrow">A playable metaphor from The Self-Driving Mind</p>
+  <h1 id="introTitle">The Freeway Navigator</h1>
+  <p class="sub">Subscription vs. Endowment</p>
+  <p class="lede">Three miles of coastal freeway, two ways to drive it. Grip the wheel and every correction costs a little willpower: that’s the <b class="amber">subscription</b>. Let go, and the route you already set carries you: that’s the <b class="cyan">endowment</b>.</p>
+  <p class="meta"><span>About 4 minutes</span><span aria-hidden="true">·</span><span>One hand is enough</span><span aria-hidden="true">·</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg> Best with the sound on</span></p>
+  <button class="primary" id="openBtn" type="button" disabled>Getting the road ready…</button>
+  <div id="loadBar" aria-hidden="true"><i id="loadFill"></i></div>
+  <p id="loadLine" role="status">Paving three miles of coastline…</p>
+  <div class="opts">
+   <label><input type="checkbox" id="optAssist"> Assisted driving: lane-by-lane steering, no quick reflexes needed</label>
+   <label><input type="checkbox" id="optReduced"> Reduce motion</label>
   </div>
-  <div class="touch-group">
-    <button class="touch-button" data-input="brake" aria-label="Brake">−</button>
-    <button class="touch-button" data-input="accelerate" aria-label="Accelerate">+</button>
+  <p class="honest">A symbolic game, not a driving lesson. The energy is made up, and the yoga links are my interpretation.</p>
+ </div>
+</section>
+
+<section id="pause" class="overlay" role="dialog" aria-modal="true" aria-labelledby="pauseTitle" hidden>
+ <div class="card">
+  <p class="eyebrow">A moment of stillness</p>
+  <h2 id="pauseTitle">Paused</h2>
+  <p>The road waits. Your progress is held.</p>
+  <div class="set">
+   <label><input type="checkbox" id="setAssist"><span>Assisted driving<small>← → move one lane at a time, the car keeps its distance, and the glass wipes itself after a few seconds.</small></span></label>
+   <label><input type="checkbox" id="setReduced"><span>Reduce motion<small>Steady camera, no shake or sway.</small></span></label>
+   <label class="touchonly" id="tiltRow"><input type="checkbox" id="setTilt"><span>Tilt to steer<small>Tilt the phone instead of dragging. Dragging still works.</small></span></label>
   </div>
-</div>
-<div id="start" class="overlay">
-  <div class="card panel">
-    <div class="eyebrow">The Self-Driving Mind · A playable metaphor</div>
-    <h1>The Freeway Navigator</h1>
-    <div style="font-size:20px;color:var(--cyan)">Subscription vs. Endowment</div>
-    <p>A three-mile coastal commute. Drive through the changing traffic, feel the cost of continual correction, then release the wheel and let the guidance carry you.</p>
-    <div class="instructions">
-      <div><strong style="color:var(--amber)">Manual · Subscription</strong>Steer with arrows or A/D. Adjust speed with ↑/↓ or W/S. Corrections, pressure, and braking consume ego energy.</div>
-      <div><strong style="color:var(--cyan)">Autonomous · Endowment</strong>Press Space to release control. Flow restores energy. Press C when perception becomes obscured.</div>
-    </div>
-    <label><input id="reducedMotion" type="checkbox"> Reduced camera motion</label>
-    <div class="actions"><button id="startButton" class="primary">Begin Commute</button></div>
-    <p class="small">A symbolic educational simulation. Energy flow and autonomous behavior are fictional game systems.</p>
-    <p id="loadStatus" class="small" role="status">Loading the procedural freeway…</p>
+  <details>
+   <summary>What the words mean</summary>
+   <dl class="gloss">
+    <dt class="amber">Manual · Subscription</dt><dd>You hold the wheel. Every correction is paid for in willpower, like a subscription that bills by the mile.</dd>
+    <dt class="cyan">Autonomous · Endowment</dt><dd>The destination was set before you started. Let go and the guidance carries you, refilling energy as it goes. The book uses a self-driving car as a stand-in for dhyāna, meditation that runs without white knuckles. That’s an analogy, not a product review.</dd>
+    <dt>Ego energy</dt><dd>Your willpower battery. Steering, braking and tailgating spend it. Letting go refills it. At zero the car only crawls.</dd>
+    <dt>Friction</dt><dd>How tense the road feels: cars too close, jerky corrections, crowds. It makes energy drain faster. Zero when you let go.</dd>
+    <dt>Clarity</dt><dd>How clearly the guidance can see. Every so often grime builds up while it drives. Until you wipe, the car slows to 20 mph and stops refilling energy. I read this as yama and niyama, the ethical groundwork that keeps perception clear. My reading, not a ruling.</dd>
+    <dt>Roadside notes</dt><dd>Green signs with lines from the book. When the guidance is driving you have the attention to read the small print; when you’re steering, it goes by. All of them wait for you on the results screen.</dd>
+    <dt>Controls</dt><dd><span class="touchonly">Drag the road to steer. Hold Gas or Brake. Tap Let go / Take the wheel. Tap the windshield to wipe. </span><span class="kbd">← → or A D steer · ↑ ↓ or W S speed · Space let go / take the wheel · C wipe · P or Esc pause · M sound.</span></dd>
+   </dl>
+  </details>
+  <div class="actions"><button class="primary" id="resumeBtn" type="button">Resume</button><button class="ghost" id="restartBtn" type="button">Start over</button></div>
+ </div>
+</section>
+
+<section id="report" class="overlay" role="dialog" aria-modal="true" aria-labelledby="reportTitle" hidden>
+ <div class="card">
+  <p class="eyebrow">Destination reached · plugged in</p>
+  <h2 id="reportTitle" tabindex="-1">You made it</h2>
+  <p id="reportLede"></p>
+  <h3>Your energy, mile by mile</h3>
+  <svg id="chart" viewBox="0 0 600 150" role="img" aria-labelledby="chartDesc"></svg>
+  <p id="chartDesc" style="font-size:13px;color:var(--dim)"></p>
+  <div class="cols"><div class="col m" id="colM"></div><div class="col a" id="colA"></div></div>
+  <p class="reflect" id="reflectLine"></p>
+  <details id="roadNotes"><summary id="notesSum">Notes from the road</summary><ol class="notes" id="notesList"></ol></details>
+  <div class="actions" id="otherRow" hidden><button class="primary" id="otherBtn" type="button">Try the other way</button><button class="ghost" id="againBtn2" type="button">Drive again</button></div>
+  <div class="book">
+   <div class="cover" aria-hidden="true">THE SELF-DRIVING MIND</div>
+   <p>This drive comes from <i>The Self-Driving Mind</i> (March 9, 2027), where a car on autopilot stands in for meditation that keeps going without you gripping it. <a href="https://www.barnesandnoble.com/w/the-self-driving-mind-sundar-rajan/1151506645?ean=9798895741986" target="_blank" rel="noopener">Pre-order at Barnes&nbsp;&amp;&nbsp;Noble</a> or <a href="https://theselfdrivingmind.com/book/" target="_blank" rel="noopener">read about the book</a>.</p>
   </div>
-</div>
-<div id="pause" class="overlay" hidden>
-  <div class="card panel">
-    <div class="eyebrow">A moment of stillness</div>
-    <h2>Commute paused</h2>
-    <p>Your route and progress are held.</p>
-    <button id="resumeButton" class="primary">Resume</button>
+  <h3>Share your drive</h3>
+  <form id="shareForm" class="shareRow" autocomplete="off">
+   <input id="fromName" maxlength="24" placeholder="Your first name (optional)" aria-label="Your first name, shown on the card and the link">
+   <button type="submit">Make my card</button>
+  </form>
+  <div id="shareOut" hidden style="display:grid;gap:10px">
+   <img id="cardImg" alt="">
+   <div class="actions"><button class="btnc" id="shareBtn" type="button" hidden>Share</button><button class="ghost" id="saveBtn" type="button">Save image</button><button class="ghost" id="copyBtn" type="button">Copy link</button></div>
   </div>
-</div>
-<div id="report" class="overlay" hidden>
-  <div class="card panel">
-    <div class="eyebrow">Destination reached · Charging connected</div>
-    <h2>What carried your journey?</h2>
-    <table>
-      <thead><tr><th>Recorded in this commute</th><th>Manual Grind<br><span class="small">Willpower / Exhaustion</span></th><th>Autonomous Carry<br><span class="small">Endowment / Restoration</span></th></tr></thead>
-      <tbody id="reportRows"></tbody>
-    </table>
-    <p>The destination was already set. Continual correction spent energy; releasing control and maintaining clear alignment allowed the system to carry the journey.</p>
-    <p id="reflection" class="small"></p>
-    <div class="actions"><button id="replayButton" class="primary">Drive Again</button></div>
-    <p class="small">Results are measured from this run. Unused modes are marked “Not experienced.” Energy is a metaphor, not an EV efficiency model.</p>
-  </div>
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <p id="copyStatus" role="status" style="font-size:13px"></p>
+  <small>Energy, friction and clarity are made-up game systems: not an EV model and not a measure of your mind. Finishing doesn’t certify anyone’s meditation, least of all mine.</small>
+  <div class="actions" id="againRow"><button class="primary" id="againBtn" type="button">Drive again</button></div>
+ </div>
+</section>
+
+<section id="fail" class="overlay" role="alertdialog" aria-modal="true" aria-labelledby="failTitle" aria-describedby="failText" hidden>
+ <div class="card">
+  <p class="eyebrow">Small detour</p>
+  <h2 id="failTitle">The freeway didn’t load</h2>
+  <p id="failText"></p>
+  <div class="actions"><button class="primary" id="retryBtn" type="button">Try again</button><button class="ghost" id="flatBtn" type="button">Play the simple 2D version</button></div>
+  <small>Nothing you did. The 2D version is the same drive with simpler pictures.</small>
+ </div>
+</section>
+
+<div id="oldBrowser" class="overlay" hidden><div class="card"><h2>This browser is a little too vintage</h2><p>The Freeway Navigator needs a recent Chrome, Safari, Firefox or Edge. On a phone, updating the browser usually does it.</p></div></div>
+<div id="fade" aria-hidden="true"></div>
+<noscript><div class="overlay"><div class="card"><h2>The freeway needs JavaScript</h2><p>Turn JavaScript on and reload to drive.</p></div></div></noscript>
+
 <script>
-"use strict";
+/* Plain ES5 guard: if the main script never starts (very old browser), say so instead of hanging. */
+setTimeout(function(){ if(!window.__fwParsed){ var o=document.getElementById('oldBrowser'); if(o) o.hidden=false; } },15000);
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" onerror="window.__threeFailed=true"></script>
+<script>
+'use strict';
+window.__fwParsed=true;
 (() => {
-const $ = id => document.getElementById(id);
-if (!window.THREE) {
-  $("loadStatus").textContent = "Three.js could not load. Connect to the internet and reload.";
-  $("startButton").disabled = true;
-  return;
-}
-const clamp = (x,a=0,b=1) => Math.max(a,Math.min(b,x));
-const smooth = (a,b,k,dt) => a+(b-a)*(1-Math.exp(-k*dt));
-const MILE=1609.344, FINISH=3*MILE, LANE=3.8;
-const LANES=[-LANE,0,LANE];
+const $=id=>document.getElementById(id);
+const QS=new URLSearchParams(location.search);
+const DEBUG=QS.has('debug'), CAPTURE=QS.get('capture'), FORCE_FLAT=QS.has('flat');
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const smooth=(a,b,k,dt)=>a+(b-a)*(1-Math.exp(-k*dt));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const cleanName=s=>String(s||'').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,24);
+const FROM=cleanName(QS.get('from'));
+const MILE=1609.344, FINISH=3*MILE, LANE=3.8, LANES=[-LANE,0,LANE];
+const START_ENERGY=.9, CRAWL=11; // nobody starts a commute at 100%; an empty tank crawls at ~25 mph instead of stranding you
+const COARSE=matchMedia('(pointer:coarse)').matches;
 let seed=89341;
-function random(){seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;}
-const input={left:false,right:false,accelerate:false,brake:false};
-const materials={};
-function material(name,color,extra={}){
-  return materials[name]||(materials[name]=new THREE.MeshStandardMaterial({color,roughness:.72,...extra}));
-}
-function box(w,h,d,mat,x=0,y=0,z=0){
-  const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
-  mesh.position.set(x,y,z);return mesh;
-}
-function vehicleMesh(color,isTruck=false){
-  const g=new THREE.Group();
-  const body=new THREE.MeshStandardMaterial({color,roughness:.4,metalness:.35});
-  const glass=material("glass",0x152e42,{metalness:.45,roughness:.2});
-  const dark=material("rubber",0x11151d);
-  const red=new THREE.MeshBasicMaterial({color:0xef3e48});
-  const white=material("headlamp",0xb9eeff,{emissive:0x8acbde,emissiveIntensity:1});
-  if(isTruck){
-    g.add(box(2.1,1.9,3.5,body,0,1.2,.55));
-    g.add(box(2,1.35,1.55,body,0,.92,-1.75));
-    g.add(box(1.72,.58,.06,glass,0,1.3,-2.55));
-  }else{
-    g.add(box(1.95,.48,4.25,body,0,.55,0));
-    const roof=box(1.65,.62,2.15,glass,0,1.04,.1);
-    g.add(roof);
-    g.add(box(1.62,.07,1.15,body,0,1.38,.25));
-    g.add(box(1.9,.09,.65,body,0,.83,-1.55));
-  }
-  const wheelGeo=new THREE.CylinderGeometry(.34,.34,.22,10);
-  for(const x of [-1,1])for(const z of [-1.35,1.35]){
-    const w=new THREE.Mesh(wheelGeo,dark);w.rotation.z=Math.PI/2;w.position.set(x,.35,z);g.add(w);
-  }
-  for(const x of [-.66,.66]){
-    g.add(box(.43,.13,.07,white,x,.67,isTruck?-2.56:-2.15));
-    g.add(box(.43,.15,.08,red,x,.66,isTruck?2.34:2.15));
-  }
-  g.userData.brakeMaterial=red;
-  return g;
+function random(){ seed=(1664525*seed+1013904223)>>>0; return seed/4294967296; }
+
+/* ---------------------------------------------------------------- per-viewer preferences (best effort) */
+const prefs={muted:false,assisted:false,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches,tilt:false};
+try{ const p=JSON.parse(localStorage.getItem('fw-prefs')||'{}'); for(const k of ['muted','assisted','reduced']) if(typeof p[k]==='boolean') prefs[k]=p[k]; }catch(e){}
+function savePrefs(){ try{ localStorage.setItem('fw-prefs',JSON.stringify({muted:prefs.muted,assisted:prefs.assisted,reduced:prefs.reduced})); }catch(e){} }
+
+let inputMode=COARSE?'touch':'key';
+function setInput(m){ inputMode=m; if(document.documentElement.dataset.input!==m) document.documentElement.dataset.input=m; }
+setInput(inputMode);
+const touchy=()=>inputMode==='touch';
+
+/* ---------------------------------------------------------------- simulation (unchanged physics from the original, with fairness fixes) */
+const input={keyL:false,keyR:false,gas:false,brake:false,drag:0,dragging:false,tilt:0};
+function steerCommand(){
+ if(input.dragging) return clamp(input.drag,-1,1);
+ const k=(input.keyR?1:0)-(input.keyL?1:0); if(k) return k;
+ return prefs.tilt ? input.tilt : 0;
 }
 
-class AudioSynthesizer{
-  constructor(){this.ctx=null;this.muted=false;}
-  init(){
-    if(this.ctx){this.ctx.resume().catch(()=>{});return;}
-    const AC=window.AudioContext||window.webkitAudioContext;
-    if(!AC)return;
-    try{
-      this.ctx=new AC();
-      this.master=this.ctx.createGain();this.master.gain.value=.38;this.master.connect(this.ctx.destination);
-      this.motorGain=this.ctx.createGain();this.motorGain.gain.value=.025;this.motorGain.connect(this.master);
-      this.motor=this.ctx.createOscillator();this.motor.type="sine";this.motor.frequency.value=65;this.motor.connect(this.motorGain);this.motor.start();
-      this.overtone=this.ctx.createOscillator();this.overtone.type="triangle";
-      this.overtoneGain=this.ctx.createGain();this.overtoneGain.gain.value=.008;
-      this.overtone.connect(this.overtoneGain);this.overtoneGain.connect(this.master);this.overtone.start();
-      const buffer=this.ctx.createBuffer(1,this.ctx.sampleRate*3,this.ctx.sampleRate);
-      const data=buffer.getChannelData(0);let last=0;
-      for(let i=0;i<data.length;i++){last=(last+(Math.random()*2-1)*.06)/1.025;data[i]=last;}
-      const noise=this.ctx.createBufferSource();noise.buffer=buffer;noise.loop=true;
-      const filter=this.ctx.createBiquadFilter();filter.type="lowpass";filter.frequency.value=850;
-      this.roadGain=this.ctx.createGain();this.roadGain.gain.value=.05;
-      noise.connect(filter);filter.connect(this.roadGain);this.roadGain.connect(this.master);noise.start();
-    }catch(e){this.ctx=null;}
-  }
-  tone(f,start,duration=.4,volume=.13){
-    if(!this.ctx)return;
-    const t=this.ctx.currentTime+start,o=this.ctx.createOscillator(),g=this.ctx.createGain();
-    o.type="sine";o.frequency.value=f;
-    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(volume,t+.025);
-    g.gain.exponentialRampToValueAtTime(.0001,t+duration);
-    o.connect(g);g.connect(this.master);o.start(t);o.stop(t+duration+.03);
-  }
-  chime(on){this.tone(on?440:660,0);this.tone(on?660:440,.13);}
-  clean(){this.tone(660,0,.25,.09);this.tone(880,.09,.4,.08);}
-  arrival(){[261.63,329.63,392,523.25].forEach((f,i)=>this.tone(f,i*.17,2,.11));}
-  update(speed,auto,paused){
-    if(!this.ctx)return;
-    const t=this.ctx.currentTime;
-    this.master.gain.setTargetAtTime(this.muted||paused?0:.38,t,.12);
-    this.motor.frequency.setTargetAtTime(48+speed*(auto?2:2.7),t,.15);
-    this.overtone.frequency.setTargetAtTime(96+speed*4,t,.15);
-    this.motorGain.gain.setTargetAtTime(.015+speed*.00065,t,.15);
-    this.roadGain.gain.setTargetAtTime(.015+speed*.0012,t,.2);
-  }
+class Vehicle{
+ constructor(){ this.reset(); }
+ reset(){ this.x=0;this.vx=0;this.speed=18;this.distance=0;this.steer=0;this.correction=0;this.braking=0;this.previousSteer=0; }
+ update(dt,command,energy){
+  this.steer=smooth(this.steer,command.steer,6,dt);
+  const change=Math.abs(this.steer-this.previousSteer)/dt;
+  this.correction=smooth(this.correction,clamp(change/3),5,dt);
+  this.previousSteer=this.steer;
+  const targetVx=command.lateral!==undefined?command.lateral:this.steer*4.4;
+  this.vx=smooth(this.vx,targetVx,4,dt);
+  this.x=clamp(this.x+this.vx*dt,-4.85,4.85);
+  const acceleration=clamp((command.speed-this.speed)*1.5,-7,energy<.08?1.1:3);
+  this.braking=clamp(-acceleration/7);
+  this.speed=clamp(this.speed+acceleration*dt,0,36);
+  this.distance+=this.speed*dt;
+ }
 }
 
-class VehicleDynamicsController{
-  constructor(){this.reset();}
-  reset(){this.x=0;this.vx=0;this.speed=24;this.distance=0;this.steer=0;this.correction=0;this.braking=0;this.previousSteer=0;}
-  update(dt,command,energy){
-    this.steer=smooth(this.steer,command.steer,6,dt);
-    const change=Math.abs(this.steer-this.previousSteer)/dt;
-    this.correction=smooth(this.correction,clamp(change/3),5,dt);
-    this.previousSteer=this.steer;
-    const targetVx=command.lateral!==undefined?command.lateral:this.steer*4.4;
-    this.vx=smooth(this.vx,targetVx,4,dt);
-    this.x=clamp(this.x+this.vx*dt,-4.85,4.85);
-    const acceleration=clamp((command.speed-this.speed)*1.5,-7,energy<.08?1.1:3);
-    this.braking=clamp(-acceleration/7);
-    this.speed=clamp(this.speed+acceleration*dt,0,36);
-    this.distance+=this.speed*dt;
-  }
+const CAR_COLORS=[0x667994,0xd3c9bb,0x485766,0x92666c,0x879588,0xc2b18d];
+class Traffic{
+ constructor(){
+  this.cars=[];
+  for(let i=0;i<66;i++) this.cars.push({lane:i%3,x:LANES[i%3],s:0,v:20,desired:22+random()*8,truck:i%9===0,cooldown:5+random()*10,target:i%3,color:CAR_COLORS[i%CAR_COLORS.length],braking:false});
+  this.reset();
+ }
+ reset(){ // cars start a little further out than the original, so standing still never means an instant rear-end
+  this.cars.forEach((c,i)=>{ c.lane=c.target=i%3; c.x=LANES[c.lane]; c.s=150+Math.floor(i/3)*33+(i%3)*7; c.v=20+random()*6; c.braking=false; });
+ }
+ ahead(s,x,exclude=null){
+  let best=null,gap=Infinity;
+  for(const c of this.cars){ if(c===exclude||Math.abs(c.x-x)>2.2) continue; const d=c.s-s; if(d>0&&d<gap){gap=d;best=c;} }
+  return {car:best,gap};
+ }
+ safeLane(lane,s,speed,player){
+  const x=LANES[lane];
+  for(const c of this.cars){ if(Math.abs(c.x-x)>2.4&&c.target!==lane) continue; const d=c.s-s; if(d>-(12+c.v*.9)&&d<14+speed*1.1) return false; }
+  if(player&&Math.abs(player.x-x)<2.6&&Math.abs(player.distance-s)<32) return false;
+  return true;
+ }
+ update(dt,player,phase){
+  const decisions=this.cars.map(c=>{
+   const front=this.ahead(c.s,c.x,c);
+   let desired=phase===1?11+(c.desired-22)*.7:c.desired;
+   if(phase===1&&c.s>2050&&c.s<2720&&c.target===2) desired=Math.min(desired,8);
+   if(front.car) desired=Math.min(desired,Math.max(0,(front.gap-8)/1.65));
+   const playerGap=player.distance-c.s;
+   if(playerGap>0&&Math.abs(player.x-c.x)<2.25) desired=Math.min(desired,Math.max(0,(playerGap-9)/1.6));
+   return desired;
+  });
+  this.cars.forEach((c,i)=>{
+   const old=c.v;
+   c.v=smooth(c.v,decisions[i],1.8,dt); c.s+=c.v*dt; c.cooldown-=dt;
+   if(c.cooldown<=0&&Math.abs(c.x-LANES[c.target])<.1){
+    const candidate=c.target+(random()<.5?-1:1);
+    if(candidate>=0&&candidate<3&&this.safeLane(candidate,c.s,c.v,player)) c.target=candidate;
+    c.cooldown=7+random()*12;
+   }
+   c.x=smooth(c.x,LANES[c.target],.65,dt);
+   if(Math.abs(c.x-LANES[c.target])<.15) c.lane=c.target;
+   if(c.s-player.distance< -80){ c.s=player.distance+500+random()*450; c.target=c.lane=Math.floor(random()*3); c.x=LANES[c.lane]; c.v=phase===1?12:23; }
+   c.braking=old-c.v>.025;
+  });
+ }
 }
 
-class TrafficSimulation{
-  constructor(world){this.world=world;this.cars=[];this.populate();}
-  populate(){
-    const palette=[0x667994,0xd3c9bb,0x485766,0x92666c,0x879588,0xc2b18d];
-    for(let i=0;i<66;i++){
-      const truck=i%9===0,mesh=vehicleMesh(palette[i%palette.length],truck);
-      this.world.add(mesh);
-      this.cars.push({mesh,lane:i%3,x:LANES[i%3],s:90+Math.floor(i/3)*33+(i%3)*7,
-        v:19+random()*7,desired:22+random()*8,truck,cooldown:5+random()*10,target:i%3});
-    }
+class Autopilot{
+ constructor(){ this.reset(); }
+ reset(){ this.lane=1;this.cooldown=0;this.maneuvers=0; }
+ update(dt,v,traffic,limited,phase,cap=99){
+  this.cooldown=Math.max(0,this.cooldown-dt);
+  const front=traffic.ahead(v.distance,v.x);
+  const cruise=Math.min(cap,limited?9:phase===1?20:29);
+  if(!limited&&this.cooldown===0&&Math.abs(v.x-LANES[this.lane])<.3&&front.gap<65){
+   let best=this.lane,bestScore=front.gap;
+   for(const lane of [this.lane-1,this.lane+1]){
+    if(lane<0||lane>2||!traffic.safeLane(lane,v.distance,v.speed)) continue;
+    const gap=traffic.ahead(v.distance,LANES[lane]).gap;
+    if(gap>bestScore+22){best=lane;bestScore=gap;}
+   }
+   if(best!==this.lane){this.lane=best;this.cooldown=5;this.maneuvers++;}
   }
-  reset(){
-    this.cars.forEach((c,i)=>{c.lane=c.target=i%3;c.x=LANES[c.lane];c.s=90+Math.floor(i/3)*33+(i%3)*7;c.v=20+random()*6;});
-  }
-  ahead(s,x,exclude=null){
-    let best=null,gap=Infinity;
-    for(const c of this.cars){
-      if(c===exclude||Math.abs(c.x-x)>2.2)continue;
-      const d=c.s-s;
-      if(d>0&&d<gap){gap=d;best=c;}
-    }
-    return {car:best,gap};
-  }
-  safeLane(lane,s,speed,player){
-    const x=LANES[lane];
-    for(const c of this.cars){
-      if(Math.abs(c.x-x)>2.4&&c.target!==lane)continue;
-      const d=c.s-s;
-      if(d>-(12+c.v*.9)&&d<14+speed*1.1)return false;
-    }
-    if(player&&Math.abs(player.x-x)<2.6&&Math.abs(player.distance-s)<32)return false;
-    return true;
-  }
-  update(dt,player,phase){
-    // Compute decisions from one shared snapshot before moving any vehicles.
-    const decisions=this.cars.map(c=>{
-      const front=this.ahead(c.s,c.x,c);
-      let desired=phase===1?11+(c.desired-22)*.7:c.desired;
-      if(phase===1&&c.s>2050&&c.s<2720&&c.target===2)desired=Math.min(desired,8);
-      if(front.car)desired=Math.min(desired,Math.max(0,(front.gap-8)/1.65));
-      const playerGap=player.distance-c.s;
-      if(playerGap>0&&Math.abs(player.x-c.x)<2.25)desired=Math.min(desired,Math.max(0,(playerGap-9)/1.6));
-      return desired;
-    });
-    this.cars.forEach((c,i)=>{
-      const old=c.v;
-      c.v=smooth(c.v,decisions[i],1.8,dt);c.s+=c.v*dt;c.cooldown-=dt;
-      if(c.cooldown<=0&&Math.abs(c.x-LANES[c.target])<.1){
-        const candidate=c.target+(random()<.5?-1:1);
-        if(candidate>=0&&candidate<3&&this.safeLane(candidate,c.s,c.v,player)){
-          c.target=candidate;
-        }
-        c.cooldown=7+random()*12;
-      }
-      c.x=smooth(c.x,LANES[c.target],.65,dt);
-      if(Math.abs(c.x-LANES[c.target])<.15)c.lane=c.target;
-      if(c.s-player.distance< -80){
-        c.s=player.distance+500+random()*450;
-        c.target=c.lane=Math.floor(random()*3);c.x=LANES[c.lane];
-        c.v=phase===1?12:23;
-      }
-      c.mesh.position.set(c.x,0,-(c.s-player.distance));
-      c.mesh.rotation.y=-clamp((LANES[c.target]-c.x)*.08,-.16,.16);
-      c.mesh.userData.brakeMaterial.color.setHex(old-c.v>.025?0xff6455:0xa52a39);
-      c.mesh.visible=Math.abs(c.s-player.distance)<850;
-    });
-  }
+  let target=cruise;
+  if(front.car){ const comfortable=12+v.speed*1.7; target=Math.min(target,Math.max(0,front.car.v+(front.gap-comfortable)*.48)); }
+  const lateral=clamp((LANES[this.lane]-v.x)*1.4,-2.25,2.25);
+  return {steer:lateral/4.4,lateral,speed:target};
+ }
 }
 
-class AutopilotEngine{
-  constructor(){this.reset();}
-  reset(){this.lane=1;this.cooldown=0;this.maneuvers=0;}
-  update(dt,v,traffic,limited,phase){
-    this.cooldown=Math.max(0,this.cooldown-dt);
-    const front=traffic.ahead(v.distance,v.x);
-    const cruise=limited?9:phase===1?20:29;
-    if(!limited&&this.cooldown===0&&Math.abs(v.x-LANES[this.lane])<.3&&front.gap<65){
-      let best=this.lane,bestScore=front.gap;
-      for(const lane of [this.lane-1,this.lane+1]){
-        if(lane<0||lane>2||!traffic.safeLane(lane,v.distance,v.speed))continue;
-        const gap=traffic.ahead(v.distance,LANES[lane]).gap;
-        if(gap>bestScore+22){best=lane;bestScore=gap;}
-      }
-      if(best!==this.lane){this.lane=best;this.cooldown=5;this.maneuvers++;}
-    }
-    let target=cruise;
-    if(front.car){
-      const comfortable=12+v.speed*1.7;
-      target=Math.min(target,Math.max(0,front.car.v+(front.gap-comfortable)*.48));
-    }
-    const lateral=clamp((LANES[this.lane]-v.x)*1.4,-2.25,2.25);
-    return {steer:lateral/4.4,lateral,speed:target};
-  }
+class Systems{
+ constructor(){ this.reset(); }
+ reset(){ this.battery=START_ENERGY;this.friction=0;this.cleanliness=1;this.grimeTarget=1;this.limited=false;this.dustAge=0; }
+ update(dt,v,traffic,automatic,boost=1){
+  const front=traffic.ahead(v.distance,v.x);
+  const pressure=front.car?clamp(1-front.gap/(16+v.speed*2)):0;
+  const neighbors=traffic.cars.filter(c=>Math.abs(c.s-v.distance)<16&&Math.abs(c.x-v.x)<5).length;
+  const target=automatic?0:clamp(.07+pressure*.65+v.correction*.3+Math.min(neighbors,3)*.05);
+  this.friction=smooth(this.friction,target,automatic?.8:.5,dt);
+  if(automatic&&this.friction<.002) this.friction=0;
+  // Grime builds over a couple of seconds rather than snapping on; a wipe is instant.
+  this.cleanliness=this.grimeTarget<1?smooth(this.cleanliness,this.grimeTarget,1.1,dt):1;
+  this.limited=this.grimeTarget<1&&this.cleanliness<.65;
+  if(this.grimeTarget<1) this.dustAge+=dt;
+  let delta;
+  if(automatic) delta=this.limited?0:.004*boost*this.cleanliness*clamp(v.speed/12)*dt;
+  else delta=-(.0015+.003*Math.abs(v.steer)+.005*v.correction+.0035*v.braking+.003*this.friction)*dt*boost;
+  const before=this.battery;
+  this.battery=clamp(this.battery+delta);
+  return this.battery-before;
+ }
+ dirty(){ this.grimeTarget=.3; this.dustAge=0; }
+ get dirtyNow(){ return this.grimeTarget<1; }
+ clean(){ this.cleanliness=1; this.grimeTarget=1; this.limited=false; this.dustAge=0; }
 }
 
-class BatteryFrictionSystem{
-  constructor(){this.reset();}
-  reset(){this.battery=1;this.friction=0;this.cleanliness=1;this.nextDust=36;this.limited=false;this.dustAge=0;}
-  update(dt,v,traffic,automatic,time){
-    const front=traffic.ahead(v.distance,v.x);
-    const pressure=front.car?clamp(1-front.gap/(16+v.speed*2)):0;
-    const neighbors=traffic.cars.filter(c=>Math.abs(c.s-v.distance)<16&&Math.abs(c.x-v.x)<5).length;
-    const target=automatic?0:clamp(.07+pressure*.65+v.correction*.3+Math.min(neighbors,3)*.05);
-    this.friction=smooth(this.friction,target,automatic?.8:.5,dt);
-    if(automatic&&this.friction<.002)this.friction=0;
-    let delta;
-    if(automatic){
-      delta=this.limited?0:.004*this.cleanliness*clamp(v.speed/12)*dt;
-      if(time>=this.nextDust&&this.cleanliness>.65){
-        this.cleanliness=.32;this.limited=true;this.dustAge=0;this.nextDust=time+48+random()*25;
-        game.notify("Sensor Obscured: Clean Perception Needed · Press C",7);
-        game.audio.tone(330,0,.5,.08);
-      }
-      if(this.limited)this.dustAge+=dt;
-    }else{
-      delta=-(.0015+.003*Math.abs(v.steer)+.005*v.correction+.0035*v.braking+.003*this.friction)*dt;
-    }
-    const before=this.battery;
-    this.battery=clamp(this.battery+delta);
-    return this.battery-before;
-  }
-  clean(){
-    this.cleanliness=1;this.limited=false;this.dustAge=0;
-    this.nextDust=Math.max(this.nextDust,game.time+32);
-  }
-}
-
-class ProceduralWorld{
-  constructor(){
-    this.scene=new THREE.Scene();this.scene.background=new THREE.Color(0x27283e);
-    this.scene.fog=new THREE.Fog(0x716079,110,750);
-    this.renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:"high-performance"});
-    this.renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));
-    this.renderer.setSize(innerWidth,innerHeight);
-    this.renderer.outputEncoding=THREE.sRGBEncoding;
-    this.renderer.toneMapping=THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure=1.2;
-    document.body.prepend(this.renderer.domElement);
-    this.camera=new THREE.PerspectiveCamera(57,innerWidth/innerHeight,.1,1500);
-    this.camera.position.set(0,5.5,11);
-    this.scene.add(new THREE.HemisphereLight(0xb8caff,0x423138,1.1));
-    const sunLight=new THREE.DirectionalLight(0xffc095,1.3);sunLight.position.set(-80,45,-100);this.scene.add(sunLight);
-    const road=material("road",0x303340);
-    this.scene.add(box(14,.15,1600,road,0,-.13,-620));
-    this.scene.add(box(1400,.1,1600,material("ocean",0x354761,{metalness:.6,roughness:.35}),-720,-2,-600));
-    this.scene.add(box(500,.1,1600,material("land",0x353846),265,-.8,-600));
-    this.scene.add(box(.45,.65,1600,material("barrier",0x8f8993),-7.2,.27,-620));
-    this.scene.add(box(.45,.65,1600,materials.barrier,7.2,.27,-620));
-    const line=material("line",0xd7c7ac,{emissive:0x786b56,emissiveIntensity:.2});
-    for(const x of [-6.2,6.2])this.scene.add(box(.12,.02,1600,line,x,.005,-620));
-    this.markers=new THREE.InstancedMesh(new THREE.BoxGeometry(.12,.025,4),line,180);
-    this.scene.add(this.markers);
-    this.matrix=new THREE.Matrix4();
-    this.poles=[];
-    const poleMat=material("pole",0x535666),lampMat=material("lamp",0xffd9ac,{emissive:0xffaf68,emissiveIntensity:2});
-    for(let i=0;i<28;i++){
-      const g=new THREE.Group();
-      g.add(box(.14,10,.14,poleMat,0,5,0));
-      g.add(box(2.7,.12,.14,poleMat,-1.3,10,0));
-      g.add(box(.7,.12,.45,lampMat,-2.5,9.9,0));
-      this.scene.add(g);this.poles.push(g);
-    }
-    for(let i=0;i<18;i++){
-      const mountain=new THREE.Mesh(new THREE.ConeGeometry(35+random()*55,35+random()*65,5),material("mountain",0x4a435c));
-      mountain.position.set(65+random()*200,12,-80-i*65);mountain.rotation.y=random()*6;this.scene.add(mountain);
-    }
-    const skyCanvas=document.createElement("canvas");skyCanvas.width=16;skyCanvas.height=256;
-    const ctx=skyCanvas.getContext("2d"),gradient=ctx.createLinearGradient(0,0,0,256);
-    gradient.addColorStop(0,"#101b36");gradient.addColorStop(.5,"#665475");gradient.addColorStop(.82,"#df967f");gradient.addColorStop(1,"#efb98f");
-    ctx.fillStyle=gradient;ctx.fillRect(0,0,16,256);
-    const sky=new THREE.Mesh(new THREE.SphereGeometry(1200,24,16),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(skyCanvas),side:THREE.BackSide,fog:false}));
-    this.scene.add(sky);
-    const sun=new THREE.Mesh(new THREE.SphereGeometry(22,20,12),new THREE.MeshBasicMaterial({color:0xffc497,fog:false}));
-    sun.position.set(-260,44,-650);this.scene.add(sun);
-    this.player=vehicleMesh(0xe3e9e9);this.scene.add(this.player);
-    this.ribbon=box(.12,.015,30,new THREE.MeshBasicMaterial({color:0x67e6d4,transparent:true,opacity:.45}),0,.035,-19);
-    this.scene.add(this.ribbon);
-    this.cones=[];
-    for(let i=0;i<28;i++){
-      const cone=new THREE.Mesh(new THREE.ConeGeometry(.28,.8,6),material("cone",0xfda16a));
-      this.scene.add(cone);this.cones.push(cone);
-    }
-    this.hub=new THREE.Group();
-    const hubMat=material("hub",0xdee8ed),glow=material("hubGlow",0x81ffe0,{emissive:0x45e9bd,emissiveIntensity:1.7});
-    this.hub.add(box(15,.35,12,hubMat,16,.05,0));
-    this.hub.add(box(15,.35,9,hubMat,16,5,0));
-    for(const x of [10,22])this.hub.add(box(.3,5,.3,hubMat,x,2.5,0));
-    for(let i=0;i<4;i++){
-      this.hub.add(box(.9,2.1,.55,hubMat,11+i*3,1.15,-2));
-      this.hub.add(box(.55,.9,.1,glow,11+i*3,1.5,-1.7));
-    }
-    const sign=document.createElement("canvas");sign.width=512;sign.height=128;
-    const sc=sign.getContext("2d");sc.fillStyle="#142b34";sc.fillRect(0,0,512,128);
-    sc.fillStyle="#8fffe2";sc.font="bold 38px sans-serif";sc.textAlign="center";sc.fillText("THE HORIZON",256,57);
-    sc.font="22px sans-serif";sc.fillText("CHARGING · DESTINATION",256,94);
-    const board=new THREE.Mesh(new THREE.PlaneGeometry(9,2.25),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(sign)}));
-    board.position.set(16,4.4,4.7);this.hub.add(board);this.scene.add(this.hub);
-    addEventListener("resize",()=>{
-      this.camera.aspect=innerWidth/innerHeight;this.camera.updateProjectionMatrix();
-      this.renderer.setSize(innerWidth,innerHeight);
-    });
-  }
-  render(game,dt){
-    const v=game.vehicle,d=v.distance;
-    let index=0;
-    for(const x of [-LANE/2,LANE/2])for(let i=0;i<90;i++){
-      this.matrix.makeTranslation(x,.01,40-i*12+(d%12));this.markers.setMatrixAt(index++,this.matrix);
-    }
-    this.markers.instanceMatrix.needsUpdate=true;
-    this.poles.forEach((p,i)=>p.position.set(8.3,0,40-i*42+(d%42)));
-    this.cones.forEach((c,i)=>{c.position.set(5.15,.4,-(2050+i*24-d));c.visible=c.position.z<30&&c.position.z> -700;});
-    this.hub.position.z=-(FINISH-d+12);this.hub.visible=d>FINISH-750;
-    const arrival=game.arriving?clamp(game.arrivalTime/4):game.ended?1:0;
-    const px=v.x+(16-v.x)*arrival;
-    this.player.position.set(px,0,0);
-    this.player.rotation.y=smooth(this.player.rotation.y,-v.vx*.055,5,dt);
-    this.player.rotation.z=game.reduced?0:-v.vx*.014;
-    this.ribbon.visible=game.automatic&&!game.ended;
-    this.ribbon.position.x=LANES[game.autopilot.lane];
-    this.ribbon.material.opacity=game.systems.limited?.12:.4;
-    const cameraX=game.reduced?px:px*.55;
-    this.camera.position.x=smooth(this.camera.position.x,cameraX,game.automatic?1.5:3,dt);
-    this.camera.position.y=smooth(this.camera.position.y,game.automatic?5.7:5.1,2,dt);
-    this.camera.lookAt(px*.7,.8,-22);
-    this.renderer.render(this.scene,this.camera);
-  }
-}
+const mkStats=()=>({time:0,distance:0,spent:0,restored:0,friction:0,corrections:0,lanes:0,wipes:0,grime:0,contacts:0});
+const SEGMENTS=['Free-flowing highway','Rush-hour choke','The Supercharger horizon'];
+// Roadside notes: the book's own take, one per sign. You only get to read them when you're not steering.
+const CH10='Ch. 10 · The Cloud Behind the Windshield', CH11='Ch. 11 · Lifetime Charging in the Real World', SILENT='The Silent Driver';
+const ROADNOTES=[
+ {mi:.7,sign:['Willpower','Renews daily'],text:'The subscription model runs on willpower, renewed every morning. It works exactly as designed, until it depletes. Every honest practitioner knows what that feels like from the inside.',src:CH11,
+  ctx:'The Ego energy bar is that willpower. Every correction you make while steering bills it, like a subscription charged by the mile.'},
+ {mi:1.1,sign:['Hands hovering?','Still driving'],text:'Three hours of LA traffic on Full Self-Driving, my hands hovering, uselessly ready. I arrived restored instead of drained. That drive was the mirror this book grew out of.',src:SILENT,
+  ctx:'This game is that drive. The book uses the self-driving car as a picture of meditation that carries you, instead of one you have to push.'},
+ {mi:1.5,sign:['Self-promises','Break'],text:'Jeffery Long, a religion professor, meditated on and off for decades, until the alarm won again. After his initiation in 2005 he hasn’t missed a day. The practice stopped being a daily negotiation with himself.',src:CH11,
+  ctx:'Initiation is a commitment made to a teacher, not to yourself. In the game it’s the Let go button: the route was set before you started.'},
+ {mi:1.9,sign:['The water is','already there'],text:'Practice doesn’t generate the power. It opens the gate. The ego’s grip on the wheel is the earthen bank, and once it’s removed, as Swami Vivekananda put it, in rushes nature.',src:CH10,
+  ctx:'A farmer doesn’t push water into a field; he opens the gate. Here you don’t make the car go. You stop getting in its way.'},
+ {mi:2.3,sign:['The car knows','how to drive'],text:'The question is whether the driver is finally willing to stop performing driving.',src:CH10,
+  ctx:'The guidance has been driving fine all along. All it asks of you is a clear windshield, which the book reads as everyday ethics keeping the mind clear.'},
+ {mi:2.7,sign:['Missing variable:','Transmission'],text:'My disciplined friends were manual drivers of the mind, trying to build the car while driving it. The missing variable wasn’t discipline. It was transmission.',src:SILENT,
+  ctx:'Transmission is the book’s word for what a real teacher passes on (guru kṛpā, grace). It’s the charge you didn’t have to generate. Here, that’s the energy that refills while you’re carried.'},
+];
+const ATOM={sign:['The crossing','is atomic'],text:'The preparation is cumulative. The crossing is atomic. Self-driving doesn’t engage gradually: one click, and the mode has changed.',src:CH10,
+ ctx:'You just did it: one press of Let go. Notice that it didn’t feel like more steering.'};
 
 class Game{
-  constructor(){
-    this.world=new ProceduralWorld();
-    this.vehicle=new VehicleDynamicsController();
-    this.autopilot=new AutopilotEngine();
-    this.traffic=new TrafficSimulation(this.world.scene);
-    this.systems=new BatteryFrictionSystem();
-    this.audio=new AudioSynthesizer();
-    this.started=false;this.paused=false;this.ended=false;
-    this.last=performance.now();this.accumulator=0;this.uiClock=0;
-    this.reset();
-    requestAnimationFrame(t=>this.frame(t));
+ constructor(){
+  this.vehicle=new Vehicle(); this.autopilot=new Autopilot(); this.traffic=new Traffic(); this.systems=new Systems();
+  this.state='intro'; this.paused=false; this.calm=1; this.tension=0;
+  this.reset();
+ }
+ reset(){
+  seed=89341; this.vehicle.reset(); this.autopilot.reset(); this.traffic.reset(); this.systems.reset();
+  this.time=0; this.automatic=false; this.engaging=0; this.phase=0; this.manualTarget=20;
+  this.arriving=false; this.arrivalTime=0; this.ended=false; this.prompted=false; this.lowStage=0;
+  this.lesson=null; this.recording=false; this.recordFrom=0; this.recordT=0; this.usedAssist=false;
+  this.stats=[mkStats(),mkStats()]; this.timeline=[]; this.sampleT=0;
+  this.lastCorrection=0; this.contactCooldown=0; this.assistLane=1;
+  this.autoTime=0; this.nextDust=22; this.hint=null; this._man=0;
+  this.notes=ROADNOTES.map(()=>null); this.atomAt=0; this.atomShown=false; this.toldSign=false;
+ }
+ get running(){ return this.state==='lesson'||this.state==='play'; }
+ startRun(withLesson,hint){
+  this.reset(); this.hint=hint||null;
+  if(withLesson){ this.state='lesson'; this.lesson={step:0,acc:0,autoT:0,lane0:1,doneT:-1}; }
+  else { this.state='play'; this.beginRecording(); }
+ }
+ beginRecording(){
+  this.recording=true; this.recordFrom=this.vehicle.distance; this.recordT=this.time;
+  this.systems.battery=START_ENERGY; this.systems.friction=0; this.stats=[mkStats(),mkStats()];
+  this.timeline=[{d:this.vehicle.distance,e:this.systems.battery,a:this.automatic}]; this.sampleT=0;
+  this.autoTime=0; this.nextDust=22; this.usedAssist=prefs.assisted;
+ }
+ idle(dt){ // the entrance: the scene drives itself behind the title
+  const v=this.vehicle; this.traffic.update(dt,v,0);
+  const c=this.autopilot.update(dt,v,this.traffic,false,0,24); v.update(dt,c,1);
+  if(v.distance>MILE*1.6){ this.reset(); }
+ }
+ toggle(reason){
+  if(!this.running||this.paused||this.arriving) return 'no';
+  if(!this.automatic&&this.systems.limited){ notify(`Wipe the glass first. The guidance can’t see through grime. ${touchy()?'Tap the windshield.':'Press C.'}`); return 'blocked'; }
+  this.automatic=!this.automatic;
+  if(this.automatic){
+   this.autopilot.lane=LANES.reduce((best,x,i)=>Math.abs(x-this.vehicle.x)<Math.abs(LANES[best]-this.vehicle.x)?i:best,0);
+   this.engaging=1.2; audio.release();
+   notify('You let go. The route is held, and the guidance is driving.');
+   if(this.recording&&!this.atomShown){ this.atomShown=true; this.atomAt=this.time+2.5; }
+  }else{
+   this.manualTarget=this.vehicle.speed; this.assistLane=this.autopilot.lane; audio.take();
+   notify(reason==='steer'?'You grabbed the wheel, so it’s yours again. Subscription resumed.':reason==='brake'?'Braking hands the wheel back to you. Subscription resumed.':'You took the wheel. Subscription resumed.');
   }
-  reset(){
-    seed=89341;this.vehicle.reset();this.autopilot.reset();this.traffic.reset();this.systems.reset();
-    this.time=0;this.automatic=false;this.engaging=0;this.phase=0;this.manualTarget=24;
-    this.arriving=false;this.arrivalTime=0;this.ended=false;this.prompted=false;this.lowWarn=false;
-    this.stats=[0,1].map(()=>({time:0,distance:0,spent:0,restored:0,friction:0,corrections:0}));
-    this.lastCorrection=0;this.contactCooldown=0;this.noticeUntil=0;this.accumulator=0;
-    Object.keys(input).forEach(k=>input[k]=false);
+  onModeChange(); return this.automatic?'auto':'manual';
+ }
+ clean(){
+  if(!this.running||this.paused||this.arriving) return;
+  if(!this.systems.dirtyNow){ notify('The glass is already clear.'); return; }
+  this.systems.clean(); audio.wipe(); wipeFx();
+  if(this.recording) this.stats[this.automatic?1:0].wipes++;
+  notify('Clear again. The guidance can see the road.');
+  if(this.lesson&&this.lesson.step===2) lessonNext();
+ }
+ laneStep(dir){
+  if(!this.running||this.paused||this.arriving) return;
+  if(this.automatic) this.toggle('steer');
+  this.assistLane=clamp(this.assistLane+dir,0,2);
+ }
+ step(dt){
+  if(this.state==='intro'){ this.idle(dt); return; }
+  if(!this.running||this.paused) return;
+  this.time+=dt;
+  if(this.arriving){
+   this.arrivalTime+=dt; this.vehicle.speed=smooth(this.vehicle.speed,0,2,dt);
+   if(this.arrivalTime>=4) this.finish();
+   return;
   }
-  start(){
-    this.audio.init();this.reset();this.started=true;this.paused=false;
-    this.reduced=$("reducedMotion").checked;
-    ["start","report","pause"].forEach(id=>$(id).hidden=true);
-    ["hud","controls","help","touch"].forEach(id=>$(id).hidden=false);
-    this.notify("The destination is already set. Begin by feeling the road.",6);
-    this.updateUI();
+  const v=this.vehicle, sys=this.systems, L=this.lesson;
+  const phase=Math.min(2,Math.floor(v.distance/MILE));
+  if(phase!==this.phase){
+   this.phase=phase;
+   notify(phase===1?'Rush-hour choke. The road asks for constant correction.':'The Supercharger horizon. The charger is just ahead.',6);
   }
-  notify(message,seconds=4){
-    $("notice").textContent=message;$("notice").classList.add("show");
-    this.noticeUntil=this.time+seconds;
+  if(this.state==='play'&&!this.prompted&&!this.automatic&&this.time-this.recordT>22&&this.stats[1].time===0){
+   this.prompted=true; notify(`The route is already held. Let go whenever you like${touchy()?'':' (Space)'}.`,7);
   }
-  toggle(){
-    if(!this.started||this.paused||this.ended||this.arriving)return;
-    if(!this.automatic&&this.systems.cleanliness<.65){this.notify("Clean perception first · Press C");return;}
-    this.automatic=!this.automatic;this.audio.chime(this.automatic);
-    if(this.automatic){
-      this.autopilot.lane=LANES.reduce((best,x,i)=>Math.abs(x-this.vehicle.x)<Math.abs(LANES[best]-this.vehicle.x)?i:best,0);
-      this.engaging=1.2;this.notify("Destination retained. Support engaged.");
-    }else{
-      this.manualTarget=this.vehicle.speed;this.notify("Manual control returned · Subscription Model");
+  this.traffic.update(dt,v,this.phase);
+  const cap=this.state==='lesson'?17:99;
+  let command;
+  if(this.automatic){
+   command=this.autopilot.update(dt,v,this.traffic,sys.limited,this.phase,cap);
+   if(this.engaging>0){
+    this.engaging=Math.max(0,this.engaging-dt);
+    const blend=1-this.engaging/1.2;
+    command.lateral*=blend; command.steer*=blend;
+    command.speed=this.manualTarget+(command.speed-this.manualTarget)*blend;
+   }
+  }else{
+   this.manualTarget=clamp(this.manualTarget+(input.gas?5:0)*dt-(input.brake?10:0)*dt,0,34);
+   if(prefs.assisted){
+    const lat=clamp((LANES[this.assistLane]-v.x)*1.4,-2.25,2.25);
+    command={steer:lat/4.4,lateral:lat,speed:this.manualTarget};
+    const f=this.traffic.ahead(v.distance,v.x);
+    if(f.car) command.speed=Math.min(command.speed,Math.max(0,f.car.v+(f.gap-(12+v.speed*1.7))*.48));
+   }else command={steer:steerCommand(),speed:this.manualTarget};
+   command.speed=Math.min(command.speed,cap);
+   if(sys.battery<=0) command.speed=Math.min(command.speed,CRAWL); // out of energy: crawl, never strand
+  }
+  const previousDistance=v.distance,previousX=v.x;
+  v.update(dt,command,sys.battery);
+  this.contactCooldown=Math.max(0,this.contactCooldown-dt);
+  for(const c of this.traffic.cars){
+   const gap=c.s-v.distance,previousGap=c.s-previousDistance;
+   const lateralNear=Math.min(Math.abs(c.x-v.x),Math.abs(c.x-previousX))<1.85;
+   if(lateralNear&&((Math.abs(gap)<4.5)||(previousGap>4.5&&gap<=4.5))){
+    if(previousGap>=0){ v.distance=Math.min(v.distance,c.s-4.6); v.speed=Math.min(v.speed,c.v); }
+    else { c.s=v.distance-4.6; c.v=Math.min(c.v,v.speed); }
+    if(!this.automatic&&this.contactCooldown===0){
+     sys.battery=clamp(sys.battery-.035); sys.friction=clamp(sys.friction+.3);
+     if(this.recording){ this.stats[0].spent+=.035; this.stats[0].contacts++; }
+     this.contactCooldown=2; audio.bump(); buzz(25);
+     notify('Bumper kiss. Give the road a little more space.');
     }
-    this.updateUI();
+   }
   }
-  clean(){
-    if(!this.started||this.paused||this.ended||this.arriving)return;
-    if(this.systems.cleanliness>.99){this.notify("Perception is clear. Let the journey continue.");return;}
-    this.systems.clean();this.audio.clean();
-    this.notify("Clarity restored · Ethical alignment keeps perception clear.");
+  v.distance=Math.max(previousDistance,v.distance);
+  ROADNOTES.forEach((n,i)=>{
+   if(this.notes[i]||v.distance<n.mi*MILE) return;
+   const how=this.notes[i]=!this.recording?'x':this.automatic?'a':'m';
+   if(how==='a') showRoadNote(n);
+   else if(how==='m'&&!this.toldSign){ this.toldSign=true; notify('A roadside note went by. Hard to read the small print while you’re steering. It’ll wait for you at the charger.',6); }
+  });
+  if(this.atomAt&&this.time>=this.atomAt){ this.atomAt=0; if(this.automatic) showRoadNote(ATOM); }
+  // Grime only builds while the guidance drives; it arrives on a schedule of autonomous time, never at random in manual.
+  if(this.automatic&&this.state==='play'&&!sys.dirtyNow){
+   this.autoTime+=dt;
+   if(this.autoTime>=this.nextDust){ this.nextDust=this.autoTime+50+random()*25; this.dirty(); }
   }
-  setPause(value){
-    if(!this.started||this.ended||this.arriving)return;
-    this.paused=value;$("pause").hidden=!value;
-    Object.keys(input).forEach(k=>input[k]=false);
-    this.accumulator=0;
+  if(sys.dirtyNow&&prefs.assisted&&sys.dustAge>3.5){ this.systems.clean(); audio.wipe(); wipeFx(); notify('Assist wiped the glass for you.'); if(this.recording) this.stats[this.automatic?1:0].wipes++; if(L&&L.step===2) lessonNext(); }
+  const boost=L?(L.step===0?3:L.step===1?6:1):1;
+  const delta=sys.update(dt,v,this.traffic,this.automatic,boost);
+  if(this.recording){
+   const s=this.stats[this.automatic?1:0];
+   s.time+=dt; s.distance+=v.distance-previousDistance;
+   s.spent+=Math.max(0,-delta); s.restored+=Math.max(0,delta); s.friction+=sys.friction*dt;
+   if(sys.limited) s.grime+=dt;
+   if(!this.automatic&&v.correction>.3&&this.lastCorrection<=.3) s.corrections++;
+   this.sampleT+=dt;
+   if(this.sampleT>=1){ this.sampleT=0; this.timeline.push({d:v.distance,e:sys.battery,a:this.automatic}); }
   }
-  step(dt){
-    if(!this.started||this.paused||this.ended)return;
-    this.time+=dt;
-    if(this.time>this.noticeUntil)$("notice").classList.remove("show");
-    if(this.arriving){
-      this.arrivalTime+=dt;this.vehicle.speed=smooth(this.vehicle.speed,0,2,dt);
-      if(this.arrivalTime>=4)this.finish();
-      return;
-    }
-    const v=this.vehicle;
-    const phase=Math.min(2,Math.floor(v.distance/MILE));
-    if(phase!==this.phase){
-      this.phase=phase;
-      this.notify(phase===1?"The Congested Choke · The road asks for continual correction.":"The Supercharger Horizon · Your destination is approaching.",6);
-    }
-    if(this.time>13&&!this.prompted){
-      this.prompted=true;this.notify("The route is already held. Press Space to release control.",7);
-    }
-    if(this.automatic&&(input.left||input.right)){this.toggle();}
-    this.traffic.update(dt,v,this.phase);
-    let command;
-    if(this.automatic){
-      command=this.autopilot.update(dt,v,this.traffic,this.systems.limited,this.phase);
-      if(this.engaging>0){
-        this.engaging=Math.max(0,this.engaging-dt);
-        const blend=1-this.engaging/1.2;
-        command.lateral*=blend;command.steer*=blend;
-        command.speed=this.manualTarget+(command.speed-this.manualTarget)*blend;
-      }
-      if(this.systems.dustAge>12)command.speed=0;
-    }else{
-      this.manualTarget=clamp(this.manualTarget+(input.accelerate?5:0)*dt-(input.brake?10:0)*dt,0,34);
-      command={steer:(input.right?1:0)-(input.left?1:0),speed:this.manualTarget};
-      if(this.systems.battery===0)command.speed=0;
-    }
-    const previousDistance=v.distance,previousX=v.x;
-    v.update(dt,command,this.systems.battery);
-    // Swept longitudinal contact check prevents crossing a vehicle between ticks.
-    this.contactCooldown=Math.max(0,this.contactCooldown-dt);
-    for(const c of this.traffic.cars){
-      const gap=c.s-v.distance,previousGap=c.s-previousDistance;
-      const lateralNear=Math.min(Math.abs(c.x-v.x),Math.abs(c.x-previousX))<1.85;
-      if(lateralNear&&((Math.abs(gap)<4.5)||(previousGap>4.5&&gap<=4.5))){
-        if(previousGap>=0){
-          v.distance=Math.min(v.distance,c.s-4.6);v.speed=Math.min(v.speed,c.v);
-        }else{
-          c.s=v.distance-4.6;c.v=Math.min(c.v,v.speed);
-        }
-        if(!this.automatic&&this.contactCooldown===0){
-          this.systems.battery=clamp(this.systems.battery-.035);
-          this.stats[0].spent+=.035;this.systems.friction=clamp(this.systems.friction+.3);
-          this.contactCooldown=2;this.notify("Close contact · Give the road more space.");
-        }
-      }
-    }
-    v.distance=Math.max(previousDistance,v.distance);
-    const delta=this.systems.update(dt,v,this.traffic,this.automatic,this.time);
-    const s=this.stats[this.automatic?1:0];
-    s.time+=dt;s.distance+=v.distance-previousDistance;
-    s.spent+=Math.max(0,-delta);s.restored+=Math.max(0,delta);s.friction+=this.systems.friction*dt;
-    if(!this.automatic&&v.correction>.3&&this.lastCorrection<=.3)s.corrections++;
-    this.lastCorrection=v.correction;
-    if(this.systems.battery<.2&&!this.lowWarn){
-      this.lowWarn=true;this.notify("Ego energy is running low. Release control to receive support.",7);
-    }
-    if(v.distance>=FINISH){
-      v.distance=FINISH;this.arriving=true;this.arrivalTime=0;
-      this.notify("Destination reached · Connecting to the charging horizon.",5);
-    }
+  this.lastCorrection=v.correction;
+  if(this.automatic&&this.autopilot.maneuvers!==this._man){ if(this.recording&&this._man!==undefined) this.stats[1].lanes+=this.autopilot.maneuvers-this._man; this._man=this.autopilot.maneuvers; }
+  if(L) this.lessonTick(dt);
+  if(this.state==='play'&&!this.automatic){
+   const b=sys.battery;
+   if(b<.5&&this.lowStage<1){ this.lowStage=1; say('Ego energy at half.'); }
+   if(b<.25&&this.lowStage<2){ this.lowStage=2; audio.low(); notify('Running low on ego energy. Letting go refills it. Or keep going; it’s your commute.',7); }
+   if(b<=0&&this.lowStage<3){ this.lowStage=3; notify('Out of ego energy. The car can only crawl now. Let go and the guidance will carry you while it refills.',8); }
   }
-  finish(){
-    this.ended=true;this.arriving=false;this.vehicle.speed=0;this.audio.arrival();
-    $("report").hidden=false;["controls","touch","help"].forEach(id=>$(id).hidden=true);
-    const a=this.stats[0],b=this.stats[1];
-    const value=(s,fn)=>s.time<.1?"Not experienced":fn(s);
-    const rows=[
-      ["Time in mode",s=>`${Math.floor(s.time/60)}m ${Math.floor(s.time%60)}s`],
-      ["Distance",s=>`${(s.distance/MILE).toFixed(2)} miles`],
-      ["Energy consumed",s=>`${(s.spent*100).toFixed(1)} points`],
-      ["Energy restored",s=>`${(s.restored*100).toFixed(1)} points`],
-      ["Average friction",s=>`${Math.round(s.friction/s.time*100)}%`]
-    ];
-    $("reportRows").innerHTML=rows.map(([label,fn])=>`<tr><td>${label}</td><td>${value(a,fn)}</td><td>${value(b,fn)}</td></tr>`).join("")+
-      `<tr><td>Driving actions</td><td>${value(a,s=>s.corrections+" correction bursts")}</td><td>${value(b,s=>this.autopilot.maneuvers+" guided lane changes")}</td></tr>`;
-    $("reflection").textContent=a.time&&b.time?
-      "Where did effort help—and where did releasing control help? These measurements reflect the different road conditions encountered in each mode.":
-      "You experienced one mode. Replay and try the other to feel how your relationship to the same road changes.";
+  if(this.state==='play'&&this.automatic&&this.lowStage>0&&sys.battery>.55) this.lowStage=0;
+  if(v.distance>=FINISH){
+   v.distance=FINISH; this.arriving=true; this.arrivalTime=0;
+   if(this.recording) this.timeline.push({d:FINISH,e:sys.battery,a:this.automatic});
+   notify('Destination reached. Pulling into the charger.',5);
   }
-  updateUI(){
-    const s=this.systems;
-    $("batteryText").textContent=Math.round(s.battery*100)+"%";
-    $("batteryFill").style.width=s.battery*100+"%";
-    $("batteryFill").style.background=s.battery<.2?"#ffa28a":"#79eadb";
-    $("frictionText").textContent=Math.round(s.friction*100)+"%";
-    $("frictionFill").style.width=s.friction*100+"%";
-    $("sensorText").textContent=Math.round(s.cleanliness*100)+"%";
-    $("sensorFill").style.width=s.cleanliness*100+"%";
-    $("sensorFill").style.background=s.limited?"#ffba81":"#79eadb";
-    $("mode").textContent=this.automatic?(s.limited?"FSD · Clarity Needed":this.engaging>0?"Releasing Control…":"Autonomous · Endowment"):"Manual · Subscription";
-    $("mode").style.color=this.automatic?"#79eadb":"#ffbf81";
-    $("modeButton").textContent=this.automatic?"Take Manual Control":"Release Control · Engage FSD";
-    $("cleanButton").textContent=s.limited?"Clean Sensor · C":"Sensors Clear · C";
-    $("phase").textContent=["Free Flowing Highway","Heavy Rush-Hour Choke","The Supercharger Horizon"][this.phase];
-    $("distance").textContent=(this.vehicle.distance/MILE).toFixed(2)+" / 3.00 miles";
-    $("speed").textContent=Math.round(this.vehicle.speed*2.23694)+" mph";
-    $("progressFill").style.width=clamp(this.vehicle.distance/FINISH)*100+"%";
+ }
+ dirty(){
+  this.systems.dirty(); audio.grime();
+  notify(`Grime on the glass. Until you wipe, the car slows to 20 mph and stops refilling. ${touchy()?'Tap the windshield or Wipe.':'Press C or click Wipe.'}`,8);
+  onGrime(true);
+ }
+ lessonTick(dt){
+  const L=this.lesson, v=this.vehicle;
+  if(L.step===0){
+   if(!this.automatic) L.acc+=Math.abs(v.steer)*dt;
+   if((prefs.assisted&&this.assistLane!==L.lane0)||L.acc>1.1) lessonNext();
+   else if(this.automatic) lessonNext(); // they jumped ahead to letting go; fine
+  }else if(L.step===1){
+   if(this.automatic&&this.engaging===0) L.autoT+=dt;
+   if(L.autoT>4.5) lessonNext();
+  }else if(L.step===3){
+   L.doneT+=dt; if(L.doneT>5.5) lessonFinish();
   }
-  frame(t){
-    const elapsed=Math.min((t-this.last)/1000,.1);this.last=t;
-    if(!this.paused){this.accumulator+=elapsed;while(this.accumulator>=1/60){this.step(1/60);this.accumulator-=1/60;}}
-    this.uiClock+=elapsed;
-    if(this.uiClock>.1){this.updateUI();this.uiClock=0;}
-    this.audio.update(this.vehicle.speed,this.automatic,this.paused||!this.started);
-    this.world.render(this,elapsed);
-    requestAnimationFrame(n=>this.frame(n));
-  }
+ }
+ finish(){
+  this.state='end'; this.arriving=false; this.ended=true; this.vehicle.speed=0; audio.arrival();
+  onFinish();
+ }
 }
 
-let game;
-try{
-  game=new Game();
-  $("loadStatus").textContent="Ready · Procedural scenery and sound. No downloaded assets.";
-}catch(e){
-  $("loadStatus").textContent="WebGL could not initialize. Try a browser with hardware acceleration enabled.";
-  $("startButton").disabled=true;
-  return;
+/* ---------------------------------------------------------------- audio: all synthesised, no downloads */
+class FreewayAudio{
+ constructor(){ this.ctx=null; this.muted=prefs.muted; }
+ init(){
+  if(this.ctx){ if(this.ctx.state!=='running') this.ctx.resume().catch(()=>{}); return; }
+  const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+  try{
+   const c=this.ctx=new AC();
+   const comp=c.createDynamicsCompressor(); comp.threshold.value=-20; comp.ratio.value=3; comp.connect(c.destination);
+   this.master=c.createGain(); this.master.gain.value=0; this.master.connect(comp);
+   this.verb=c.createConvolver(); this.verb.buffer=this.impulse(2.8);
+   const vg=c.createGain(); vg.gain.value=.3; this.verb.connect(vg); vg.connect(this.master);
+   const len=c.sampleRate*3, nb=c.createBuffer(1,len,c.sampleRate), d=nb.getChannelData(0);
+   let last=0; for(let i=0;i<len;i++){ last=(last+(Math.random()*2-1)*.06)/1.025; d[i]=last*3.5; }
+   this.brown=nb;
+   const wb=c.createBuffer(1,c.sampleRate*2,c.sampleRate), w=wb.getChannelData(0); for(let i=0;i<w.length;i++) w[i]=Math.random()*2-1; this.white=wb;
+   // Motor: the original sine + triangle pair.
+   this.motorGain=c.createGain(); this.motorGain.gain.value=.02; this.motorGain.connect(this.master);
+   this.motor=c.createOscillator(); this.motor.type='sine'; this.motor.frequency.value=60; this.motor.connect(this.motorGain); this.motor.start();
+   this.over=c.createOscillator(); this.over.type='triangle'; this.overGain=c.createGain(); this.overGain.gain.value=.006; this.over.connect(this.overGain); this.overGain.connect(this.master); this.over.start();
+   // Road: brown noise through a filter that opens when you're tense and closes when you're carried.
+   const road=c.createBufferSource(); road.buffer=nb; road.loop=true;
+   this.roadLP=c.createBiquadFilter(); this.roadLP.type='lowpass'; this.roadLP.frequency.value=900;
+   this.roadGain=c.createGain(); this.roadGain.gain.value=.04; road.connect(this.roadLP); this.roadLP.connect(this.roadGain); this.roadGain.connect(this.master); road.start();
+   // Tension: two close detuned saws through a narrow band, so they beat against each other.
+   this.tenseGain=c.createGain(); this.tenseGain.gain.value=0; const bp=c.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=640; bp.Q.value=5;
+   for(const f of [97,103.5]){ const o=c.createOscillator(); o.type='sawtooth'; o.frequency.value=f; o.connect(bp); o.start(); }
+   bp.connect(this.tenseGain); this.tenseGain.connect(this.master);
+   const hiss=c.createBufferSource(); hiss.buffer=wb; hiss.loop=true; const hp=c.createBiquadFilter(); hp.type='bandpass'; hp.frequency.value=3200; hp.Q.value=.7;
+   this.hissGain=c.createGain(); this.hissGain.gain.value=0; hiss.connect(hp); hp.connect(this.hissGain); this.hissGain.connect(this.master); hiss.start();
+   // Calm: a soft Dmaj9 pad with a slow swell, mostly in the reverb.
+   this.padGain=c.createGain(); this.padGain.gain.value=0; const plp=c.createBiquadFilter(); plp.type='lowpass'; plp.frequency.value=1100;
+   for(const [f,det] of [[146.83,-4],[146.83,5],[185,0],[220,-3],[329.63,4],[440,0]]){ const o=c.createOscillator(); o.type='sine'; o.frequency.value=f; o.detune.value=det; const g=c.createGain(); g.gain.value=f>300?.35:.6; o.connect(g); g.connect(plp); o.start(); }
+   const swell=c.createOscillator(), sg=c.createGain(); swell.frequency.value=.09; sg.gain.value=.25; const pv=c.createGain(); pv.gain.value=.75; swell.connect(sg); sg.connect(pv.gain); swell.start();
+   plp.connect(pv); pv.connect(this.padGain); this.padGain.connect(this.master); const ps=c.createGain(); ps.gain.value=.8; this.padGain.connect(ps); ps.connect(this.verb);
+  }catch(e){ this.ctx=null; }
+ }
+ impulse(sec){ const c=this.ctx, len=c.sampleRate*sec|0, b=c.createBuffer(2,len,c.sampleRate);
+  for(let ch=0;ch<2;ch++){ const d=b.getChannelData(ch); for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6); } return b; }
+ tone(f,start=0,dur=.5,vol=.1,{type='sine',wet=.3,f2}={}){
+  if(!this.ctx) return; const c=this.ctx, t=c.currentTime+start, o=c.createOscillator(), g=c.createGain();
+  o.type=type; o.frequency.setValueAtTime(f,t); if(f2) o.frequency.exponentialRampToValueAtTime(f2,t+dur);
+  g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(g); g.connect(this.master); if(wet){ const s=c.createGain(); s.gain.value=wet; g.connect(s); s.connect(this.verb); }
+  o.start(t); o.stop(t+dur+.05);
+ }
+ noise(start=0,dur=.3,vol=.1,{f=1000,f2,q=1,type='bandpass',wet=.1}={}){
+  if(!this.ctx) return; const c=this.ctx, t=c.currentTime+start, s=c.createBufferSource(), fl=c.createBiquadFilter(), g=c.createGain();
+  s.buffer=this.white; fl.type=type; fl.Q.value=q; fl.frequency.setValueAtTime(f,t); if(f2) fl.frequency.exponentialRampToValueAtTime(f2,t+dur);
+  g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+Math.min(.05,dur/3)); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  s.connect(fl); fl.connect(g); g.connect(this.master); if(wet){ const w=c.createGain(); w.gain.value=wet; g.connect(w); w.connect(this.verb); }
+  s.start(t,Math.random()); s.stop(t+dur+.05);
+ }
+ start(){ this.noise(0,1.8,.12,{f:200,f2:1400,q:.6,wet:.4}); this.tone(293.66,.2,2.4,.05,{wet:.7}); this.tone(440,.35,2.2,.035,{wet:.7}); }
+ release(){ this.noise(0,1.1,.08,{f:500,f2:2400,q:.5,wet:.5}); this.tone(440,0,1.2,.08,{wet:.6}); this.tone(659.25,.14,1.6,.07,{wet:.6}); }
+ take(){ this.tone(659.25,0,.35,.07,{wet:.2}); this.tone(440,.1,.5,.07,{wet:.2}); this.noise(0,.06,.12,{f:1800,q:3,wet:0}); }
+ grime(){ this.noise(0,.9,.07,{type:'lowpass',f:500,f2:220,wet:.2}); this.tone(196,0,.8,.05,{type:'triangle',wet:.3}); }
+ wipe(){ this.noise(0,.42,.14,{f:700,f2:4200,q:1.4,wet:.1}); this.tone(880,.32,.9,.05,{wet:.6}); this.tone(1318.5,.4,.8,.03,{wet:.6}); }
+ bump(){ this.tone(110,0,.25,.16,{f2:60,wet:.1}); this.noise(0,.12,.12,{type:'lowpass',f:600,wet:0}); }
+ low(){ this.tone(392,0,.5,.05,{wet:.3}); this.tone(329.63,.18,.7,.05,{wet:.3}); }
+ tick(){ this.tone(1046.5,0,.5,.05,{wet:.5}); this.tone(1568,.06,.5,.03,{wet:.5}); }
+ arrival(){ [261.63,329.63,392,523.25,659.25].forEach((f,i)=>this.tone(f,i*.17,2.6,.08,{wet:.7})); }
+ update(speed,calm,tension,silent){
+  if(!this.ctx) return; const t=this.ctx.currentTime, k=.25;
+  this.master.gain.setTargetAtTime(this.muted||silent?0:.5,t,.15);
+  this.motor.frequency.setTargetAtTime(46+speed*lerp(2.7,1.9,calm),t,k);
+  this.over.frequency.setTargetAtTime(92+speed*lerp(4.4,3,calm),t,k);
+  this.motorGain.gain.setTargetAtTime((.012+speed*.0006)*lerp(1,.6,calm),t,k);
+  this.overGain.gain.setTargetAtTime(.004+.01*tension,t,k);
+  this.roadLP.frequency.setTargetAtTime(lerp(1500,520,calm),t,k);
+  this.roadGain.gain.setTargetAtTime((.012+speed*.0011)*lerp(1,.75,calm),t,k);
+  this.tenseGain.gain.setTargetAtTime(.022*tension*(1-calm),t,.4);
+  this.hissGain.gain.setTargetAtTime(.01*tension*(1-calm)*clamp(speed/25),t,.4);
+  this.padGain.gain.setTargetAtTime(.045*calm,t,.8);
+ }
+ setMuted(m){ this.muted=m; prefs.muted=m; savePrefs(); }
 }
-$("startButton").onclick=()=>game.start();
-$("replayButton").onclick=()=>game.start();
-$("modeButton").onclick=()=>game.toggle();
-$("cleanButton").onclick=()=>game.clean();
-$("pauseButton").onclick=()=>game.setPause(true);
-$("resumeButton").onclick=()=>{game.audio.init();game.setPause(false);};
-$("soundButton").onclick=()=>{
-  game.audio.init();game.audio.muted=!game.audio.muted;
-  $("soundButton").textContent=game.audio.muted?"♪ Off":"♫";
-  $("soundButton").setAttribute("aria-label",game.audio.muted?"Unmute sound":"Mute sound");
-};
-const bindings={ArrowLeft:"left",KeyA:"left",ArrowRight:"right",KeyD:"right",
-  ArrowUp:"accelerate",KeyW:"accelerate",ArrowDown:"brake",KeyS:"brake"};
-addEventListener("keydown",e=>{
-  if(!game.started||game.ended)return;
-  if(bindings[e.code]||["Space","KeyC","KeyP"].includes(e.code))e.preventDefault();
-  if(e.repeat)return;
-  if(e.code==="KeyP"){game.setPause(!game.paused);return;}
-  if(game.paused)return;
-  if(bindings[e.code])input[bindings[e.code]]=true;
-  if(e.code==="Space")game.toggle();
-  if(e.code==="KeyC")game.clean();
-});
-addEventListener("keyup",e=>{if(bindings[e.code])input[bindings[e.code]]=false;});
-document.querySelectorAll("[data-input]").forEach(button=>{
-  button.addEventListener("pointerdown",e=>{
-    e.preventDefault();button.setPointerCapture(e.pointerId);
-    input[button.dataset.input]=true;
-  });
-  for(const event of ["pointerup","pointercancel","lostpointercapture"]){
-    button.addEventListener(event,()=>input[button.dataset.input]=false);
+const audio=new FreewayAudio();
+function buzz(ms){ const act=navigator.userActivation; if(touchy()&&navigator.vibrate&&!prefs.reduced&&(!act||act.hasBeenActive)) try{ navigator.vibrate(ms); }catch(e){} }
+
+/* ---------------------------------------------------------------- 3D world */
+function glowTexture(inner,outer){
+ const c=document.createElement('canvas'); c.width=c.height=128; const g=c.getContext('2d');
+ const r=g.createRadialGradient(64,64,0,64,64,64); r.addColorStop(0,inner); r.addColorStop(.25,inner); r.addColorStop(1,outer);
+ g.fillStyle=r; g.fillRect(0,0,128,128); return new THREE.CanvasTexture(c);
+}
+class World3D{
+ constructor(canvas){ this.canvas=canvas; this.flat=false; this.downgraded=0; this.range=850; this.mats={}; }
+ mat(name,color,extra={}){ return this.mats[name]||(this.mats[name]=new THREE.MeshStandardMaterial({color,roughness:.72,...extra})); }
+ box(w,h,d,mat,x=0,y=0,z=0){ const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat); m.position.set(x,y,z); return m; }
+ vehicleMesh(color,isTruck=false){
+  const g=new THREE.Group(), box=this.box.bind(this);
+  const body=new THREE.MeshStandardMaterial({color,roughness:.4,metalness:.35});
+  const glass=this.mat('glass',0x152e42,{metalness:.45,roughness:.2}), dark=this.mat('rubber',0x11151d);
+  const red=new THREE.MeshBasicMaterial({color:0xa52a39}), white=this.mat('headlamp',0xb9eeff,{emissive:0x8acbde,emissiveIntensity:1});
+  if(isTruck){ g.add(box(2.1,1.9,3.5,body,0,1.2,.55)); g.add(box(2,1.35,1.55,body,0,.92,-1.75)); g.add(box(1.72,.58,.06,glass,0,1.3,-2.55)); }
+  else{ g.add(box(1.95,.48,4.25,body,0,.55,0)); g.add(box(1.65,.62,2.15,glass,0,1.04,.1)); g.add(box(1.62,.07,1.15,body,0,1.38,.25)); g.add(box(1.9,.09,.65,body,0,.83,-1.55)); }
+  const wheelGeo=this.wheelGeo||(this.wheelGeo=new THREE.CylinderGeometry(.34,.34,.22,10));
+  for(const x of [-1,1]) for(const z of [-1.35,1.35]){ const w=new THREE.Mesh(wheelGeo,dark); w.rotation.z=Math.PI/2; w.position.set(x,.35,z); g.add(w); }
+  for(const x of [-.66,.66]){ g.add(box(.43,.13,.07,white,x,.67,isTruck?-2.56:-2.15)); g.add(box(.43,.15,.08,red,x,.66,isTruck?2.34:2.15)); }
+  g.userData.brake=red; return g;
+ }
+ async build(game,progress){
+  // Yield so the loading line can paint; fall back to a timer because hidden tabs pause animation frames.
+  const T=THREE, frame=()=>new Promise(r=>{ let done=false; const f=()=>{ if(!done){ done=true; r(); } }; requestAnimationFrame(()=>setTimeout(f,0)); setTimeout(f,150); });
+  progress(.1,'Paving three miles of coastline…');
+  const r=this.renderer=new T.WebGLRenderer({canvas:this.canvas,antialias:!COARSE,powerPreference:'high-performance'});
+  this.dpr=Math.min(devicePixelRatio||1,COARSE?1.5:1.75); r.setPixelRatio(this.dpr); r.setSize(innerWidth,innerHeight,false);
+  r.outputEncoding=T.sRGBEncoding; r.toneMapping=T.ACESFilmicToneMapping; r.toneMappingExposure=1.05;
+  this.canvas.addEventListener('webglcontextlost',e=>{ e.preventDefault(); onContextLost(); });
+  const s=this.scene=new T.Scene(); s.background=new T.Color(0x2a2a44); s.fog=new T.Fog(0x8e6676,140,900);
+  this.camera=new T.PerspectiveCamera(56,innerWidth/innerHeight,.1,1600); this.camera.position.set(0,6,12);
+  s.add(new T.HemisphereLight(0x8a90c8,0x22191f,.55));
+  const sunLight=new T.DirectionalLight(0xffb27f,1.5); sunLight.position.set(-80,45,-100); s.add(sunLight);
+  const box=this.box.bind(this);
+  s.add(box(14,.15,1600,this.mat('road',0x1d1e26,{roughness:.9}),0,-.13,-620));
+  // Water and land meet the barriers exactly; the original left gaps where the pale lower sky showed through.
+  s.add(box(1400,.1,1600,new T.MeshLambertMaterial({color:0x1a3152}),-707.4,-2,-600)); // matte: the glitter path below carries the sun
+  s.add(box(.3,2,1600,this.mat('seawall',0x2a2730),-7.5,-1,-620));
+  s.add(box(500,.1,1600,this.mat('land',0x1a1820,{roughness:.95}),257.4,-.5,-600));
+  s.add(box(.45,.65,1600,this.mat('barrier',0x6d6876),-7.2,.27,-620));
+  s.add(box(.45,.65,1600,this.mats.barrier,7.2,.27,-620));
+  const line=this.mat('line',0xd7c7ac,{emissive:0x786b56,emissiveIntensity:.25});
+  for(const x of [-6.2,6.2]) s.add(box(.12,.02,1600,line,x,.005,-620));
+  this.markers=new T.InstancedMesh(new T.BoxGeometry(.12,.025,4),line,180); s.add(this.markers); this.matrix=new T.Matrix4();
+  const sky=document.createElement('canvas'); sky.width=16; sky.height=256; const sc=sky.getContext('2d'), gr=sc.createLinearGradient(0,0,0,256);
+  gr.addColorStop(0,'#0d1530'); gr.addColorStop(.42,'#38365f'); gr.addColorStop(.66,'#9b5f78'); gr.addColorStop(.82,'#e99a7a'); gr.addColorStop(1,'#ffd09a');
+  sc.fillStyle=gr; sc.fillRect(0,0,16,256);
+  s.add(new T.Mesh(new T.SphereGeometry(1200,24,16),new T.MeshBasicMaterial({map:new T.CanvasTexture(sky),side:T.BackSide,fog:false})));
+  const glow=glowTexture('rgba(255,226,180,1)','rgba(255,150,90,0)');
+  const sun=new T.Sprite(new T.SpriteMaterial({map:glow,color:0xffb98a,transparent:true,opacity:.75,depthWrite:false,blending:T.AdditiveBlending,fog:false})); sun.position.set(-300,48,-760); sun.scale.set(220,220,1); s.add(sun);
+  const core=new T.Sprite(new T.SpriteMaterial({map:glowTexture('rgba(255,246,228,1)','rgba(255,230,190,0)'),transparent:true,depthWrite:false,blending:T.AdditiveBlending,fog:false})); core.position.set(-300,48,-755); core.scale.set(54,54,1); s.add(core);
+  // A warm glitter path on the water, from the sun toward the road.
+  const gc=document.createElement('canvas'); gc.width=64; gc.height=256; const gg=gc.getContext('2d'), gl2=gg.createLinearGradient(0,0,0,256);
+  gl2.addColorStop(0,'rgba(255,200,150,.9)'); gl2.addColorStop(1,'rgba(255,170,120,0)'); gg.fillStyle=gl2; gg.fillRect(0,0,64,256);
+  const hx=gg.createLinearGradient(0,0,64,0); hx.addColorStop(0,'rgba(0,0,0,1)'); hx.addColorStop(.5,'rgba(0,0,0,0)'); hx.addColorStop(1,'rgba(0,0,0,1)'); gg.globalCompositeOperation='destination-out'; gg.fillStyle=hx; gg.fillRect(0,0,64,256);
+  const glitter=new T.Mesh(new T.PlaneGeometry(90,760),new T.MeshBasicMaterial({map:new T.CanvasTexture(gc),transparent:true,depthWrite:false,blending:T.AdditiveBlending,opacity:.55,fog:false}));
+  glitter.rotation.x=-Math.PI/2; glitter.rotation.z=-.33; glitter.position.set(-150,-1.9,-400); s.add(glitter);
+  await frame();
+  progress(.3,'Planting lamp posts along the shoulder…');
+  this.poles=[];
+  const poleMat=this.mat('pole',0x535666), lampMat=this.mat('lamp',0xffd9ac,{emissive:0xffaf68,emissiveIntensity:2});
+  for(let i=0;i<28;i++){ const g=new T.Group(); g.add(box(.14,10,.14,poleMat,0,5,0)); g.add(box(2.7,.12,.14,poleMat,-1.3,10,0)); g.add(box(.7,.12,.45,lampMat,-2.5,9.9,0)); s.add(g); this.poles.push(g); }
+  this.mountains=new T.Group();
+  for(let i=0;i<18;i++){ const m=new T.Mesh(new T.ConeGeometry(35+random()*55,35+random()*65,5),this.mat('mountain',0x2c2638)); m.position.set(65+random()*200,12,-80-i*65); m.rotation.y=random()*6; this.mountains.add(m); }
+  s.add(this.mountains);
+  await frame();
+  progress(.5,'Merging 66 other commuters…');
+  this.player=this.vehicleMesh(0xe8eef0); s.add(this.player);
+  this.carMeshes=[];
+  for(let i=0;i<game.traffic.cars.length;i++){
+   const c=game.traffic.cars[i], m=this.vehicleMesh(c.color,c.truck); s.add(m); this.carMeshes.push(m);
+   if(i%11===10){ progress(.5+.3*i/66); await frame(); }
   }
+  progress(.82,'Wiring the charger at the end of the road…');
+  this.ribbon=box(.16,.02,46,new T.MeshBasicMaterial({color:0x67e6d4,transparent:true,opacity:.45,blending:T.AdditiveBlending,depthWrite:false}),0,.04,-26); s.add(this.ribbon);
+  this.cones=[]; for(let i=0;i<28;i++){ const cone=new T.Mesh(new T.ConeGeometry(.28,.8,6),this.mat('cone',0xfda16a)); s.add(cone); this.cones.push(cone); }
+  const hub=this.hub=new T.Group(), hubMat=this.mat('hub',0xdee8ed), hg=this.mat('hubGlow',0x81ffe0,{emissive:0x45e9bd,emissiveIntensity:1.7});
+  hub.add(box(15,.35,12,hubMat,16,.05,0)); hub.add(box(15,.35,9,hubMat,16,5,0));
+  for(const x of [10,22]) hub.add(box(.3,5,.3,hubMat,x,2.5,0));
+  for(let i=0;i<4;i++){ hub.add(box(.9,2.1,.55,hubMat,11+i*3,1.15,-2)); hub.add(box(.55,.9,.1,hg,11+i*3,1.5,-1.7)); }
+  const sign=document.createElement('canvas'); sign.width=512; sign.height=128; const sg=sign.getContext('2d');
+  sg.fillStyle='#142b34'; sg.fillRect(0,0,512,128); sg.fillStyle='#8fffe2'; sg.textAlign='center'; sg.font='bold 38px sans-serif'; sg.fillText('THE HORIZON',256,57); sg.font='22px sans-serif'; sg.fillText('CHARGING · DESTINATION',256,94);
+  const board=new T.Mesh(new T.PlaneGeometry(9,2.25),new T.MeshBasicMaterial({map:new T.CanvasTexture(sign)})); board.position.set(16,4.4,4.7); hub.add(board);
+  const hubGlow=new T.Sprite(new T.SpriteMaterial({map:glow,color:0x7fffe0,transparent:true,opacity:.6,depthWrite:false,blending:T.AdditiveBlending})); hubGlow.position.set(16,3,0); hubGlow.scale.set(40,22,1); hub.add(hubGlow);
+  s.add(hub);
+  // Roadside signs carrying the book's lines, on the land shoulder.
+  this.signs=ROADNOTES.map(n=>{
+   const c=document.createElement('canvas'); c.width=512; c.height=208; const g=c.getContext('2d');
+   g.fillStyle='#0d6a45'; g.fillRect(0,0,512,208); g.strokeStyle='#eef6ee'; g.lineWidth=7; g.strokeRect(12,12,488,184);
+   g.fillStyle='#f4fbf6'; g.textAlign='center'; g.textBaseline='middle';
+   n.sign.forEach((line,k)=>{ let px=54; g.font=`bold ${px}px "Arial Narrow",Arial,sans-serif`; while(g.measureText(line.toUpperCase()).width>440&&px>30){ px-=2; g.font=`bold ${px}px "Arial Narrow",Arial,sans-serif`; } g.fillText(line.toUpperCase(),256,66+k*62); });
+   g.font='600 19px Arial,sans-serif'; g.fillStyle='#bfe0cc'; g.fillText(`MILE ${n.mi.toFixed(1)}`,256,178);
+   const grp=new T.Group(), post=this.mat('signPost',0x8a8f99);
+   grp.add(box(.26,6,.26,post,-3.6,3,0)); grp.add(box(.26,6,.26,post,3.6,3,0));
+   const board=new T.Mesh(new T.PlaneGeometry(10,4.06),new T.MeshBasicMaterial({map:Object.assign(new T.CanvasTexture(c),{encoding:T.sRGBEncoding,anisotropy:4}),toneMapped:false})); board.position.set(0,7.2,.15); grp.add(board);
+   grp.add(box(10.3,4.3,.14,this.mat('signBack',0x3a3f48),0,7.2,0));
+   grp.rotation.y=-.22; grp.visible=false; s.add(grp); return grp;
+  });
+  await frame();
+  progress(.92,'Setting the destination. (It was already set.)');
+  this.resize(); r.compile(s,this.camera); this.render(game,0);
+  await frame();
+  progress(1,'Ready when you are.');
+ }
+ resize(){ if(!this.renderer) return; this.renderer.setSize(innerWidth,innerHeight,false); this.camera.aspect=innerWidth/innerHeight; this.camera.updateProjectionMatrix(); }
+ downgrade(){ // adaptive quality: one or two steps down on slow phones
+  this.downgraded++;
+  if(this.downgraded===1){ this.dpr=Math.min(this.dpr,1); this.renderer.setPixelRatio(this.dpr); this.range=520; }
+  else { this.dpr=.75; this.renderer.setPixelRatio(this.dpr); this.range=380; this.mountains.visible=false; }
+  this.resize();
+ }
+ render(game,dt){
+  const v=game.vehicle, d=v.distance, T=THREE, cam=this.camera, sys=game.systems, calm=game.calm;
+  let i=0;
+  for(const x of [-LANE/2,LANE/2]) for(let k=0;k<90;k++){ this.matrix.makeTranslation(x,.01,40-k*12+(d%12)); this.markers.setMatrixAt(i++,this.matrix); }
+  this.markers.instanceMatrix.needsUpdate=true;
+  this.poles.forEach((p,k)=>p.position.set(8.3,0,40-k*42+(d%42)));
+  this.cones.forEach((c,k)=>{ c.position.set(5.15,.4,-(2050+k*24-d)); c.visible=c.position.z<30&&c.position.z>-700; });
+  this.hub.position.z=-(FINISH-d+12); this.hub.visible=d>FINISH-900;
+  this.signs.forEach((g,k)=>{ const z=-(ROADNOTES[k].mi*MILE-d); g.position.set(cam.aspect<.9?10.4:13,-.4,z); g.visible=z<40&&z>-this.range; });
+  game.traffic.cars.forEach((c,k)=>{ const m=this.carMeshes[k]; m.position.set(c.x,0,-(c.s-d)); m.rotation.y=-clamp((LANES[c.target]-c.x)*.08,-.16,.16); m.userData.brake.color.setHex(c.braking?0xff6455:0xa52a39); m.visible=Math.abs(c.s-d)<this.range; });
+  const arrival=game.arriving?clamp(game.arrivalTime/4):game.ended?1:0;
+  const px=v.x+(16-v.x)*arrival;
+  this.player.position.set(px,0,0);
+  this.player.rotation.y=smooth(this.player.rotation.y,-v.vx*.055,5,dt||.016);
+  this.player.rotation.z=prefs.reduced?0:-v.vx*.014;
+  const showRibbon=game.automatic&&!game.ended&&game.state!=='intro'||game.state==='intro';
+  this.ribbon.visible=showRibbon; this.ribbon.position.x=LANES[game.autopilot.lane];
+  this.ribbon.material.opacity=(sys.limited?.1:.5)*(.4+.6*calm);
+  // The feel: manual is low, close and narrow; autonomous rises, pulls back and widens.
+  const portrait=cam.aspect<.9;
+  const fov=portrait?lerp(66,76,calm):lerp(50,60,calm);
+  if(Math.abs(cam.fov-fov)>.01){ cam.fov=fov; cam.updateProjectionMatrix(); }
+  const follow=prefs.reduced?1:portrait?.92:.55;
+  const t=game.time||performance.now()/1000;
+  const shake=prefs.reduced?0:game.tension*(1-calm)*clamp(v.speed/25)*.05;
+  const sway=prefs.reduced?0:calm*Math.sin(t*.35)*.25;
+  cam.position.x=smooth(cam.position.x,px*follow+sway,calm>.5?1.5:3,dt||.016)+Math.sin(t*37)*shake;
+  cam.position.y=smooth(cam.position.y,lerp(4.5,6.6,calm)+(portrait?.6:0),2,dt||.016)+Math.sin(t*29)*shake*.6;
+  cam.position.z=smooth(cam.position.z,lerp(9.6,12.8,calm)+(portrait?1.2:0),2,dt||.016);
+  cam.lookAt(px*.7,lerp(-.4,.6,calm),lerp(-16,-34,calm));
+  const clar=lerp(.3,1,sys.cleanliness);
+  this.scene.fog.near=lerp(70,150,calm)*clar; this.scene.fog.far=lerp(560,950,calm)*clar;
+  this.renderer.render(this.scene,cam);
+ }
+}
+
+/* ---------------------------------------------------------------- 2D fallback (no WebGL): same drive, simpler pictures */
+class WorldFlat{
+ constructor(canvas){ this.canvas=canvas; this.flat=true; this.g=canvas.getContext('2d'); this.resize(); }
+ async build(game,progress){ progress(1,'Ready when you are (2D mode).'); }
+ resize(){ const r=Math.min(devicePixelRatio||1,2); this.canvas.width=innerWidth*r; this.canvas.height=innerHeight*r; this.r=r; }
+ downgrade(){}
+ render(game){
+  const g=this.g, W=this.canvas.width, H=this.canvas.height, r=this.r, v=game.vehicle, d=v.distance;
+  const ppm=Math.min(W*.62/16,30*r), lon=ppm*.6, cx=W/2, py=H*.7;
+  const arrival=game.arriving?clamp(game.arrivalTime/4):game.ended?1:0, px=v.x+(16-v.x)*arrival;
+  const X=x=>cx+(x-px*.6)*ppm, Y=s=>py-(s-d)*lon;
+  const sea=g.createLinearGradient(0,0,0,H); sea.addColorStop(0,'#1d2c4a'); sea.addColorStop(1,'#25466a'); g.fillStyle=sea; g.fillRect(0,0,W,H);
+  g.fillStyle='#34323f'; g.fillRect(X(7.6),0,W,H);
+  g.fillStyle='#2b2d38'; g.fillRect(X(-7),0,14*ppm,H);
+  g.fillStyle='#d7c7ac'; g.fillRect(X(-6.25),0,.12*ppm,H); g.fillRect(X(6.15),0,.12*ppm,H);
+  for(const x of [-LANE/2,LANE/2]) for(let s=Math.floor((d-60)/12)*12;s<d+H/lon;s+=12){ g.fillRect(X(x)-1*r,Y(s+2),2*r,4*lon); }
+  if(d>FINISH-400){ g.fillStyle='#1f3c3a'; g.fillRect(X(9),Y(FINISH+20),15*ppm,22*lon); g.fillStyle='#8fffe2'; g.font=`bold ${14*r}px system-ui`; g.textAlign='center'; g.fillText('THE HORIZON · CHARGING',X(16.5),Y(FINISH+9)); }
+  for(const n of ROADNOTES){ const s=n.mi*MILE; if(s-d<-20||s-d>H/lon) continue;
+   const x0=X(8.4), w=Math.min(W-x0-6*r,150*r), y0=Y(s)-20*r; if(w<40*r) continue;
+   g.fillStyle='#0d6a45'; g.fillRect(x0,y0,w,40*r); g.strokeStyle='#eef6ee'; g.lineWidth=2*r; g.strokeRect(x0+3*r,y0+3*r,w-6*r,34*r);
+   g.fillStyle='#f4fbf6'; g.font=`bold ${11*r}px Arial,sans-serif`; g.textAlign='center';
+   n.sign.forEach((line,k)=>g.fillText(line.toUpperCase(),x0+w/2,y0+(17+k*13)*r,w-10*r)); }
+  if((game.automatic&&!game.ended)||game.state==='intro'){ g.fillStyle=`rgba(121,234,219,${game.systems.limited?.15:.45})`; g.fillRect(X(LANES[game.autopilot.lane])-2*r,Y(d+60),4*r,55*lon); }
+  const car=(x,s,w,l,col,brake)=>{ const x0=X(x)-w*ppm/2, y0=Y(s)-l*lon/2; g.fillStyle=col; g.beginPath(); (g.roundRect?g.roundRect(x0,y0,w*ppm,l*lon,4*r):g.rect(x0,y0,w*ppm,l*lon)); g.fill(); g.fillStyle=brake?'#ff6455':'#a52a39'; g.fillRect(x0+2*r,y0+l*lon-3*r,w*ppm-4*r,3*r); };
+  for(const c of game.traffic.cars){ if(c.s-d>-30&&c.s-d<H/lon) car(c.x,c.s,c.truck?2.1:1.95,c.truck?5.4:4.25,'#'+c.color.toString(16).padStart(6,'0'),c.braking); }
+  car(px,d,1.95,4.25,'#e8eef0',false);
+ }
+}
+
+/* ---------------------------------------------------------------- UI helpers */
+let srLast='';
+function say(text){ if(text===srLast) text+=' '; srLast=text; $('sr').textContent=text; }
+let noticeTimer;
+function notify(msg,seconds=4.5){
+ if(!$('coach').hidden){ say(msg); return; } // the lesson card already narrates; don't stack two boxes
+ if(NARROW()&&noteUntil) hideRoadNote();
+ $('notice').textContent=msg; $('notice').classList.add('show'); say(msg);
+ clearTimeout(noticeTimer); noticeTimer=setTimeout(()=>$('notice').classList.remove('show'),seconds*1000);
+}
+let noteUntil=0;
+function showRoadNote(n){
+ $('rnSrc').textContent='From the book · '+n.src; $('rnSign').textContent=n.sign.join(' '); $('rnText').textContent=n.text; $('rnCtx').textContent=n.ctx;
+ if(NARROW()) $('notice').classList.remove('show'); // phones share one slot under the HUD: newest wins
+ $('roadnote').classList.add('show'); say(`Roadside note. ${n.sign.join(' ')}. ${n.text} On this road: ${n.ctx}`);
+ // Timed on game time, so a pause holds the note and nobody has to speed-read.
+ noteUntil=game.time+Math.min(20,6+(n.text+' '+n.ctx).split(' ').length*.25);
+}
+function hideRoadNote(){ noteUntil=0; $('roadnote').classList.remove('show'); }
+const NARROW=()=>innerWidth<=640;
+let lastFocus=null;
+function openDialog(id,focusId){ lastFocus=document.activeElement; $(id).hidden=false; const f=focusId?$(focusId):$(id).querySelector('button,input,a[href]'); if(f) f.focus({preventScroll:true}); }
+function closeDialog(id){ $(id).hidden=true; if(lastFocus&&lastFocus.focus&&document.contains(lastFocus)) lastFocus.focus({preventScroll:true}); }
+addEventListener('keydown',e=>{ // keep Tab inside whichever dialog is open
+ if(e.key!=='Tab') return;
+ const open=[...document.querySelectorAll('.overlay')].find(o=>!o.hidden); if(!open) return;
+ const f=[...open.querySelectorAll('button:not([disabled]),input,a[href],summary')].filter(x=>x.offsetParent);
+ if(!f.length) return; const first=f[0], last=f[f.length-1];
+ if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); }
+ else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); }
 });
-addEventListener("blur",()=>game.setPause(true));
-document.addEventListener("visibilitychange",()=>{if(document.hidden)game.setPause(true);});
-$("reducedMotion").checked=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+let game, world=null, state='loading';
+const fmtTime=s=>`${Math.floor(s/60)}m ${String(Math.floor(s%60)).padStart(2,'0')}s`;
+
+function updateHUD(){
+ const s=game.systems, v=game.vehicle;
+ const e=Math.round(s.battery*100), f=Math.round(s.friction*100), c=Math.round(s.cleanliness*100);
+ $('energyFill').style.width=e+'%'; $('energyVal').textContent=e+'%'; $('energyFill').style.background=s.battery<.25?'var(--rose)':'var(--cyan)';
+ $('frictionFill').style.width=f+'%'; $('frictionVal').textContent=f+'%';
+ $('clarityFill').style.width=c+'%'; $('clarityVal').textContent=c+'%'; $('clarityFill').style.background=s.limited?'var(--amber)':'var(--cyan)';
+ const set=(id,val)=>{ const el=$(id); if(el.getAttribute('aria-valuenow')!==String(val)) el.setAttribute('aria-valuenow',val); };
+ set('mEnergy',Math.round(e/5)*5); set('mFriction',Math.round(f/10)*10); set('mClarity',Math.round(c/10)*10);
+ $('segName').textContent=SEGMENTS[game.phase];
+ $('tripVal').textContent=`${(v.distance/MILE).toFixed(1)} of 3 mi · ${Math.round(v.speed*2.23694)} mph`;
+ $('tripFill').style.width=clamp(v.distance/FINISH)*100+'%';
+ $('modeName').textContent=game.automatic?(s.limited?'Autonomous · glass needs a wipe':game.engaging>0?'Letting go…':'Autonomous · Endowment'):'Manual · Subscription';
+ if(noteUntil&&game.time>noteUntil) hideRoadNote();
+ const wipeHidden=!(s.dirtyNow&&game.running&&!game.arriving);
+ if($('wipeBtn').hidden!==wipeHidden) $('wipeBtn').hidden=wipeHidden;
+ // Atmosphere
+ $('vignette').style.opacity=((1-game.calm)*(.45+.55*game.tension)*(game.running?1:0)).toFixed(3);
+ $('grime').style.opacity=((1-s.cleanliness)/.7*.9).toFixed(3);
+}
+function onModeChange(){
+ const a=game.automatic;
+ document.body.classList.toggle('auto',a); $('hud').classList.toggle('calm',a);
+ $('modeBtnLabel').textContent=a?'Take the wheel':'Let go';
+ $('modeBtnSub').innerHTML=a?'<span class="kbd">Space · </span>back to manual':'<span class="kbd">Space · </span>guidance drives';
+ $('modeBtn').setAttribute('aria-label',a?'Take the wheel back (manual, subscription)':'Let go (autonomous, endowment)');
+ $('modeBtn').classList.remove('pulse');
+ showSteerHint(!a&&!prefs.assisted&&game.running&&$('coach').hidden);
+ $('laneBtns').hidden=!prefs.assisted||!game.running;
+ say(a?'Autonomous mode. Energy refills while the guidance drives.':'Manual mode. Steering spends energy.');
+ if(game.lesson&&game.lesson.step===1&&!a){ $('modeBtn').classList.add('pulse'); }
+}
+let steerHintTimer;
+function showSteerHint(on){ clearTimeout(steerHintTimer); $('steerHint').hidden=!on; if(on) steerHintTimer=setTimeout(()=>$('steerHint').hidden=true,6000); }
+function onGrime(on){ if(on) $('wipeBtn').hidden=false; }
+
+/* road grime texture, generated once */
+function makeGrime(){
+ const c=document.createElement('canvas'), w=c.width=512, h=c.height=512, g=c.getContext('2d');
+ let sd=7; const rnd=()=>((sd=(sd*16807)%2147483647)/2147483647);
+ for(let i=0;i<260;i++){ const x=rnd()*w, y=rnd()*h, r=4+rnd()*rnd()*46, a=.05+rnd()*.16; const gr=g.createRadialGradient(x,y,0,x,y,r); gr.addColorStop(0,`rgba(120,104,84,${a})`); gr.addColorStop(1,'rgba(120,104,84,0)'); g.fillStyle=gr; g.fillRect(x-r,y-r,r*2,r*2); }
+ for(let i=0;i<40;i++){ const x=rnd()*w; g.strokeStyle=`rgba(150,132,110,${.05+rnd()*.08})`; g.lineWidth=1+rnd()*3; g.beginPath(); g.moveTo(x,rnd()*h*.3); g.lineTo(x+(rnd()-.5)*30,h*(.5+rnd()*.5)); g.stroke(); }
+ const edge=g.createRadialGradient(w/2,h/2,w*.15,w/2,h/2,w*.7); edge.addColorStop(0,'rgba(90,80,70,.05)'); edge.addColorStop(1,'rgba(90,80,70,.55)'); g.fillStyle=edge; g.fillRect(0,0,w,h);
+ $('grime').style.backgroundImage=`url(${c.toDataURL('image/png')})`;
+}
+function wipeFx(){
+ const gr=$('grime'); gr.classList.add('wiping'); setTimeout(()=>gr.classList.remove('wiping'),500);
+ if(!prefs.reduced){ const s=$('squeegee'); s.classList.remove('go'); void s.offsetWidth; s.classList.add('go'); }
+ buzz(15);
+}
+
+/* ---------------------------------------------------------------- the lesson: three steps, each one tactile */
+const LESSON=[
+ {meter:'mEnergy',title:'Steer',text:()=>prefs.assisted?`${touchy()?'Swipe sideways or tap ‹ Lane ›':inputMode==='mouse'?'Click ‹ Lane › or press ← / →':'Press ← or →'} to move one lane. Watch Ego energy: every correction spends a little.`:`${touchy()?'Drag the road left and right':inputMode==='mouse'?'Drag the road sideways, or hold ← / →,':'Hold ← or → (or A / D)'} to steer. Watch Ego energy dip: every correction spends a little.`},
+ {meter:'mEnergy',title:'Now let go',text:()=>`${touchy()?'Tap':'Press Space or click'} Let go. The destination is already set, so the guidance can carry you. Watch energy refill and friction fall to zero.`},
+ {meter:'mClarity',title:'Keep the glass clean',text:()=>`Grime! When Clarity drops, the car slows down and stops refilling. ${touchy()?'Tap the windshield':inputMode==='mouse'?'Click the windshield or press C':'Press C'}, or use Wipe the glass.`},
+];
+function coach(step){
+ const L=LESSON[step]; $('coach').hidden=false;
+ $('coachStep').textContent=`Lesson · ${step+1} of 3`; $('coachTitle').textContent=L.title; $('coachText').textContent=L.text();
+ [...$('coachDots').children].forEach((d,i)=>{ d.className=i<step?'done':i===step?'on':''; });
+ document.querySelectorAll('.meter').forEach(m=>m.classList.toggle('spot',m.id===L.meter));
+ if(step===1) $('modeBtn').classList.toggle('pulse',!game.automatic);
+ say(`Lesson step ${step+1} of 3. ${L.title}. ${L.text()}`);
+}
+function lessonNext(){
+ const L=game.lesson; if(!L) return;
+ audio.tick();
+ if(L.step===0){ L.step=1; coach(1); if(game.automatic) $('modeBtn').classList.remove('pulse'); }
+ else if(L.step===1){ L.step=2; game.dirty(); coach(2); }
+ else if(L.step===2){
+  L.step=3; L.doneT=0;
+  $('coachStep').textContent='Lesson · done'; $('coachTitle').textContent='That’s the whole game';
+  $('coachText').textContent='Steer and pay, or let go and refill. Next the wheel comes back to you, and energy resets to 90%: nobody starts a commute at 100. Three miles, any mix you like.';
+  [...$('coachDots').children].forEach(d=>d.className='done'); document.querySelectorAll('.meter').forEach(m=>m.classList.remove('spot'));
+  $('skipLesson').textContent='Start the drive';
+  say('Lesson done. '+$('coachText').textContent);
+ }
+}
+function lessonFinish(){
+ if(!game.lesson) return;
+ game.lesson=null; $('coach').hidden=true; $('skipLesson').textContent='Skip the lesson';
+ document.querySelectorAll('.meter').forEach(m=>m.classList.remove('spot')); $('modeBtn').classList.remove('pulse');
+ if(game.systems.dirtyNow) game.systems.clean();
+ if(game.automatic){ game.automatic=false; game.manualTarget=game.vehicle.speed; game.assistLane=game.autopilot.lane; onModeChange(); }
+ game.state='play'; game.beginRecording(); glossFor(innerWidth>=900); showSteerHint(!prefs.assisted);
+ notify(`The wheel is yours. Three miles to the charger. Let go whenever you like${touchy()?'':' (Space)'}.`,6);
+}
+function glossFor(on){ $('hud').classList.toggle('glossy',on); }
+
+/* ---------------------------------------------------------------- flow */
+function startFromIntro(withLesson=true){
+ if(state!=='ready') return;
+ state='run'; audio.init(); audio.start(); setInput(inputMode);
+ $('fade').classList.add('on');
+ $('intro').classList.add('leaving');
+ setTimeout(()=>{
+  $('intro').hidden=true;
+  beginRun(withLesson);
+  $('fade').classList.remove('on');
+ },CAPTURE?0:480);
+}
+function beginRun(withLesson,hint){
+ game.startRun(withLesson,hint); game.calm=0; hideRoadNote();
+ ['hud','controls','pauseBtn'].forEach(id=>$(id).hidden=false);
+ $('report').hidden=true; onModeChange(); updateHUD();
+ glossFor(true);
+ if(withLesson){ coach(0); showSteerHint(false); }
+ else{
+  $('coach').hidden=true; glossFor(innerWidth>=900);
+  notify(hint==='auto'?'This time, try letting go early and stay with it for a while.':hint==='manual'?'This time, keep the wheel for a mile and feel what it costs.':'Same road, same traffic. Drive it however you like.',6);
+ }
+ $('modeBtn').focus({preventScroll:true});
+}
+function setPaused(p){
+ if(!game.running||game.arriving) return;
+ if(p===game.paused) return;
+ game.paused=p; input.keyL=input.keyR=input.gas=input.brake=false; input.dragging=false; input.drag=0;
+ if(p){ $('setAssist').checked=prefs.assisted; $('setReduced').checked=prefs.reduced; $('setTilt').checked=prefs.tilt; openDialog('pause','resumeBtn'); }
+ else { closeDialog('pause'); audio.init(); }
+}
+function onFinish(){
+ ['controls','laneBtns','steerHint','pauseBtn'].forEach(id=>$(id).hidden=true); $('coach').hidden=true; hideRoadNote();
+ setTimeout(()=>{ buildReport(); $('report').scrollTop=0; openDialog('report','reportTitle'); },1400);
+}
+function onContextLost(){
+ if(game) game.paused=true;
+ showFail('lost');
+}
+
+/* ---------------------------------------------------------------- results */
+function buildReport(){
+ const [m,a]=game.stats, both=m.time>1&&a.time>1, onlyM=m.time>1&&a.time<=1, onlyA=a.time>1&&m.time<=1;
+ const mi=x=>(x/MILE).toFixed(1);
+ $('reportTitle').textContent=both?`You drove ${mi(m.distance)} miles and were carried ${mi(a.distance)}`:onlyM?'You drove all three miles yourself':'You let the road carry you the whole way';
+ $('reportLede').textContent=both?'Same road, same traffic, two relationships with it. Here’s what each one cost and what it gave back.':onlyM?'Impressive, honestly. Also tiring. Here’s the bill.':'You still kept the glass clean, which is the part people forget.';
+ const col=(s,el,manual)=>{
+  el.className='col '+(manual?'m':'a');
+  if(s.time<=1){
+   el.classList.add('none');
+   el.innerHTML=`<h4>${manual?'Manual · Subscription':'Autonomous · Endowment'}</h4><p>Not tried this run.</p><p>${manual?'Next time, keep the wheel for a mile and feel what it costs.':'Next time, let go for a mile and watch what refills.'}</p>`;
+   return;
+  }
+  const rows=[['Time',fmtTime(s.time)],['Distance',`${(s.distance/MILE).toFixed(2)} mi`],['Energy spent',`${Math.round(s.spent*100)} pts`],['Energy refilled',`${Math.round(s.restored*100)} pts`]];
+  if(manual){ rows.push(['Average friction',`${Math.round(s.friction/s.time*100)}%`],['Correction bursts',s.corrections]); if(s.contacts) rows.push(['Bumper kisses',s.contacts]); }
+  else { rows.push(['Guided lane changes',s.lanes],['Wipes',s.wipes]); if(s.grime>1) rows.push(['Time with grime',`${Math.round(s.grime)} s`]); }
+  el.innerHTML=`<h4>${manual?'Manual · Subscription':'Autonomous · Endowment'}</h4>`+rows.map(([k,v])=>`<div class="row"><span>${k}</span><b>${v}</b></div>`).join('');
+ };
+ col(m,$('colM'),true); col(a,$('colA'),false);
+ const tl=game.timeline, start=tl[0]?tl[0].e:START_ENERGY, end=game.systems.battery;
+ let low=tl[0]||{e:start,d:0}; tl.forEach(p=>{ if(p.e<low.e) low=p; });
+ $('chart').innerHTML=chartSVG(tl);
+ const lessonMi=game.recordFrom/MILE;
+ $('chartDesc').textContent=`Energy started at ${Math.round(start*100)}% and ended at ${Math.round(end*100)}%. Lowest: ${Math.round(low.e*100)}% at mile ${(low.d/MILE).toFixed(1)}. Amber stretches are manual, teal stretches autonomous.${lessonMi>.05?` The first ${lessonMi.toFixed(1)} miles were the lesson and aren’t counted.`:''}`;
+ const wipes=m.wipes+a.wipes;
+ $('reflectLine').textContent=both?(m.spent>a.restored?'Notice which miles you remember as effort. Usually they’re the ones you were holding.':'Where did effort help, and where did letting go help? Both are allowed. The destination was set either way.')
+  :onlyM?'Being good at grinding is still grinding. Mine too. Next time, try letting go for a mile and see what changes.'
+  :`Letting go isn’t doing nothing. You wiped the glass ${wipes} time${wipes===1?'':'s'}. Next time, grab the wheel for a mile and feel the difference.`;
+ const read=game.notes.filter(x=>x==='a').length, total=ROADNOTES.length;
+ $('notesSum').textContent=read===total?`Notes from the road · you read all ${total} while carried`
+  :read?`Notes from the road · you read ${read} of ${total}, the rest passed while you were steering`
+  :`Notes from the road · ${total} went by while you were steering. Here they are, parked.`;
+ $('notesList').innerHTML=ROADNOTES.map((n,i)=>{ const h=game.notes[i]; const tag=h==='a'?'read while carried':h==='m'?'passed while steering':h==='x'?'passed during the lesson':'not reached';
+  return `<li class="${h==='a'?'read':''}"><b>${n.sign.join(' ')}</b><span class="tag">${tag}</span><p>${n.text}</p><cite>${n.src}</cite><p class="ctx"><span>On this road</span>${n.ctx}</p></li>`; }).join('');
+ $('roadNotes').open=false;
+ $('otherRow').hidden=both; $('againRow').hidden=!both;
+ $('otherBtn').textContent=onlyM?'Try letting go this time':'Try the wheel this time';
+ $('otherBtn').dataset.hint=onlyM?'auto':'manual';
+ if(game.usedAssist) $('reportLede').textContent+=' (Assisted driving was on.)';
+ $('shareOut').hidden=true; $('copyStatus').textContent='';
+ say(`${$('reportTitle').textContent}. ${$('reportLede').textContent}`);
+}
+function chartSVG(tl){
+ if(tl.length<2) return '';
+ const narrow=innerWidth<640, W=narrow?380:600, H=narrow?150:150, L=narrow?38:34,R=8,Tp=10,B=26, x=d=>L+(d/FINISH)*(W-L-R), y=e=>Tp+(1-e)*(H-Tp-B);
+ $('chart').setAttribute('viewBox',`0 0 ${W} ${H}`);
+ let out=`<g font-size="${narrow?13:11}" fill="#a3b3c9" font-family="system-ui,sans-serif">`;
+ for(const e of [0,.5,1]) out+=`<line x1="${L}" x2="${W-R}" y1="${y(e)}" y2="${y(e)}" stroke="rgba(255,255,255,.1)"/><text x="${L-6}" y="${y(e)+4}" text-anchor="end">${e*100}%</text>`;
+ for(let k=0;k<=3;k++) out+=`<text x="${x(k*MILE)}" y="${H-6}" text-anchor="${k===0?'start':k===3?'end':'middle'}">${k===0?'start':k===3?'charger':'mile '+k}</text>`;
+ out+='</g>';
+ let seg=[tl[0]], mode=tl[0].a; const flush=()=>{ if(seg.length<2) return; const c=mode?'#79eadb':'#ffbf81';
+  const p=seg.map((q,i)=>`${i?'L':'M'}${x(q.d).toFixed(1)},${y(q.e).toFixed(1)}`).join('');
+  out+=`<path d="${p}L${x(seg[seg.length-1].d).toFixed(1)},${y(0)}L${x(seg[0].d).toFixed(1)},${y(0)}Z" fill="${c}" opacity=".12"/><path d="${p}" fill="none" stroke="${c}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>`; };
+ for(let i=1;i<tl.length;i++){ const q=tl[i]; seg.push(q); if(q.a!==mode||i===tl.length-1){ flush(); seg=[q]; mode=q.a; } }
+ return out;
+}
+
+/* share card: a 1200×630 picture of this drive */
+function drawCard(name){
+ const c=document.createElement('canvas'); c.width=1200; c.height=630; const g=c.getContext('2d');
+ const bg=g.createLinearGradient(0,0,0,630); bg.addColorStop(0,'#0d1530'); bg.addColorStop(.55,'#38365f'); bg.addColorStop(1,'#9b5f78'); g.fillStyle=bg; g.fillRect(0,0,1200,630);
+ try{ if(world&&!world.flat){ world.render(game,0); g.globalAlpha=.55; g.drawImage(world.canvas,0,0,world.canvas.width,world.canvas.height,0,0,1200,1200*world.canvas.height/world.canvas.width>630?1200*world.canvas.height/world.canvas.width:630); g.globalAlpha=1; } }catch(e){}
+ const shade=g.createLinearGradient(0,0,0,630); shade.addColorStop(0,'rgba(13,21,48,.85)'); shade.addColorStop(1,'rgba(13,21,48,.6)'); g.fillStyle=shade; g.fillRect(0,0,1200,630);
+ const [m,a]=game.stats, both=m.time>1&&a.time>1, onlyM=m.time>1&&a.time<=1, mi=x=>(x/MILE).toFixed(1);
+ g.fillStyle='#a3b3c9'; g.font='600 22px system-ui,sans-serif'; g.fillText('THE FREEWAY NAVIGATOR · FROM THE SELF-DRIVING MIND',64,72);
+ g.fillStyle='#eef4ff'; g.font='400 54px "Palatino Linotype",Palatino,Georgia,serif';
+ const title=both?`I drove ${mi(m.distance)} miles. The road carried me ${mi(a.distance)}.`:onlyM?'I drove all three miles myself.':'I let the road carry me the whole way.';
+ wrap(g,title,64,140,1072,62);
+ const box=(x,label,col,s)=>{ g.fillStyle='rgba(16,24,39,.75)'; g.fillRect(x,250,520,190); g.fillStyle=col; g.fillRect(x,250,6,190);
+  g.font='700 24px system-ui,sans-serif'; g.fillText(label,x+28,292); g.fillStyle='#eef4ff'; g.font='400 26px system-ui,sans-serif';
+  if(s.time<=1){ g.fillStyle='#a3b3c9'; g.fillText('Not tried this time',x+28,338); return; }
+  g.fillText(`${fmtTime(s.time)} · ${(s.distance/MILE).toFixed(2)} mi`,x+28,338);
+  g.fillText(`Energy spent ${Math.round(s.spent*100)} · refilled ${Math.round(s.restored*100)}`,x+28,378); };
+ box(64,'MANUAL · SUBSCRIPTION','#ffbf81',m); box(616,'AUTONOMOUS · ENDOWMENT','#79eadb',a);
+ // energy line
+ const tl=game.timeline, X=d=>64+(d/FINISH)*1072, Y=e=>595-e*95;
+ g.lineWidth=4; g.lineJoin='round';
+ for(let i=1;i<tl.length;i++){ g.strokeStyle=tl[i].a?'#79eadb':'#ffbf81'; g.beginPath(); g.moveTo(X(tl[i-1].d),Y(tl[i-1].e)); g.lineTo(X(tl[i].d),Y(tl[i].e)); g.stroke(); }
+ g.fillStyle='#a3b3c9'; g.font='400 20px system-ui,sans-serif'; g.fillText('Ego energy over three miles (a made-up meter)',64,470);
+ g.textAlign='right'; g.fillText(name?`— ${name} · theselfdrivingmind.com`:'theselfdrivingmind.com',1136,610); g.textAlign='left';
+ return c;
+}
+function wrap(g,text,x,y,max,lh){ const words=text.split(' '); let line=''; for(const w of words){ const t=line?line+' '+w:w; if(g.measureText(t).width>max&&line){ g.fillText(line,x,y); line=w; y+=lh; } else line=t; } g.fillText(line,x,y); }
+let cardBlob=null, cardURL=null;
+function shareLink(name){ const base=location.origin+location.pathname; return name?`${base}?from=${encodeURIComponent(name)}`:base; }
+
+/* ---------------------------------------------------------------- input wiring */
+const KEYS={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',ArrowUp:'gas',KeyW:'gas',ArrowDown:'brake',KeyS:'brake'};
+addEventListener('keydown',e=>{
+ const tag=e.target.tagName, type=e.target.type;
+ if(tag==='INPUT'&&type==='text') return;
+ const onButton=tag==='BUTTON'||tag==='A'||tag==='SUMMARY'||(tag==='INPUT'&&type==='checkbox');
+ if(e.code==='KeyM'){ $('mute').click(); return; }
+ if(e.code==='Escape'||e.code==='KeyP'){ if(!game) return; if(game.paused){ setPaused(false); e.preventDefault(); } else if(game.running){ setPaused(true); e.preventDefault(); } return; }
+ if(!game||!game.running||game.paused) return;
+ const k=KEYS[e.code];
+ if(k||e.code==='KeyC'||(e.code==='Space'&&!onButton)) e.preventDefault();
+ if(k||e.code==='KeyC'||e.code==='Space') setInput('key');
+ if(e.repeat) return;
+ if(k==='left'||k==='right'){
+  if(prefs.assisted){ game.laneStep(k==='left'?-1:1); return; }
+  if(game.automatic) game.toggle('steer');
+  input[k==='left'?'keyL':'keyR']=true;
+ }
+ if(k==='gas') input.gas=true;
+ if(k==='brake'){ input.brake=true; if(game.automatic) game.toggle('brake'); }
+ if(e.code==='Space'&&!onButton) game.toggle();
+ if(e.code==='KeyC') game.clean();
+});
+addEventListener('keyup',e=>{ const k=KEYS[e.code]; if(k==='left') input.keyL=false; if(k==='right') input.keyR=false; if(k==='gas') input.gas=false; if(k==='brake') input.brake=false; });
+
+let drag=null;
+$('stage').addEventListener('pointerdown',e=>{
+ setInput(e.pointerType==='mouse'?'mouse':'touch');
+ if(!game||!game.running||game.paused) return;
+ drag={id:e.pointerId,x0:e.clientX,y0:e.clientY,t0:performance.now(),moved:false,stepped:0};
+ try{ $('stage').setPointerCapture(e.pointerId); }catch(err){}
+ const w=$('wheel'); w.style.transform=`translate(${e.clientX}px,${e.clientY}px)`;
+});
+$('stage').addEventListener('pointermove',e=>{
+ if(!drag||e.pointerId!==drag.id||!game.running||game.paused) return;
+ const dx=e.clientX-drag.x0;
+ if(Math.abs(dx)>10) drag.moved=true;
+ if(!drag.moved) return;
+ if(prefs.assisted){ const st=Math.trunc(dx/50); if(st!==drag.stepped){ game.laneStep(Math.sign(st-drag.stepped)); drag.stepped=st; } return; }
+ if(game.automatic){ if(Math.abs(dx)>28) game.toggle('steer'); else return; }
+ input.dragging=true; input.drag=clamp(dx/80,-1,1);
+ const w=$('wheel'); w.classList.add('on'); w.style.transform=`translate(${drag.x0}px,${drag.y0}px) rotate(${input.drag*100}deg)`;
+});
+function endDrag(e){
+ if(!drag||e.pointerId!==drag.id) return;
+ if(!drag.moved&&performance.now()-drag.t0<400&&game.running&&!game.paused&&game.systems.dirtyNow) game.clean();
+ drag=null; input.dragging=false; input.drag=0; $('wheel').classList.remove('on');
+}
+$('stage').addEventListener('pointerup',endDrag); $('stage').addEventListener('pointercancel',endDrag);
+
+function holdButton(id,key,onDown){
+ const b=$(id);
+ b.addEventListener('pointerdown',e=>{ setInput(e.pointerType==='mouse'?'mouse':'touch'); if(!game.running||game.paused) return; e.preventDefault(); try{ b.setPointerCapture(e.pointerId); }catch(err){} input[key]=true; b.classList.add('down'); if(onDown) onDown(); });
+ for(const ev of ['pointerup','pointercancel','lostpointercapture']) b.addEventListener(ev,()=>{ input[key]=false; b.classList.remove('down'); });
+ b.addEventListener('click',e=>{ if(e.detail===0&&game.running&&!game.paused){ if(onDown) onDown(); game.manualTarget=clamp(game.manualTarget+(key==='gas'?4:-5),0,34); } }); // keyboard press = a nudge
+}
+holdButton('gasBtn','gas');
+holdButton('brakeBtn','brake',()=>{ if(game.automatic) game.toggle('brake'); });
+$('modeBtn').addEventListener('pointerdown',e=>setInput(e.pointerType==='mouse'?'mouse':'touch'));
+$('modeBtn').onclick=()=>game.toggle();
+$('wipeBtn').onclick=()=>game.clean();
+$('laneL').onclick=()=>game.laneStep(-1); $('laneR').onclick=()=>game.laneStep(1);
+$('pauseBtn').onclick=()=>setPaused(true);
+$('resumeBtn').onclick=()=>setPaused(false);
+$('restartBtn').onclick=()=>{ game.paused=false; closeDialog('pause'); beginRun(false); };
+$('skipLesson').onclick=()=>{ if(game.lesson) lessonFinish(); };
+$('againBtn').onclick=$('againBtn2').onclick=()=>{ closeDialog('report'); beginRun(false); };
+$('otherBtn').onclick=e=>{ closeDialog('report'); beginRun(false,e.currentTarget.dataset.hint); };
+$('mute').onclick=()=>{ audio.init(); const m=!audio.muted; audio.setMuted(m); $('mute').setAttribute('aria-pressed',String(m)); $('mute').setAttribute('aria-label',m?'Turn sound on':'Mute sound'); $('waves').toggleAttribute('hidden',m); $('cross').toggleAttribute('hidden',!m); };
+const syncAssist=on=>{ prefs.assisted=on; savePrefs(); $('optAssist').checked=$('setAssist').checked=on; if(game){ if(on){ game.usedAssist=true; game.assistLane=LANES.reduce((b,x,i)=>Math.abs(x-game.vehicle.x)<Math.abs(LANES[b]-game.vehicle.x)?i:b,0); } if(game.running) onModeChange(); } };
+const syncReduced=on=>{ prefs.reduced=on; savePrefs(); $('optReduced').checked=$('setReduced').checked=on; };
+$('optAssist').onchange=e=>syncAssist(e.target.checked); $('setAssist').onchange=e=>syncAssist(e.target.checked);
+$('optReduced').onchange=e=>syncReduced(e.target.checked); $('setReduced').onchange=e=>syncReduced(e.target.checked);
+$('setTilt').onchange=async e=>{
+ const on=e.target.checked;
+ if(on&&window.DeviceOrientationEvent&&typeof DeviceOrientationEvent.requestPermission==='function'){
+  try{ const r=await DeviceOrientationEvent.requestPermission(); if(r!=='granted'){ e.target.checked=false; return; } }catch(err){ e.target.checked=false; return; }
+ }
+ prefs.tilt=on;
+};
+addEventListener('deviceorientation',e=>{ if(!prefs.tilt||e.gamma==null) return; const g=e.gamma; input.tilt=Math.abs(g)<4?0:clamp((g-Math.sign(g)*4)/22,-1,1); });
+$('openBtn').onclick=()=>startFromIntro(true);
+$('openBtn').addEventListener('pointerdown',e=>setInput(e.pointerType==='mouse'?'mouse':'touch'));
+if(!DEBUG) addEventListener('blur',()=>{ if(game) setPaused(true); });
+document.addEventListener('visibilitychange',()=>{ if(document.hidden&&game&&!DEBUG) setPaused(true); });
+addEventListener('resize',()=>{ if(world) world.resize(); });
+
+$('shareForm').addEventListener('submit',async e=>{
+ e.preventDefault(); const name=cleanName($('fromName').value);
+ const c=drawCard(name);
+ cardBlob=await new Promise(r=>c.toBlob(r,'image/png'));
+ if(cardURL) URL.revokeObjectURL(cardURL); cardURL=URL.createObjectURL(cardBlob);
+ $('cardImg').src=cardURL; $('cardImg').alt=`Share card: ${$('reportTitle').textContent}. Manual and autonomous stats and an energy line.`;
+ $('shareOut').hidden=false; $('copyStatus').textContent='';
+ $('shareBtn').hidden=!navigator.share;
+});
+$('shareBtn').onclick=async()=>{
+ const name=cleanName($('fromName').value), url=shareLink(name), text=`${$('reportTitle').textContent}. Three miles, two ways to drive them. Best with sound on.`;
+ try{
+  const file=cardBlob&&new File([cardBlob],'freeway-navigator.png',{type:'image/png'});
+  if(file&&navigator.canShare&&navigator.canShare({files:[file]})) await navigator.share({files:[file],title:'The Freeway Navigator',text:`${text} ${url}`});
+  else await navigator.share({title:'The Freeway Navigator',text,url});
+ }catch(err){}
+};
+$('saveBtn').onclick=()=>{ if(!cardURL) return; const a=document.createElement('a'); a.href=cardURL; a.download='freeway-navigator.png'; document.body.appendChild(a); a.click(); a.remove(); $('copyStatus').textContent='Image saved.'; };
+$('copyBtn').onclick=()=>{ const v=shareLink(cleanName($('fromName').value)); const fb=()=>{ $('copyStatus').textContent=`Here’s the link to copy: ${v}`; };
+ try{ navigator.clipboard.writeText(v).then(()=>$('copyStatus').textContent='Link copied. Paste it into a text or an email.',fb); }catch(err){ fb(); } };
+
+/* ---------------------------------------------------------------- errors */
+function showFail(kind){
+ const msgs={
+  three:['The freeway didn’t load','The 3D engine comes from a CDN (cdnjs), and it didn’t arrive. Check your connection and try again, or play the simple 2D version, which needs nothing extra.'],
+  webgl:['Your browser couldn’t start 3D graphics','WebGL is turned off or not supported here. Turning on hardware acceleration usually fixes it. Or play the simple 2D version.'],
+  lost:['The graphics card took a coffee break','The 3D view stopped responding, which happens on busy phones. Carry on in 2D from right where you were, or reload the road.'],
+  error:['Something went sideways','An unexpected error stopped the road from building. Try again, or play the simple 2D version.']
+ };
+ const [t,p]=msgs[kind]||msgs.error; $('failTitle').textContent=t; $('failText').textContent=p;
+ $('retryBtn').textContent=kind==='lost'?'Reload the road':'Try again'; $('fail').dataset.kind=kind;
+ openDialog('fail','retryBtn');
+}
+$('retryBtn').onclick=()=>{
+ const kind=$('fail').dataset.kind; closeDialog('fail');
+ if(kind==='three'){
+  $('loadLine').textContent='Trying the road again…';
+  const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+  s.onload=()=>boot(false); s.onerror=()=>showFail('three'); document.head.appendChild(s);
+ } else if(kind==='lost') location.reload();
+ else boot(false);
+};
+$('flatBtn').onclick=()=>{ const kind=$('fail').dataset.kind; closeDialog('fail'); if(kind==='lost'){ switchToFlat(); if(game.running) game.paused=false; } else boot(true); };
+function freshCanvas(){ const old=$('gl'), c=document.createElement('canvas'); c.id='gl'; old.replaceWith(c); return c; }
+function switchToFlat(){ world=new WorldFlat(freshCanvas()); }
+
+/* ---------------------------------------------------------------- frame loop + adaptive quality */
+let last=0, acc=0, uiClock=0; const perf={n:0,sum:0};
+function frame(ms){
+ requestAnimationFrame(frame);
+ const dt=Math.min(.1,(ms-(last||ms))/1000); last=ms;
+ if(!game) return;
+ if(!game.paused){ acc+=dt; let n=0; while(acc>=1/60&&n<8){ game.step(1/60); acc-=1/60; n++; } if(n>=8) acc=0; }
+ const target=game.state==='intro'||game.state==='end'?1:game.automatic?1:0;
+ game.calm=smooth(game.calm,target,prefs.reduced?4:1.4,dt);
+ game.tension=smooth(game.tension,game.automatic||!game.running?0:clamp(.25+game.systems.friction*.75),2,dt);
+ uiClock+=dt; if(uiClock>.1){ uiClock=0; if(game.running||game.state==='end') updateHUD(); }
+ audio.update(game.vehicle.speed,game.calm,game.tension,game.paused||state!=='run');
+ if(world){
+  if(game.running&&!game.paused&&!world.flat&&world.downgraded<2&&!document.hidden){ perf.n++; perf.sum+=dt; if(perf.n>=180){ if(perf.sum/perf.n>1/38) world.downgrade(); perf.n=0; perf.sum=0; } }
+  world.render(game,dt);
+ }
+}
+
+/* ---------------------------------------------------------------- boot */
+function progress(p,line){ $('loadFill').style.width=Math.round(p*100)+'%'; if(line) $('loadLine').textContent=line; }
+async function boot(flat){
+ state='loading'; const t0=performance.now();
+ $('openBtn').disabled=true; $('openBtn').textContent='Getting the road ready…';
+ if(!game) game=new Game();
+ try{
+  if(flat||FORCE_FLAT){ world=new WorldFlat(freshCanvas()); await world.build(game,progress); }
+  else{
+   if(!window.THREE){ showFail('three'); progress(0,'The 3D engine didn’t arrive.'); return; }
+   const w=new World3D(world?freshCanvas():$('gl'));
+   try{ await w.build(game,progress); }
+   catch(err){ console.warn('3D unavailable:',err&&err.message); showFail('webgl'); progress(0,'3D graphics aren’t available here.'); return; }
+   world=w;
+  }
+ }catch(err){ console.error(err); showFail('error'); return; }
+ const wait=Math.max(0,1100-(performance.now()-t0)); // let the loading line breathe for a beat
+ setTimeout(()=>{ state='ready'; $('loadBar').style.visibility='hidden'; const b=$('openBtn'); b.disabled=false; b.textContent=touchy()?'Tap to start':'Start driving'; $('loadLine').textContent=world.flat?'2D mode: same drive, simpler pictures.':'Ready when you are.'; },CAPTURE?0:wait);
+}
+if(FROM){ $('introEyebrow').textContent=`${FROM} sent you a drive`; document.title=`${FROM} sent you the Freeway Navigator`; }
+$('optAssist').checked=prefs.assisted; $('optReduced').checked=prefs.reduced;
+if(prefs.muted){ $('mute').setAttribute('aria-pressed','true'); $('mute').setAttribute('aria-label','Turn sound on'); $('waves').setAttribute('hidden',''); $('cross').removeAttribute('hidden'); }
+makeGrime();
+requestAnimationFrame(frame);
+setTimeout(()=>boot(false),60);
+
+/* ---------------------------------------------------------------- testing hooks (?debug) */
+if(DEBUG){
+ const LN=LANES;
+ window.__fw={get game(){return game},get world(){return world},audio,prefs,input,LESSON,
+  start(lesson=true){ if(state!=='ready') return 'not ready'; state='run'; audio.init(); $('intro').hidden=true; beginRun(lesson); return 'ok'; },
+  step(sec=1,bot){ for(let i=0;i<Math.round(sec*60);i++){ if(bot) bot(); game.step(1/60); const t=game.state==='end'||game.automatic?1:0; game.calm=smooth(game.calm,t,1.4,1/60); game.tension=smooth(game.tension,game.automatic?0:clamp(.25+game.systems.friction*.75),2,1/60); } updateHUD(); world.render(game,1/60); return game.time.toFixed(1); },
+  seek(miles){ game.vehicle.distance=miles*MILE; },
+  // A test driver: weaves to the clearest lane in manual, lets go between two distances, wipes when asked.
+  driver(autoFrom=1e9,autoTo=1e9,noWipe=false){ return ()=>{
+   const v=game.vehicle, tr=game.traffic, want=v.distance>=autoFrom&&v.distance<autoTo;
+   if(game.lesson) return;
+   if(want!==game.automatic&&!game.arriving&&game.engaging<=0&&!game.systems.limited){ input.keyL=input.keyR=input.gas=input.brake=false; game.toggle(); }
+   if(game.systems.dirtyNow&&game.systems.dustAge>1.5&&!noWipe) game.clean();
+   if(game.automatic) return;
+   let best=1,bg=-1; for(let l=0;l<3;l++){ const gap=tr.ahead(v.distance,LN[l]).gap, cur=Math.abs(v.x-LN[l])<1.9; if((cur||tr.safeLane(l,v.distance,v.speed))&&gap>bg+(cur?-15:0)){ bg=gap; best=l; } }
+   const cur=LN.reduce((b,x,i)=>Math.abs(x-v.x)<Math.abs(LN[b]-v.x)?i:b,0), tgt=Math.abs(best-cur)>1?cur+Math.sign(best-cur):best;
+   if(prefs.assisted){ if(tgt!==game.assistLane&&Math.abs(v.x-LN[game.assistLane])<.4) game.laneStep(Math.sign(tgt-game.assistLane)); }
+   else { const dx=LN[tgt]-v.x; input.keyL=dx<-.5; input.keyR=dx>.5; }
+   const gap=tr.ahead(v.distance,v.x).gap, close=gap<10+v.speed*1.3; input.brake=close; input.gas=!close&&game.manualTarget<29;
+  }; },
+  run(autoFrom,autoTo){ const d=this.driver(autoFrom,autoTo); while(game.state!=='end'&&game.time<1200){ d(); game.step(1/60); } input.keyL=input.keyR=input.gas=input.brake=false; updateHUD(); return {t:game.time.toFixed(0),stats:game.stats,energy:game.systems.battery}; },
+  lessonSteer(){ input.keyR=true; this.step(1.2); input.keyR=false; this.step(.3); },
+  fail(kind){ showFail(kind); },
+  downgrade(){ world.downgrade(); return world.downgraded; }
+ };
+}
+
+/* ---------------------------------------------------------------- local tool: write the link-preview image (?capture=og) */
+if(CAPTURE==='og'){
+ $('intro').hidden=true; $('mute').hidden=true;
+ const wait=setInterval(async()=>{
+  if(state!=='ready'||!world||world.flat) return; clearInterval(wait);
+  state='capture'; game.state='play'; game.reset(); game.state='play'; game.automatic=true; game.calm=1;
+  game.vehicle.distance=.55*MILE; game.vehicle.speed=27;
+  for(let i=0;i<240;i++){ game.traffic.update(1/60,game.vehicle,0); const c=game.autopilot.update(1/60,game.vehicle,game.traffic,false,0); game.vehicle.update(1/60,c,1); }
+  world.renderer.setPixelRatio(1); world.renderer.setSize(1200,630,false); world.camera.aspect=1200/630; world.camera.updateProjectionMatrix();
+  for(let i=0;i<90;i++) world.render(game,1/30);
+  const out=document.createElement('canvas'); out.width=1200; out.height=630; const g=out.getContext('2d');
+  world.render(game,1/60); g.drawImage(world.canvas,0,0,1200,630);
+  const v=g.createLinearGradient(0,0,0,630); v.addColorStop(0,'rgba(13,21,48,.75)'); v.addColorStop(.42,'rgba(13,21,48,0)'); v.addColorStop(1,'rgba(13,21,48,.25)'); g.fillStyle=v; g.fillRect(0,0,1200,630);
+  g.textAlign='center'; g.fillStyle='#c9d6e7'; g.font='600 22px system-ui,sans-serif'; g.fillText('A PLAYABLE METAPHOR FROM THE SELF-DRIVING MIND',600,62);
+  g.fillStyle='#eef4ff'; g.shadowColor='rgba(0,0,0,.6)'; g.shadowBlur=18; g.font='400 70px "Palatino Linotype",Palatino,Georgia,serif'; g.fillText('The Freeway Navigator',600,134);
+  g.font='italic 34px "Palatino Linotype",Palatino,Georgia,serif'; g.fillStyle='#79eadb'; g.fillText('Subscription vs. Endowment',600,182);
+  const blob=await new Promise(r=>out.toBlob(r,'image/jpeg',.88));
+  await fetch('/__save?f=freeway-navigator-og.jpg',{method:'POST',body:blob}); document.title='saved og image';
+ },200);
+}
 })();
 </script>
 </body>
