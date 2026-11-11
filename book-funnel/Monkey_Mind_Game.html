@@ -928,7 +928,8 @@ DEMO.key = function(e){ // returns true when the key was consumed
 };
 // touch: hold the title 3 s to start; during the demo, hold the top-left corner 3 s to stop. Everything else is ignored.
 window.addEventListener('pointerdown', function(e){
-  var corner = e.clientX<90 && e.clientY<90, onTitle = !DEMO.on && !$('arrival').hidden && e.target.closest && e.target.closest('#title');
+  var bt=$('demoTag').querySelector('.badge').getBoundingClientRect(), onBadge = DEMO.on && !DEMO.clean && e.clientX>=bt.left-8 && e.clientX<=bt.right+8 && e.clientY>=bt.top-8 && e.clientY<=bt.bottom+8;
+  var corner = (e.clientX<90 && e.clientY<90) || onBadge, onTitle = !DEMO.on && !$('arrival').hidden && e.target.closest && e.target.closest('#title');
   if(DEMO.on || onTitle){
     clearTimeout(DEMO.hold);
     if(DEMO.on && corner) DEMO.hold=setTimeout(DEMO.stop, 3000);
@@ -998,8 +999,18 @@ function start(){
   }
   toArrival();
   window.__mmReady=true;
-  var savedDemo=lsGet('monkeymind_v2_demo');
-  if(Q.has('demo') || savedDemo==='1' || savedDemo==='clean') DEMO.start(Q.has('clean') || (!Q.has('demo') && savedDemo==='clean'));
+  // ?demo=off (or ?nodemo) always clears a stuck demo. ?demo starts it once, then drops itself from the address,
+  // so stopping the demo and reloading leaves you in the normal game.
+  var dq=(Q.get('demo')||'').toLowerCase();
+  if(Q.has('nodemo') || dq==='off' || dq==='0'){ lsSet('monkeymind_v2_demo','0'); }
+  else {
+    var savedDemo=lsGet('monkeymind_v2_demo');
+    if(Q.has('demo') || savedDemo==='1' || savedDemo==='clean') DEMO.start(Q.has('clean') || (!Q.has('demo') && savedDemo==='clean'));
+  }
+  if(Q.has('demo')||Q.has('nodemo')||Q.has('clean')){
+    try{ ['demo','nodemo','clean'].forEach(function(k){ Q.delete(k); }); var qs=Q.toString();
+      history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); }catch(e){}
+  }
   requestAnimationFrame(function(n){ last=n; loop(n); });
 }
 var fontsReady = (document.fonts && document.fonts.load) ? Promise.race([
