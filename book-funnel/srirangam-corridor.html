@@ -179,7 +179,9 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 #journey .dots i.o{background:rgba(255,255,255,.12);box-shadow:none}
 #journey .taps{color:var(--ink);font-weight:600}
 #insights{margin:0;padding-left:18px;display:grid;gap:6px;color:#e2dacb;font-size:14px}
-#worries{margin:0;display:flex;flex-wrap:wrap;gap:6px}
+#worries{margin:0;display:grid;gap:8px}
+#worries .wrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+#worries .wrow b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;min-width:64px;filter:brightness(1.35)}
 #worries span{font-size:13px;background:#f1ebdf;color:#2b2a27;border-radius:8px;padding:4px 10px}
 .reflect{font:italic 17px/1.45 var(--display);color:var(--ink)!important;border-left:2px solid var(--gold);padding-left:12px}
 .book{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;background:rgba(233,204,136,.07);border:1px solid rgba(233,204,136,.2);border-radius:14px;padding:12px}
@@ -296,7 +298,7 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
  <div class="card">
   <p class="eyebrow">Gate 4 · the ten-minute contract</p>
   <h2 id="contractTitle">Your worries followed you in</h2>
-  <p class="lede">An email, the markets, a meeting. They'll keep flying at you. So make them a deal: they wait on a shelf for ten minutes, and in minute eleven you get every one of them back, untouched.</p>
+  <p class="lede">Work pings, Mom’s messages, the milk running out. They'll keep flying at you. So make them a deal: they wait on a shelf for ten minutes, and in minute eleven you get every one of them back, untouched.</p>
   <div class="actions"><button class="primary" id="beginContract" type="button">Deal: start 10 minutes</button><button class="ghost" id="skipContract" type="button">No timer, just walk</button></div>
   <small>The clock runs in real time, even if you switch tabs. You can finish early whenever you like.</small>
  </div>
@@ -331,7 +333,7 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
  <p class="reflect">At first, the stick helped you return. Later, the rhythm kept going with less effort. What changed when the guides disappeared?</p>
  <h3>Your worries are back</h3>
  <div id="worries"></div>
- <p style="font-size:14px;color:var(--muted)">Untouched, as promised. Pick the one that actually needs you.</p>
+ <p id="worryNote" style="font-size:14px;color:var(--muted)">Untouched, as promised. Pick the one that actually needs you.</p>
  <div class="book">
   <div class="cover" aria-hidden="true">THE SELF-DRIVING MIND</div>
   <p>This walk comes from Chapters 8 and 9 of <i>The Self-Driving Mind</i>, about giving a restless mind something to hold. <a href="https://theselfdrivingmind.com/book/" target="_blank" rel="noopener">Read about the book</a> or <a href="https://www.barnesandnoble.com/w/the-self-driving-mind-sundar-rajan/1151506645?ean=9798895741986" target="_blank" rel="noopener">pre-order at Barnes&nbsp;&amp;&nbsp;Noble</a>.</p>
@@ -380,15 +382,43 @@ const GATES = [
  {place:'The lamp-lit passage', task:'Let go of the controls', line:'The rhythm is steady. Let go of the controls and let the current carry you.', yoga:'toward Dhyāna', gloss:'continuity grows as corrections get rarer'},
  {place:'The sanctum', task:'Keep walking, add nothing', line:'Movement continues. You don’t need to add anything.', yoga:'Dhyāna', gloss:'attention that keeps flowing on its own'}
 ];
-const CONCERNS = [
- {text:'Overdue Email', sub:'Re: Re: Re: Q3 numbers', color:'#4f7fd1'},
- {text:'Portfolio Down 20%', sub:'Markets · just now', color:'#d39a3a'},
- {text:'Unfinished Meeting', sub:'Notes: (blank)', color:'#8b6cc4'}
-];
+/* Thoughts come in three flavours. Each walk draws a fresh mix: 6 drift past in gates 1–3,
+   6 worries need shelving in gates 4–5, and 1 faint one floats by in the stillness. */
+const FLAVOURS = {
+ work:{label:'Work', color:'#4f7fd1'},
+ mom: {label:'Mom',  color:'#d46a8c'},
+ home:{label:'Home', color:'#4f9a6a'}
+};
+const POOL = {
+ work:[
+  ['Overdue Email','Re: Re: Re: Q3 numbers'], ['Portfolio Down 20%','Markets · just now'], ['Unfinished Meeting','Notes: (blank)'],
+  ['Slack: 47 unread','#general is on fire'], ['CI failed on main','It worked on my machine'], ['PR review requested','3 days ago'],
+  ['Prod alert: latency spike','p95 at 2.4 s'], ['Sprint ends today','Jira · 9 tickets open'], ['Restart to update','Your laptop, again']
+ ],
+ mom:[
+  ['Mom: Did you eat?','2 missed calls'], ['Mom: Call me when free','Not urgent. Call now.'], ['Mom: Forwarded a video','Health tips · 11 min'],
+  ['Mom: Sharma aunty’s son got promoted','No pressure.'], ['Mom: When are you visiting?','Book tickets early']
+ ],
+ home:[
+  ['Milk is over','Also eggs'], ['Electricity bill due','Tomorrow'], ['Plumber coming 4–6 pm','He said 2 pm'],
+  ['School form to sign','Due yesterday'], ['Car service overdue','The light is on']
+ ]
+};
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.random()*(i+1)|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function buildPlan(){
+ const bag={}; for(const f in POOL) bag[f]=shuffle(POOL[f].map(([text,sub])=>({text,sub,flavour:f})));
+ const take=f=>bag[f].pop();
+ // Worries: at least one of each flavour (Mom always gets one), the rest mixed.
+ const worries=[take('mom'),take('work'),take('home')];
+ const rest=shuffle([...bag.work,...bag.mom,...bag.home]);
+ while(worries.length<6) worries.push(rest.pop());
+ const drift=rest.splice(-6), faint=[rest.pop()];
+ return {worry:shuffle(worries), drift:shuffle(drift), faint};
+}
 const SUPPORT_KEYS = ['ring','metro','guides','wheels','steer'];
 const SUPPORT_NAMES = {ring:'Beat ring',metro:'Metronome',guides:'Guide lines',wheels:'Training wheels',steer:'Steering'};
 // Route distance at which each gate is crossed (gate n at BOUND[n-1]); the sanctum door at END.
-const BOUND = [16,76,136,196,256,316,376], END = 412, ELE_Z = 2;
+const BOUND = [16,56,96,136,176,216,256], END = 290, ELE_Z = 2;
 
 const config = {assisted:false, window:.4, reduced:matchMedia('(prefers-reduced-motion: reduce)').matches};
 $('reduceMotion').checked = config.reduced;
@@ -410,18 +440,18 @@ const supportSum = s => SUPPORT_KEYS.reduce((n,k)=>n+supports(s)[k],0);
 /* Palette keyframes along the route: daytime bazaar dust to midnight stone to golden sanctum. */
 const KEYS = [
  {at:0,   sky:[228,168,104], fog:[212,154,100], hemi:.8,  sun:1.35,lamp:.3,  stone:[172,146,114], dens:.018, exp:.9,  strip:1},
- {at:136, sky:[214,132,84],  fog:[196,124,86],  hemi:.68, sun:1.0, lamp:.5,  stone:[160,132,106], dens:.02,  exp:.92, strip:1},
- {at:196, sky:[118,108,122], fog:[104,98,112],  hemi:.5,   sun:.3, lamp:.85, stone:[142,134,128], dens:.022, exp:1.0,  strip:.2},
- {at:256, sky:[58,60,76],    fog:[52,55,72],    hemi:.32,  sun:.08,lamp:1.15,stone:[112,108,108], dens:.024, exp:1.05, strip:0},
- {at:316, sky:[22,26,38],    fog:[20,24,35],    hemi:.2,   sun:0,  lamp:1.45,stone:[86,82,82],    dens:.022, exp:1.1,  strip:0},
- {at:376, sky:[13,12,18],    fog:[15,13,18],    hemi:.16,  sun:0,  lamp:1.55,stone:[70,64,60],    dens:.016, exp:1.05, strip:0},
+ {at:96,  sky:[214,132,84],  fog:[196,124,86],  hemi:.68, sun:1.0, lamp:.5,  stone:[160,132,106], dens:.02,  exp:.92, strip:1},
+ {at:136, sky:[118,108,122], fog:[104,98,112],  hemi:.5,   sun:.3, lamp:.85, stone:[142,134,128], dens:.022, exp:1.0,  strip:.2},
+ {at:176, sky:[58,60,76],    fog:[52,55,72],    hemi:.32,  sun:.08,lamp:1.15,stone:[112,108,108], dens:.024, exp:1.05, strip:0},
+ {at:216, sky:[22,26,38],    fog:[20,24,35],    hemi:.2,   sun:0,  lamp:1.45,stone:[86,82,82],    dens:.022, exp:1.1,  strip:0},
+ {at:256, sky:[13,12,18],    fog:[15,13,18],    hemi:.16,  sun:0,  lamp:1.55,stone:[70,64,60],    dens:.016, exp:1.05, strip:0},
  {at:END, sky:[16,13,14],    fog:[20,16,14],    hemi:.14,  sun:0,  lamp:1.6, stone:[70,62,56],    dens:.014, exp:1.0,  strip:0}
 ];
 function palette(d){
  let i=0; while(i<KEYS.length-2 && d>KEYS[i+1].at) i++;
  const a=KEYS[i], b=KEYS[i+1], t=smooth(a.at,b.at,d), o={};
  for(const k in a){ if(k==='at') continue; o[k]=Array.isArray(a[k]) ? a[k].map((v,j)=>lerp(v,b[k][j],t)) : lerp(a[k],b[k],t); }
- o.depth = clamp(d/END,0,1); o.gold = smooth(330,END,d);
+ o.depth = clamp(d/END,0,1); o.gold = smooth(BOUND[5]+14,END,d);
  return o;
 }
 const css = c => `rgb(${c[0]|0},${c[1]|0},${c[2]|0})`;
@@ -536,6 +566,11 @@ class AudioEngine{
  thunk(){ this.tone({f:140,f2:70,peak:.18,d:.18,wet:.3}); this.hit({type:'lowpass',f:500,peak:.12,d:.1}); }
  whoosh(){ this.hit({f:240,f2:1300,q:.6,a:.9,peak:.2,d:2.2,wet:.4}); }
  coin(){ this.hit({f:3200,q:4,peak:.08,d:.05}); this.tone({f:2100,peak:.02,d:.1}); }
+ // A small arrival sound per flavour: keyboard ticks for work, a phone buzz for Mom, a cupboard knock for home.
+ arrive(flavour,v=1){ if(!this.ctx) return; const t=this.ctx.currentTime, pan=Math.random()*1.2-.6;
+  if(flavour==='work') [0,.07,.15].forEach(d=>this.hit({t:t+d,f:3600,q:3,peak:.07*v,d:.02,pan,wet:.15}));
+  else if(flavour==='mom') [0,.2].forEach(d=>this.tone({t:t+d,f:165,type:'square',peak:.025*v,d:.13,pan,wet:.1}));
+  else [0,.13].forEach(d=>{ this.hit({t:t+d,type:'lowpass',f:380,peak:.16*v,d:.07,pan,wet:.25}); this.tone({t:t+d,f:110,f2:80,peak:.06*v,d:.08,pan,wet:.2}); }); }
  pluck(f,t,peak){ // one tanpura-like string: bright saw through a closing filter
   const c=this.ctx, lp=c.createBiquadFilter(); lp.type='lowpass'; lp.Q.value=.7;
   lp.frequency.setValueAtTime(2400,t); lp.frequency.exponentialRampToValueAtTime(380,t+3.8);
@@ -582,7 +617,7 @@ class AudioEngine{
 }
 
 /* ---------------------------------------------------------------- attention model: no rendering or DOM */
-const stats = {taps:Array(8).fill(0), hits:Array(8).fill(0), beats:Array(8).fill(0), err:Array(8).fill(0), assistedAt:-1, wanders:0, comebacks:0, shelved:0, autoShelved:0, lessonTaps:0};
+const stats = {taps:Array(8).fill(0), hits:Array(8).fill(0), beats:Array(8).fill(0), err:Array(8).fill(0), assistedAt:-1, wanders:0, comebacks:0, shelved:0, autoShelved:0, lessonTaps:0, letGo:0};
 class AttentionModel{
  constructor(){ this.period=3.2; this.epoch=now(); this.alignment=.7; this.value=0; this.returns=0; this.lastAccepted=0; this.nextIndex=1; this.wander=false; this.flash=0; }
  reset(){ this.epoch=now(); this.nextIndex=1; this.lastAccepted=0; }
@@ -638,43 +673,59 @@ class ContractController{
 
 /* ---------------------------------------------------------------- worries (concern tokens) */
 class Concerns{
- constructor(){ this.list=[]; this.spawned=0; this.nextAt=Infinity; }
- spawn(){ if(this.spawned>=CONCERNS.length) return; const c=CONCERNS[this.spawned++];
-  const t={...c, i:this.spawned-1, z:30, x:(this.spawned%2?-1:1)*(.4+Math.random()*.6), reserved:false, rt:0, misses:0, born:movement.time};
-  this.list.push(t); world.addToken(t); if(this.spawned===1) this.firstHint=true; refreshLater(); }
- get active(){ return this.list.filter(t=>!t.reserved); }
+ constructor(){ this.list=[]; this.plan=buildPlan(); this.nextAt=Infinity; this.stageWorries=0; this.firstWorry=true; this.firstDrift=true; }
+ // kind: 'worry' (shelve it), 'drift' (floats past the stalls), 'faint' (passes by in the stillness)
+ spawn(kind='worry'){
+  const c=this.plan[kind].shift(); if(!c) return null;
+  const side=Math.random()<.5?-1:1, t={...c, kind, color:FLAVOURS[c.flavour].color, side, z:28, reserved:false, gone:false, rt:0, misses:0,
+   x: kind==='drift' ? side*3.05 : kind==='faint' ? side*.9 : side*(.4+Math.random()*.6)};
+  if(kind==='worry'){ t.wi=this.worries.length; this.stageWorries++; }
+  this.list.push(t); world.addToken(t); audio.arrive(c.flavour, kind==='worry'?1:kind==='drift'?.5:.25);
+  if(kind==='worry' && this.firstWorry){ this.firstWorry=false; t.hintMe=true; }
+  if(kind==='drift' && this.firstDrift){ this.firstDrift=false; t.hintMe=true; }
+  refreshLater(); return t;
+ }
+ get worries(){ return this.list.filter(t=>t.kind==='worry'); }
+ get active(){ return this.list.filter(t=>t.kind==='worry' && !t.reserved); }
+ get shelvedCount(){ return this.list.filter(t=>t.kind==='worry' && t.reserved).length; }
  shelve(t, auto){
-  if(!t || t.reserved) return false;
+  if(!t || t.reserved || t.kind!=='worry') return false;
   t.reserved=true; t.rt=0; stats.shelved++; if(auto) stats.autoShelved++;
   attention.value=Math.min(1,attention.value+.03); audio.paper(); world.shelve(t);
   hideHint(); drawRing(); $('ring').classList.add('glow'); setTimeout(()=>$('ring').classList.remove('glow'),900);
-  banner(auto ? `I shelved “${t.text}” for you. It'll be there in minute eleven.` : `“${t.text}” is on the shelf until minute eleven. Back to the stick.`, 3800);
+  banner(auto ? `I shelved “${t.text}” for you. It'll be there in minute eleven.` : `“${t.text}” is on the shelf until minute eleven. Back to the stick.`, 3400);
   refreshLater(); return true;
  }
  nearest(){ return this.active.sort((a,b)=>a.z-b.z)[0]; }
  update(dt){
+  let pull=0;
   for(const t of this.list){
    if(t.reserved){ t.rt=Math.min(1,t.rt+dt*1.1); continue; }
-   if(journey.resting) continue;
+   if(t.gone || journey.resting) continue;
    t.z -= dt*(2.2 + movement.speed*.5);
-   if(t.z < 9 && this.firstHint){ this.firstHint=false; hint(`${inputMode==='touch'?'Tap':'Click'} the worry to shelve it`, ()=>world.tokenScreen(t), inputMode==='key'?'or press E':'or use the Later button', false); }
+   if(t.hintMe && t.z<11){ t.hintMe=false;
+    if(t.kind==='worry') hint(`${inputMode==='touch'?'Tap':'Click'} the worry to shelve it`, ()=>world.tokenScreen(t), inputMode==='key'?'or press E':'or use the Later button', false);
+    else { t.hinting=true; hint('Thoughts drift by.', ()=>world.tokenScreen(t), 'Nothing to do. Keep the stick steady and let it pass.', false); setTimeout(()=>{ if(hintTarget && $('hintText').textContent.startsWith('Thoughts')) hideHint(); },4500); } }
+   if(t.kind==='drift' && t.z<10 && t.z>-1) pull += t.side*(1-attention.alignment)*.9; // a wobbly stick lets the trunk reach for it
    if(t.z < -2.5){
-    t.z=26; t.misses++; attention.alignment=Math.max(.2,attention.alignment-.08);
+    if(t.kind!=='worry'){ t.gone=true; stats.letGo++; if(t.hinting) hideHint(); world.removeToken(t); continue; }
+    t.z=24; t.misses++; attention.alignment=Math.max(.2,attention.alignment-.08);
     if(t.misses>=2){ this.shelve(t,true); }
-    else banner('It came back around. Worries do that. Shelve it when it passes.', 4000);
+    else banner('It came back around. Worries do that. Shelve it when it passes.', 3600);
    }
   }
+  movement.thought=pull;
  }
 }
 
 /* ---------------------------------------------------------------- movement */
 class MovementController{
- constructor(){ this.distance=0; this.x=0; this.vx=0; this.keys=new Set(); this.drag=0; this.authority=1; this.time=0; this.speed=0; this.script=0; }
+ constructor(){ this.distance=0; this.x=0; this.vx=0; this.keys=new Set(); this.drag=0; this.authority=1; this.time=0; this.speed=0; this.script=0; this.thought=0; }
  update(dt,stage){
   this.time+=dt;
   this.authority=damp(this.authority, stage>=6?0:1, stage>=6?.9:3, dt);
   const input=(this.keys.has('ArrowRight')||this.keys.has('KeyD')?1:0)-(this.keys.has('ArrowLeft')||this.keys.has('KeyA')?1:0)+this.drag;
-  const pull=Math.sin(this.time*.7+1.3)*(1-attention.alignment)*(stage<=3?.9:stage<=5?.3:0) + this.script;
+  const pull=Math.sin(this.time*.7+1.3)*(1-attention.alignment)*(stage<=3?.9:stage<=5?.3:0) + this.script + this.thought;
   this.vx=damp(this.vx,(clamp(input,-1,1)*1.7+pull)*this.authority,4,dt);
   this.x=clamp(this.x+this.vx*dt,-2.1,2.1);
   this.x=damp(this.x,0,stage>=6?1.4:.25,dt);
@@ -690,8 +741,7 @@ class JourneyController{
  eligible(){
   const el=movement.time-this.stageStart;
   if(this.stage===0) return this.lessonDone;
-  if(this.stage===4) return concerns.spawned>=2 && !concerns.active.length;
-  if(this.stage===5) return concerns.spawned>=3 && !concerns.active.length;
+  if(this.stage===4||this.stage===5) return concerns.stageWorries>=3 && !concerns.active.length;
   return true;
  }
  targetSpeed(){
@@ -707,7 +757,7 @@ class JourneyController{
   $('gateName').textContent=`Gate ${stage} of 7`; $('gateSub').textContent=g.place;
   const yoga=`Yoga link (my interpretation): <b>${g.yoga}</b>, ${g.gloss}.`;
   const eyebrow = stage===1 ? 'Gate 1 of 7 · Prakāra 1 (one of the temple’s seven walled rings)' : `Gate ${stage} of 7 · Prakāra ${stage}`;
-  if(stage!==4) gateCard(eyebrow, g.place, g.line, yoga, stage===1?6200:5200);
+  if(stage!==4) gateCard(eyebrow, g.place, g.line, yoga, stage===1?5000:4000);
   audio.bell([196,220,247,262,294,330,392][stage-1], .085); audio.whoosh();
   updateSupportsUI(stage, true);
   if(stage===2) setTimeout(()=>{ // scripted gentle distraction from the cloth stalls, after the gate title fades
@@ -715,12 +765,14 @@ class JourneyController{
    movement.script=-1.25; attention.alignment=Math.min(attention.alignment,.45);
    setTimeout(()=>{ movement.script=0; },3800);
    setTimeout(()=>{ if(this.stage===2) hint('It wandered. That’s fine.', ()=>world.stickScreen(), `${tapWord()} on the beat to bring it back${inputMode==='touch'?'. Drag sideways to steer':'. ← → or A/D steer'}`); this.wanderHint=true; },1400);
-  },5000);
-  if(stage===3){ banner('From here the prompts stop. The wheels are taking less of the weight.',5200); }
+  },4200);
+  if(stage>=1 && stage<=3){ this.driftLeft=2; this.driftAt=movement.time+(stage===1?3.5:2); }
+  if(stage===3){ banner('From here the prompts stop. The wheels are taking less of the weight.',4200); }
   if(stage===4){ this.modal=true; movement.speed=0; setTimeout(()=>openDialog('contract','beginContract'),900); }
-  if(stage===5){ concerns.nextAt=movement.time+3; banner('Beat ring and metronome are off. Listen for the footsteps: the rhythm is still there.',6500); }
+  if(stage===5){ concerns.stageWorries=0; concerns.nextAt=movement.time+2.5; banner('Beat ring and metronome are off. Listen for the footsteps: the rhythm is still there.',6500); }
   if(stage===6){
    hideHint(); $('laterBtn').hidden=true; concerns.active.forEach(t=>concerns.shelve(t,true));
+   this.faintAt=movement.time+6;
    banner('Let the rhythm carry you. Steering off. Wheels off in three… two…',4200);
    setTimeout(()=>{ if(this.stage>=6){ this.wheelsOff=true; world.popWheels(); audio.click(); setTimeout(()=>audio.thunk(),650); banner('Training wheels off. Still walking.',4500); } },3000);
    $('returnBtn').classList.add('free'); $('returnBtn').firstChild.textContent='Optional';
@@ -731,10 +783,10 @@ class JourneyController{
  acceptContract(timed){
   contract.begin(timed); this.modal=false; closeDialog('contract');
   const g=GATES[4];
-  gateCard('Gate 4 of 7 · Prakāra 4', g.place, timed?'Deal. Ten minutes on the clock.':'No timer. The shelf still works.', `Yoga link (my interpretation): <b>${g.yoga}</b>, ${g.gloss}.`, 4600);
+  gateCard('Gate 4 of 7 · Prakāra 4', g.place, timed?'Deal. Ten minutes on the clock.':'No timer. The shelf still works.', `Yoga link (my interpretation): <b>${g.yoga}</b>, ${g.gloss}.`, 3800);
   audio.bell(330,.07); attention.reset();
-  setTimeout(()=>{ if(this.stage===4) banner('Guide lines are fading. Beat ring and metronome now come every other beat.',5200); },4800);
-  concerns.spawn(); concerns.nextAt=movement.time+13;
+  setTimeout(()=>{ if(this.stage===4) banner('Guide lines are fading. Beat ring and metronome now come every other beat.',4200); },4000);
+  concerns.stageWorries=0; concerns.spawn('worry'); concerns.nextAt=movement.time+5;
   refreshLater();
  }
  update(){
@@ -744,8 +796,10 @@ class JourneyController{
    if(!this.lessonDone && el>22 && !config.assisted && attention.returns<3){ setAssist(true); hint('I widened the timing window.', ()=>world.stickScreen(), 'No shame. That’s what training wheels are for.'); }
    if(!this.lessonDone && el>55){ this.lessonDone=true; hideHint(); banner('Close enough. The gate is open; practice continues inside.',4500); }
   }
-  if((this.stage===4||this.stage===5) && movement.time>concerns.nextAt){ concerns.spawn(); concerns.nextAt = this.stage===4 ? movement.time+12 : Infinity; }
-  if((this.stage===4||this.stage===5) && el>48 && concerns.active.length && concerns.nearest().z<12) concerns.shelve(concerns.nearest(),true);
+  if(this.stage>=6 && this.faintAt && movement.time>this.faintAt){ this.faintAt=0; concerns.spawn('faint'); }
+  if(this.stage>=1 && this.stage<=3 && this.driftLeft>0 && movement.time>this.driftAt){ concerns.spawn('drift'); this.driftLeft--; this.driftAt=movement.time+6; }
+  if((this.stage===4||this.stage===5) && concerns.stageWorries<3 && movement.time>concerns.nextAt){ concerns.spawn('worry'); concerns.nextAt=movement.time+(this.stage===4?5:4.5); }
+  if((this.stage===4||this.stage===5) && el>40 && concerns.active.length && concerns.nearest().z<12) concerns.shelve(concerns.nearest(),true);
   if(this.stage<7 && movement.distance>=BOUND[this.stage] && this.eligible()) this.enter(this.stage+1);
   if(this.stage===7 && movement.distance>=END-.05 && !this.resting) arrive();
  }
@@ -956,8 +1010,8 @@ class WorldGL{
  buildShelf(){
   const g=this.shelf=new THREE.Group(); this.scene.add(g); g.position.set(2.5,3.6,.8);
   const wood=this.M.wood; this.box(1.5,.08,.7,wood,g,0,-.45,0); this.box(1.5,.08,.7,wood,g,0,.45,0); this.box(.08,.98,.7,wood,g,-.75,0,0); this.box(.08,.98,.7,wood,g,.75,0,0); this.box(1.5,.98,.06,wood,g,0,0,-.33);
-  const lab=canvasTex(256,64,(c,w,h)=>{ c.fillStyle='#2a2116'; c.fillRect(0,0,w,h); c.fillStyle='#e9cc88'; c.font='600 26px system-ui,sans-serif'; c.textAlign='center'; c.textBaseline='middle'; c.fillText('Minute 11 shelf',w/2,h/2); });
-  this.mesh(new THREE.PlaneGeometry(1.5,.38),new THREE.MeshBasicMaterial({map:lab}),g,0,.72,0);
+  this.shelfLabel=canvasTex(256,64,()=>{}); this.setShelfCount(0);
+  this.mesh(new THREE.PlaneGeometry(1.5,.38),new THREE.MeshBasicMaterial({map:this.shelfLabel}),g,0,.72,0);
   const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:this.glowTex,color:0xffb050,blending:THREE.AdditiveBlending,transparent:true,opacity:.5,depthWrite:false})); glow.scale.setScalar(2); g.add(glow);
   g.visible=false; g.scale.setScalar(.01);
  }
@@ -966,26 +1020,39 @@ class WorldGL{
   const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(p,3));
   this.dust=new THREE.Points(g,new THREE.PointsMaterial({map:this.glowTex,color:0xfff0d0,size:.12,transparent:true,opacity:.55,depthWrite:false,blending:THREE.AdditiveBlending})); this.scene.add(this.dust);
  }
+ setShelfCount(n){
+  const c=this.shelfLabel.image, g=c.getContext('2d'); g.fillStyle='#2a2116'; g.fillRect(0,0,c.width,c.height);
+  g.fillStyle='#e9cc88'; g.font='600 26px system-ui,sans-serif'; g.textAlign='center'; g.textBaseline='middle';
+  g.fillText(n?`Minute 11 shelf · ${n}`:'Minute 11 shelf',c.width/2,c.height/2); this.shelfLabel.needsUpdate=true;
+ }
  tokenTexture(t){
-  return canvasTex(512,170,(g,w,h)=>{ g.clearRect(0,0,w,h); const r=26;
-   g.fillStyle='rgba(244,240,232,.97)'; g.beginPath(); g.moveTo(r,6); g.arcTo(w-6,6,w-6,h-6,r); g.arcTo(w-6,h-6,6,h-6,r); g.arcTo(6,h-6,6,6,r); g.arcTo(6,6,w-6,6,r); g.fill();
+  return canvasTex(512,170,(g,w,h)=>{ g.clearRect(0,0,w,h); const r=26, mom=t.flavour==='mom';
+   // Mom's messages look like a chat bubble; work and home are notification cards.
+   g.fillStyle=mom?'rgba(252,238,242,.97)':'rgba(244,240,232,.97)'; g.beginPath(); g.moveTo(r,6); g.arcTo(w-6,6,w-6,h-6,r); g.arcTo(w-6,h-6,6,h-6,r);
+   if(mom){ g.lineTo(52,h-6); g.lineTo(30,h+0); g.lineTo(34,h-6); }
+   g.arcTo(6,h-6,6,6,r); g.arcTo(6,6,w-6,6,r); g.fill();
+   if(mom){ g.strokeStyle=t.color; g.lineWidth=4; g.stroke(); }
    g.fillStyle=t.color; g.beginPath(); g.arc(70,h/2,34,0,7); g.fill();
-   g.fillStyle='#fff'; g.font='700 34px system-ui,sans-serif'; g.textAlign='center'; g.textBaseline='middle'; g.fillText(t.text[0],70,h/2+1);
-   g.textAlign='left'; g.fillStyle='#24221f'; g.font='700 38px system-ui,sans-serif'; g.fillText(t.text,124,h/2-18,w-140);
+   g.strokeStyle='#fff'; g.fillStyle='#fff'; g.lineWidth=4; g.lineJoin='round'; const cx=70, cy=h/2;
+   if(t.flavour==='work'){ g.strokeRect(cx-15,cy-12,30,19); g.beginPath(); g.moveTo(cx-21,cy+12); g.lineTo(cx+21,cy+12); g.stroke(); }
+   else if(mom){ g.beginPath(); g.ellipse(cx,cy-3,16,12,0,0,7); g.stroke(); g.beginPath(); g.moveTo(cx-8,cy+7); g.lineTo(cx-13,cy+15); g.lineTo(cx-1,cy+9); g.fill(); }
+   else { g.beginPath(); g.moveTo(cx-16,cy); g.lineTo(cx,cy-15); g.lineTo(cx+16,cy); g.moveTo(cx-11,cy-4); g.lineTo(cx-11,cy+13); g.lineTo(cx+11,cy+13); g.lineTo(cx+11,cy-4); g.stroke(); }
+   g.textAlign='left'; g.textBaseline='middle'; g.fillStyle='#24221f'; g.font='700 36px system-ui,sans-serif'; g.fillText(t.text,124,h/2-18,w-140);
    g.fillStyle='#6d685f'; g.font='400 26px system-ui,sans-serif'; g.fillText(t.sub,124,h/2+24,w-140); });
  }
  addToken(t){
-  const g=new THREE.Group(); const m=this.mesh(new THREE.PlaneGeometry(2.9,.96),new THREE.MeshBasicMaterial({map:this.tokenTexture(t),transparent:true,side:THREE.DoubleSide,fog:false}),g);
+  const g=new THREE.Group(); const m=this.mesh(new THREE.PlaneGeometry(2.9,.96),new THREE.MeshBasicMaterial({map:this.tokenTexture(t),transparent:true,opacity:t.kind==='faint'?.42:t.kind==='drift'?.9:1,side:THREE.DoubleSide,fog:false,depthWrite:t.kind==='worry'}),g);
   const hitbox=this.mesh(new THREE.PlaneGeometry(4,1.8),new THREE.MeshBasicMaterial({visible:false}),g); hitbox.userData.token=t;
-  this.scene.add(g); this.tokenMeshes.set(t,{g,hitbox}); g.position.set(t.x,3.4,ELE_Z-t.z);
+  this.scene.add(g); this.tokenMeshes.set(t,{g,hitbox,card:m}); g.position.set(t.x,3.4,ELE_Z-t.z);
  }
- shelve(t){ const o=this.tokenMeshes.get(t); if(o) o.from=o.g.position.clone(); this.shelf.visible=true; }
+ removeToken(t){ const o=this.tokenMeshes.get(t); if(o){ this.scene.remove(o.g); o.card.material.map.dispose(); this.tokenMeshes.delete(t); } }
+ shelve(t){ const o=this.tokenMeshes.get(t); if(o) o.from=o.g.position.clone(); this.shelf.visible=true; this.setShelfCount(concerns.shelvedCount); }
  popWheels(){
   this.wheels.forEach(w=>{ const p=new THREE.Vector3(); w.getWorldPosition(p); this.elephant.remove(w); this.scene.add(w); w.position.copy(p);
    this.loose.push({w,vx:w.userData.side*(this.camera.aspect<.85?1.1:2),vy:3.6,spin:w.userData.side*6,life:0}); });
  }
  pick(cx,cy){
-  const hits=[]; this.tokenMeshes.forEach((o,t)=>{ if(!t.reserved) hits.push(o.hitbox); }); if(!hits.length) return null;
+  const hits=[]; this.tokenMeshes.forEach((o,t)=>{ if(t.kind==='worry' && !t.reserved) hits.push(o.hitbox); }); if(!hits.length) return null;
   this.ray.setFromCamera({x:cx/innerWidth*2-1,y:-(cy/innerHeight)*2+1},this.camera);
   const h=this.ray.intersectObjects(hits,false); return h.length ? h[0].object.userData.token : null;
  }
@@ -1059,17 +1126,23 @@ class WorldGL{
    o.w.position.z+=movement.speed*dt; o.w.rotation.z+=o.spin*dt*Math.max(0,1-o.life/2.5); o.w.userData.spokes.rotation.x-=dt*4;
    if(o.life>9){ this.scene.remove(o.w); return false; } return true; });
   // worries: approach, or fold into the shelf
-  this.shelf.visible = st>=4 || concerns.list.length>0;
+  this.shelf.visible = st>=4 || concerns.shelvedCount>0;
   const shelfTarget = state==='end' ? 0 : (st>=4 ? 1 : 0);
   this.shelf.scale.setScalar(damp(this.shelf.scale.x,Math.max(.01,shelfTarget),3,dt)); this.shelf.position.x=lerp(2.5,2.2,this.camera.aspect<.85?1:0)+movement.x*.6;
-  let slot=0;
+  const por=this.camera.aspect<.85; let slot=0;
   this.tokenMeshes.forEach((o,tk)=>{
-   const g=o.g;
-   if(state==='end'||journey.unpack){ const por=this.camera.aspect<.85, tgt=por?new THREE.Vector3(0,5.6-tk.i*.75,-2.5):new THREE.Vector3((tk.i-1)*3.1,4.6,-3.5);
+   const g=o.g, bob=Math.sin(t*1.3+(tk.wi||0)+tk.side)*.1;
+   if(tk.kind==='worry' && (state==='end'||journey.unpack)){ // minute eleven: every worry back in front of you, untouched
+    const n=tk.wi, col=n%(por?2:3), row=(n/(por?2:3))|0;
+    const tgt=por?new THREE.Vector3((col?1:-1)*.98,5.5-row*.68,-2.5):new THREE.Vector3((col-1)*3,5.1-row*1.05,-3.5);
     g.position.lerp(tgt,Math.min(1,dt*2)); const sc=por?.6:.85; g.scale.lerp(new THREE.Vector3(sc,sc,sc),Math.min(1,dt*2)); g.rotation.set(0,0,0); return; }
-   if(tk.reserved){ const a=t*.6+slot*2.1, tgt=new THREE.Vector3(this.shelf.position.x+Math.cos(a)*.35,this.shelf.position.y-.05+Math.sin(a)*.12,this.shelf.position.z+Math.sin(a)*.1);
-    g.position.lerp(tgt,Math.min(1,dt*3.2)); const sc=lerp(1,.2,tk.rt); g.scale.setScalar(sc); g.rotation.y=Math.sin(a)*.5; slot++; return; }
-   const por=this.camera.aspect<.85; g.position.set(tk.x*(1-Math.max(0,(8-tk.z)/8)*.3)*(por?.7:1), (por?3.9:3.2)+Math.sin(t*1.3+tk.i)*.1, ELE_Z-tk.z); g.scale.setScalar(por?1.15:1); g.lookAt(this.camera.position.x,g.position.y,this.camera.position.z);
+   if(tk.reserved){ // folded into the shelf, stacking in rows of three
+    const s=slot++, tgt=new THREE.Vector3(this.shelf.position.x+((s%3)-1)*.46,this.shelf.position.y+.2-((s/3)|0)*.36,this.shelf.position.z+.12);
+    g.position.lerp(tgt,Math.min(1,dt*3.2)); g.scale.setScalar(lerp(1,.15,tk.rt)); g.rotation.set(0,Math.sin(t*.5+s)*.15,0); return; }
+   if(tk.kind==='drift'){ g.position.set(por?tk.side*2.2:tk.x, 2.5+bob, ELE_Z-tk.z); g.scale.setScalar(por?.75:.85); }
+   else if(tk.kind==='faint'){ g.position.set(tk.x*(por?.6:1), 4.1+bob, ELE_Z-tk.z); g.scale.setScalar(.75); }
+   else { g.position.set(tk.x*(1-Math.max(0,(8-tk.z)/8)*.3)*(por?.7:1), (por?3.9:3.2)+bob, ELE_Z-tk.z); g.scale.setScalar(por?1.15:1); }
+   g.lookAt(this.camera.position.x,g.position.y,this.camera.position.z);
   });
   // camera
   const {P,L,F}=this.pose(), bob=(red||st===0&&state==='intro')?0:Math.sin(t*.7)*.04, sway=red?0:Math.sin(t*.17)*.25*this.introPose;
@@ -1084,7 +1157,7 @@ class WorldFlat{
  constructor(canvas){ this.flat=true; this.c=canvas; this.g=canvas.getContext('2d'); this.elapsed=0; this.introPose=1; this.rects=new Map(); this.wheelsGone=0; this.resize(); }
  resize(){ const k=Math.min(devicePixelRatio,2); this.k=k; this.c.width=innerWidth*k; this.c.height=innerHeight*k; }
  P(x,y,z){ const W=innerWidth,H=innerHeight, f=Math.min(W,H)*.95, s=f/(Math.max(z,.3)+5); return {x:W/2+(x-movement.x*.3)*s, y:H*.42+(4.2-y)*s, s}; }
- addToken(){} shelve(){} popWheels(){ this.wheelsGone=this.elapsed; }
+ addToken(){} shelve(){} removeToken(){} popWheels(){ this.wheelsGone=this.elapsed; }
  stickScreen(){ return {x:innerWidth/2+movement.x*18, y:innerHeight*(innerWidth<innerHeight?.62:.6), ok:true}; }
  tokenScreen(t){ const r=this.rects.get(t); return r?{x:r.x+r.w/2,y:r.y+r.h/2,ok:true}:null; }
  pick(x,y){ for(const [t,r] of this.rects) if(!t.reserved && x>r.x-20&&x<r.x+r.w+20&&y>r.y-20&&y<r.y+r.h+20) return t; return null; }
@@ -1103,10 +1176,10 @@ class WorldFlat{
    const tiers=big?8:2; for(let i=0;i<tiers;i++){ const w=(big?20:12)-i*(big?1.8:2), a=this.P(-w/2,(big?9:6)+i*1.5+1.5,gz), b=this.P(w/2,(big?9:6)+i*1.5,gz); g.fillRect(a.x,a.y,b.x-a.x,b.y-a.y); }
    const l=this.P(-10,big?9:6,gz), r=this.P(-3,0,gz); g.fillRect(l.x,l.y,r.x-l.x,r.y-l.y); const l2=this.P(3,big?9:6,gz), r2=this.P(10,0,gz); g.fillRect(l2.x,l2.y,r2.x-l2.x,r2.y-l2.y); }
   this.rects.clear();
-  concerns.list.forEach(tk=>{ if(tk.reserved) return; const p=this.P(tk.x,2.8,tk.z+3), w=2.9*p.s, h=.96*p.s; if(w>W*1.2) return;
-   g.fillStyle='rgba(244,240,232,.96)'; g.beginPath(); g.roundRect ? g.roundRect(p.x-w/2,p.y-h/2,w,h,h*.2) : g.rect(p.x-w/2,p.y-h/2,w,h); g.fill();
+  concerns.list.forEach(tk=>{ if(tk.reserved||tk.gone) return; const p=this.P(tk.x,tk.kind==='drift'?2.4:2.8,tk.z+3), w=2.9*p.s*(tk.kind==='worry'?1:.8), h=.96*p.s*(tk.kind==='worry'?1:.8); if(w>W*1.2) return;
+   g.globalAlpha=tk.kind==='faint'?.4:1; g.fillStyle='rgba(244,240,232,.96)'; g.beginPath(); g.roundRect ? g.roundRect(p.x-w/2,p.y-h/2,w,h,h*.2) : g.rect(p.x-w/2,p.y-h/2,w,h); g.fill();
    g.fillStyle=tk.color; g.beginPath(); g.arc(p.x-w/2+h/2,p.y,h*.3,0,7); g.fill(); g.fillStyle='#24221f'; g.font=`700 ${Math.max(9,h*.32)|0}px system-ui`; g.textBaseline='middle'; g.fillText(tk.text,p.x-w/2+h,p.y,w-h*1.2);
-   this.rects.set(tk,{x:p.x-w/2,y:p.y-h/2,w,h}); });
+   g.globalAlpha=1; if(tk.kind==='worry') this.rects.set(tk,{x:p.x-w/2,y:p.y-h/2,w,h}); });
   const ex=W/2+movement.x*18, ey=H*(W<H?.8:.82), sc=Math.min(W,H)/7;
   g.fillStyle='#7d7e86'; g.beginPath(); g.ellipse(ex,ey,sc*.95,sc*.8,0,0,7); g.fill(); g.fillStyle='#8a8b93'; g.beginPath(); g.ellipse(ex,ey-sc*.65,sc*.62,sc*.55,0,0,7); g.fill();
   g.fillStyle='#7b1f2b'; g.fillRect(ex-sc*.8,ey-sc*.2,sc*1.6,sc*.35);
@@ -1221,8 +1294,19 @@ function buildEnding(early){
  if(stats.wanders) li(`You wandered ${stats.wanders} time${stats.wanders>1?'s':''} and came back ${stats.comebacks}.`);
  if(journey.stage>=6) li(late ? `Gates 6–7: ${late} optional tap${late>1?'s':''}. The walk carried on either way.` : 'Gates 6–7: zero taps. None needed.');
  if(stats.assistedAt>0) li(`You switched on the wider window at gate ${stats.assistedAt}. Using help is part of the practice.`);
- const W=$('worries'); W.replaceChildren(); concerns.list.forEach(t=>{ const s=document.createElement('span'); s.textContent=t.text; W.appendChild(s); });
- if(!concerns.list.length){ const s=document.createElement('span'); s.textContent='Nothing shelved this time'; W.appendChild(s); }
+ const ws=concerns.worries, passed=stats.letGo;
+ if(ws.length||passed) li(`${ws.length+passed} thoughts showed up. You shelved ${ws.length} and let ${passed} float by.`);
+ // Worries come back grouped by flavour.
+ const W=$('worries'); W.replaceChildren();
+ for(const f of ['work','mom','home']){
+  const items=ws.filter(t=>t.flavour===f); if(!items.length) continue;
+  const row=document.createElement('div'); row.className='wrow';
+  const b=document.createElement('b'); b.textContent=`${FLAVOURS[f].label} (${items.length})`; b.style.color=FLAVOURS[f].color; row.appendChild(b);
+  items.forEach(t=>{ const s=document.createElement('span'); s.textContent=t.text.replace(/^Mom: /,''); row.appendChild(s); });
+  W.appendChild(row);
+ }
+ if(!ws.length){ const s=document.createElement('span'); s.textContent='Nothing shelved this time'; W.appendChild(s); }
+ $('worryNote').textContent = ws.some(t=>t.flavour==='mom') ? 'Untouched, as promised. Maybe start with Mom. She’ll ask if you ate.' : 'Untouched, as promised. Pick the one that actually needs you.';
 }
 function drawRing(){ $('ring').style.background=`conic-gradient(var(--gold) ${attention.value*360}deg,rgba(255,255,255,.1) 0deg)`; $('valueBox').setAttribute('aria-label',`Value given to this moment: ${Math.round(attention.value*100)} percent`); }
 function setPaused(p){
@@ -1368,7 +1452,7 @@ if(DEBUG) window.__src={get world(){return world},journey,movement,attention,con
   if(state==='intro'){ audio.init(); $('intro').hidden=true; state='count'; }
   if(state==='count'){ count=12; $('count').hidden=true; beginLesson(); }
   journey.lessonDone=true; hideHint();
-  if(n>=5){ if(contract.mode==='none') contract.begin(false); while(concerns.spawned<2) concerns.spawn(); concerns.active.forEach(t=>concerns.shelve(t,true)); }
+  if(n>=5){ if(contract.mode==='none') contract.begin(false); while(concerns.worries.length<3) concerns.spawn('worry'); concerns.active.forEach(t=>concerns.shelve(t,true)); }
   movement.distance = n===0 ? 0 : BOUND[n-1]+.2;
   if(n>=7) journey.enter(6);
   if(n>=1) journey.enter(n);
