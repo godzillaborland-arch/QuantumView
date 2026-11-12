@@ -151,6 +151,19 @@ body.demo #hudR,body.demo #soundBtn{visibility:hidden}
 #demoSound{position:fixed;top:calc(56px + var(--sat));left:50%;transform:translateX(-50%);z-index:40;pointer-events:none;white-space:nowrap;
   font-size:13px;letter-spacing:.08em;color:var(--amber);background:rgba(14,16,19,.88);border:1px solid rgba(255,181,71,.5);border-radius:999px;padding:8px 16px}
 @media (max-width:520px){#demoSound{top:calc(86px + var(--sat))}}
+/* Event-driven demo explanations. No interaction or layout changes in normal play. */
+#demoCaption{position:fixed;z-index:45;pointer-events:none;box-sizing:border-box;
+ max-width:min(470px,calc(100vw - 32px));padding:13px 19px;border-radius:22px;
+ background:rgba(14,16,19,.96);border:1px solid var(--caption-color,var(--teal));
+ color:var(--ink);font-size:18px;line-height:1.5;text-align:center;
+ box-shadow:0 8px 30px rgba(0,0,0,.35);opacity:0;transform:translate(-50%,5px);
+ transition:opacity .3s ease,transform .3s ease}
+#demoCaption.visible{opacity:1;transform:translate(-50%,0)}
+#demoCaption[hidden]{display:none}
+#demoCaption:before{content:"";position:absolute;top:-7px;left:var(--pointer,50%);width:12px;height:12px;
+ background:#0e1013;border-left:1px solid var(--caption-color,var(--teal));border-top:1px solid var(--caption-color,var(--teal));transform:rotate(45deg)}
+@media(max-width:520px){#demoCaption{font-size:16px;line-height:1.4;padding:11px 15px;width:calc(100vw - 32px)}}
+@media(prefers-reduced-motion:reduce){#demoCaption{transition:none}}
 </style>
 </head>
 <body>
@@ -162,6 +175,7 @@ body.demo #hudR,body.demo #soundBtn{visibility:hidden}
 </div>
 <button class="icon" id="soundBtn" type="button" aria-label="Sound off. Turn sound on" aria-pressed="false" hidden></button>
 <div id="cue" role="presentation" hidden></div>
+<div id="demoCaption" role="status" aria-live="polite" hidden></div>
 <div id="demoTag" hidden><span class="badge"><i></i>Demo</span><span class="long">the monkeys are playing themselves · </span><span class="site">theselfdrivingmind.com</span></div>
 <div id="demoSound" hidden>Tap anywhere for sound</div>
 
@@ -405,7 +419,7 @@ function press(){
   BREATH.pressed=true;
   if(BREATH.phase==='idle') startIn();
 }
-function startIn(){ BREATH.phase='in'; BREATH.hold=0; if(S.waiting){ S.waiting=false; startSitClock(); } }
+function startIn(){ if(DEMO.on && !S.wandered) DEMO.caption('inhale'); BREATH.phase='in'; BREATH.hold=0; if(S.waiting){ S.waiting=false; startSitClock(); } }
 function startSitClock(){ announce(S.endless ? 'Endless sit started. Breathe in.' : 'Sit started. Breathe in.'); }
 function release(fromTap){
   if(!S || S.mode!=='play') return;
@@ -421,13 +435,14 @@ function exhale(fill, wave){
   if(!wave) return;
   S.breaths++;
   var full = fill>=0.85;
+  if(DEMO.on && fill>=0.999 && !S.wandered) DEMO.caption('release');
   var reach = U*1.25*Math.pow(fill,1.5);
   S.waves.push({r:0, R:reach, t:0, dur:BREATH.outDur, fill:fill, n:0});
   A.chime(fill);
   if(full){
     S.fullBreaths++; vibrate(14);
     if(S.wandered){ S.wandered=false; S.returns++; S.fx.push({x:CX, y:CY-U*0.55, text:'back', color:COL.teal, t:0, life:1.8});
-      announce('Back. Returns: '+S.returns+'.'); }
+      announce('Back. Returns: '+S.returns+'.'); if(DEMO.on) DEMO.caption('return'); }
   }
 }
 function breathUpdate(dt){
@@ -506,10 +521,12 @@ function land(m){
   var first=!S.wandered; S.wandered=true; if(first) S.wanders++;
   S.bestStretch=Math.max(S.bestStretch,S.stretch); S.stretch=0;
   A.tok(); vibrate(8);
+  if(DEMO.on && S.landings===1) DEMO.caption('fog');
   if(first && S.t-S.lastAnnounce>6){ S.lastAnnounce=S.t; announce('A monkey got through. Take one full breath to come back.'); }
 }
 function settle(m, i){
   m.state='settled'; m.t=0; S.settledN++;
+  if(DEMO.on && m.sk && !S.wandered) DEMO.caption('crimson',m);
   A.pluck(i, Math.min(0.5, i*0.07));
 }
 
@@ -528,7 +545,7 @@ function update(dt){
   if(!S.ending){
     S.t+=dt;
     if(!S.wandered){ S.stretch+=dt; if(S.stretch>S.bestStretch) S.bestStretch=S.stretch; }
-    if(a.name!==S.phase){ if(S.phase) announce(a.name==='Quiet' && !S.endless ? 'Quiet now. Nearly there.' : a.name+'.'); S.phase=a.name; }
+    if(a.name!==S.phase){ if(S.phase) announce(a.name==='Quiet' && !S.endless ? 'Quiet now. Nearly there.' : a.name+'.'); S.phase=a.name; if(DEMO.on && a.name==='Quiet') DEMO.caption('quiet'); }
     var left = S.endless?1e9:S.len-S.t;
     S.spawnT-=dt;
     var crowd = S.gentle ? S.monkeys.filter(function(m){ return m.wait; }).length : 0;
@@ -723,6 +740,7 @@ var LASTRESULT=null;
 function showClose(stoppedEarly){
   if(!S) return;
   if(stoppedEarly) S.stoppedEarly=true;
+  if(DEMO.on) DEMO.caption('results');
   S.mode='close'; S.paused=false; show('pause',false); show('hud',false); $('cue').hidden=true;
   if(A.ctx&&A.on&&A.ctx.state==='suspended') A.ctx.resume();
   A.idle();
@@ -866,9 +884,55 @@ $('help').addEventListener('click', function(e){ if(e.target===this) closeHelp()
    Visitor input is ignored and best times / sit counts are never touched. */
 var DEMO = {on:false, clean:false, phase:'', t:0, cycle:0, bot:null, buf:'', saved:null, lock:null, hold:null};
 var DEMO_WORD='bandar', DEMO_WEATHER=['steady','turbulent','calm'];
+// Each explanation is triggered by the game event itself. Busy moments are skipped, never queued.
+DEMO.captionTime=0; DEMO.captionLast=-100; DEMO.captionSeen={}; DEMO.captionActive=null;
+DEMO.captionCopy={
+ inhale:["Hold to breathe in. The ring fills.","Hold. Breathe in. Watch the ring fill.","One held breath fills the ring."],
+ release:["Let go. The wave settles every monkey it reaches.","Release. The breath becomes a settling wave.","Let go. Every monkey the wave reaches settles."],
+ fog:["One got through. Fog. No game over…","A thought got through. Fog, not failure…","A wandering moment. The sit goes on…"],
+ return:["…one full breath brings you back. That's a return. Returns are the score.","One full breath. You're back. That's a return — the whole score.","Back again. A full breath makes a return. Count the coming back."],
+ quiet:["It gets quieter. Like a real sit, on a good day.","A quieter stretch. Some sits find this too.","Less bustle. A little room to breathe."],
+ results:["Who visited: the thoughts that showed up, decoded.","Who visited? Your passing thoughts, decoded.","The sit ends. Meet the thoughts that visited."],
+ welcome:["Two minutes. Try it on your phone →","A two-minute sit. Your phone can be next →","Your turn? Two minutes on your phone →"]
+};
+DEMO.caption=function(key,m){
+ if(!DEMO.on || Q.has('nocaptions') || DEMO.captionSeen[key]) return;
+ if(DEMO.captionTime-DEMO.captionLast<4.8) return;
+ var mobile=W<520, index=DEMO.captionCycle%3, text;
+ if(key==='crimson'){
+   var gloss=GLOSS[m.label]; if(!gloss) return;
+   text=(mobile?'Crimson: ':['Crimson ones are the classics: ','A classic thought: ','Crimson names, everyday visitors: '][index])+m.label+' means '+gloss[0]+'.';
+ }else{
+   text=DEMO.captionCopy[key][index];
+   if(mobile){ var short={welcome:'Try it on your phone →',release:'Let go. The wave settles the monkeys.',return:"One full breath brings you back. A return is the score.",results:'Who visited: your thoughts, decoded.'}; text=short[key]||text; }
+ }
+ DEMO.captionSeen[key]=true; DEMO.captionLast=DEMO.captionTime;
+ DEMO.captionActive={key:key,m:m,x:m?m.x:CX,y:m?m.y:CY,until:DEMO.captionTime+4.5};
+ var el=$('demoCaption'); el.classList.remove('visible'); el.textContent=text; el.hidden=false;
+ el.style.setProperty('--caption-color',key==='crimson'?COL.crimson:COL.teal);
+ DEMO.captionLayout();
+};
+DEMO.captionLayout=function(){
+ var a=DEMO.captionActive,el=$('demoCaption'); if(!a) return;
+ var screen=a.key==='welcome'||a.key==='results';
+ var x=a.m?a.m.x:a.x,y=a.m?a.m.y:a.y;
+ var cw=el.offsetWidth,ch=el.offsetHeight;
+ var left=screen?W/2:Math.max(cw/2+16,Math.min(W-cw/2-16,x));
+ var top=screen?H-ch-24:Math.max(110,Math.min(H-ch-54,(a.m?y+46:CY+U+22)));
+ el.style.left=left+'px'; el.style.top=top+'px';
+ el.style.setProperty('--pointer',Math.max(20,Math.min(cw-20,x-left+cw/2))+'px');
+};
+DEMO.captionTick=function(dt){
+ DEMO.captionTime+=dt; var a=DEMO.captionActive; if(!a) return;
+ var el=$('demoCaption');
+ if(DEMO.captionTime>=a.until){el.classList.remove('visible');if(DEMO.captionTime>a.until+.35){el.hidden=true;DEMO.captionActive=null;}}
+ else {DEMO.captionLayout();el.classList.add('visible');}
+};
+DEMO.captionClear=function(){ DEMO.captionActive=null; $('demoCaption').hidden=true; $('demoCaption').classList.remove('visible'); };
+
 DEMO.start = function(clean){
   if(DEMO.on) return;
-  DEMO.on=true; DEMO.clean=!!clean; DEMO.cycle=0;
+  DEMO.on=true; DEMO.clean=!!clean; DEMO.cycle=0; DEMO.captionTime=0; DEMO.captionLast=-100;
   DEMO.saved={length:CFG.length, diff:CFG.diff, input:CFG.input, gentle:CFG.gentle, pace:CFG.pace};
   lsSet('monkeymind_v2_demo', clean?'clean':'1');
   document.body.classList.add('demo'); $('demoTag').hidden=DEMO.clean;
@@ -881,7 +945,7 @@ DEMO.start = function(clean){
 };
 DEMO.stop = function(){
   if(!DEMO.on) return;
-  DEMO.on=false; lsSet('monkeymind_v2_demo','0');
+  DEMO.on=false; DEMO.captionClear(); lsSet('monkeymind_v2_demo','0');
   Object.assign(CFG, DEMO.saved||{}); DEMO.bot=null;
   document.body.classList.remove('demo'); $('demoTag').hidden=true; $('demoSound').hidden=true;
   A.setOn(!!DEMO.soundWas);
@@ -890,7 +954,7 @@ DEMO.stop = function(){
   toArrival(); announce('Demo stopped.');
 };
 DEMO.wake = function(){ try{ if(navigator.wakeLock && !document.hidden) navigator.wakeLock.request('screen').then(function(l){ DEMO.lock=l; }, function(){}); }catch(e){} };
-DEMO.toArrival = function(){ DEMO.phase='arrival'; DEMO.t=0; toArrival(); };
+DEMO.toArrival = function(){ DEMO.phase='arrival'; DEMO.t=0; DEMO.captionClear(); DEMO.captionSeen={}; DEMO.captionCycle=DEMO.cycle; toArrival(); DEMO.caption('welcome'); };
 DEMO.botFor = function(diff){ // a decent-but-human breather; lapses more in turbulent weather
   var ph='idle', tt=0, hold=4, gap=0.6, lapse = diff==='turbulent'?0.18 : diff==='steady'?0.1 : 0.05, dayDream=false;
   return function(t){
@@ -902,7 +966,7 @@ DEMO.botFor = function(diff){ // a decent-but-human breather; lapses more in tur
 DEMO.unlock = function(){ if(A.on && A.ctx && A.ctx.state!=='running'){ try{ A.ctx.resume(); }catch(e){} } };
 DEMO.tick = function(dt){
   if(!DEMO.on) return;
-  DEMO.t+=dt;
+  DEMO.t+=dt; DEMO.captionTick(dt);
   var needTap = A.on && A.ctx && A.ctx.state!=='running';
   if($('demoSound').hidden===needTap) $('demoSound').hidden=!needTap;
   if(DEMO.phase==='arrival'){
