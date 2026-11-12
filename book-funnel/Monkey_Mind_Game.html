@@ -313,7 +313,9 @@ function fail(msg){
 window.addEventListener('error', function(e){ if(!window.__mmReady) fail(e.message); });
 
 var CANON = 'https://theselfdrivingmind.com/book-funnel/Monkey_Mind_Game.html';
-var Q = new URLSearchParams(location.search.replace(/^\?+/, '')); // tolerate a pasted extra question mark
+var Q = new URLSearchParams();
+// Shared links may capitalize option names. Normalize keys while preserving values and duplicates.
+new URLSearchParams(location.search.replace(/^\?+/, '')).forEach(function(value,key){ Q.append(key.toLowerCase(),value); });
 var DEBUG = Q.has('debug');
 var RM = Q.has('rm') || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
 var TAU = Math.PI*2;
