@@ -164,6 +164,26 @@ body.demo #hudR,body.demo #soundBtn{visibility:hidden}
  background:#0e1013;border-left:1px solid var(--caption-color,var(--teal));border-top:1px solid var(--caption-color,var(--teal));transform:rotate(45deg)}
 @media(max-width:520px){#demoCaption{font-size:16px;line-height:1.4;padding:11px 15px;width:calc(100vw - 32px)}}
 @media(prefers-reduced-motion:reduce){#demoCaption{transition:none}}
+/* Compact close screen keeps the book invitation above optional detail. */
+#close .panel{padding:20px;max-width:620px}
+#closeLine{font-size:clamp(17px,4vw,20px);line-height:1.35}
+#close .stats{grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+#close .stat{padding:9px 5px} #close .stat .v{font-size:23px}
+#close .stat .k{font-size:10px;letter-spacing:.06em}
+#visitorDetails{margin-top:16px;text-align:left;border-top:1px solid var(--line);padding-top:10px}
+#visitorDetails summary{cursor:pointer;color:var(--ink2);font-size:13px;min-height:32px}
+#visitors h3{display:none}
+body.demo #visitors li:nth-child(n+3),body.demo #visitors .gl{display:none}
+body.demo #visitors ul{gap:3px;margin:5px 0}
+#close .quote{font-size:12px;line-height:1.5;padding-top:10px;margin-top:10px}
+#close .fine{font-size:11px;line-height:1.4;margin-top:8px}
+body.demo #close .row:has(button),body.demo #close .fine{display:none}
+#demoQR{position:fixed;right:24px;bottom:24px;z-index:42;width:200px;padding:10px;background:#fff;
+ color:#0e1013;border-radius:12px;text-align:center;pointer-events:none;box-shadow:0 4px 24px #0005}
+#demoQR[hidden]{display:none} #demoQR img{display:block;width:100%;height:auto}
+#demoQR span{display:block;font-size:14px;font-weight:700;padding:5px 0 1px}
+@media(max-width:850px){#demoQR{width:112px;right:12px;top:66px;bottom:auto;padding:6px}#demoQR span{font-size:11px}}
+@media(max-width:520px){#close .stats{grid-template-columns:repeat(2,1fr)}#close .panel{padding:16px}body.demo #close{padding-top:190px}}
 </style>
 </head>
 <body>
@@ -176,6 +196,7 @@ body.demo #hudR,body.demo #soundBtn{visibility:hidden}
 <button class="icon" id="soundBtn" type="button" aria-label="Sound off. Turn sound on" aria-pressed="false" hidden></button>
 <div id="cue" role="presentation" hidden></div>
 <div id="demoCaption" role="status" aria-live="polite" hidden></div>
+<div id="demoQR" hidden><img src="monkey-mind-play-qr.svg" width="200" height="200" alt="QR code to play Monkey Mind on your phone"><span>Scan to play</span></div>
 <div id="demoTag" hidden><span class="badge"><i></i>Demo</span><span class="long">the monkeys are playing themselves · </span><span class="site">theselfdrivingmind.com</span></div>
 <div id="demoSound" hidden>Tap anywhere for sound</div>
 
@@ -262,7 +283,8 @@ body.demo #hudR,body.demo #soundBtn{visibility:hidden}
     <h2 id="closeLine" tabindex="-1"></h2>
     <div class="stats" id="stats"></div>
     <div id="newBest" hidden></div>
-    <div id="visitors"></div>
+    <div class="row" style="margin-top:12px"><a class="btn book" id="bookLink" href="https://theselfdrivingmind.com/?utm_source=monkey_mind&amp;utm_medium=game&amp;utm_campaign=game_over" target="_blank" rel="noopener">About the book →</a></div>
+    <details id="visitorDetails"><summary>Who visited · thoughts decoded</summary><div id="visitors"></div></details>
     <p class="quote">"Wherever the restless, unsteady mind wanders, from there bring it back, again and again, under the sway of the Self." — Bhagavad Gita 6.26</p>
     <div class="row" style="margin-top:18px">
       <button class="btn primary" type="button" id="againBtn">Sit again</button>
@@ -272,7 +294,7 @@ body.demo #hudR,body.demo #soundBtn{visibility:hidden}
     <div class="row" style="margin-top:12px"><button class="link" type="button" id="menuBtn">Change settings</button></div>
     <p class="fine" id="legacy" hidden></p>
     <p class="fine">Monkey Mind! is a practice from <i>The Self-Driving Mind</i>, attention training for the road and for life. Out March 9, 2027.</p>
-    <div class="row" style="margin-top:12px"><a class="btn book" id="bookLink" href="https://theselfdrivingmind.com/?utm_source=monkey_mind&amp;utm_medium=game&amp;utm_campaign=game_over" target="_blank" rel="noopener">About the book →</a></div>
+    
   </div>
 </section>
 
@@ -290,7 +312,7 @@ function fail(msg){
 window.addEventListener('error', function(e){ if(!window.__mmReady) fail(e.message); });
 
 var CANON = 'https://theselfdrivingmind.com/book-funnel/Monkey_Mind_Game.html';
-var Q = new URLSearchParams(location.search);
+var Q = new URLSearchParams(location.search.replace(/^\?+/, '')); // tolerate a pasted extra question mark
 var DEBUG = Q.has('debug');
 var RM = Q.has('rm') || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
 var TAU = Math.PI*2;
@@ -739,6 +761,7 @@ function closeLine(){
 var LASTRESULT=null;
 function showClose(stoppedEarly){
   if(!S) return;
+  $('visitorDetails').open=DEMO.on;
   if(stoppedEarly) S.stoppedEarly=true;
   if(DEMO.on) DEMO.caption('results');
   S.mode='close'; S.paused=false; show('pause',false); show('hud',false); $('cue').hidden=true;
@@ -938,14 +961,14 @@ DEMO.start = function(clean){
   document.body.classList.add('demo'); $('demoTag').hidden=DEMO.clean;
   // sound on (add ?mute to keep it quiet). Without a recent tap or key the browser keeps audio suspended,
   // so a small "Tap anywhere for sound" pill shows until someone touches the screen once.
-  DEMO.soundWas=A.on; if(!Q.has('mute')) A.setOn(true);
+  DEMO.soundWas=A.on; A.setOn(!Q.has('mute'));
   announce('Demo mode. The monkeys are playing themselves.');
   show('help',false); show('pause',false);
   DEMO.toArrival(); DEMO.wake();
 };
 DEMO.stop = function(){
   if(!DEMO.on) return;
-  DEMO.on=false; DEMO.captionClear(); lsSet('monkeymind_v2_demo','0');
+  DEMO.on=false; $('demoQR').hidden=true; DEMO.captionClear(); lsSet('monkeymind_v2_demo','0');
   Object.assign(CFG, DEMO.saved||{}); DEMO.bot=null;
   document.body.classList.remove('demo'); $('demoTag').hidden=true; $('demoSound').hidden=true;
   A.setOn(!!DEMO.soundWas);
@@ -967,6 +990,7 @@ DEMO.unlock = function(){ if(A.on && A.ctx && A.ctx.state!=='running'){ try{ A.c
 DEMO.tick = function(dt){
   if(!DEMO.on) return;
   DEMO.t+=dt; DEMO.captionTick(dt);
+  $('demoQR').hidden=DEMO.clean || (DEMO.phase!=='arrival' && DEMO.phase!=='close');
   var needTap = A.on && A.ctx && A.ctx.state!=='running';
   if($('demoSound').hidden===needTap) $('demoSound').hidden=!needTap;
   if(DEMO.phase==='arrival'){
@@ -1066,7 +1090,7 @@ function start(){
   // ?demo=off (or ?nodemo) always clears a stuck demo. ?demo starts it once, then drops itself from the address,
   // so stopping the demo and reloading leaves you in the normal game.
   var dq=(Q.get('demo')||'').toLowerCase();
-  if(Q.has('nodemo') || dq==='off' || dq==='0'){ lsSet('monkeymind_v2_demo','0'); }
+  if(Q.has('nodemo') || Q.getAll('demo').some(function(v){ return /^(off|0)$/i.test(v); })){ lsSet('monkeymind_v2_demo','0'); }
   else {
     var savedDemo=lsGet('monkeymind_v2_demo');
     if(Q.has('demo') || savedDemo==='1' || savedDemo==='clean') DEMO.start(Q.has('clean') || (!Q.has('demo') && savedDemo==='clean'));
