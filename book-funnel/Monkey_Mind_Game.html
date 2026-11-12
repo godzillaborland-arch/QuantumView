@@ -139,6 +139,7 @@ legend{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--i
 /* secret perpetual demo: nothing clickable, no cursor, a quiet brand line */
 body.demo,body.demo #stage{cursor:none}
 body.demo .layer,body.demo button,body.demo a,body.demo summary{pointer-events:none}
+body.demo #bookLink{pointer-events:auto;cursor:pointer}
 body.demo #hudR,body.demo #soundBtn{visibility:hidden}
 #demoTag{position:fixed;top:calc(18px + var(--sat));left:50%;transform:translateX(-50%);z-index:40;pointer-events:none;white-space:nowrap;
   display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.1em;color:var(--ink2)}
@@ -283,7 +284,7 @@ body.demo #close .row:has(button),body.demo #close .fine{display:none}
     <h2 id="closeLine" tabindex="-1"></h2>
     <div class="stats" id="stats"></div>
     <div id="newBest" hidden></div>
-    <div class="row" style="margin-top:12px"><a class="btn book" id="bookLink" href="https://theselfdrivingmind.com/?utm_source=monkey_mind&amp;utm_medium=game&amp;utm_campaign=game_over" target="_blank" rel="noopener">About the book →</a></div>
+    <div class="row" style="margin-top:12px"><a class="btn book" id="bookLink" href="https://theselfdrivingmind.com/book/?utm_source=monkey_mind&amp;utm_medium=game&amp;utm_campaign=game_over" target="_blank" rel="noopener">About the book →</a></div>
     <details id="visitorDetails"><summary>Who visited · thoughts decoded</summary><div id="visitors"></div></details>
     <p class="quote">"Wherever the restless, unsteady mind wanders, from there bring it back, again and again, under the sway of the Self." — Bhagavad Gita 6.26</p>
     <div class="row" style="margin-top:18px">
@@ -735,7 +736,7 @@ function toArrival(){
   S=null; BREATH.phase='idle'; BREATH.level=0;
   show('close',false); show('pause',false); show('hud',false); $('cue').hidden=true; show('arrival',true); $('soundBtn').hidden=false;
   A.idle(); syncSettings(); $('arrival').scrollTop=0;
-  if(!DEMO.on) setTimeout(function(){ $('sitSound').focus({preventScroll:true}); },50);
+  setTimeout(function(){ if(!DEMO.on) $('sitSound').focus({preventScroll:true}); },50);
 }
 function begin(withSound){
   if(withSound!=null) A.setOn(withSound);
@@ -956,6 +957,7 @@ DEMO.captionClear=function(){ DEMO.captionActive=null; $('demoCaption').hidden=t
 DEMO.start = function(clean){
   if(DEMO.on) return;
   DEMO.on=true; DEMO.clean=!!clean; DEMO.cycle=0; DEMO.captionTime=0; DEMO.captionLast=-100;
+  try{ if(document.activeElement && document.activeElement!==document.body) document.activeElement.blur(); }catch(e){}
   DEMO.saved={length:CFG.length, diff:CFG.diff, input:CFG.input, gentle:CFG.gentle, pace:CFG.pace};
   lsSet('monkeymind_v2_demo', clean?'clean':'1');
   document.body.classList.add('demo'); $('demoTag').hidden=DEMO.clean;
@@ -1003,19 +1005,22 @@ DEMO.tick = function(dt){
     if(S && S.mode==='play'){ if(S.paused) setPaused(false); if(DEMO.bot) DEMO.bot(DEMO.t); }
     else { DEMO.phase='close'; DEMO.t=0; }
   } else if(DEMO.phase==='close'){
-    var p=$('close').querySelector('.panel');
-    if(DEMO.t>4 && p) p.scrollTop += dt*28;
-    if(DEMO.t>14) DEMO.toArrival();
+    // Leave the invitation still, and give a visitor time to read or click.
+    if($('bookLink').matches(':hover') || document.activeElement===$('bookLink')) DEMO.t-=dt;
+    if(DEMO.t>45) DEMO.toArrival();
   }
 };
+DEMO.bookTarget=function(e){ return DEMO.on && S && S.mode==='close' && e.target && e.target.closest && e.target.closest('#bookLink'); };
 DEMO.key = function(e){ // returns true when the key was consumed
   var k=(e.key||'').toLowerCase();
+  if(DEMO.on && S && S.mode==='close' && (k==='tab' || (DEMO.bookTarget(e) && k==='enter'))) return false;
   if(k.length===1){ DEMO.buf=(DEMO.buf+k).slice(-12); if(DEMO.buf.slice(-DEMO_WORD.length)===DEMO_WORD){ DEMO.buf=''; if(DEMO.on) DEMO.stop(); else DEMO.start(false); e.preventDefault(); return true; } }
   if(DEMO.on){ DEMO.unlock(); e.preventDefault(); return true; }
   return false;
 };
 // touch: hold the title 3 s to start; during the demo, hold the top-left corner 3 s to stop. Everything else is ignored.
 window.addEventListener('pointerdown', function(e){
+  if(DEMO.bookTarget(e)){ DEMO.t=0; return; }
   var bt=$('demoTag').querySelector('.badge').getBoundingClientRect(), onBadge = DEMO.on && !DEMO.clean && e.clientX>=bt.left-8 && e.clientX<=bt.right+8 && e.clientY>=bt.top-8 && e.clientY<=bt.bottom+8;
   var corner = (e.clientX<90 && e.clientY<90) || onBadge, onTitle = !DEMO.on && !$('arrival').hidden && e.target.closest && e.target.closest('#title');
   if(DEMO.on || onTitle){
@@ -1025,8 +1030,8 @@ window.addEventListener('pointerdown', function(e){
   }
   if(DEMO.on){ DEMO.unlock(); e.preventDefault(); e.stopPropagation(); }
 }, true);
-['pointerup','pointercancel'].forEach(function(n){ window.addEventListener(n, function(e){ clearTimeout(DEMO.hold); if(DEMO.on){ e.stopPropagation(); } }, true); });
-window.addEventListener('click', function(e){ if(DEMO.on){ e.preventDefault(); e.stopPropagation(); } }, true);
+['pointerup','pointercancel'].forEach(function(n){ window.addEventListener(n, function(e){ clearTimeout(DEMO.hold); if(DEMO.on && !DEMO.bookTarget(e)){ e.stopPropagation(); } }, true); });
+window.addEventListener('click', function(e){ if(DEMO.bookTarget(e)){ DEMO.t=0; return; } if(DEMO.on){ e.preventDefault(); e.stopPropagation(); } }, true);
 window.addEventListener('error', function(){
   if(!DEMO.on) return;
   var n=0; try{ n=+(sessionStorage.getItem('mm_demo_err')||0)+1; sessionStorage.setItem('mm_demo_err',String(n)); }catch(e){}
