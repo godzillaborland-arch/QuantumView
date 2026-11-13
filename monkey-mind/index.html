@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Monkey Mind! — Hold the Center</title>
+<meta name="description" content="A two-minute sit disguised as a game. Breathe with one ring, let the monkeys go on the out-breath, and count how often you come back.">
+<link rel="canonical" href="https://theselfdrivingmind.com/monkey-mind/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Monkey Mind!">
+<meta property="og:url" content="https://theselfdrivingmind.com/monkey-mind/">
+<meta property="og:title" content="Monkey Mind! — Can you hold the center?">
+<meta property="og:description" content="A two-minute sit disguised as a game. Breathe with one ring, let the monkeys go on the out-breath, and count how often you come back.">
+<meta property="og:image" content="https://theselfdrivingmind.com/monkey-mind/monkey-mind-og.jpg">
+<meta property="og:image:secure_url" content="https://theselfdrivingmind.com/monkey-mind/monkey-mind-og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Monkey Mind! A still monkey at the center of a breathing ring while other monkeys leap in, labelled worry, to-do and raga.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Monkey Mind! — Can you hold the center?">
+<meta name="twitter:description" content="A two-minute sit disguised as a game. Breathe with one ring, let the monkeys go on the out-breath, and count how often you come back.">
+<meta name="twitter:image" content="https://theselfdrivingmind.com/monkey-mind/monkey-mind-og.jpg">
+<meta name="theme-color" content="#0e1013">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e1013; --panel:#14171a; --ink:#e8eeec; --ink2:#bcc6c1; --ink3:#8c9792;
+  --teal:#3fe0c8; --teal-dim:rgba(63,224,200,.16); --amber:#ffb547; --crimson:#ff5470;
+  --line:rgba(255,255,255,.16);
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;
+  --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
+  --sal:env(safe-area-inset-left,0px); --sar:env(safe-area-inset-right,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--mono);overflow:hidden;
+  -webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+button,a{font-family:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#stage{position:fixed;inset:0;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;cursor:pointer}
+#stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.layer{position:fixed;inset:0;display:flex;overflow-y:auto;overscroll-behavior:contain;
+  padding:calc(20px + var(--sat)) calc(16px + var(--sar)) calc(20px + var(--sab)) calc(16px + var(--sal))}
+.layer[hidden]{display:none}
+.layer>.col,.layer>.panel{margin:auto}
+@media (max-width:640px){#arrival,#close,#help{padding-top:calc(74px + var(--sat))}}
+.dim{background:rgba(14,16,19,.72)}
+.col{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;max-width:520px;width:100%}
+.eyebrow{font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--ink3)}
+h1{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;font-size:clamp(34px,10vw,56px);font-weight:700;letter-spacing:.12em;text-transform:uppercase;line-height:1.05;
+  text-shadow:0 0 28px rgba(63,224,200,.35)}
+.sub{font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--teal)}
+.lede{font-size:15px;line-height:1.75;color:var(--ink2);max-width:430px}
+.btn{min-height:52px;padding:14px 28px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);
+  font-size:14px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;transition:background .2s,box-shadow .2s}
+.btn.primary{background:var(--teal);color:#06231f;box-shadow:0 0 28px rgba(63,224,200,.35)}
+.btn.primary:hover{box-shadow:0 0 38px rgba(63,224,200,.55)}
+.btn:not(.primary):hover{background:var(--teal-dim)}
+.btn.quiet{border-color:var(--line);color:var(--ink2)}
+.btn.book{border-color:rgba(255,181,71,.55);color:var(--amber);text-decoration:none;display:inline-flex;align-items:center}
+.btn.book:hover{background:rgba(255,181,71,.1)}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.link{background:none;border:0;color:var(--ink2);font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+  text-decoration:underline;text-underline-offset:5px;padding:12px 10px;min-height:44px}
+.link:hover{color:var(--teal)}
+/* settings */
+details.settings{width:100%;max-width:440px;border-top:1px solid var(--line);padding-top:6px}
+details.settings summary{list-style:none;cursor:pointer;color:var(--ink2);font-size:13px;letter-spacing:.14em;text-transform:uppercase;padding:12px;min-height:44px}
+details.settings summary::-webkit-details-marker{display:none}
+details.settings summary::after{content:' +';color:var(--teal)}
+details.settings[open] summary::after{content:' –'}
+fieldset{border:0;display:flex;flex-direction:column;gap:6px;margin:10px 0;align-items:center}
+legend{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;width:100%;text-align:center}
+.seg{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.seg span{display:inline-flex;align-items:center;min-height:40px;padding:8px 13px;border:1px solid var(--line);border-radius:999px;
+  font-size:12px;letter-spacing:.1em;color:var(--ink2);text-transform:uppercase}
+.seg input:checked+span{border-color:var(--teal);color:var(--teal);background:var(--teal-dim)}
+.seg input:focus-visible+span{outline:2px solid var(--teal);outline-offset:2px}
+.hint{font-size:12px;color:var(--ink3);line-height:1.6;max-width:380px}
+/* hud */
+#hud{position:fixed;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;
+  padding:calc(14px + var(--sat)) calc(14px + var(--sar)) 0 calc(18px + var(--sal))}
+#hud[hidden]{display:none}
+#hudL{display:flex;flex-direction:column;gap:4px;padding-top:4px}
+#hudTime{font-size:24px;font-weight:500;color:var(--ink)}
+#hudPhase{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink3)}
+#hudR{display:flex;gap:8px;pointer-events:auto}
+.icon{width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:rgba(14,16,19,.92);color:var(--ink2);
+  display:inline-flex;align-items:center;justify-content:center}
+.icon:hover{border-color:var(--teal);color:var(--teal)}
+.icon svg{width:22px;height:22px}
+#soundBtn{position:fixed;top:calc(14px + var(--sat));right:calc(14px + var(--sar));z-index:30}
+#hud #soundSlot{width:48px}
+#cue{position:fixed;left:50%;bottom:calc(22px + var(--sab));transform:translateX(-50%);pointer-events:none;white-space:nowrap;
+  font-size:16px;letter-spacing:.12em;color:var(--ink);background:rgba(14,16,19,.8);border:1px solid rgba(63,224,200,.4);
+  border-radius:999px;padding:11px 20px;transition:opacity .4s,border-color .4s,color .4s}
+#cue[hidden]{display:none}
+@media (max-width:420px){#cue{font-size:15px;letter-spacing:.04em;padding:11px 16px}}
+#cue.soft{color:var(--ink2);border-color:var(--line)}
+#cue.go{color:var(--teal);border-color:var(--teal)}
+/* panels */
+.panel{background:var(--panel);border:1px solid rgba(63,224,200,.25);border-radius:18px;box-shadow:0 0 40px rgba(63,224,200,.12);
+  width:100%;max-width:520px;max-height:100%;overflow-y:auto;padding:26px 22px;text-align:left;scrollbar-color:#2b3331 transparent}
+.panel h2{font-size:15px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal)}
+.panel p,.panel li{font-size:14px;line-height:1.75;color:var(--ink2)}
+.panel b{color:var(--ink)}
+.panel .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.panel ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin:10px 0}
+.quote{font-style:italic;color:var(--ink2);border-top:1px solid var(--line);padding-top:14px;margin-top:14px;font-size:13.5px;line-height:1.75}
+.tag{display:inline-block;width:10px;height:10px;margin-right:8px;vertical-align:1px}
+.tag.ev{background:var(--amber);border-radius:50%}
+.tag.sk{background:var(--crimson);transform:rotate(45deg)}
+.am{color:var(--amber)} .cr{color:var(--crimson)} .te{color:var(--teal)}
+/* close */
+#close .panel{max-width:560px;text-align:center}
+#closeLine{font-size:clamp(18px,4.8vw,22px);line-height:1.5;color:var(--ink);font-weight:500;letter-spacing:.01em;text-transform:none;margin:6px 0 4px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:18px 0}
+.stat{border:1px solid var(--line);border-radius:14px;padding:12px 8px}
+.stat .v{font-size:26px;color:var(--ink)}
+.stat .k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-top:4px}
+#visitors{text-align:left;margin:6px 0 4px}
+#visitors h3{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);font-weight:500;text-align:center;margin-bottom:6px}
+#visitors li{font-size:14px;line-height:1.55}
+#visitors .gl{display:block;color:var(--ink3);font-size:13px;padding-left:18px}
+#newBest{color:var(--teal);font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+.fine{font-size:12px;color:var(--ink3);line-height:1.6;margin-top:12px}
+.fine a{color:var(--ink2)}
+/* loader / error */
+#loader .ring{width:72px;height:72px;border-radius:50%;border:2px solid var(--teal);opacity:.6;animation:breathe 10s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(.7);opacity:.35}40%{transform:scale(1);opacity:.8}}
+@media (prefers-reduced-motion:reduce){#loader .ring{animation:none}}
+#error .panel{text-align:center}
+/* secret perpetual demo: nothing clickable, no cursor, a quiet brand line */
+body.demo,body.demo #stage{cursor:none}
+body.demo .layer,body.demo button,body.demo a,body.demo summary{pointer-events:none}
+body.demo #bookLink{pointer-events:auto;cursor:pointer}
+body.demo #hudR,body.demo #soundBtn{visibility:hidden}
+#demoTag{position:fixed;top:calc(18px + var(--sat));left:50%;transform:translateX(-50%);z-index:40;pointer-events:none;white-space:nowrap;
+  display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.1em;color:var(--ink2)}
+#demoTag[hidden],#demoSound[hidden]{display:none}
+#demoTag .badge{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border:1px solid var(--teal);border-radius:999px;
+  color:var(--teal);font-weight:700;letter-spacing:.24em;text-transform:uppercase;background:rgba(14,16,19,.85)}
+#demoTag .badge i{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px var(--teal)}
+@media (max-width:760px){#demoTag .long{display:none}}
+@media (max-width:420px){#demoTag .site{display:none}}
+#demoSound{position:fixed;top:calc(56px + var(--sat));left:50%;transform:translateX(-50%);z-index:40;pointer-events:none;white-space:nowrap;
+  font-size:13px;letter-spacing:.08em;color:var(--amber);background:rgba(14,16,19,.88);border:1px solid rgba(255,181,71,.5);border-radius:999px;padding:8px 16px}
+@media (max-width:520px){#demoSound{top:calc(86px + var(--sat))}}
+/* Event-driven demo explanations. No interaction or layout changes in normal play. */
+#demoCaption{position:fixed;z-index:45;pointer-events:none;box-sizing:border-box;
+ max-width:min(470px,calc(100vw - 32px));padding:13px 19px;border-radius:22px;
+ background:rgba(14,16,19,.96);border:1px solid var(--caption-color,var(--teal));
+ color:var(--ink);font-size:18px;line-height:1.5;text-align:center;
+ box-shadow:0 8px 30px rgba(0,0,0,.35);opacity:0;transform:translate(-50%,5px);
+ transition:opacity .3s ease,transform .3s ease}
+#demoCaption.visible{opacity:1;transform:translate(-50%,0)}
+#demoCaption[hidden]{display:none}
+#demoCaption:before{content:"";position:absolute;top:-7px;left:var(--pointer,50%);width:12px;height:12px;
+ background:#0e1013;border-left:1px solid var(--caption-color,var(--teal));border-top:1px solid var(--caption-color,var(--teal));transform:rotate(45deg)}
+@media(max-width:520px){#demoCaption{font-size:16px;line-height:1.4;padding:11px 15px;width:calc(100vw - 32px)}}
+@media(prefers-reduced-motion:reduce){#demoCaption{transition:none}}
+/* Compact close screen keeps the book invitation above optional detail. */
+#close .panel{padding:20px;max-width:620px}
+#closeLine{font-size:clamp(17px,4vw,20px);line-height:1.35}
+#close .stats{grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+#close .stat{padding:9px 5px} #close .stat .v{font-size:23px}
+#close .stat .k{font-size:10px;letter-spacing:.06em}
+#visitorDetails{margin-top:16px;text-align:left;border-top:1px solid var(--line);padding-top:10px}
+#visitorDetails summary{cursor:pointer;color:var(--ink2);font-size:13px;min-height:32px}
+#visitors h3{display:none}
+body.demo #visitors li:nth-child(n+3),body.demo #visitors .gl{display:none}
+body.demo #visitors ul{gap:3px;margin:5px 0}
+#close .quote{font-size:12px;line-height:1.5;padding-top:10px;margin-top:10px}
+#close .fine{font-size:11px;line-height:1.4;margin-top:8px}
+body.demo #close .row:has(button),body.demo #close .fine{display:none}
+#demoQR{position:fixed;right:24px;bottom:24px;z-index:42;width:200px;padding:10px;background:#fff;
+ color:#0e1013;border-radius:12px;text-align:center;pointer-events:none;box-shadow:0 4px 24px #0005}
+#demoQR[hidden]{display:none} #demoQR img{display:block;width:100%;height:auto}
+#demoQR span{display:block;font-size:14px;font-weight:700;padding:5px 0 1px}
+@media(max-width:850px){#demoQR{width:112px;right:12px;top:66px;bottom:auto;padding:6px}#demoQR span{font-size:11px}}
+@media(max-width:520px){#close .stats{grid-template-columns:repeat(2,1fr)}#close .panel{padding:16px}body.demo #close{padding-top:190px}}
+</style>
+</head>
+<body>
+<div id="stage" aria-hidden="true"><canvas id="cv"></canvas></div>
+
+<div id="hud" hidden>
+  <div id="hudL"><div id="hudTime">2:00</div><div id="hudPhase">Turbulent</div></div>
+  <div id="hudR"><button class="icon" id="pauseBtn" type="button" aria-label="Pause"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button><span id="soundSlot"></span></div>
+</div>
+<button class="icon" id="soundBtn" type="button" aria-label="Sound off. Turn sound on" aria-pressed="false" hidden></button>
+<div id="cue" role="presentation" hidden></div>
+<div id="demoCaption" role="status" aria-live="polite" hidden></div>
+<div id="demoQR" hidden><img src="monkey-mind-play-qr.png" width="200" height="200" alt="QR code to play Monkey Mind on your phone"><span>Scan to play</span></div>
+<div id="demoTag" hidden><span class="badge"><i></i>Demo</span><span class="long">the monkeys are playing themselves · </span><span class="site">theselfdrivingmind.com</span></div>
+<div id="demoSound" hidden>Tap anywhere for sound</div>
+
+<section class="layer" id="loader" aria-label="Loading">
+  <div class="col"><div class="ring"></div><p class="hint" id="loaderText">Finding a quiet spot…</p></div>
+</section>
+
+<section class="layer" id="error" hidden aria-labelledby="errTitle">
+  <div class="panel"><h2 id="errTitle">The monkeys knocked something over.</h2>
+    <p style="margin:12px 0 18px">Something in this browser didn't load. A reload usually settles it.</p>
+    <button class="btn primary" type="button" onclick="location.reload()">Reload</button>
+    <p class="fine" id="errDetail"></p></div>
+</section>
+
+<section class="layer dim" id="arrival" hidden aria-labelledby="title">
+  <div class="col">
+    <div class="eyebrow">Bandarlok</div>
+    <h1 id="title">Monkey Mind!</h1>
+    <div class="sub">Hold the center</div>
+    <p class="lede">Two minutes. Some monkeys. One breath at a time. You're a monkey too, just the one sitting still.</p>
+    <div class="row" style="margin-top:6px">
+      <button class="btn primary" type="button" id="sitSound">Sit with sound</button>
+      <button class="btn quiet" type="button" id="sitQuiet">Sit quietly</button>
+    </div>
+    <button class="link" type="button" id="helpOpen">How it works</button>
+    <details class="settings" id="settings">
+      <summary>Settings</summary>
+      <fieldset><legend>Length</legend><div class="seg" data-key="length">
+        <label><input type="radio" name="length" value="60"><span>1 min</span></label>
+        <label><input type="radio" name="length" value="120"><span>2 min</span></label>
+        <label><input type="radio" name="length" value="300"><span>5 min</span></label>
+        <label><input type="radio" name="length" value="0"><span>Endless</span></label></div></fieldset>
+      <fieldset><legend>Mind weather</legend><div class="seg" data-key="diff">
+        <label><input type="radio" name="diff" value="calm"><span>Calm</span></label>
+        <label><input type="radio" name="diff" value="steady"><span>Steady</span></label>
+        <label><input type="radio" name="diff" value="turbulent"><span>Turbulent</span></label></div></fieldset>
+      <fieldset><legend>Breath (in / out, seconds)</legend><div class="seg" data-key="pace">
+        <label><input type="radio" name="pace" value="3-5"><span>3 / 5</span></label>
+        <label><input type="radio" name="pace" value="4-6"><span>4 / 6</span></label>
+        <label><input type="radio" name="pace" value="5-7"><span>5 / 7</span></label></div></fieldset>
+      <fieldset><legend>How you breathe</legend><div class="seg" data-key="input">
+        <label><input type="radio" name="input" value="hold"><span>Hold &amp; release</span></label>
+        <label><input type="radio" name="input" value="tap"><span>Tap at the top</span></label></div></fieldset>
+      <fieldset><legend>Gentle mode</legend><div class="seg" data-key="gentle">
+        <label><input type="radio" name="gentle" value="0"><span>Off</span></label>
+        <label><input type="radio" name="gentle" value="1"><span>On</span></label></div>
+        <p class="hint">Monkeys wait at the edge of the ring for your next full breath. No reaction speed needed.</p></fieldset>
+      <fieldset><legend>Vibration</legend><div class="seg" data-key="haptics">
+        <label><input type="radio" name="haptics" value="1"><span>On</span></label>
+        <label><input type="radio" name="haptics" value="0"><span>Off</span></label></div></fieldset>
+    </details>
+  </div>
+</section>
+
+<section class="layer dim" id="help" hidden role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="panel">
+    <div class="top"><h2 id="helpTitle">How it works</h2><button class="icon" type="button" id="helpClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <p>Your mind is full of monkeys, thoughts leaping in from every direction. You're the one at the center, sitting still. Mostly.</p>
+    <ul>
+      <li><b>Breathe in:</b> press and hold anywhere (or hold Space). The ring fills.</li>
+      <li><b>Breathe out:</b> let go. A wave rolls out over the out-breath and settles every monkey it reaches.</li>
+      <li><b>A full breath reaches the whole ring.</b> A quick jab barely leaves your head. (Ask me how I know.)</li>
+      <li><b>If one gets through,</b> things go foggy for a bit. Your next full breath brings you back. That's a <span class="te">return</span>, and returns are the whole score.</li>
+    </ul>
+    <p><span class="tag ev"></span><span class="am">Amber, round tag:</span> everyday chatter. Worry, to-do, scroll, lane drift.<br>
+       <span class="tag sk"></span><span class="cr">Crimson, diamond tag:</span> the classics, in Sanskrit. Let one go to see what it means.</p>
+    <p style="margin-top:10px">Sits end with a bell, not a game over. P or Esc pauses; so does switching tabs.</p>
+    <p class="quote">"Wherever the restless, unsteady mind wanders, from there bring it back, again and again, under the sway of the Self." — Bhagavad Gita 6.26</p>
+  </div>
+</section>
+
+<section class="layer dim" id="pause" hidden role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+  <div class="col">
+    <h2 id="pauseTitle" class="sub" style="font-size:15px">Paused</h2>
+    <p class="hint">The monkeys are waiting. They're good at that.</p>
+    <button class="btn primary" type="button" id="resumeBtn">Resume</button>
+    <button class="btn quiet" type="button" id="endBtn">End the sit</button>
+  </div>
+</section>
+
+<section class="layer dim" id="close" hidden aria-labelledby="closeLine">
+  <div class="panel">
+    <div class="eyebrow" id="closeEyebrow">Sit complete</div>
+    <h2 id="closeLine" tabindex="-1"></h2>
+    <div class="stats" id="stats"></div>
+    <div id="newBest" hidden></div>
+    <a id="bookLink" hidden tabindex="-1"></a>
+    <details id="visitorDetails"><summary>Who visited · thoughts decoded</summary><div id="visitors"></div></details>
+    <p class="quote">"Wherever the restless, unsteady mind wanders, from there bring it back, again and again, under the sway of the Self." — Bhagavad Gita 6.26</p>
+    <div class="row" style="margin-top:18px">
+      <button class="btn primary" type="button" id="againBtn">Sit again</button>
+      <button class="btn quiet" type="button" id="shareBtn">Share</button>
+      <button class="btn quiet" type="button" id="cardBtn">Save card</button>
+    </div>
+    <div class="row" style="margin-top:12px"><button class="link" type="button" id="menuBtn">Change settings</button></div>
+    <p class="fine" id="legacy" hidden></p>
+    
+    
+  </div>
+</section>
+
+<div id="live" class="sr" aria-live="polite"></div>
+<noscript><div class="layer"><div class="panel"><h2>Monkey Mind! needs JavaScript</h2><p>It's a small canvas game. Turn JavaScript on and the monkeys will show up.</p></div></div></noscript>
+
+<script>
+(function(){
+'use strict';
+var $ = function(id){ return document.getElementById(id); };
+function fail(msg){
+  try{ ['loader','arrival','hud','close','pause','help'].forEach(function(id){ var e=$(id); if(e) e.hidden=true; });
+    $('error').hidden=false; $('errDetail').textContent = msg ? String(msg).slice(0,140) : ''; }catch(e){}
+}
+window.addEventListener('error', function(e){ if(!window.__mmReady) fail(e.message); });
+
+var CANON = 'https://theselfdrivingmind.com/monkey-mind/';
+var Q = new URLSearchParams();
+// Shared links may capitalize option names. Normalize keys while preserving values and duplicates.
+new URLSearchParams(location.search.replace(/^\?+/, '')).forEach(function(value,key){ Q.append(key.toLowerCase(),value); });
+var DEBUG = Q.has('debug');
+var RM = Q.has('rm') || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+var TAU = Math.PI*2;
+
+var EVERYDAY = ['worry','regret','to-do','scroll','replay','what-if','deadline','notification','comparison','lane drift','road noise','blind spot'];
+var SANSKRIT = ['chinta','kalpana','raga','dvesha','bhaya','ahamkara'];
+var GLOSS = {
+  chinta:['anxious thinking','rehearsing a problem you can’t solve yet'],
+  kalpana:['imagining','a whole movie built from one frame'],
+  raga:['craving','the mind’s “just one more”'],
+  dvesha:['aversion','pushing away before you’ve looked'],
+  bhaya:['fear','the what-if with a pulse'],
+  ahamkara:['ego','the “I” that wants credit for sitting still']
+};
+var COL = {bg:'#0e1013', teal:'#3fe0c8', amber:'#ffb547', crimson:'#ff5470', ink:'#e8eeec', ink3:'#8c9792'};
+
+/* ---------- storage ---------- */
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+var DEF = {length:'120', diff:'steady', pace:'4-6', input:'hold', gentle:'0', haptics:'1'};
+var CFG = Object.assign({}, DEF);
+try{ Object.assign(CFG, JSON.parse(lsGet('monkeymind_v2_settings')||'{}')); }catch(e){}
+['length','diff','pace','input','gentle','haptics'].forEach(function(k){ if(Q.has(k)) CFG[k]=Q.get(k); });
+function saveCfg(){ lsSet('monkeymind_v2_settings', JSON.stringify(CFG)); }
+// carry over v1 records (survival seconds) without deleting them
+var LEGACY = {};
+['calm','steady','turbulent'].forEach(function(d){
+  var v = parseFloat(lsGet('dhyana_best_time_'+d)||'0');
+  if(!v && d==='steady') v = parseFloat(lsGet('dhyana_best_time')||'0');
+  var kept = parseFloat(lsGet('monkeymind_v2_legacy_'+d)||'0');
+  if(v>kept){ lsSet('monkeymind_v2_legacy_'+d, String(v)); kept=v; }
+  LEGACY[d]=kept||0;
+});
+function bestKey(){ return 'monkeymind_v2_best_settled_'+CFG.diff; }
+
+/* ---------- audio ---------- */
+var A = {ctx:null, master:null, on:false, drone:null, lastSet:0};
+A.init = function(){
+  if(A.ctx) return true;
+  var AC = window.AudioContext||window.webkitAudioContext; if(!AC) return false;
+  try{
+    A.ctx = new AC(); A.master = A.ctx.createGain(); A.master.gain.value = 0;
+    var comp = A.ctx.createDynamicsCompressor(); A.master.connect(comp); comp.connect(A.ctx.destination);
+    var f = A.ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=320; f.Q.value=0.7;
+    var g = A.ctx.createGain(); g.gain.value=0.0;
+    var o1=A.ctx.createOscillator(), o2=A.ctx.createOscillator(), o3=A.ctx.createOscillator();
+    o1.type='sawtooth'; o1.frequency.value=110; o2.type='sawtooth'; o2.frequency.value=110.35; o3.type='sine'; o3.frequency.value=55;
+    var g3=A.ctx.createGain(); g3.gain.value=0.5;
+    o1.connect(f); o2.connect(f); o3.connect(g3); g3.connect(g); f.connect(g); g.connect(A.master);
+    o1.start(); o2.start(); o3.start();
+    A.drone={f:f,g:g};
+    return true;
+  }catch(e){ A.ctx=null; return false; }
+};
+A.setOn = function(on){
+  A.on = !!on;
+  if(on && !A.init()){ A.on=false; }
+  if(A.ctx){
+    if(on && A.ctx.state==='suspended') A.ctx.resume();
+    var t=A.ctx.currentTime; A.master.gain.cancelScheduledValues(t);
+    A.master.gain.setTargetAtTime(on?0.55:0, t, 0.25);
+  }
+  updateSoundBtn();
+};
+A.follow = function(level, quiet){
+  if(!A.ctx||!A.on) return;
+  var now=performance.now(); if(now-A.lastSet<50) return; A.lastSet=now;
+  var t=A.ctx.currentTime;
+  A.drone.f.frequency.setTargetAtTime(260+780*level, t, 0.15);
+  A.drone.g.gain.setTargetAtTime((0.05+0.05*level)*(1-0.45*quiet), t, 0.3);
+};
+A.idle = function(){ if(A.ctx&&A.on){ var t=A.ctx.currentTime; A.drone.g.gain.setTargetAtTime(0.035,t,0.5); A.drone.f.frequency.setTargetAtTime(300,t,0.5);} };
+function voice(type, f0, f1, dur, vol, delay){
+  if(!A.ctx||!A.on||!(vol>0.0003)) return;
+  try{
+    var t=A.ctx.currentTime+(delay||0), o=A.ctx.createOscillator(), g=A.ctx.createGain();
+    o.type=type; o.frequency.setValueAtTime(f0,t); if(f1&&f1!==f0) o.frequency.exponentialRampToValueAtTime(f1,t+dur*0.6);
+    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+0.012); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g); g.connect(A.master); o.start(t); o.stop(t+dur+0.05);
+  }catch(e){}
+}
+var PENTA=[392,440,523.25,587.33,659.25,783.99,880];
+A.chime = function(fill){ var v=0.07*Math.sqrt(fill); voice('sine',523.25,523.25,2.6,v); voice('sine',784,784,2.0,v*0.5,0.04); voice('sine',1046.5,1046.5,1.4,v*0.25,0.08); };
+A.pluck = function(i,delay){ voice('triangle',PENTA[i%PENTA.length],PENTA[i%PENTA.length],0.7,0.035,delay); };
+A.chirp = function(){ voice('sine',1500,2100,0.09,0.018); voice('sine',1700,2400,0.08,0.014,0.11); };
+A.tok = function(){ voice('sine',210,120,0.35,0.09); voice('triangle',420,300,0.12,0.02); };
+A.bell = function(){ var b=196; [[1,0.12,7],[2.01,0.05,5],[2.76,0.05,4.5],[4.07,0.03,3],[5.4,0.02,2.5]].forEach(function(p){ voice('sine',b*p[0],b*p[0],p[2],p[1]); }); };
+
+/* ---------- canvas ---------- */
+var cv=$('cv'), ctx=cv.getContext('2d'), W=0, H=0, DPR=1, U=200, CX=0, CY=0;
+function resize(){
+  DPR=Math.min(window.devicePixelRatio||1, 2); W=window.innerWidth; H=window.innerHeight;
+  cv.width=Math.round(W*DPR); cv.height=Math.round(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0);
+  U=Math.max(90, Math.min(W*0.41, H*0.3, 240));
+  CX=W/2; CY=H*0.48;
+}
+window.addEventListener('resize', resize);
+
+/* ---------- game state ---------- */
+var S = null;
+function pace(){ var p=(CFG.pace||'4-6').split('-'); return {inS:+p[0]||4, outS:+p[1]||6}; }
+var BREATH = {phase:'idle', level:0, fill:0, pressed:false, hold:0, waitT:0, auto:true};
+function newSit(){
+  var len = +CFG.length;
+  S = {mode:'play', waiting:true, paused:false, t:0, len:len, endless:len===0, monkeys:[], waves:[], fx:[],
+    cloud:0, wandered:false, wobble:0, landings:0, wanders:0, returns:0, fullBreaths:0, breaths:0, settledN:0,
+    stretch:0, bestStretch:0, visitors:{}, spawnT:1.2, ending:false, endT:0, phase:'', lastChirp:0, lastAnnounce:0,
+    stoppedEarly:false, gentle:CFG.gentle==='1', tap:CFG.input==='tap'};
+  BREATH.phase='idle'; BREATH.level=0; BREATH.fill=0; BREATH.pressed=false; BREATH.hold=0; BREATH.waitT=0; BREATH.auto=false;
+}
+var DIFF = {calm:{sp:0.13, iv:2.6}, steady:{sp:0.19, iv:1.8}, turbulent:{sp:0.27, iv:1.25}};
+function arc(){ // returns {name, frac, speedMul, ivMul, skP, quiet}
+  var L = S.endless ? 120 : S.len, t = S.endless ? S.t%120 : S.t, cyc = S.endless ? Math.floor(S.t/120) : 0;
+  var f = Math.min(1, t/L), boost = 1+0.15*cyc;
+  if(f<0.33) return {name:'Turbulent', f:f, sp:1*boost, iv:1/boost, sk:0.15, quiet:0};
+  if(f<0.75){ var k=(f-0.33)/0.42; return {name:'Settling', f:f, sp:(1-0.4*k)*boost, iv:(1+0.9*k)/boost, sk:0.45, quiet:0}; }
+  var q=(f-0.75)/0.25; return {name:'Quiet', f:f, sp:0.55*boost, iv:(3.2+2*q)/boost, sk:0.5, quiet:S.endless?0:q};
+}
+function announce(msg){ var l=$('live'); l.textContent=''; setTimeout(function(){ l.textContent=msg; }, 30); }
+function vibrate(ms){ var ua=navigator.userActivation; if(CFG.haptics==='1' && navigator.vibrate && (!ua || ua.hasBeenActive)){ try{ navigator.vibrate(ms); }catch(e){} } }
+
+/* ---------- breath ---------- */
+function press(){
+  if(!S || S.mode!=='play' || S.paused || S.ending) return;
+  if(S.tap){ if(S.waiting){ S.waiting=false; startSitClock(); } if(BREATH.phase==='in'||BREATH.phase==='full') release(true); return; }
+  BREATH.pressed=true;
+  if(BREATH.phase==='idle') startIn();
+}
+function startIn(){ if(DEMO.on && !S.wandered) DEMO.caption('inhale'); BREATH.phase='in'; BREATH.hold=0; if(S.waiting){ S.waiting=false; startSitClock(); } }
+function startSitClock(){ announce(S.endless ? 'Endless sit started. Breathe in.' : 'Sit started. Breathe in.'); }
+function release(fromTap){
+  if(!S || S.mode!=='play') return;
+  if(!S.tap) BREATH.pressed=false;
+  if(S.tap && !fromTap) return;
+  if(BREATH.phase!=='in' && BREATH.phase!=='full') return;
+  exhale(BREATH.level, true);
+}
+function exhale(fill, wave){
+  var p=pace();
+  BREATH.phase='out'; BREATH.fill=fill;
+  BREATH.outDur = Math.max(0.45, p.outS*fill);
+  if(!wave) return;
+  S.breaths++;
+  var full = fill>=0.85;
+  if(DEMO.on && fill>=0.999 && !S.wandered) DEMO.caption('release');
+  var reach = U*1.25*Math.pow(fill,1.5);
+  S.waves.push({r:0, R:reach, t:0, dur:BREATH.outDur, fill:fill, n:0});
+  A.chime(fill);
+  if(full){
+    S.fullBreaths++; vibrate(14);
+    if(S.wandered){ S.wandered=false; S.returns++; S.fx.push({x:CX, y:CY-U*0.55, text:'back', color:COL.teal, t:0, life:1.8});
+      announce('Back. Returns: '+S.returns+'.'); if(DEMO.on) DEMO.caption('return'); }
+  }
+}
+function breathUpdate(dt){
+  var p=pace();
+  if(BREATH.phase==='in'){
+    BREATH.hold+=dt; BREATH.level=Math.min(1, BREATH.level+dt/p.inS);
+    if(BREATH.level>=1){ BREATH.level=1; BREATH.phase='full'; BREATH.waitT=0; }
+  } else if(BREATH.phase==='full'){
+    BREATH.waitT+=dt;
+    if(S && S.tap && BREATH.waitT>2.2) exhale(1,false); // ring keeps breathing; no wave without a tap
+  } else if(BREATH.phase==='out'){
+    BREATH.level -= dt*BREATH.fill/BREATH.outDur;
+    if(BREATH.level<=0){ BREATH.level=0; BREATH.phase='idle'; BREATH.waitT=0;
+      if(S && !S.tap && BREATH.pressed) startIn(); }
+  } else { // idle
+    BREATH.waitT+=dt;
+    var auto = !S || S.mode!=='play' || (S.tap && !S.waiting) || (S.tap && S.waiting);
+    if(auto && BREATH.waitT>0.5){ BREATH.phase='in'; BREATH.hold=0; }
+  }
+}
+// arrival/close screens: the ring breathes on its own
+function ambientBreath(dt){
+  var p=pace();
+  if(BREATH.phase==='full' && BREATH.waitT>0.6){ BREATH.phase='out'; BREATH.fill=1; BREATH.outDur=p.outS; }
+  breathUpdate(dt);
+}
+
+/* ---------- monkeys ---------- */
+function spawn(a){
+  var sk = Math.random()<a.sk, pool = sk?SANSKRIT:EVERYDAY, label = pool[(Math.random()*pool.length)|0];
+  var ang = Math.random()*TAU, dx=Math.cos(ang), dy=Math.sin(ang);
+  var edge = Math.min(dx? (dx>0?(W-CX):CX)/Math.abs(dx):1e9, dy? (dy>0?(H-CY):CY)/Math.abs(dy):1e9);
+  var d = Math.min(edge+28, U*2.3);
+  var base = DIFF[CFG.diff]||DIFF.steady;
+  var m = {label:label, sk:sk, x:CX+dx*d, y:CY+dy*d, bx:CX+dx*d, by:CY+dy*d, state:'rest', rest:0.2+Math.random()*0.5,
+    speed: base.sp*a.sp*(sk?1.3:1)*(0.8+Math.random()*0.4)*U, born:0, s:Math.max(7.5,U*0.062),
+    hop:null, t:0, face:dx>0?-1:1, sway:Math.random()*TAU, wait:false};
+  S.monkeys.push(m);
+  S.visitors[label] = (S.visitors[label]||0)+1;
+  if(S.t-S.lastChirp>2.5 && Math.random()<0.5){ A.chirp(); S.lastChirp=S.t; }
+}
+var CENTER_R = function(){ return U*0.2; };
+function updateMonkey(m, dt){
+  m.born+=dt; m.t+=dt; m.sway+=dt*2.2;
+  if(m.state==='rest'){
+    if(m.wait){ m.x=m.bx+Math.sin(m.sway)*m.s*0.3; m.y=m.by; return; }
+    m.rest-=dt; m.x=m.bx; m.y=m.by;
+    if(m.rest<=0){
+      var vx=CX-m.bx, vy=CY-m.by, d=Math.hypot(vx,vy)||1, ux=vx/d, uy=vy/d;
+      var L=Math.min(U*(0.32+Math.random()*0.16), d);
+      var tx, ty;
+      var gentleR = U*1.1;
+      if(S.gentle && d-L<gentleR){ L=Math.max(0,d-gentleR); if(L<2){ m.wait=true; return; } }
+      if(d-L < CENTER_R()){ tx=CX; ty=CY-U*0.06; L=d; }
+      else { var j=(Math.random()-0.5)*0.3*L; tx=m.bx+ux*L-uy*j; ty=m.by+uy*L+ux*j; }
+      var dur = L/(2*m.speed);
+      m.hop={fx:m.bx,fy:m.by,tx:tx,ty:ty,t:0,dur:Math.max(0.25,dur),h:L*(RM?0.1:0.38)};
+      m.face = tx>m.bx?1:-1; m.state='hop';
+    }
+  } else if(m.state==='hop'){
+    var h=m.hop; h.t+=dt; var k=Math.min(1,h.t/h.dur), e=k<0.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    m.x=h.fx+(h.tx-h.fx)*e; m.y=h.fy+(h.ty-h.fy)*e - Math.sin(Math.PI*k)*h.h;
+    if(Math.hypot(m.x-CX,m.y-CY)<CENTER_R()){ land(m); return; }
+    if(k>=1){ m.bx=h.tx; m.by=h.ty; m.x=m.bx; m.y=m.by; m.state='rest'; m.rest=h.dur*(0.7+Math.random()*0.6); }
+  } else if(m.state==='landed'){
+    if(m.t>0.9){ m.state='passing'; m.t=0; var a=Math.random()*TAU; m.vx=Math.cos(a)*U*0.9; m.vy=-Math.abs(Math.sin(a))*U*0.6-U*0.3; }
+  } else if(m.state==='passing' || m.state==='leaving'){
+    m.x+=m.vx*dt; m.y+=m.vy*dt; m.vy+=U*1.4*dt; if(m.t>1.3) m.dead=true;
+  } else if(m.state==='settled'){
+    if(m.t>(m.sk?2.8:1.6)) m.dead=true;
+  }
+}
+function land(m){
+  m.state='landed'; m.t=0; S.landings++;
+  S.cloud=Math.min(0.8,S.cloud+0.45); if(!RM) S.wobble=1;
+  var first=!S.wandered; S.wandered=true; if(first) S.wanders++;
+  S.bestStretch=Math.max(S.bestStretch,S.stretch); S.stretch=0;
+  A.tok(); vibrate(8);
+  if(DEMO.on && S.landings===1) DEMO.caption('fog');
+  if(first && S.t-S.lastAnnounce>6){ S.lastAnnounce=S.t; announce('A monkey got through. Take one full breath to come back.'); }
+}
+function settle(m, i){
+  m.state='settled'; m.t=0; S.settledN++;
+  if(DEMO.on && m.sk && !S.wandered) DEMO.caption('crimson',m);
+  A.pluck(i, Math.min(0.5, i*0.07));
+}
+
+/* ---------- update ---------- */
+function update(dt){
+  if(!S || S.mode!=='play'){ ambientBreath(dt); return; }
+  if(S.paused) return;
+  breathUpdate(dt);
+  var a = arc();
+  A.follow(BREATH.level, a.quiet);
+  // fx
+  for(var i=S.fx.length-1;i>=0;i--){ var f=S.fx[i]; f.t+=dt; if(f.t>f.life) S.fx.splice(i,1); }
+  S.wobble=Math.max(0,S.wobble-dt*0.45);
+  if(S.wandered) S.cloud=Math.max(0.22, S.cloud-dt*0.07); else S.cloud=Math.max(0, S.cloud-dt*0.6);
+  if(S.waiting) return;
+  if(!S.ending){
+    S.t+=dt;
+    if(!S.wandered){ S.stretch+=dt; if(S.stretch>S.bestStretch) S.bestStretch=S.stretch; }
+    if(a.name!==S.phase){ if(S.phase) announce(a.name==='Quiet' && !S.endless ? 'Quiet now. Nearly there.' : a.name+'.'); S.phase=a.name; if(DEMO.on && a.name==='Quiet') DEMO.caption('quiet'); }
+    var left = S.endless?1e9:S.len-S.t;
+    S.spawnT-=dt;
+    var crowd = S.gentle ? S.monkeys.filter(function(m){ return m.wait; }).length : 0;
+    if(S.spawnT<=0 && left>6 && crowd<6){ spawn(a); var base=(DIFF[CFG.diff]||DIFF.steady).iv; S.spawnT=base*a.iv*(0.6+Math.random()*0.8); }
+    if(!S.endless && S.t>=S.len){ S.ending=true; S.endT=0; A.bell(); vibrate(30);
+      S.monkeys.forEach(function(m){ if(m.state==='rest'||m.state==='hop'){ m.state='leaving'; m.t=0; var vx=m.x-CX, vy=m.y-CY, d=Math.hypot(vx,vy)||1; m.vx=vx/d*U*1.2; m.vy=vy/d*U*1.2-U*0.4; } });
+      announce('Sit complete.'); }
+  } else { S.endT+=dt; if(S.endT>3.6){ showClose(); return; } }
+  // waves
+  for(var w=S.waves.length-1;w>=0;w--){
+    var wv=S.waves[w]; wv.t+=dt; var k=Math.min(1,wv.t/wv.dur); wv.r=wv.R*(1-Math.pow(1-k,3));
+    for(var j=0;j<S.monkeys.length;j++){ var m=S.monkeys[j];
+      if((m.state==='rest'||m.state==='hop') && Math.hypot(m.x-CX,m.y-CY)<=wv.r){ settle(m, wv.n++); } }
+    if(wv.t>wv.dur+0.6) S.waves.splice(w,1);
+  }
+  for(var n=S.monkeys.length-1;n>=0;n--){ updateMonkey(S.monkeys[n],dt); if(S.monkeys[n].dead) S.monkeys.splice(n,1); }
+}
+
+/* ---------- drawing ---------- */
+function drawMonkey(c, x, y, s, color, pose, alpha, face, eyesClosed){
+  c.save(); c.translate(x,y); c.scale(face||1,1); c.globalAlpha=alpha==null?1:alpha;
+  c.fillStyle=color; c.strokeStyle=color; c.lineCap='round'; c.lineJoin='round';
+  // tail
+  c.lineWidth=s*0.26; c.beginPath(); c.moveTo(s*0.45,s*1.05);
+  if(pose==='sit'){ c.bezierCurveTo(s*1.9,s*1.6,s*2.1,s*0.2,s*1.45,-s*0.1); c.quadraticCurveTo(s*1.05,-s*0.25,s*1.2,s*0.2); }
+  else { c.bezierCurveTo(s*1.7,s*1.3,s*2.3,s*0.1,s*1.8,-s*0.7); c.quadraticCurveTo(s*1.45,-s*1.0,s*1.4,-s*0.55); }
+  c.stroke();
+  // limbs
+  c.lineWidth=s*0.26;
+  if(pose==='leap'){ c.beginPath(); c.moveTo(-s*0.45,s*0.25); c.lineTo(-s*1.25,-s*0.55); c.moveTo(s*0.45,s*0.25); c.lineTo(s*1.1,-s*0.6);
+    c.moveTo(-s*0.3,s*1.25); c.lineTo(-s*0.85,s*1.85); c.moveTo(s*0.3,s*1.25); c.lineTo(s*0.75,s*1.9); c.stroke(); }
+  else { c.beginPath(); c.ellipse(0,s*1.42,s*1.08,s*0.36,0,0,TAU); c.fill(); }
+  // body, head, ears
+  c.beginPath(); c.ellipse(0,s*0.62,s*0.7,s*0.86,0,0,TAU); c.fill();
+  c.beginPath(); c.arc(-s*0.74,-s*0.78,s*0.3,0,TAU); c.arc(s*0.74,-s*0.78,s*0.3,0,TAU); c.fill();
+  c.beginPath(); c.arc(0,-s*0.72,s*0.7,0,TAU); c.fill();
+  // face
+  c.globalAlpha=(alpha==null?1:alpha)*0.6; c.fillStyle=COL.bg;
+  c.beginPath(); c.ellipse(0,-s*0.6,s*0.47,s*0.36,0,0,TAU); c.fill();
+  c.globalAlpha=alpha==null?1:alpha; c.fillStyle=color; c.strokeStyle=color; c.lineWidth=Math.max(1,s*0.1);
+  if(eyesClosed){ c.beginPath(); c.arc(-s*0.2,-s*0.66,s*0.11,0.15*Math.PI,0.85*Math.PI); c.moveTo(s*0.31,-s*0.62); c.arc(s*0.2,-s*0.66,s*0.11,0.15*Math.PI,0.85*Math.PI); c.stroke(); }
+  else { c.beginPath(); c.arc(-s*0.19,-s*0.66,s*0.08,0,TAU); c.arc(s*0.19,-s*0.66,s*0.08,0,TAU); c.fill(); }
+  c.restore();
+}
+function tagShape(c,x,y,r,sk,color){ c.fillStyle=color; c.beginPath();
+  if(sk){ c.moveTo(x,y-r); c.lineTo(x+r,y); c.lineTo(x,y+r); c.lineTo(x-r,y); c.closePath(); } else c.arc(x,y,r*0.8,0,TAU); c.fill(); }
+function pill(c, x, y, text, color, alpha, sk, small){
+  var fs = small? 13 : (W<480?14:15);
+  c.save(); c.globalAlpha=alpha; c.font='500 '+fs+'px '+FONT; var tw=c.measureText(text).width;
+  var hasTag = sk!=null, pw=tw+22+(hasTag?16:0), ph=fs+12;
+  var px=Math.max(8+pw/2, Math.min(W-8-pw/2, x)), py=Math.max(70+ph/2, Math.min(H-8-ph/2, y));
+  for(var tries=0;tries<4;tries++){ var hit=false;
+    for(var q=0;q<PLACED.length;q++){ var o=PLACED[q]; if(Math.abs(o.x-px)<(o.w+pw)/2+4 && Math.abs(o.y-py)<(o.h+ph)/2+3){ py=o.y-(o.h+ph)/2-4; hit=true; } }
+    if(!hit) break; }
+  PLACED.push({x:px,y:py,w:pw,h:ph});
+  c.fillStyle='rgba(14,16,19,0.82)'; c.strokeStyle=color; c.globalAlpha=alpha*0.55; c.lineWidth=1;
+  rr(c,px-pw/2,py-ph/2,pw,ph,ph/2); c.fill(); c.stroke(); c.globalAlpha=alpha;
+  if(hasTag) tagShape(c, px-pw/2+14, py, 5, sk, color);
+  c.fillStyle=color; c.textAlign='center'; c.textBaseline='middle'; c.fillText(text, px+(hasTag?8:0), py+1); c.restore();
+}
+function rr(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
+var FONT = "'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace";
+var PLACED = [];
+
+function draw(now){
+  var t=now/1000, c=ctx, a=S&&S.mode==='play'?arc():{quiet:0,f:0}; PLACED.length=0;
+  var quiet = S&&S.mode==='play'? (S.ending?1:a.quiet) : 0;
+  c.save(); c.fillStyle=COL.bg; c.fillRect(0,0,W,H);
+  // warm dawn in the quiet stretch
+  if(quiet>0){ var g=c.createRadialGradient(CX,H*1.1,0,CX,H*1.1,Math.max(W,H)*0.9);
+    g.addColorStop(0,'rgba(255,181,71,'+(0.10*quiet)+')'); g.addColorStop(1,'rgba(255,181,71,0)'); c.fillStyle=g; c.fillRect(0,0,W,H); }
+  // wobble when a monkey lands
+  var wob = S&&S.mode==='play'&&!RM ? S.wobble : 0;
+  if(wob>0){ c.translate(CX,CY); c.rotate(Math.sin(t*7)*0.02*wob); c.translate(-CX+Math.sin(t*11)*5*wob,-CY); }
+  // grid
+  c.strokeStyle='rgba(255,255,255,'+(0.035*(1-quiet*0.7))+')'; c.lineWidth=1; c.beginPath();
+  for(var x=CX%48;x<W;x+=48){ c.moveTo(x,0); c.lineTo(x,H); } for(var y=CY%48;y<H;y+=48){ c.moveTo(0,y); c.lineTo(W,y); } c.stroke();
+  var lvl=BREATH.level, full=BREATH.phase==='full';
+  // track + ticks
+  c.strokeStyle=COL.teal; c.globalAlpha=0.16; c.lineWidth=1.5; c.beginPath(); c.arc(CX,CY,U,0,TAU); c.stroke();
+  c.globalAlpha=full?0.75:0.28; c.beginPath();
+  for(var i=0;i<24;i++){ var an=i/24*TAU; c.moveTo(CX+Math.cos(an)*(U-5),CY+Math.sin(an)*(U-5)); c.lineTo(CX+Math.cos(an)*(U+5),CY+Math.sin(an)*(U+5)); } c.stroke();
+  if(S&&S.gentle&&S.mode==='play'){ c.globalAlpha=0.22; c.setLineDash([4,8]); c.beginPath(); c.arc(CX,CY,U*1.1,0,TAU); c.stroke(); c.setLineDash([]); }
+  // breath ring
+  var r=U*(0.3+0.7*lvl);
+  var gf=c.createRadialGradient(CX,CY,0,CX,CY,r); gf.addColorStop(0,'rgba(63,224,200,0)'); gf.addColorStop(1,'rgba(63,224,200,'+(0.05+0.07*lvl)+')');
+  c.globalAlpha=1; c.fillStyle=gf; c.beginPath(); c.arc(CX,CY,r,0,TAU); c.fill();
+  c.globalAlpha=0.5+0.45*lvl; c.lineWidth=2+2.5*lvl; c.shadowBlur=18+14*lvl; c.shadowColor=COL.teal;
+  c.beginPath(); c.arc(CX,CY,r,0,TAU); c.stroke(); c.shadowBlur=0;
+  // waves
+  if(S) S.waves.forEach(function(wv){ var k=Math.min(1,wv.t/wv.dur), fa=1-k;
+    c.globalAlpha=0.08*fa; c.fillStyle=COL.teal; c.beginPath(); c.arc(CX,CY,wv.r,0,TAU); c.fill();
+    c.globalAlpha=0.75*fa*Math.min(1,wv.fill*1.4); c.lineWidth=2+3*fa; c.beginPath(); c.arc(CX,CY,wv.r,0,TAU); c.stroke(); });
+  c.globalAlpha=1;
+  // center monkey
+  var cs=U*0.105, breatheScale=1+0.05*lvl;
+  c.save(); c.translate(CX,CY+cs*0.2); c.scale(breatheScale,breatheScale); c.shadowBlur=22; c.shadowColor=COL.teal;
+  drawMonkey(c,0,0,cs,COL.teal,'sit',1,1,true); c.restore();
+  // monkeys
+  if(S && S.mode==='play'){
+    S.monkeys.forEach(function(m){
+      var col=m.sk?COL.crimson:COL.amber, al=Math.min(1,m.born/0.5), pose='sit';
+      if(m.state==='hop'||m.state==='passing'||m.state==='leaving') pose='leap';
+      if(m.state==='settled'){ al=Math.max(0,1-m.t/(m.sk?2.8:1.6)); }
+      if(m.state==='passing'||m.state==='leaving') al=Math.max(0,1-m.t/1.3);
+      var mx=m.x, my=m.y;
+      if(m.state==='landed'){ mx=CX; my=CY-cs*2.1; }
+      var onScreen = mx>-m.s && mx<W+m.s && my>-m.s && my<H+m.s;
+      if(!onScreen){ var ex=Math.max(14,Math.min(W-14,mx)), ey=Math.max(14,Math.min(H-14,my)); c.globalAlpha=0.7*al; tagShape(c,ex,ey,6,m.sk,col); c.globalAlpha=1; return; }
+      drawMonkey(c,mx,my-m.s*0.4,m.s,col,pose,al*(m.state==='settled'?0.8:1),m.face,m.state==='settled');
+      if(m.state==='settled'){
+        var txt = m.sk ? m.label+' · '+GLOSS[m.label][0] : m.label;
+        pill(c,mx,my-m.s*2.6-Math.min(1,m.t)*10,txt,col,al,m.sk);
+      } else if(m.state==='rest'||m.state==='hop'){
+        pill(c,mx,my-m.s*2.6,m.label,col,al*0.95,m.sk);
+      }
+    });
+    S.fx.forEach(function(f){ var al=Math.min(1,(f.life-f.t)/0.6); pill(c,f.x,f.y-f.t*14,f.text,f.color,al,null); });
+  }
+  c.restore();
+  // cloud
+  var cl = S&&S.mode==='play'?S.cloud:0;
+  if(cl>0.01){
+    var fg=c.createRadialGradient(CX,CY,U*0.15,CX,CY,Math.max(W,H)*0.75);
+    fg.addColorStop(0,'rgba(120,138,146,'+(0.28*cl)+')'); fg.addColorStop(0.5,'rgba(70,84,90,'+(0.32*cl)+')'); fg.addColorStop(1,'rgba(30,36,40,'+(0.45*cl)+')');
+    c.fillStyle=fg; c.fillRect(0,0,W,H);
+    if(!RM){ for(var k2=0;k2<6;k2++){ var px=CX+Math.cos(t*0.13+k2*1.7)*U*1.3, py=CY+Math.sin(t*0.1+k2*2.3)*U*1.0, wr=U*(0.8+0.25*Math.sin(t*0.2+k2));
+        var wg=c.createRadialGradient(px,py,0,px,py,wr); wg.addColorStop(0,'rgba(165,180,188,'+(0.11*cl)+')'); wg.addColorStop(1,'rgba(165,180,188,0)');
+        c.fillStyle=wg; c.fillRect(px-wr,py-wr,wr*2,wr*2); } }
+  }
+}
+
+/* ---------- HUD / cue ---------- */
+var lastCue='', lastHud='';
+function fmt(s){ s=Math.max(0,Math.round(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+function hud(){
+  if(!S||S.mode!=='play') return;
+  var a=arc(), txt;
+  if(S.endless) txt = 'settled '+fmt(S.stretch)+'|best '+fmt(S.bestStretch);
+  else txt = (S.waiting?fmt(S.len):fmt(S.len-S.t))+'|'+(S.waiting?'Ready':(S.ending?'Bell':a.name));
+  if(txt!==lastHud){ lastHud=txt; var p=txt.split('|'); $('hudTime').textContent=p[0]; $('hudPhase').textContent=p[1]; }
+  var cue='', cls='';
+  var kb = !matchMedia('(pointer: coarse)').matches;
+  if(S.ending) cue='';
+  else if(S.waiting) cue = S.tap ? 'Tap when the ring is full' : (kb?'Hold anywhere, or Space, to breathe in':'Press and hold to breathe in');
+  else if(BREATH.phase==='in') { cue='in…'; cls='soft'; }
+  else if(BREATH.phase==='full'){ cue=S.tap?'tap to let go':'…and let go'; cls='go'; }
+  else if(BREATH.phase==='out'){ cue='out…'; cls='soft'; }
+  else { cue = S.wandered ? 'one full breath to come back' : 'breathe in'; cls='soft'; }
+  var key=cue+cls;
+  if(key!==lastCue){ lastCue=key; var el=$('cue'); el.textContent=cue; el.className=cls; el.hidden=!cue; }
+}
+
+/* ---------- screens ---------- */
+function show(id, on){ $(id).hidden=!on; }
+function updateSoundBtn(){
+  var b=$('soundBtn');
+  b.innerHTML = A.on
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor" stroke="none"/><path d="M16 9a4 4 0 010 6M18.5 6.5a7.5 7.5 0 010 11"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor" stroke="none"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';
+  b.setAttribute('aria-label', A.on?'Sound on. Mute':'Sound off. Turn sound on');
+  b.setAttribute('aria-pressed', A.on?'true':'false');
+}
+function toArrival(){
+  S=null; BREATH.phase='idle'; BREATH.level=0;
+  show('close',false); show('pause',false); show('hud',false); $('cue').hidden=true; show('arrival',true); $('soundBtn').hidden=false;
+  A.idle(); syncSettings(); $('arrival').scrollTop=0;
+  setTimeout(function(){ if(!DEMO.on) $('sitSound').focus({preventScroll:true}); },50);
+}
+function begin(withSound){
+  if(withSound!=null) A.setOn(withSound);
+  newSit(); lastCue=''; lastHud='';
+  show('arrival',false); show('close',false); show('help',false); show('hud',true); $('soundBtn').hidden=false;
+  hud();
+}
+function setPaused(p){
+  if(!S||S.mode!=='play'||S.ending) return;
+  S.paused=p; show('pause',p);
+  if(A.ctx&&A.on){ if(p) A.ctx.suspend(); else A.ctx.resume(); }
+  if(p){ BREATH.pressed=false; announce('Paused.'); $('resumeBtn').focus(); } else announce('Resumed.');
+}
+function closeLine(){
+  var n=S.wanders, r=S.returns;
+  if(S.stoppedEarly) return 'You stopped at '+fmt(S.t)+'. Also allowed. Getting up is part of sitting.';
+  if(S.endless) return n===0 ? 'Settled the whole way. Either you’re a monk or the monkeys are napping.' : 'Longest stretch with nobody on your head: '+fmt(S.bestStretch)+'. Then you came back '+r+' time'+(r===1?'':'s')+'.';
+  if(n===0) return 'Nobody got through. Suspicious. Come back tomorrow and let a few win.';
+  if(S.breaths>=6 && S.fullBreaths/S.breaths<0.4) return 'Lots of short breaths today. The monkeys noticed. So did you, which is the point.';
+  if(r>=n) return 'You wandered off '+n+' time'+(n===1?'':'s')+' and came back '+(r===n?(n===1?'once':n+' times'):r+' times')+'. That’s the whole practice.';
+  return 'You wandered off '+n+' time'+(n===1?'':'s')+' and came back '+r+'. The bell beat you to the last one. That’s allowed.';
+}
+var LASTRESULT=null;
+function showClose(stoppedEarly){
+  if(!S) return;
+  $('visitorDetails').open=DEMO.on;
+  if(stoppedEarly) S.stoppedEarly=true;
+  if(DEMO.on) DEMO.caption('results');
+  S.mode='close'; S.paused=false; show('pause',false); show('hud',false); $('cue').hidden=true;
+  if(A.ctx&&A.on&&A.ctx.state==='suspended') A.ctx.resume();
+  A.idle();
+  S.bestStretch=Math.max(S.bestStretch,S.stretch);
+  var prev=parseFloat(lsGet(bestKey())||'0'), isBest=!DEMO.on && S.bestStretch>prev+0.5 && S.t>20;
+  if(isBest) lsSet(bestKey(), String(S.bestStretch));
+  if(!DEMO.on) lsSet('monkeymind_v2_sits', String((+lsGet('monkeymind_v2_sits')||0)+(S.stoppedEarly?0:1)));
+  $('closeEyebrow').textContent = S.stoppedEarly ? 'Sit ended' : (S.endless ? 'Endless sit' : 'Sit complete');
+  $('closeLine').textContent = closeLine();
+  var st=[[S.returns,'Returns'],[fmt(S.bestStretch),'Longest settled'],[S.fullBreaths,'Full breaths'],[S.settledN,'Monkeys let go']];
+  $('stats').innerHTML = st.map(function(s){ return '<div class="stat"><div class="v">'+s[0]+'</div><div class="k">'+s[1]+'</div></div>'; }).join('');
+  var nb=$('newBest'); nb.hidden=!isBest; nb.textContent='New longest settled stretch ('+CFG.diff+')';
+  var vis=Object.keys(S.visitors).sort(function(a,b){ return S.visitors[b]-S.visitors[a]; });
+  var ev=vis.filter(function(l){ return SANSKRIT.indexOf(l)<0; }), sk=vis.filter(function(l){ return SANSKRIT.indexOf(l)>=0; });
+  var h='';
+  if(vis.length){
+    h+='<h3>Who visited</h3><ul>';
+    sk.forEach(function(l){ h+='<li><span class="tag sk"></span><span class="cr">'+l+'</span> ×'+S.visitors[l]+' — '+GLOSS[l][0]+'<span class="gl">'+GLOSS[l][1]+'</span></li>'; });
+    if(ev.length) h+='<li><span class="tag ev"></span><span class="am">'+ev.slice(0,6).map(function(l){ return l+' ×'+S.visitors[l]; }).join(', ')+(ev.length>6?', …':'')+'</span></li>';
+    h+='</ul>';
+    if(sk.length) h+='<p class="fine" style="text-align:center;margin-top:2px">Glosses are one reading, not a dictionary’s.</p>';
+  }
+  $('visitors').innerHTML=h;
+  var lg=$('legacy'), lv=LEGACY[CFG.diff];
+  lg.hidden=!(S.endless&&lv); if(lv) lg.textContent='Your record from the old survival version ('+CFG.diff+'): held the center for '+fmt(lv)+'. Kept for posterity.';
+  LASTRESULT={returns:S.returns, landings:S.wanders, best:S.bestStretch, full:S.fullBreaths, settled:S.settledN, len:S.endless?0:S.len, t:S.t, endless:S.endless, early:S.stoppedEarly, top:vis.slice(0,3), line:$('closeLine').textContent};
+  $('shareBtn').textContent='Share';
+  show('close',true); $('close').querySelector('.panel').scrollTop=0;
+  announce($('closeEyebrow').textContent+'. '+$('closeLine').textContent+' Returns '+S.returns+', longest settled '+fmt(S.bestStretch)+'.');
+  if(!DEMO.on) setTimeout(function(){ $('closeLine').focus({preventScroll:true}); },60);
+}
+function shareText(){
+  var r=LASTRESULT; if(!r) return '';
+  if(r.endless) return 'My mind stayed settled for '+fmt(r.best)+' straight in Monkey Mind! (endless). The monkeys disagree.';
+  return 'I sat with the monkeys for '+fmt(r.early?r.t:r.len)+' — wandered off '+r.landings+' time'+(r.landings===1?'':'s')+', came back '+r.returns+'. Monkey Mind!';
+}
+function share(){
+  var text=shareText(), btn=$('shareBtn');
+  if(navigator.share){ navigator.share({title:'Monkey Mind!', text:text, url:CANON}).catch(function(){}); return; }
+  var done=function(){ btn.textContent='Copied'; setTimeout(function(){ btn.textContent='Share'; },2000); };
+  if(navigator.clipboard) navigator.clipboard.writeText(text+' '+CANON).then(done, function(){ btn.textContent='Copy failed'; });
+}
+
+/* ---------- share card / OG ---------- */
+function drawCard(c, w, h, result){
+  c.fillStyle=COL.bg; c.fillRect(0,0,w,h);
+  c.strokeStyle='rgba(255,255,255,0.035)'; c.lineWidth=1; c.beginPath();
+  for(var x=0;x<w;x+=48){ c.moveTo(x,0); c.lineTo(x,h); } for(var y=0;y<h;y+=48){ c.moveTo(0,y); c.lineTo(w,y); } c.stroke();
+  var cx=900, cy=315, u=190;
+  var g=c.createRadialGradient(cx,cy,0,cx,cy,u); g.addColorStop(0,'rgba(63,224,200,0)'); g.addColorStop(1,'rgba(63,224,200,0.12)');
+  c.fillStyle=g; c.beginPath(); c.arc(cx,cy,u,0,TAU); c.fill();
+  c.strokeStyle=COL.teal; c.globalAlpha=0.9; c.lineWidth=4; c.shadowBlur=26; c.shadowColor=COL.teal; c.beginPath(); c.arc(cx,cy,u,0,TAU); c.stroke(); c.shadowBlur=0;
+  c.globalAlpha=0.18; c.lineWidth=1.5; c.beginPath(); c.arc(cx,cy,u*1.3,0,TAU); c.stroke(); c.globalAlpha=1;
+  c.save(); c.shadowBlur=24; c.shadowColor=COL.teal; drawMonkey(c,cx,cy+6,24,COL.teal,'sit',1,1,true); c.restore();
+  var saveW=W, saveH=H; W=w; H=h;
+  [[700,120,'worry',false,1],[1100,170,'raga',true,-1],[1080,520,'to-do',false,-1],[700,500,'scroll',false,1]].forEach(function(m){
+    var col=m[3]?COL.crimson:COL.amber; drawMonkey(c,m[0],m[1],13,col,'leap',1,m[4],false);
+    c.save(); c.font='500 18px '+FONT; var tw=c.measureText(m[2]).width, pw=tw+44, ph=32, px=m[0], py=m[1]-50;
+    c.fillStyle='rgba(14,16,19,0.85)'; c.strokeStyle=col; c.globalAlpha=0.6; rr(c,px-pw/2,py-ph/2,pw,ph,16); c.fill(); c.stroke(); c.globalAlpha=1;
+    tagShape(c,px-pw/2+16,py,6,m[3],col); c.fillStyle=col; c.textAlign='center'; c.textBaseline='middle'; c.fillText(m[2],px+9,py+1); c.restore(); });
+  W=saveW; H=saveH;
+  c.textAlign='left'; c.textBaseline='alphabetic';
+  c.fillStyle=COL.ink3; c.font='700 18px '+FONT; spaced(c,'BANDARLOK',70,150,8);
+  c.fillStyle=COL.ink; c.shadowBlur=28; c.shadowColor='rgba(63,224,200,0.35)'; c.font='700 76px '+FONT; c.fillText('MONKEY',66,240); c.fillText('MIND!',66,322); c.shadowBlur=0;
+  if(!result){
+    c.fillStyle=COL.teal; c.font='700 22px '+FONT; spaced(c,'CAN YOU HOLD THE CENTER?',70,380,2.5);
+    c.fillStyle='#a9b4af'; c.font='400 21px '+FONT; c.fillText('Two minutes. Some monkeys.',70,438); c.fillText('One breath at a time.',70,470);
+    
+  } else {
+    c.fillStyle=COL.teal; c.font='700 22px '+FONT; spaced(c,result.endless?'ENDLESS SIT':'SIT COMPLETE',70,380,2.5);
+    c.fillStyle=COL.ink; c.font='500 30px '+FONT;
+    c.fillText(result.returns+' returns · '+fmt(result.best)+' settled',70,436);
+    c.fillStyle='#a9b4af'; c.font='400 19px '+FONT; wrap(c,result.line,70,480,520,28);
+    c.fillStyle=COL.ink3; c.font='400 17px '+FONT; c.fillText('theselfdrivingmind.com/monkey-mind',70,590);
+  }
+}
+function spaced(c,txt,x,y,sp){ for(var i=0;i<txt.length;i++){ c.fillText(txt[i],x,y); x+=c.measureText(txt[i]).width+sp; } }
+function wrap(c,txt,x,y,maxW,lh){ var words=txt.split(' '), line=''; for(var i=0;i<words.length;i++){ var tl=line?line+' '+words[i]:words[i];
+  if(c.measureText(tl).width>maxW&&line){ c.fillText(line,x,y); y+=lh; line=words[i]; } else line=tl; } if(line) c.fillText(line,x,y); }
+function saveCard(){
+  var cc=document.createElement('canvas'); cc.width=1200; cc.height=630; drawCard(cc.getContext('2d'),1200,630,LASTRESULT);
+  cc.toBlob(function(b){ if(!b) return; var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='monkey-mind-sit.png';
+    document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1000); }, 'image/png');
+}
+
+/* ---------- settings UI ---------- */
+function syncSettings(){
+  document.querySelectorAll('.seg').forEach(function(seg){ var k=seg.dataset.key;
+    seg.querySelectorAll('input').forEach(function(inp){ inp.checked = String(CFG[k])===inp.value; }); });
+}
+document.querySelectorAll('.seg input').forEach(function(inp){
+  inp.addEventListener('change', function(){ CFG[inp.name]=inp.value; saveCfg(); });
+});
+
+/* ---------- input ---------- */
+var stage=$('stage');
+stage.addEventListener('pointerdown', function(e){ if(e.button>0) return; e.preventDefault(); try{ stage.setPointerCapture(e.pointerId); }catch(_){} press(); });
+stage.addEventListener('pointerup', function(){ release(false); });
+stage.addEventListener('pointercancel', function(){ release(false); });
+stage.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+window.addEventListener('keydown', function(e){
+  if(DEMO.key(e)) return;
+  if(e.code==='Escape'){
+    if(!$('help').hidden){ closeHelp(); return; }
+    if(S&&S.mode==='play'&&!S.ending){ setPaused(!S.paused); return; }
+  }
+  if(e.code==='KeyP' && S&&S.mode==='play'){ setPaused(!S.paused); return; }
+  if(e.code==='Space'){
+    var tag=(document.activeElement&&document.activeElement.tagName)||'';
+    if(S&&S.mode==='play'&&!S.paused&&!/BUTTON|A|INPUT|SUMMARY/.test(tag)){ e.preventDefault(); if(!e.repeat) press(); }
+    else if(S&&S.mode==='play'&&!S.paused){ e.preventDefault(); document.activeElement.blur(); if(!e.repeat) press(); }
+  }
+});
+window.addEventListener('keyup', function(e){ if(DEMO.on){ e.preventDefault(); return; } if(e.code==='Space' && S&&S.mode==='play'){ e.preventDefault(); release(false); } });
+document.addEventListener('visibilitychange', function(){
+  if(DEMO.on){ if(!document.hidden) DEMO.wake(); return; }
+  if(document.hidden && S&&S.mode==='play'&&!S.paused&&!S.ending) setPaused(true); });
+window.addEventListener('blur', function(){ BREATH.pressed=false; });
+
+$('sitSound').addEventListener('click', function(){ begin(true); });
+$('sitQuiet').addEventListener('click', function(){ begin(false); });
+$('soundBtn').addEventListener('click', function(){ A.setOn(!A.on); if(S&&S.paused&&A.ctx) A.ctx.suspend(); });
+$('pauseBtn').addEventListener('click', function(){ setPaused(true); });
+$('resumeBtn').addEventListener('click', function(){ setPaused(false); });
+$('endBtn').addEventListener('click', function(){ if(A.ctx&&A.on) A.ctx.resume(); showClose(!(S&&S.endless)); });
+$('againBtn').addEventListener('click', function(){ begin(null); });
+$('menuBtn').addEventListener('click', function(){ toArrival(); $('settings').open=true; });
+$('shareBtn').addEventListener('click', share);
+$('cardBtn').addEventListener('click', saveCard);
+var helpReturn=null;
+function closeHelp(){ show('help',false); if(helpReturn) helpReturn.focus(); }
+$('helpOpen').addEventListener('click', function(){ helpReturn=this; show('help',true); $('helpClose').focus(); });
+$('helpClose').addEventListener('click', closeHelp);
+$('help').addEventListener('click', function(e){ if(e.target===this) closeHelp(); });
+
+/* ---------- secret perpetual demo ----------
+   An attract loop for a booth screen, a kiosk or recording footage: arrival -> a 75 s sit played by a
+   breathing bot (with the odd lapse, so fog and returns show) -> close screen -> repeat, cycling the weather.
+   Start/stop: type "bandar" anywhere; on touch, hold the title 3 s to start and the top-left corner 3 s to stop.
+   ?demo starts it from a link (add &clean to hide the brand line). It survives reloads until stopped.
+   Visitor input is ignored and best times / sit counts are never touched. */
+var DEMO = {on:false, clean:false, phase:'', t:0, cycle:0, bot:null, buf:'', saved:null, lock:null, hold:null};
+var DEMO_WORD='bandar', DEMO_WEATHER=['steady','turbulent','calm'];
+// Each explanation is triggered by the game event itself. Busy moments are skipped, never queued.
+DEMO.captionTime=0; DEMO.captionLast=-100; DEMO.captionSeen={}; DEMO.captionActive=null;
+DEMO.captionCopy={
+ inhale:["Hold to breathe in. The ring fills.","Hold. Breathe in. Watch the ring fill.","One held breath fills the ring."],
+ release:["Let go. The wave settles every monkey it reaches.","Release. The breath becomes a settling wave.","Let go. Every monkey the wave reaches settles."],
+ fog:["One got through. Fog. No game over…","A thought got through. Fog, not failure…","A wandering moment. The sit goes on…"],
+ return:["…one full breath brings you back. That's a return. Returns are the score.","One full breath. You're back. That's a return — the whole score.","Back again. A full breath makes a return. Count the coming back."],
+ quiet:["It gets quieter. Like a real sit, on a good day.","A quieter stretch. Some sits find this too.","Less bustle. A little room to breathe."],
+ results:["Who visited: the thoughts that showed up, decoded.","Who visited? Your passing thoughts, decoded.","The sit ends. Meet the thoughts that visited."],
+ welcome:["Two minutes. Try it on your phone →","A two-minute sit. Your phone can be next →","Your turn? Two minutes on your phone →"]
+};
+DEMO.caption=function(key,m){
+ if(!DEMO.on || Q.has('nocaptions') || DEMO.captionSeen[key]) return;
+ if(DEMO.captionTime-DEMO.captionLast<4.8) return;
+ var mobile=W<520, index=DEMO.captionCycle%3, text;
+ if(key==='crimson'){
+   var gloss=GLOSS[m.label]; if(!gloss) return;
+   text=(mobile?'Crimson: ':['Crimson ones are the classics: ','A classic thought: ','Crimson names, everyday visitors: '][index])+m.label+' means '+gloss[0]+'.';
+ }else{
+   text=DEMO.captionCopy[key][index];
+   if(mobile){ var short={welcome:'Try it on your phone →',release:'Let go. The wave settles the monkeys.',return:"One full breath brings you back. A return is the score.",results:'Who visited: your thoughts, decoded.'}; text=short[key]||text; }
+ }
+ DEMO.captionSeen[key]=true; DEMO.captionLast=DEMO.captionTime;
+ DEMO.captionActive={key:key,m:m,x:m?m.x:CX,y:m?m.y:CY,until:DEMO.captionTime+4.5};
+ var el=$('demoCaption'); el.classList.remove('visible'); el.textContent=text; el.hidden=false;
+ el.style.setProperty('--caption-color',key==='crimson'?COL.crimson:COL.teal);
+ DEMO.captionLayout();
+};
+DEMO.captionLayout=function(){
+ var a=DEMO.captionActive,el=$('demoCaption'); if(!a) return;
+ var screen=a.key==='welcome'||a.key==='results';
+ var x=a.m?a.m.x:a.x,y=a.m?a.m.y:a.y;
+ var cw=el.offsetWidth,ch=el.offsetHeight;
+ var left=screen?W/2:Math.max(cw/2+16,Math.min(W-cw/2-16,x));
+ var top=screen?H-ch-24:Math.max(110,Math.min(H-ch-54,(a.m?y+46:CY+U+22)));
+ el.style.left=left+'px'; el.style.top=top+'px';
+ el.style.setProperty('--pointer',Math.max(20,Math.min(cw-20,x-left+cw/2))+'px');
+};
+DEMO.captionTick=function(dt){
+ DEMO.captionTime+=dt; var a=DEMO.captionActive; if(!a) return;
+ var el=$('demoCaption');
+ if(DEMO.captionTime>=a.until){el.classList.remove('visible');if(DEMO.captionTime>a.until+.35){el.hidden=true;DEMO.captionActive=null;}}
+ else {DEMO.captionLayout();el.classList.add('visible');}
+};
+DEMO.captionClear=function(){ DEMO.captionActive=null; $('demoCaption').hidden=true; $('demoCaption').classList.remove('visible'); };
+
+DEMO.start = function(clean){
+  if(DEMO.on) return;
+  DEMO.on=true; DEMO.clean=!!clean; DEMO.cycle=0; DEMO.captionTime=0; DEMO.captionLast=-100;
+  try{ if(document.activeElement && document.activeElement!==document.body) document.activeElement.blur(); }catch(e){}
+  DEMO.saved={length:CFG.length, diff:CFG.diff, input:CFG.input, gentle:CFG.gentle, pace:CFG.pace};
+  lsSet('monkeymind_v2_demo', clean?'clean':'1');
+  document.body.classList.add('demo'); $('demoTag').hidden=DEMO.clean;
+  // sound on (add ?mute to keep it quiet). Without a recent tap or key the browser keeps audio suspended,
+  // so a small "Tap anywhere for sound" pill shows until someone touches the screen once.
+  DEMO.soundWas=A.on; A.setOn(!Q.has('mute'));
+  announce('Demo mode. The monkeys are playing themselves.');
+  show('help',false); show('pause',false);
+  DEMO.toArrival(); DEMO.wake();
+};
+DEMO.stop = function(){
+  if(!DEMO.on) return;
+  DEMO.on=false; $('demoQR').hidden=true; DEMO.captionClear(); lsSet('monkeymind_v2_demo','0');
+  Object.assign(CFG, DEMO.saved||{}); DEMO.bot=null;
+  document.body.classList.remove('demo'); $('demoTag').hidden=true; $('demoSound').hidden=true;
+  A.setOn(!!DEMO.soundWas);
+  try{ if(DEMO.lock) DEMO.lock.release(); }catch(e){} DEMO.lock=null;
+  try{ sessionStorage.removeItem('mm_demo_err'); }catch(e){}
+  toArrival(); announce('Demo stopped.');
+};
+DEMO.wake = function(){ try{ if(navigator.wakeLock && !document.hidden) navigator.wakeLock.request('screen').then(function(l){ DEMO.lock=l; }, function(){}); }catch(e){} };
+DEMO.toArrival = function(){ DEMO.phase='arrival'; DEMO.t=0; DEMO.captionClear(); DEMO.captionSeen={}; DEMO.captionCycle=DEMO.cycle; toArrival(); DEMO.caption('welcome'); };
+DEMO.botFor = function(diff){ // a decent-but-human breather; lapses more in turbulent weather
+  var ph='idle', tt=0, hold=4, gap=0.6, lapse = diff==='turbulent'?0.18 : diff==='steady'?0.1 : 0.05, dayDream=false;
+  return function(t){
+    if(ph==='idle' && BREATH.phase==='idle' && t-tt>=gap){ press(); ph='hold'; tt=t; hold=3.8+Math.random()*1.2; }
+    else if(ph==='hold' && t-tt>=hold){ release(false); ph='idle'; tt=t; gap=0.3+Math.random()*1.0+(Math.random()<lapse?3+Math.random()*3:0);
+      if(!dayDream && t>16){ dayDream=true; gap=9; } } // one scripted daydream per sit, so the fog and a return show on screen
+  };
+};
+DEMO.unlock = function(){ if(A.on && A.ctx && A.ctx.state!=='running'){ try{ A.ctx.resume(); }catch(e){} } };
+DEMO.tick = function(dt){
+  if(!DEMO.on) return;
+  DEMO.t+=dt; DEMO.captionTick(dt);
+  $('demoQR').hidden=DEMO.clean || (DEMO.phase!=='arrival' && DEMO.phase!=='close');
+  var needTap = A.on && A.ctx && A.ctx.state!=='running';
+  if($('demoSound').hidden===needTap) $('demoSound').hidden=!needTap;
+  if(DEMO.phase==='arrival'){
+    if(DEMO.t>6){
+      var diff=DEMO_WEATHER[DEMO.cycle%DEMO_WEATHER.length]; DEMO.cycle++;
+      Object.assign(CFG,{length:'75', diff:diff, input:'hold', gentle:'0', pace:'4-6'});
+      begin(null); DEMO.bot=DEMO.botFor(diff); DEMO.phase='sit'; DEMO.t=0;
+    }
+  } else if(DEMO.phase==='sit'){
+    if(S && S.mode==='play'){ if(S.paused) setPaused(false); if(DEMO.bot) DEMO.bot(DEMO.t); }
+    else { DEMO.phase='close'; DEMO.t=0; }
+  } else if(DEMO.phase==='close'){
+    // Leave the invitation still, and give a visitor time to read or click.
+    if($('bookLink').matches(':hover') || document.activeElement===$('bookLink')) DEMO.t-=dt;
+    if(DEMO.t>45) DEMO.toArrival();
+  }
+};
+DEMO.bookTarget=function(e){ return DEMO.on && S && S.mode==='close' && e.target && e.target.closest && e.target.closest('#bookLink'); };
+DEMO.key = function(e){ // returns true when the key was consumed
+  var k=(e.key||'').toLowerCase();
+  if(DEMO.on && S && S.mode==='close' && (k==='tab' || (DEMO.bookTarget(e) && k==='enter'))) return false;
+  if(k.length===1){ DEMO.buf=(DEMO.buf+k).slice(-12); if(DEMO.buf.slice(-DEMO_WORD.length)===DEMO_WORD){ DEMO.buf=''; if(DEMO.on) DEMO.stop(); else DEMO.start(false); e.preventDefault(); return true; } }
+  if(DEMO.on){ DEMO.unlock(); e.preventDefault(); return true; }
+  return false;
+};
+// touch: hold the title 3 s to start; during the demo, hold the top-left corner 3 s to stop. Everything else is ignored.
+window.addEventListener('pointerdown', function(e){
+  if(DEMO.bookTarget(e)){ DEMO.t=0; return; }
+  var bt=$('demoTag').querySelector('.badge').getBoundingClientRect(), onBadge = DEMO.on && !DEMO.clean && e.clientX>=bt.left-8 && e.clientX<=bt.right+8 && e.clientY>=bt.top-8 && e.clientY<=bt.bottom+8;
+  var corner = (e.clientX<90 && e.clientY<90) || onBadge, onTitle = !DEMO.on && !$('arrival').hidden && e.target.closest && e.target.closest('#title');
+  if(DEMO.on || onTitle){
+    clearTimeout(DEMO.hold);
+    if(DEMO.on && corner) DEMO.hold=setTimeout(DEMO.stop, 3000);
+    if(onTitle) DEMO.hold=setTimeout(function(){ DEMO.start(false); }, 3000);
+  }
+  if(DEMO.on){ DEMO.unlock(); e.preventDefault(); e.stopPropagation(); }
+}, true);
+['pointerup','pointercancel'].forEach(function(n){ window.addEventListener(n, function(e){ clearTimeout(DEMO.hold); if(DEMO.on && !DEMO.bookTarget(e)){ e.stopPropagation(); } }, true); });
+window.addEventListener('click', function(e){ if(DEMO.bookTarget(e)){ DEMO.t=0; return; } if(DEMO.on){ e.preventDefault(); e.stopPropagation(); } }, true);
+window.addEventListener('error', function(){
+  if(!DEMO.on) return;
+  var n=0; try{ n=+(sessionStorage.getItem('mm_demo_err')||0)+1; sessionStorage.setItem('mm_demo_err',String(n)); }catch(e){}
+  if(n<=5) setTimeout(function(){ location.reload(); }, 1500);
+});
+
+/* ---------- loop ---------- */
+var last=performance.now(), frozen=false, frames=[];
+function loop(now){
+  requestAnimationFrame(loop);
+  var dt=Math.min(0.05,(now-last)/1000); last=now;
+  if(!frozen){ DEMO.tick(dt); update(dt); }
+  draw(now); hud();
+  if(DEBUG){ frames.push(now); if(frames.length>120) frames.shift(); }
+}
+
+/* ---------- debug & capture hooks ---------- */
+if(DEBUG){
+  var simT=0;
+  window.MM = {
+    get S(){ return S; }, BREATH:BREATH, CFG:CFG, A:A,
+    freeze:function(f){ frozen=f!==false; },
+    begin:begin, press:press, release:release, showClose:showClose, toArrival:toArrival, setPaused:setPaused,
+    fps:function(){ if(frames.length<2) return 0; return Math.round((frames.length-1)*1000/(frames[frames.length-1]-frames[0])); },
+    step:function(sec, bot){ var n=Math.round(sec*60); for(var i=0;i<n;i++){ if(bot) bot(simT); DEMO.tick(1/60); update(1/60); simT+=1/60; if(!DEMO.on && (!S||S.mode!=='play')) break; } draw(performance.now()); hud(); },
+    DEMO:DEMO,
+    bots:{},
+    sim:function(opts){
+      opts=opts||{}; var keep=Object.assign({},CFG); Object.assign(CFG, opts.cfg||{});
+      var wasOn=A.on; A.on=false; begin(null); var bot=window.MM.bots[opts.bot||'breath'](); var cap=opts.cap||600;
+      S.waiting=false; var t=0; while(S && S.mode==='play' && t<cap){ bot(t); update(1/60); t+=1/60; }
+      if(S && S.mode==='play'){ S.ending=true; }
+      var r={bot:opts.bot, diff:CFG.diff, input:CFG.input, landings:S.landings, returns:S.returns, best:Math.round(Math.max(S.bestStretch,S.stretch)), full:S.fullBreaths, breaths:S.breaths, settled:S.settledN, spawned:Object.keys(S.visitors).reduce(function(a,k){ return a+S.visitors[k]; },0)};
+      Object.assign(CFG, keep); A.on=wasOn; toArrival(); return r;
+    }
+  };
+  // bots drive press()/release() with a sim clock
+  function holdBot(hold, gap){ return function(){ var st=0, phase='idle', tt=0; return function(t){
+    if(phase==='idle' && BREATH.phase==='idle'){ if(t-tt>=gap){ press(); phase='hold'; tt=t; } }
+    else if(phase==='hold' && (hold==='full' ? (BREATH.phase==='full' && t-tt>0) : t-tt>=hold)){ release(false); phase='idle'; tt=t; } }; }; }
+  window.MM.bots.idle = function(){ return function(){}; };
+  window.MM.bots.mash = holdBot(0.12, 0.05);
+  window.MM.bots.quick = holdBot(1.0, 0.05);
+  window.MM.bots.half = holdBot(2.0, 0.1);
+  window.MM.bots.breath = holdBot('full', 0.3);
+  window.MM.bots.tapmash = function(){ var tt=-1; return function(t){ if(t-tt>=0.3){ press(); tt=t; } }; };
+  window.MM.bots.tapbreath = function(){ return function(){ if(BREATH.phase==='full') press(); }; };
+}
+
+function start(){
+  resize(); syncSettings(); updateSoundBtn();
+  show('loader',false);
+  if(Q.get('capture')==='og'){
+    var oc=document.createElement('canvas'); oc.width=1200; oc.height=630; drawCard(oc.getContext('2d'),1200,630,null);
+    oc.style.cssText='position:fixed;inset:0;width:100%;height:auto;z-index:99'; document.body.appendChild(oc);
+    oc.toBlob(function(b){ fetch('/__save?f=monkey-mind-og-clean.jpg',{method:'POST',body:b}).then(function(r){ document.title='saved '+r.status; }).catch(function(){ document.title='save failed'; }); },'image/jpeg',0.9);
+    return;
+  }
+  toArrival();
+  window.__mmReady=true;
+  // ?demo=off (or ?nodemo) always clears a stuck demo. ?demo starts it once, then drops itself from the address,
+  // so stopping the demo and reloading leaves you in the normal game.
+  var dq=(Q.get('demo')||'').toLowerCase();
+  if(Q.has('nodemo') || Q.getAll('demo').some(function(v){ return /^(off|0)$/i.test(v); })){ lsSet('monkeymind_v2_demo','0'); }
+  else {
+    var savedDemo=lsGet('monkeymind_v2_demo');
+    if(Q.has('demo') || savedDemo==='1' || savedDemo==='clean') DEMO.start(Q.has('clean') || (!Q.has('demo') && savedDemo==='clean'));
+  }
+  if(Q.has('demo')||Q.has('nodemo')||Q.has('clean')){
+    try{ ['demo','nodemo','clean'].forEach(function(k){ Q.delete(k); }); var qs=Q.toString();
+      history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash); }catch(e){}
+  }
+  requestAnimationFrame(function(n){ last=n; loop(n); });
+}
+var fontsReady = (document.fonts && document.fonts.load) ? Promise.race([
+  Promise.all([document.fonts.load('500 15px "JetBrains Mono"'), document.fonts.load('700 20px "JetBrains Mono"')]),
+  new Promise(function(r){ setTimeout(r,1800); })]) : Promise.resolve();
+fontsReady.then(start, start).catch(function(e){ fail(e&&e.message); });
+})();
+</script>
+</body>
+</html>
