@@ -286,6 +286,20 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
  #end .end-honest{margin-top:-3px}
 }
 
+
+#worries .worry-chip{display:inline-flex;align-items:center;gap:6px;min-height:30px;font:inherit;font-size:13px;background:#f1ebdf;color:#2b2a27;border:0;border-radius:8px;padding:4px 9px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+#worries .worry-chip i{flex:none;width:7px;height:7px;border-radius:50%}
+#worries .worry-chip.more{background:transparent;color:var(--gold);border:1px solid var(--line);text-decoration:underline;text-underline-offset:3px}
+#worryDialog{width:min(480px,calc(100vw - 28px));max-height:calc(100dvh - 40px);padding:22px;border:1px solid var(--gold);border-radius:16px;background:#171c24;color:var(--ink);overflow:hidden}
+#worryDialog::backdrop{background:rgba(5,8,14,.8)}
+#worryDialog header,#worryDialog footer{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#worryDialog h2{font:400 23px/1.2 var(--display);margin:0}
+#worryDialog form{margin:0}#worryDialog button{min-height:44px;padding:8px 12px}
+#worryCategory{color:var(--gold);font-size:12px;text-transform:uppercase;letter-spacing:.1em;margin-top:24px}
+#worryFullText{font:400 25px/1.4 var(--display);overflow-wrap:anywhere;margin:16px 0 28px}
+#worryPosition{font-size:12px;white-space:nowrap;color:var(--muted)}
+@media(max-width:420px),(max-height:700px){#worries .worry-chip{font-size:12px;padding:3px 7px;max-width:calc(50% - 3px)}#worryDialog{padding:16px}#worryDialog h2{font-size:20px}}
+
 </style>
 </head>
 <body>
@@ -426,6 +440,7 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
  <p id="copyStatus" role="status"></p>
  <p class="end-honest">Yoga links are my interpretation, not a certificate.</p>
 </section>
+<dialog id="worryDialog" aria-labelledby="worryDialogTitle"><header><h2 id="worryDialogTitle">Your returned worries</h2><form method="dialog"><button type="submit" class="ghost">Close ×</button></form></header><p id="worryCategory"></p><p id="worryFullText"></p><footer><button type="button" id="worryPrevious" class="ghost">← Previous</button><span id="worryPosition" aria-live="polite"></span><button type="button" id="worryNext" class="ghost">Next →</button></footer></dialog>
 <button id="reopenEnd" class="ghost" type="button" hidden>Show my walk</button>
 
 <noscript><p style="position:fixed;inset:auto 0 40%;text-align:center">This walk needs JavaScript turned on.</p></noscript>
@@ -1360,16 +1375,16 @@ function buildEnding(early){
  // Three numbers instead of a chart: rhythm with guides, rhythm without, thoughts.
  const ws=concerns.worries, passed=stats.letGo, S=$('endStats'); S.replaceChildren();
  const stat=(v,label)=>{ const d=document.createElement('div'), dd=document.createElement('dd'), dt=document.createElement('dt'); dd.textContent=v; dt.textContent=label; d.append(dt,dd); S.appendChild(d); };
- if(pa!==null) stat(`${pa}%`,'with guides');
- if(pb!==null) stat(`${pb}%`,'guides gone');
+ if(pa!==null) stat(`${pa}%`,'Beats caught · guides on');
+ if(pb!==null) stat(`${pb}%`,'Beats caught · guides off');
  if(ws.length||passed) stat(String(ws.length+passed),'thoughts');
- if(pa!==null) S.setAttribute('aria-label',`On the beat: ${pa}% with guides${pb!==null?`, ${pb}% with guides gone`:''}.`);
+ if(pa!==null) S.setAttribute('aria-label',`Game timing: beats caught, ${pa}% with guides on${pb!==null?`, ${pb}% with guides off`:''}. These are game statistics.`);
  S.hidden=!S.children.length;
  // Worries come back as one line of chips, Mom first; the rest fold into "+N".
  const W=$('worries'), order=['mom','work','home'], sorted=[...ws].sort((a,b)=>order.indexOf(a.flavour)-order.indexOf(b.flavour)), SHOW=sorted.length>4?3:4;
- W.replaceChildren();
- sorted.slice(0,SHOW).forEach(t=>{ const s=document.createElement('span'), i=document.createElement('i'); i.style.background=FLAVOURS[t.flavour].color; s.append(i,t.text.replace(/^Mom: /,'')); s.title=`${FLAVOURS[t.flavour].label}: ${t.text}`; W.appendChild(s); });
- if(sorted.length>SHOW){ const s=document.createElement('span'); s.className='more'; s.textContent=`+${sorted.length-SHOW} more`; s.title=sorted.slice(SHOW).map(t=>t.text).join(', '); W.appendChild(s); }
+ returnedWorries=sorted; W.replaceChildren();
+ sorted.slice(0,SHOW).forEach((t,index)=>{ const s=document.createElement('button'), i=document.createElement('i'); s.type='button'; s.className='worry-chip'; s.onclick=()=>showReturnedWorry(index); i.style.background=FLAVOURS[t.flavour].color; s.append(i,t.text.replace(/^Mom: /,'')); s.title=`${FLAVOURS[t.flavour].label}: ${t.text}`; W.appendChild(s); });
+ if(sorted.length>SHOW){ const s=document.createElement('button'); s.type='button'; s.className='worry-chip more'; s.onclick=()=>showReturnedWorry(SHOW); s.setAttribute('aria-label',`Read all ${sorted.length} returned worries`); s.textContent=`+${sorted.length-SHOW} more`; s.title=sorted.slice(SHOW).map(t=>t.text).join(', '); W.appendChild(s); }
  W.hidden=!ws.length;
  const back = ws.length===1 ? '1 worry back, untouched.' : `${ws.length} worries back, untouched.`;
  $('worryNote').innerHTML = !ws.length ? 'Nothing went on the shelf this time.'
@@ -1377,7 +1392,18 @@ function buildEnding(early){
   : `${back} Pick the one that needs you.`;
  $('copyStatus').textContent='';
 }
-function closeEnding(){ $('end').hidden=true; $('reopenEnd').hidden=false; $('reopenEnd').focus({preventScroll:true}); }
+let returnedWorries=[], worryIndex=0;
+function showReturnedWorry(index){
+ if(!returnedWorries.length)return;
+ worryIndex=clamp(index,0,returnedWorries.length-1);const worry=returnedWorries[worryIndex];
+ $('worryCategory').textContent=FLAVOURS[worry.flavour].label;
+ $('worryFullText').textContent=worry.text.replace(/^Mom: /,'');
+ $('worryPosition').textContent=`${worryIndex+1} / ${returnedWorries.length}`;
+ $('worryPrevious').disabled=worryIndex===0; $('worryNext').disabled=worryIndex===returnedWorries.length-1;
+ if(!$('worryDialog').open)$('worryDialog').showModal();
+}
+
+function closeEnding(){ if($('worryDialog').open)$('worryDialog').close(); $('end').hidden=true; $('reopenEnd').hidden=false; $('reopenEnd').focus({preventScroll:true}); }
 
 function drawRing(){ $('ring').style.background=`conic-gradient(var(--gold) ${attention.value*360}deg,rgba(255,255,255,.1) 0deg)`; $('valueBox').setAttribute('aria-label',`Value given to this moment: ${Math.round(attention.value*100)} percent`); }
 function setPaused(p){
@@ -1407,6 +1433,8 @@ $('quietFinish').onclick=()=>finish(true);
 $('restartBtn').onclick=()=>location.reload();
 $('againBtn').onclick=()=>location.reload();
 $('stayBtn').onclick=closeEnding;
+$('worryPrevious').onclick=()=>showReturnedWorry(worryIndex-1);
+$('worryNext').onclick=()=>showReturnedWorry(worryIndex+1);
 $('reopenEnd').onclick=()=>{ $('end').hidden=false; $('reopenEnd').hidden=true; $('stayBtn').focus({preventScroll:true}); };
 $('assist').onchange=e=>setAssist(e.target.checked);
 $('reduceMotion').onchange=e=>config.reduced=e.target.checked;
@@ -1432,6 +1460,7 @@ addEventListener('pointermove',e=>{ if(dragStart && e.pointerId===dragStart.id &
 ['pointerup','pointercancel'].forEach(ev=>addEventListener(ev,e=>{ if(dragStart && e.pointerId===dragStart.id){ dragStart=null; movement.drag=0; } }));
 addEventListener('keydown',e=>{
  const tag=e.target.tagName, onButton=tag==='BUTTON'||tag==='A', onInput=tag==='INPUT';
+ if(e.code==='Escape'&&$('worryDialog').open){e.preventDefault();$('worryDialog').close();return;}
  if(onInput) return;
  if(e.code==='KeyM'){ $('mute').click(); return; }
  if(e.code==='Escape'){ if(!$('end').hidden){closeEnding();return;} if(!$('pause').hidden) setPaused(false); else if(state==='play') setPaused(true); return; }
