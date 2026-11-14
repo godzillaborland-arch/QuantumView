@@ -255,6 +255,50 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
  #count #note .num{font-size:12px}
 }
 
+
+/* Screen-sized results: short sections, always-reachable close and navigation. */
+#end{top:calc(12px + var(--sat));bottom:calc(12px + var(--sab));max-height:none;overflow:hidden;padding:18px;gap:14px;grid-template-rows:auto auto minmax(0,1fr) auto;background:rgba(20,22,28,.97)}
+.end-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+#end .end-header .eyebrow{font-size:11px;margin-bottom:5px}
+#end h2{font-size:24px;line-height:1.15}
+#stayBtn{flex:none;min-height:44px;padding:9px 12px;font-size:14px}
+.end-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.end-tabs button{padding:8px 2px;min-height:38px;font-size:13px;background:transparent;border:1px solid var(--line);border-radius:8px}
+.end-tabs button[aria-current="page"]{background:var(--gold);color:#28241b;border-color:var(--gold)}
+.end-body{min-height:0;overflow:hidden}
+.end-page{height:100%;display:flex;flex-direction:column;justify-content:center;gap:16px}
+#end .end-page p{font-size:15px;line-height:1.45}
+#end #journeyCap{font-size:12px;line-height:1.4;color:var(--muted)}
+#insights{list-style:none;padding:22px;margin:0;background:rgba(233,204,136,.08);border:1px solid var(--line);border-radius:12px;font-size:18px;line-height:1.5}
+.insight-nav{display:flex;align-items:center;justify-content:center;gap:16px}
+.insight-nav button{min-width:44px;min-height:38px;padding:5px 12px}
+#insightCount{font-size:13px;color:var(--muted)}
+#end .reflect{font-size:17px}
+#end #worryNote{font-size:13px;color:var(--muted)}
+#end .end-honest{font-size:12px;color:var(--muted)}
+.end-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.end-footer button{min-height:44px;padding:9px 14px;font-size:14px}
+#endPageCount{font-size:12px;color:var(--muted)}
+@media(max-width:420px),(max-height:650px){
+ #end{padding:13px;gap:9px;top:calc(8px + var(--sat));bottom:calc(8px + var(--sab))}
+ #end h2{font-size:21px}
+ #end .end-page p{font-size:13px;line-height:1.35}
+ .end-page{gap:11px}
+ #insights{padding:15px;font-size:16px;line-height:1.4}
+ #end .reflect{font-size:15px}
+ #end #journey{font-size:10px;gap:3px}
+ #journey .dots{height:43px;gap:2px}#journey .dots i{width:7px;height:7px}
+ #end #journeyCap{font-size:11px}
+ #worries .wrow b{width:100%;font-size:11px}
+ #worries span{font-size:12px;padding:3px 7px}
+ #worries{gap:7px}
+ #end .book{padding:10px;gap:10px}
+ #end .book img{width:65px!important}
+ #end .book p{font-size:13px!important}
+ .shareRow{flex-wrap:wrap}.shareRow input{min-width:130px}
+ .end-footer{padding-top:8px}
+}
+
 </style>
 </head>
 <body>
@@ -382,23 +426,18 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 <div id="quiet" hidden><p id="quietText"></p><button class="ghost" id="quietFinish" type="button">Finish now</button></div>
 
 <section id="end" role="dialog" aria-modal="false" aria-labelledby="endTitle" hidden>
- <p class="eyebrow" id="endEyebrow">Minute eleven</p>
- <h2 id="endTitle">You reached the sanctum</h2>
- <p id="endLede"></p>
- <h3>Your walk</h3>
- <div id="journey" aria-describedby="journeyCap"></div>
- <p id="journeyCap" style="font-size:13px;color:var(--muted)"></p>
- <ul id="insights"></ul>
- <p class="reflect">At first, the beat cued your return to the stick. Later, the external supports faded while attention continued. What changed when the training wheels fell away?</p>
- <h3>Your worries are back</h3>
- <div id="worries"></div>
- <p id="worryNote" style="font-size:14px;color:var(--muted)">Untouched, as promised. Pick the one that actually needs you.</p>
- <div class="book">
+ <header class="end-header"><div><p class="eyebrow" id="endEyebrow">The end of the walk</p><h2 id="endTitle">You reached the sanctum</h2></div><button id="stayBtn" class="ghost" type="button" aria-label="Close results and stay in the quiet">Close ×</button></header>
+ <nav class="end-tabs" aria-label="Results sections"><button type="button" data-end-page="0">Walk</button><button type="button" data-end-page="1">Notes</button><button type="button" data-end-page="2">Worries</button><button type="button" data-end-page="3">Book</button><button type="button" data-end-page="4">Share</button></nav>
+ <div class="end-body">
+  <section class="end-page" data-page="0" aria-label="Your walk"><p id="endLede"></p><h3>Your walk</h3><div id="journey" aria-describedby="journeyCap"></div><p id="journeyCap"></p></section>
+  <section class="end-page" data-page="1" aria-label="Your observations" hidden><h3>Your observations</h3><ul id="insights"></ul><div class="insight-nav"><button type="button" id="insightPrev" aria-label="Previous observation">←</button><span id="insightCount" aria-live="polite"></span><button type="button" id="insightNext" aria-label="Next observation">→</button></div><p class="reflect">At first, the beat cued your return. Later, the supports faded while attention continued. What changed for you?</p></section>
+  <section class="end-page" data-page="2" aria-label="Your worries are back" hidden><h3>Your worries are back</h3><div id="worries"></div><p id="worryNote">Untouched, as promised. Pick what needs your attention.</p></section>
+  <section class="end-page" data-page="3" aria-label="The book behind the walk" hidden><h3>The book behind the walk</h3> <div class="book">
   <a href="https://theselfdrivingmind.com/book/" target="_blank" rel="noopener" aria-label="Explore The Self-Driving Mind"><img src="/book/book-cover.jpg" alt="The Self-Driving Mind by Sundar Rajan" width="90" height="135" loading="lazy" style="display:block;width:90px;height:auto;border-radius:4px"></a>
   <p>This walk comes from Chapters 8 and 9 of <i>The Self-Driving Mind</i>, about giving a restless mind something to hold. <a href="https://theselfdrivingmind.com/book/" target="_blank" rel="noopener">Read about the book</a> or <a href="https://www.barnesandnoble.com/w/the-self-driving-mind-sundar-rajan/1151506645?ean=9798895741986" target="_blank" rel="noopener">Find the book at Barnes&nbsp;&amp;&nbsp;Noble</a>.</p>
  </div>
- <h3>Send someone ten quiet minutes</h3>
- <form id="shareForm" class="shareRow" autocomplete="off">
+<p class="end-honest">The yoga links are a teaching interpretation. Completing a game does not certify meditation attainment.</p></section>
+  <section class="end-page" data-page="4" aria-label="Share the walk" hidden><h3>Send someone a quiet walk</h3><p>Share the four-minute experience. A name is optional.</p> <form id="shareForm" class="shareRow" autocomplete="off">
   <input id="fromName" maxlength="24" placeholder="Your first name (optional)" aria-label="Your first name, shown to the person you send it to">
   <button type="submit">Make my link</button>
  </form>
@@ -408,8 +447,9 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
   <button type="button" id="copyBtn">Copy</button>
  </div>
  <p id="copyStatus" role="status"></p>
- <small style="color:var(--dim)">The yoga links are my teaching interpretation, not a claim about how the temple was designed. Finishing a game doesn't certify anyone's meditation, least of all mine.</small>
- <div class="actions"><button class="ghost" id="stayBtn" type="button">Stay in the quiet</button><button class="ghost" id="againBtn" type="button">Walk again</button></div>
+</section>
+ </div>
+ <footer class="end-footer"><button class="ghost" id="endBack" type="button">← Back</button><span id="endPageCount" aria-live="polite"></span><button class="primary" id="endNext" type="button">Next →</button><button class="ghost" id="againBtn" type="button" hidden>Walk again</button></footer>
 </section>
 <button id="reopenEnd" class="ghost" type="button" hidden>Show my walk</button>
 
@@ -1328,7 +1368,7 @@ function finish(early){
  $('quiet').hidden=true; $('timer').hidden=true; $('controls').hidden=true; $('beatcue').hidden=true; hideHint(); $('pauseBtn').hidden=true;
  $('hud').classList.add('fade'); $('supports').classList.add('fade');
  audio.bell(147,.12);
- buildEnding(early);
+ buildEnding(early); showInsight(0); showEndPage(0);
  setTimeout(()=>{ $('end').hidden=false; $('end').scrollTop=0; $('endTitle').focus && $('endTitle').setAttribute('tabindex','-1'); $('endTitle').focus({preventScroll:true}); }, early?400:1600);
 }
 function pct(a,b){ return b ? Math.round(100*a/b) : null; }
@@ -1336,7 +1376,7 @@ function buildEnding(early){
  const reached = journey.stage>=7 && movement.distance>=END-1;
  $('endEyebrow').textContent = contract.mode==='timed' ? (early?'You finished early':'Minute eleven') : 'The end of the walk';
  $('endTitle').textContent = reached ? 'You reached the sanctum' : `You stopped at gate ${Math.max(1,journey.stage)}, and that’s fine`;
- $('endLede').textContent = reached ? 'The guides came off one by one, and the elephant kept walking. Like any good driver-assist, the point was to need it less.' : 'Leaving early isn’t failing. The walk is here whenever you want the rest of it.';
+ $('endLede').textContent = reached ? 'The guides faded, and the walk continued. The supports fell away; attention remained.' : 'Leaving early isn’t failing. The walk is here whenever you want the rest of it.';
  // Journey chart: supports available (dots) and the taps you actually made, per stretch.
  const cols=[0,1,2,3,4,5,6,7], J=$('journey'); J.replaceChildren();
  const cell=(html,cls)=>{ const d=document.createElement('div'); if(cls) d.className=cls; d.innerHTML=html; J.appendChild(d); };
@@ -1367,6 +1407,22 @@ function buildEnding(early){
  if(!ws.length){ const s=document.createElement('span'); s.textContent='Nothing shelved this time'; W.appendChild(s); }
  $('worryNote').textContent = ws.some(t=>t.flavour==='mom') ? 'Untouched, as promised. Maybe start with Mom. She’ll ask if you ate.' : 'Untouched, as promised. Pick the one that actually needs you.';
 }
+let endPage=0, insightIndex=0;
+function showInsight(index){
+ const notes=[...$('insights').children]; insightIndex=clamp(index,0,Math.max(0,notes.length-1));
+ notes.forEach((note,i)=>note.hidden=i!==insightIndex);
+ $('insightCount').textContent=notes.length?`Observation ${insightIndex+1} of ${notes.length}`:'No observations yet';
+ $('insightPrev').disabled=insightIndex===0; $('insightNext').disabled=insightIndex>=notes.length-1;
+}
+function showEndPage(index){
+ endPage=clamp(index,0,4);
+ document.querySelectorAll('#end .end-page').forEach((p,i)=>p.hidden=i!==endPage);
+ document.querySelectorAll('[data-end-page]').forEach((b,i)=>{ if(i===endPage)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current'); });
+ $('endPageCount').textContent=`${endPage+1} / 5`; $('endBack').disabled=endPage===0;
+ $('endNext').hidden=endPage===4; $('againBtn').hidden=endPage!==4;
+}
+function closeEnding(){ $('end').hidden=true; $('reopenEnd').hidden=false; $('reopenEnd').focus({preventScroll:true}); }
+
 function drawRing(){ $('ring').style.background=`conic-gradient(var(--gold) ${attention.value*360}deg,rgba(255,255,255,.1) 0deg)`; $('valueBox').setAttribute('aria-label',`Value given to this moment: ${Math.round(attention.value*100)} percent`); }
 function setPaused(p){
  if(state!=='play' && state!=='rest') return;
@@ -1394,8 +1450,13 @@ $('finishBtn').onclick=()=>finish(true);
 $('quietFinish').onclick=()=>finish(true);
 $('restartBtn').onclick=()=>location.reload();
 $('againBtn').onclick=()=>location.reload();
-$('stayBtn').onclick=()=>{ $('end').hidden=true; $('reopenEnd').hidden=false; };
-$('reopenEnd').onclick=()=>{ $('end').hidden=false; $('reopenEnd').hidden=true; };
+$('stayBtn').onclick=closeEnding;
+$('endBack').onclick=()=>showEndPage(endPage-1);
+$('endNext').onclick=()=>showEndPage(endPage+1);
+$('insightPrev').onclick=()=>showInsight(insightIndex-1);
+$('insightNext').onclick=()=>showInsight(insightIndex+1);
+document.querySelectorAll('[data-end-page]').forEach(b=>b.onclick=()=>showEndPage(+b.dataset.endPage));
+$('reopenEnd').onclick=()=>{ $('end').hidden=false; $('reopenEnd').hidden=true; $('stayBtn').focus({preventScroll:true}); };
 $('assist').onchange=e=>setAssist(e.target.checked);
 $('reduceMotion').onchange=e=>config.reduced=e.target.checked;
 $('windowRange').oninput=e=>{ config.window=+e.target.value; $('winLabel').textContent=`±${config.window.toFixed(2)} s`; };
@@ -1422,7 +1483,7 @@ addEventListener('keydown',e=>{
  const tag=e.target.tagName, onButton=tag==='BUTTON'||tag==='A', onInput=tag==='INPUT';
  if(onInput) return;
  if(e.code==='KeyM'){ $('mute').click(); return; }
- if(e.code==='Escape'){ if(!$('pause').hidden) setPaused(false); else if(state==='play') setPaused(true); return; }
+ if(e.code==='Escape'){ if(!$('end').hidden){closeEnding();return;} if(!$('pause').hidden) setPaused(false); else if(state==='play') setPaused(true); return; }
  if(['Space','ArrowLeft','ArrowRight'].includes(e.code) && !onButton) e.preventDefault();
  if(e.repeat) return;
  if((e.code==='Space'||e.code==='Enter') && e.target.id==='returnBtn'){ keyReturnAt=now(); setInput('key'); returnAction(); return; }
