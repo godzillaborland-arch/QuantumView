@@ -171,28 +171,13 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 #end h2{margin:0;font:400 28px/1.1 var(--display)}
 #end p{margin:0;color:#e2dacb;font-size:15px}
 #end h3{margin:0;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
-#journey{display:grid;grid-template-columns:auto repeat(8,minmax(0,1fr));gap:4px 6px;align-items:center;font-size:12px;color:var(--muted);text-align:center}
-#journey .rh{text-align:left;padding-right:4px;white-space:nowrap}
-#journey .dots{display:flex;flex-direction:column-reverse;align-items:center;gap:3px;height:56px;justify-content:flex-start}
-#journey .dots i{width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px rgba(233,204,136,.6)}
-#journey .dots i.h{background:linear-gradient(90deg,var(--gold) 50%,rgba(255,255,255,.12) 50%);box-shadow:none}
-#journey .dots i.o{background:rgba(255,255,255,.12);box-shadow:none}
-#journey .taps{color:var(--ink);font-weight:600}
-#insights{margin:0;padding-left:18px;display:grid;gap:6px;color:#e2dacb;font-size:14px}
-#worries{margin:0;display:grid;gap:8px}
-#worries .wrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-#worries .wrow b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;min-width:64px;filter:brightness(1.35)}
-#worries span{font-size:13px;background:#f1ebdf;color:#2b2a27;border-radius:8px;padding:4px 10px}
-.reflect{font:italic 17px/1.45 var(--display);color:var(--ink)!important;border-left:2px solid var(--gold);padding-left:12px}
 .book{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;background:rgba(233,204,136,.07);border:1px solid rgba(233,204,136,.2);border-radius:14px;padding:12px}
 .book .cover{width:46px;height:66px;border-radius:3px;background:linear-gradient(160deg,#2a3a4f,#141c27);border:1px solid rgba(233,204,136,.5);display:grid;place-items:center;font:600 8px/1.15 var(--body);color:var(--gold);text-align:center;padding:4px;letter-spacing:.04em}
 .book p{font-size:14px!important}
 .book a{color:var(--gold);font-weight:600}
-.shareRow{display:flex;gap:8px}
-.shareRow input{flex:1;min-width:0;border-radius:10px;border:1px solid var(--line);background:rgba(0,0,0,.3);color:var(--ink);padding:11px 12px;font:inherit;font-size:15px;user-select:text;-webkit-user-select:text}
-.shareRow button{border-radius:10px;border:0;padding:11px 14px;font-weight:650;background:var(--gold);color:#2a2116;white-space:nowrap;min-height:44px}
 #copyStatus:empty{display:none}
-#copyStatus{font-size:13px!important;color:var(--muted)!important}
+#copyStatus{font-size:12px!important;line-height:1.35;color:var(--ink)!important;text-align:center;overflow-wrap:anywhere;margin-top:-4px!important}
+#end.shared .end-honest{display:none}
 #reopenEnd{position:fixed;z-index:8;left:50%;transform:translateX(-50%);bottom:calc(20px + var(--sab))}
 #quiet{position:fixed;z-index:6;left:0;right:0;margin:0 auto;bottom:calc(22px + var(--sab));text-align:center;display:grid;gap:10px;justify-items:center;animation:rise 1s ease both;width:min(420px,calc(100% - 32px))}
 #quiet p{margin:0;color:var(--muted);font-size:14px;text-shadow:0 1px 10px #000}
@@ -212,7 +197,6 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
  .card{padding:22px 18px}
  .card h2{font-size:25px}
  #returnBtn{width:80px;height:80px}
- #journey{font-size:11px;gap:4px 3px}
 }
 #controls .steer{display:none}
 [data-input=touch] #controls .steer{display:block}
@@ -257,46 +241,49 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 
 
 /* Screen-sized results: short sections, always-reachable close and navigation. */
-#end{top:calc(12px + var(--sat));bottom:calc(12px + var(--sab));max-height:none;overflow:hidden;padding:18px;gap:14px;grid-template-rows:auto auto minmax(0,1fr) auto;background:rgba(20,22,28,.97)}
+/* One-page results: everything, book link included, fits a 320×568 phone without scrolling. */
+#end{max-height:calc(100% - 24px - var(--sat) - var(--sab));padding:18px;gap:12px;background:rgba(20,22,28,.97)}
 .end-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-#end .end-header .eyebrow{font-size:11px;margin-bottom:5px}
+#end .end-header .eyebrow{font-size:11px;margin-bottom:4px}
 #end h2{font-size:24px;line-height:1.15}
 #stayBtn{flex:none;min-height:44px;padding:9px 12px;font-size:14px}
-.end-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
-.end-tabs button{padding:8px 2px;min-height:38px;font-size:13px;background:transparent;border:1px solid var(--line);border-radius:8px}
-.end-tabs button[aria-current="page"]{background:var(--gold);color:#28241b;border-color:var(--gold)}
-.end-body{min-height:0;overflow:hidden}
-.end-page{height:100%;display:flex;flex-direction:column;justify-content:center;gap:16px}
-#end .end-page p{font-size:15px;line-height:1.45}
-#end #journeyCap{font-size:12px;line-height:1.4;color:var(--muted)}
-#insights{list-style:none;padding:22px;margin:0;background:rgba(233,204,136,.08);border:1px solid var(--line);border-radius:12px;font-size:18px;line-height:1.5}
-.insight-nav{display:flex;align-items:center;justify-content:center;gap:16px}
-.insight-nav button{min-width:44px;min-height:38px;padding:5px 12px}
-#insightCount{font-size:13px;color:var(--muted)}
-#end .reflect{font-size:17px}
-#end #worryNote{font-size:13px;color:var(--muted)}
-#end .end-honest{font-size:12px;color:var(--muted)}
-.end-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid var(--line);padding-top:12px}
-.end-footer button{min-height:44px;padding:9px 14px;font-size:14px}
-#endPageCount{font-size:12px;color:var(--muted)}
-@media(max-width:420px),(max-height:650px){
- #end{padding:13px;gap:9px;top:calc(8px + var(--sat));bottom:calc(8px + var(--sab))}
+#endLede{font-size:15px;line-height:1.4}
+.end-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:8px;margin:0}
+.end-stats div{display:flex;flex-direction:column-reverse;background:rgba(233,204,136,.07);border:1px solid var(--line);border-radius:10px;padding:8px 6px;text-align:center;min-width:0}
+.end-stats dd{margin:0;font:400 24px/1.05 var(--display);color:var(--ink)}
+.end-stats dt{margin-top:3px;font-size:11px;line-height:1.25;color:var(--muted)}
+#end .book{grid-template-columns:auto minmax(0,1fr);gap:8px 12px;padding:12px}
+.book-cover{display:block;width:48px;height:72px;overflow:hidden;border-radius:3px;background:linear-gradient(160deg,#2a3a4f,#141c27);border:1px solid rgba(233,204,136,.4);font-size:7px;line-height:1.1;color:var(--gold)}
+.book-cover img{display:block;width:100%;height:100%;object-fit:cover}
+#end .book p{font-size:14px!important;line-height:1.4}
+.book .book-cta{grid-column:1/-1;display:flex;align-items:center;justify-content:center;min-height:44px;border-radius:10px;background:var(--gold);color:#2a2116;text-decoration:none;font-weight:650;font-size:15px}
+.end-worries{display:grid;gap:7px}
+#end #worryNote{font-size:14px;color:#e2dacb}
+#worries{display:flex;flex-wrap:wrap;gap:6px}
+#worries span{display:inline-flex;align-items:center;gap:6px;font-size:13px;background:#f1ebdf;color:#2b2a27;border-radius:8px;padding:4px 9px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#worries span i{flex:none;width:7px;height:7px;border-radius:50%}
+#worries span.more{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.end-footer{display:flex;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.end-footer button{flex:1;min-height:44px;padding:9px 14px;font-size:14px}
+#end .end-honest{font-size:11px;line-height:1.35;color:var(--muted);text-align:center;margin-top:-4px}
+@media(max-width:420px),(max-height:700px){
+ /* Stays clear of the mute button (top right, 56px) so both stay tappable. */
+ #end{padding:12px 13px;gap:8px;bottom:calc(8px + var(--sab));max-height:calc(100% - 66px - var(--sat) - var(--sab))}
  #end h2{font-size:21px}
- #end .end-page p{font-size:13px;line-height:1.35}
- .end-page{gap:11px}
- #insights{padding:15px;font-size:16px;line-height:1.4}
- #end .reflect{font-size:15px}
- #end #journey{font-size:10px;gap:3px}
- #journey .dots{height:43px;gap:2px}#journey .dots i{width:7px;height:7px}
- #end #journeyCap{font-size:11px}
- #worries .wrow b{width:100%;font-size:11px}
- #worries span{font-size:12px;padding:3px 7px}
- #worries{gap:7px}
- #end .book{padding:10px;gap:10px}
- #end .book img{width:65px!important}
- #end .book p{font-size:13px!important}
- .shareRow{flex-wrap:wrap}.shareRow input{min-width:130px}
+ #endLede{font-size:13.5px;line-height:1.35}
+ .end-stats dd{font-size:21px}
+ .end-stats dt{font-size:10.5px}
+ .end-stats div{padding:5px 4px}
+ #end .book{padding:8px 10px;gap:6px 10px}
+ .book .book-cta{min-height:42px}
+ .book-cover{width:40px;height:60px}
+ #end .book p{font-size:13px!important;line-height:1.35}
+ .end-worries{gap:6px}
+ #end #worryNote{font-size:13px}
+ #worryNote .aside{display:none}
+ #worries span{font-size:12px;padding:3px 7px;max-width:calc(50% - 3px)}
  .end-footer{padding-top:8px}
+ #end .end-honest{margin-top:-3px}
 }
 
 </style>
@@ -426,30 +413,18 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 <div id="quiet" hidden><p id="quietText"></p><button class="ghost" id="quietFinish" type="button">Finish now</button></div>
 
 <section id="end" role="dialog" aria-modal="false" aria-labelledby="endTitle" hidden>
- <header class="end-header"><div><p class="eyebrow" id="endEyebrow">The end of the walk</p><h2 id="endTitle">You reached the sanctum</h2></div><button id="stayBtn" class="ghost" type="button" aria-label="Close results and stay in the quiet">Close ×</button></header>
- <nav class="end-tabs" aria-label="Results sections"><button type="button" data-end-page="0">Walk</button><button type="button" data-end-page="1">Notes</button><button type="button" data-end-page="2">Worries</button><button type="button" data-end-page="3">Book</button><button type="button" data-end-page="4">Share</button></nav>
- <div class="end-body">
-  <section class="end-page" data-page="0" aria-label="Your walk"><p id="endLede"></p><h3>Your walk</h3><div id="journey" aria-describedby="journeyCap"></div><p id="journeyCap"></p></section>
-  <section class="end-page" data-page="1" aria-label="Your observations" hidden><h3>Your observations</h3><ul id="insights"></ul><div class="insight-nav"><button type="button" id="insightPrev" aria-label="Previous observation">←</button><span id="insightCount" aria-live="polite"></span><button type="button" id="insightNext" aria-label="Next observation">→</button></div><p class="reflect">At first, the beat cued your return. Later, the supports faded while attention continued. What changed for you?</p></section>
-  <section class="end-page" data-page="2" aria-label="Your worries are back" hidden><h3>Your worries are back</h3><div id="worries"></div><p id="worryNote">Untouched, as promised. Pick what needs your attention.</p></section>
-  <section class="end-page" data-page="3" aria-label="The book behind the walk" hidden><h3>The book behind the walk</h3> <div class="book">
-  <a href="https://theselfdrivingmind.com/book/" target="_blank" rel="noopener" aria-label="Explore The Self-Driving Mind"><img src="/book/book-cover.jpg" alt="The Self-Driving Mind by Sundar Rajan" width="90" height="135" loading="lazy" style="display:block;width:90px;height:auto;border-radius:4px"></a>
-  <p>This walk comes from Chapters 8 and 9 of <i>The Self-Driving Mind</i>, about giving a restless mind something to hold. <a href="https://theselfdrivingmind.com/book/" target="_blank" rel="noopener">Read about the book</a> or <a href="https://www.barnesandnoble.com/w/the-self-driving-mind-sundar-rajan/1151506645?ean=9798895741986" target="_blank" rel="noopener">Find the book at Barnes&nbsp;&amp;&nbsp;Noble</a>.</p>
+ <header class="end-header"><div><h2 id="endTitle">You reached the sanctum</h2></div><button id="stayBtn" class="ghost" type="button" aria-label="Close results and stay in the quiet">Close ×</button></header>
+ <p id="endLede"></p>
+ <dl id="endStats" class="end-stats"></dl>
+ <div class="book">
+  <a class="book-cover" href="https://theselfdrivingmind.com/book/" target="_blank" rel="noopener" aria-label="About The Self-Driving Mind"><img src="/book/book-cover.jpg" alt="The Self-Driving Mind by Sundar Rajan" width="48" height="72" loading="lazy"></a>
+  <p>This walk comes from Chapters 8–9 of <i>The Self-Driving Mind</i>. <a href="https://theselfdrivingmind.com/book/" target="_blank" rel="noopener">About the book</a></p>
+  <a class="book-cta" href="https://www.barnesandnoble.com/w/the-self-driving-mind-sundar-rajan/1151506645?ean=9798895741986" target="_blank" rel="noopener">Pre-order at Barnes &amp; Noble</a>
  </div>
-<p class="end-honest">The yoga links are a teaching interpretation. Completing a game does not certify meditation attainment.</p></section>
-  <section class="end-page" data-page="4" aria-label="Share the walk" hidden><h3>Send someone a quiet walk</h3><p>Share the four-minute experience. A name is optional.</p> <form id="shareForm" class="shareRow" autocomplete="off">
-  <input id="fromName" maxlength="24" placeholder="Your first name (optional)" aria-label="Your first name, shown to the person you send it to">
-  <button type="submit">Make my link</button>
- </form>
- <div class="shareRow" id="linkRow" hidden>
-  <input id="linkOut" readonly aria-label="Your link">
-  <button type="button" id="shareBtn" hidden>Share</button>
-  <button type="button" id="copyBtn">Copy</button>
- </div>
+ <div class="end-worries"><p id="worryNote">Your worries are back, untouched.</p><div id="worries"></div></div>
+ <footer class="end-footer"><button class="ghost" id="againBtn" type="button">Walk again</button><button class="ghost" id="shareBtn" type="button">Share the walk</button></footer>
  <p id="copyStatus" role="status"></p>
-</section>
- </div>
- <footer class="end-footer"><button class="ghost" id="endBack" type="button">← Back</button><span id="endPageCount" aria-live="polite"></span><button class="primary" id="endNext" type="button">Next →</button><button class="ghost" id="againBtn" type="button" hidden>Walk again</button></footer>
+ <p class="end-honest">Yoga links are my interpretation, not a certificate.</p>
 </section>
 <button id="reopenEnd" class="ghost" type="button" hidden>Show my walk</button>
 
@@ -1368,58 +1343,39 @@ function finish(early){
  $('quiet').hidden=true; $('timer').hidden=true; $('controls').hidden=true; $('beatcue').hidden=true; hideHint(); $('pauseBtn').hidden=true;
  $('hud').classList.add('fade'); $('supports').classList.add('fade');
  audio.bell(147,.12);
- buildEnding(early); showInsight(0); showEndPage(0);
+ buildEnding(early);
  setTimeout(()=>{ $('end').hidden=false; $('end').scrollTop=0; $('endTitle').focus && $('endTitle').setAttribute('tabindex','-1'); $('endTitle').focus({preventScroll:true}); }, early?400:1600);
 }
 function pct(a,b){ return b ? Math.round(100*a/b) : null; }
 function buildEnding(early){
  const reached = journey.stage>=7 && movement.distance>=END-1;
- $('endEyebrow').textContent = contract.mode==='timed' ? (early?'You finished early':'Minute eleven') : 'The end of the walk';
+ // Timed mode gets its news folded into the lede, so the card never grows an extra row.
+ const timedNote = contract.mode==='timed' ? (early?'Finished early. ':'Minute eleven. ') : '';
  $('endTitle').textContent = reached ? 'You reached the sanctum' : `You stopped at gate ${Math.max(1,journey.stage)}, and that’s fine`;
- $('endLede').textContent = reached ? 'The guides faded, and the walk continued. The supports fell away; attention remained.' : 'Leaving early isn’t failing. The walk is here whenever you want the rest of it.';
- // Journey chart: supports available (dots) and the taps you actually made, per stretch.
- const cols=[0,1,2,3,4,5,6,7], J=$('journey'); J.replaceChildren();
- const cell=(html,cls)=>{ const d=document.createElement('div'); if(cls) d.className=cls; d.innerHTML=html; J.appendChild(d); };
- cell('Gate','rh'); cols.forEach(c=>cell(c===0?'Start':String(c)));
- cell('Supports','rh'); cols.forEach(c=>{ const s=supports(c); let h=''; SUPPORT_KEYS.forEach(k=>{ h+=`<i class="${s[k]>=1?'':s[k]>0?'h':'o'}"></i>`; }); cell(h,'dots'); });
- cell('Your taps','rh'); cols.forEach(c=>cell(c<=journey.stage?String(stats.taps[c]):'–','taps'));
- $('journeyCap').textContent='Gold dots are the supports switched on in each stretch (half dot: every other beat). The numbers are your taps.';
  const A=[1,2,3].reduce((n,i)=>n+stats.hits[i],0), Ab=[1,2,3].reduce((n,i)=>n+stats.beats[i],0), B=[4,5].reduce((n,i)=>n+stats.hits[i],0), Bb=[4,5].reduce((n,i)=>n+stats.beats[i],0);
- const pa=pct(A,Ab), pb=pct(B,Bb), late=stats.taps[6]+stats.taps[7], ul=$('insights'); ul.replaceChildren();
- const li=t=>{ const e=document.createElement('li'); e.textContent=t; ul.appendChild(e); };
- li(`The lesson took you ${Math.max(3,stats.lessonTaps||stats.taps[0])} taps to land three returns${stats.assistedAt===0?', with the wider window switched on':''}.`);
- if(pa!==null) li(`Gates 1–3, every guide on: you caught ${pa}% of the beats.`);
- if(pb!==null && journey.stage>=5) li(`Gates 4–5, guides fading then gone: ${pb}%. ${pa!==null && pb>=pa-10 ? 'The guides left; your rhythm stayed.' : 'It wobbled when the guides left. Mine does too. That wobble is the practice, not a failure.'}`);
- if(stats.wanders) li(`You wandered ${stats.wanders} time${stats.wanders>1?'s':''} and came back ${stats.comebacks}.`);
- if(journey.stage>=6) li(late ? `Gates 6–7: ${late} optional tap${late>1?'s':''}. The walk carried on either way.` : 'Gates 6–7: zero taps. None needed.');
- if(stats.assistedAt>0) li(`You switched on the wider window at gate ${stats.assistedAt}. Using help is part of the practice.`);
- const ws=concerns.worries, passed=stats.letGo;
- if(ws.length||passed) li(`${ws.length+passed} thoughts showed up. You shelved ${ws.length} and let ${passed} float by.`);
- // Worries come back grouped by flavour.
- const W=$('worries'); W.replaceChildren();
- for(const f of ['work','mom','home']){
-  const items=ws.filter(t=>t.flavour===f); if(!items.length) continue;
-  const row=document.createElement('div'); row.className='wrow';
-  const b=document.createElement('b'); b.textContent=`${FLAVOURS[f].label} (${items.length})`; b.style.color=FLAVOURS[f].color; row.appendChild(b);
-  items.forEach(t=>{ const s=document.createElement('span'); s.textContent=t.text.replace(/^Mom: /,''); row.appendChild(s); });
-  W.appendChild(row);
- }
- if(!ws.length){ const s=document.createElement('span'); s.textContent='Nothing shelved this time'; W.appendChild(s); }
- $('worryNote').textContent = ws.some(t=>t.flavour==='mom') ? 'Untouched, as promised. Maybe start with Mom. She’ll ask if you ate.' : 'Untouched, as promised. Pick the one that actually needs you.';
-}
-let endPage=0, insightIndex=0;
-function showInsight(index){
- const notes=[...$('insights').children]; insightIndex=clamp(index,0,Math.max(0,notes.length-1));
- notes.forEach((note,i)=>note.hidden=i!==insightIndex);
- $('insightCount').textContent=notes.length?`Observation ${insightIndex+1} of ${notes.length}`:'No observations yet';
- $('insightPrev').disabled=insightIndex===0; $('insightNext').disabled=insightIndex>=notes.length-1;
-}
-function showEndPage(index){
- endPage=clamp(index,0,4);
- document.querySelectorAll('#end .end-page').forEach((p,i)=>p.hidden=i!==endPage);
- document.querySelectorAll('[data-end-page]').forEach((b,i)=>{ if(i===endPage)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current'); });
- $('endPageCount').textContent=`${endPage+1} / 5`; $('endBack').disabled=endPage===0;
- $('endNext').hidden=endPage===4; $('againBtn').hidden=endPage!==4;
+ const pa=pct(A,Ab), pb=journey.stage>=5?pct(B,Bb):null;
+ $('endLede').textContent = timedNote + (!reached ?'Leaving early isn’t failing. The walk is here whenever you want the rest of it.'
+  : pa!==null && pb!==null ? (pb>=pa-10 ? 'The guides left. Your rhythm stayed.' : 'It wobbled when the guides left. Mine does too.')
+  : 'The guides faded, and the walk carried on.');
+ // Three numbers instead of a chart: rhythm with guides, rhythm without, thoughts.
+ const ws=concerns.worries, passed=stats.letGo, S=$('endStats'); S.replaceChildren();
+ const stat=(v,label)=>{ const d=document.createElement('div'), dd=document.createElement('dd'), dt=document.createElement('dt'); dd.textContent=v; dt.textContent=label; d.append(dt,dd); S.appendChild(d); };
+ if(pa!==null) stat(`${pa}%`,'with guides');
+ if(pb!==null) stat(`${pb}%`,'guides gone');
+ if(ws.length||passed) stat(String(ws.length+passed),'thoughts');
+ if(pa!==null) S.setAttribute('aria-label',`On the beat: ${pa}% with guides${pb!==null?`, ${pb}% with guides gone`:''}.`);
+ S.hidden=!S.children.length;
+ // Worries come back as one line of chips, Mom first; the rest fold into "+N".
+ const W=$('worries'), order=['mom','work','home'], sorted=[...ws].sort((a,b)=>order.indexOf(a.flavour)-order.indexOf(b.flavour)), SHOW=sorted.length>4?3:4;
+ W.replaceChildren();
+ sorted.slice(0,SHOW).forEach(t=>{ const s=document.createElement('span'), i=document.createElement('i'); i.style.background=FLAVOURS[t.flavour].color; s.append(i,t.text.replace(/^Mom: /,'')); s.title=`${FLAVOURS[t.flavour].label}: ${t.text}`; W.appendChild(s); });
+ if(sorted.length>SHOW){ const s=document.createElement('span'); s.className='more'; s.textContent=`+${sorted.length-SHOW} more`; s.title=sorted.slice(SHOW).map(t=>t.text).join(', '); W.appendChild(s); }
+ W.hidden=!ws.length;
+ const back = ws.length===1 ? '1 worry back, untouched.' : `${ws.length} worries back, untouched.`;
+ $('worryNote').innerHTML = !ws.length ? 'Nothing went on the shelf this time.'
+  : ws.some(t=>t.flavour==='mom') ? `${back} Start with Mom.<span class="aside"> She’ll ask if you ate.</span>`
+  : `${back} Pick the one that needs you.`;
+ $('copyStatus').textContent='';
 }
 function closeEnding(){ $('end').hidden=true; $('reopenEnd').hidden=false; $('reopenEnd').focus({preventScroll:true}); }
 
@@ -1451,11 +1407,6 @@ $('quietFinish').onclick=()=>finish(true);
 $('restartBtn').onclick=()=>location.reload();
 $('againBtn').onclick=()=>location.reload();
 $('stayBtn').onclick=closeEnding;
-$('endBack').onclick=()=>showEndPage(endPage-1);
-$('endNext').onclick=()=>showEndPage(endPage+1);
-$('insightPrev').onclick=()=>showInsight(insightIndex-1);
-$('insightNext').onclick=()=>showInsight(insightIndex+1);
-document.querySelectorAll('[data-end-page]').forEach(b=>b.onclick=()=>showEndPage(+b.dataset.endPage));
 $('reopenEnd').onclick=()=>{ $('end').hidden=false; $('reopenEnd').hidden=true; $('stayBtn').focus({preventScroll:true}); };
 $('assist').onchange=e=>setAssist(e.target.checked);
 $('reduceMotion').onchange=e=>config.reduced=e.target.checked;
@@ -1504,16 +1455,15 @@ document.addEventListener('visibilitychange',()=>{
 addEventListener('resize',()=>world && world.resize());
 
 /* ---------------------------------------------------------------- sharing */
-$('shareForm').addEventListener('submit',e=>{
- e.preventDefault(); const n=cleanName($('fromName').value);
- const base=location.origin+location.pathname;
- $('linkOut').value = n ? `${base}?from=${encodeURIComponent(n)}` : base;
- $('linkRow').hidden=false; $('copyStatus').textContent=''; $('shareBtn').hidden=!navigator.share;
-});
-$('shareBtn').onclick=()=>{ const n=cleanName($('fromName').value);
- navigator.share({title:'The Srirangam Corridor', text:n?`${n} sent you ten quiet minutes. Best with sound on.`:'Ten quiet minutes. Best with sound on.', url:$('linkOut').value}).catch(()=>{}); };
-$('copyBtn').onclick=()=>{ const v=$('linkOut').value, fb=()=>{ $('linkOut').focus(); $('linkOut').select(); $('copyStatus').textContent='Link selected. Copy it with your keyboard.'; };
- try{ navigator.clipboard.writeText(v).then(()=>$('copyStatus').textContent='Copied. Paste it into a text or an email.',fb); }catch(err){ fb(); } };
+// One button: the phone's share sheet where there is one, otherwise copy the link.
+$('shareBtn').onclick=()=>{
+ const url=location.origin+location.pathname, st=$('copyStatus'), say=t=>{ st.textContent=t; $('end').classList.add('shared'); }, fb=()=>say(`Copy this link: ${url}`);
+ // Share sheet only on touch devices: on Windows desktop, Edge/Chrome's share dialog can crash the tab
+ // (RESULT_CODE_KILLED_BAD_MESSAGE), so desktop copies the link instead.
+ const touch = matchMedia('(pointer:coarse)').matches && navigator.maxTouchPoints>0;
+ if(navigator.share && touch){ navigator.share({title:'The Srirangam Corridor', text:'A quiet walk to the sanctum. Best with sound on.', url}).catch(()=>{}); return; }
+ try{ navigator.clipboard.writeText(url).then(()=>say('Link copied. Paste it into a text or an email.'),fb); }catch(err){ fb(); }
+};
 
 /* ---------------------------------------------------------------- frame loop */
 function frame(ms){
