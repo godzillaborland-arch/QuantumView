@@ -18,11 +18,36 @@ const trailers={
 'srirangam-corridor':{title:'The Srirangam Corridor',play:'srirangam-corridor.html',cta:'Enter the corridor'},
 'spawn-srirangam':{title:'Srirangam — God in Exile',play:'https://www.spawn.co/@self_driving_mind/srirangam-god-in-exile/play',cta:'Play on Spawn ↗',external:true,captions:false},
 'attention-lab':{title:'The Attention Lab overview',play:'#experiments',cta:'Choose an experience'}};
-const dialog=document.getElementById('trailer-dialog'),video=document.getElementById('trailer-video'),play=document.getElementById('trailer-play');let opener;
-function close(){if(dialog.open)dialog.close()}
-document.querySelectorAll('[data-trailer]').forEach(button=>button.addEventListener('click',()=>{const key=button.dataset.trailer,t=trailers[key];opener=button;document.getElementById('trailer-title').textContent=t.title;video.replaceChildren();video.src='trailers/'+key+'.mp4';video.poster='trailers/'+key+'.jpg';if(t.captions!==false){const track=document.createElement('track');track.kind='captions';track.srclang='en';track.label='English';track.src='trailers/'+key+'.vtt';video.append(track);}play.href=t.play;play.textContent=t.cta;play.target=t.external?'_blank':'_self';play.rel=t.external?'noopener noreferrer':'';document.getElementById('trailer-download').href=video.src;const status=dialog.querySelector('.trailer-status');status.textContent=t.captions===false?'Use the video controls for sound and playback.':'Use the video controls for sound, captions and playback.';dialog.showModal();const requestedSource=video.src;video.play().catch(()=>{if(dialog.open&&video.src===requestedSource){status.textContent='Your browser paused playback. Press Play in the video controls to watch.';}});}));
+const dialog=document.getElementById('trailer-dialog'),video=document.getElementById('trailer-video'),play=document.getElementById('trailer-play');
+let opener,returnHash='';
+const keyFromHash=()=>{const hash=location.hash.slice(1);return hash.startsWith('trailer-')&&Object.hasOwn(trailers,hash.slice(8))?hash.slice(8):null;};
+function close(){if(dialog.open)dialog.close();}
+function openTrailer(key){
+ const t=trailers[key];if(!t)return;
+ opener=document.querySelector('[data-trailer="'+key+'"]');
+ document.getElementById('trailer-title').textContent=t.title;
+ video.pause();video.replaceChildren();video.src='trailers/'+key+'.mp4';video.poster='trailers/'+key+'.jpg';
+ if(t.captions!==false){const track=document.createElement('track');track.kind='captions';track.srclang='en';track.label='English';track.src='trailers/'+key+'.vtt';video.append(track);}
+ play.href=t.play;play.textContent=t.cta;play.target=t.external?'_blank':'_self';play.rel=t.external?'noopener noreferrer':'';
+ document.getElementById('trailer-download').href=video.src;
+ const status=dialog.querySelector('.trailer-status');
+ status.textContent=t.captions===false?'Use the video controls for sound and playback.':'Use the video controls for sound, captions and playback.';
+ if(!dialog.open)dialog.showModal();
+ const requestedSource=video.src;
+ video.play().catch(()=>{if(dialog.open&&video.src===requestedSource)status.textContent='Your browser paused playback. Press Play in the video controls to watch.';});
+}
+document.querySelectorAll('[data-trailer]').forEach(button=>button.addEventListener('click',()=>{
+ const key=button.dataset.trailer;if(!keyFromHash())returnHash=location.hash;
+ history.pushState(null,'','#trailer-'+key);openTrailer(key);
+}));
 dialog.querySelector('.trailer-close').addEventListener('click',close);play.addEventListener('click',close);
-dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)close()}});
-dialog.addEventListener('close',()=>{video.pause();video.removeAttribute('src');video.removeAttribute('poster');video.replaceChildren();video.load();opener?.focus()});
+dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)close();}});
+dialog.addEventListener('close',()=>{
+ video.pause();video.removeAttribute('src');video.removeAttribute('poster');video.replaceChildren();video.load();
+ if(keyFromHash())history.replaceState(null,'',location.pathname+location.search+returnHash);
+ opener?.focus();
+});
+window.addEventListener('hashchange',()=>{const key=keyFromHash();if(key)openTrailer(key);else close();});
+const initialKey=keyFromHash();if(initialKey)openTrailer(initialKey);
 })();
 </script></body></html>
