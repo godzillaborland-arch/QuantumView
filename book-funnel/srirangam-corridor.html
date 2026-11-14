@@ -223,6 +223,38 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
  *{animation-duration:.01ms!important;animation-iteration-count:1!important}
  #note,#gateCard,#hud,#supports,#banner{transition:none!important}
 }
+
+/* Chapter 8 teaching: readable alongside counting, stacked on a phone. */
+#count,#anchorLesson{align-items:safe center}
+#count .card{width:min(940px,100%);padding:28px;gap:18px}
+.count-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:center;width:100%}
+.count-dialogue{text-align:left;border-left:2px solid var(--gold);padding-left:22px;align-self:start}
+.count-dialogue .source{font-size:12px;line-height:1.5;color:var(--dim);margin-top:16px}
+.count-dialogue dl{margin:0;display:grid;gap:9px}
+.count-dialogue dt{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--gold);margin-top:12px}
+.count-dialogue dd{margin:0;font:400 20px/1.4 var(--display);color:var(--ink)}
+.count-practice{display:grid;gap:14px;justify-items:center;width:100%;min-width:0}
+#countDone p{font-size:15px;line-height:1.5}
+#anchorLesson .card{text-align:left;justify-items:stretch;gap:16px}
+#anchorLesson h2{text-align:center}
+.anchor-meaning{border-left:2px solid var(--gold);padding:8px 0 8px 16px}
+.anchor-meaning strong{color:var(--gold)}
+#anchorLesson .source{font-size:12px;line-height:1.5;color:var(--dim)}
+#anchorLesson button{justify-self:center}
+@media(max-width:700px){
+ #count .card{padding:22px 18px;gap:14px}
+ .count-layout{grid-template-columns:minmax(0,1fr);gap:20px}
+ .count-dialogue{padding-left:14px}
+ .count-dialogue dd{font-size:18px;line-height:1.35}
+ .count-dialogue dt{margin-top:8px}
+ #count #bundle{width:min(280px,72vw);height:128px}
+ #count .lede{font-size:15px}
+ #count #note{padding:0 10px;gap:7px}
+ #count #note .denom{font-size:34px}
+ #count #note .seal{width:46px;height:46px;font-size:10px}
+ #count #note .num{font-size:12px}
+}
+
 </style>
 </head>
 <body>
@@ -280,17 +312,44 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 
 <section id="count" class="overlay" role="dialog" aria-modal="true" aria-labelledby="countTitle" hidden>
  <div class="card warm">
-  <p class="eyebrow">Warm-up · the salary count</p>
+  <p class="eyebrow">Chapter 8 · the salary-count experiment</p>
   <h2 id="countTitle">Count your pay</h2>
-  <p class="lede" id="countLede">Twelve notes. Fake money, real attention. Tap each note once as it lands.</p>
-  <div id="bundle"><div class="stack"></div><button id="note" type="button" aria-describedby="countStatus"><span class="denom">100</span><span class="seal">PAY</span><span class="num" id="noteNum">1 of 12</span></button></div>
-  <p id="countStatus" role="status" aria-live="polite"><span class="touchonly">Tap the note.</span><span class="kbd">Click the note or press Space.</span></p>
-  <div id="countDone" hidden style="display:grid;gap:12px;justify-items:center">
-   <p><b>Twelve for twelve.</b> Nobody's mind wanders while counting their own pay. Attention isn't broken; it goes where the value is.</p>
-   <p>So give this walk some value. The gold ring at the top is the <b>value you're giving this moment</b>. It grows each time you come back.</p>
-   <button class="primary" id="countNext" type="button">Walk to the first gate</button>
+  <div class="count-layout">
+   <aside class="count-dialogue" aria-label="Adapted disciple and Jagadguru dialogue" aria-live="polite" aria-atomic="true">
+    <dl id="countTalkBefore">
+     <dt>Disciple</dt><dd>Why does my mind wander in meditation?</dd>
+     <dt>Jagadguru</dt><dd>Imagine counting your entire month’s salary in rupee notes, without a single error. Would your mind wander?</dd>
+    </dl>
+    <dl id="countTalkAfter" hidden>
+     <dt>Disciple</dt><dd>No. The count matters too much.</dd>
+     <dt>Jagadguru</dt><dd>Then consider: is it capacity you lack—or the importance you give the practice?</dd>
+    </dl>
+    <p class="source">Adapted dialogue · Chapter 8, <i>The Self-Driving Mind</i> (not a verbatim transcript).</p>
+   </aside>
+   <div class="count-practice">
+    <p class="lede" id="countLede">Imagine these twelve play notes represent your monthly salary. Count each note once as it lands.</p>
+    <div id="bundle"><div class="stack"></div><button id="note" type="button" aria-describedby="countStatus"><span class="denom">₹100</span><span class="seal">PAY</span><span class="num" id="noteNum">1 of 12</span></button></div>
+    <p id="countStatus" role="status" aria-live="polite"><span class="touchonly">Tap the note.</span><span class="kbd">Click the note or press Space.</span></p>
+    <div id="countDone" hidden style="display:grid;gap:12px;justify-items:center">
+     <p><b>Twelve notes counted.</b> Notice how value can support attention. This is an invitation to reflect, not a test of your capacity.</p>
+     <p>The gold ring represents the <b>value you choose to give this moment</b>. It is a reminder of your commitment, not a measurement of your mind.</p>
+     <button class="primary" id="countNext" type="button">Choose an anchor</button>
+    </div>
+   </div>
   </div>
-  <small class="gloss">From the <b>Jagadguru's</b> experiment in the book. (Jagadguru: a title for a great spiritual teacher.)</small>
+ </div>
+</section>
+
+<section id="anchorLesson" class="overlay" role="dialog" aria-modal="true" aria-labelledby="anchorTitle" hidden>
+ <div class="card">
+  <p class="eyebrow">Chapters 8–9 · the elephant and its support</p>
+  <h2 id="anchorTitle">Give it something to hold</h2>
+  <p>An elephant’s trunk reaches for everything in the market. You don’t fight its urge to grasp; you give it a bamboo stick to hold.</p>
+  <p>The mind, too, can use an <b>ālambanam</b>: a mental support. Breath, mantra, or a chosen practice gives attention somewhere to return.</p>
+  <div class="anchor-meaning"><strong>In this game</strong><p>Press Space or tap Return when the circles meet. The soft beat is your cue to return the trunk to its stick.</p></div>
+  <div class="anchor-meaning"><strong>In practice</strong><p>Notice the distraction and return gently to breath or mantra. No tapping or metronome is required, and your breathing need not follow the beat.</p></div>
+  <p class="source">As the walk continues, external guides fade. When the training wheels fall away, attention remains.</p>
+  <button class="primary" id="anchorStart" type="button">Practise the gentle return</button>
  </div>
 </section>
 
@@ -330,13 +389,13 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
  <div id="journey" aria-describedby="journeyCap"></div>
  <p id="journeyCap" style="font-size:13px;color:var(--muted)"></p>
  <ul id="insights"></ul>
- <p class="reflect">At first, the stick helped you return. Later, the rhythm kept going with less effort. What changed when the guides disappeared?</p>
+ <p class="reflect">At first, the beat cued your return to the stick. Later, the external supports faded while attention continued. What changed when the training wheels fell away?</p>
  <h3>Your worries are back</h3>
  <div id="worries"></div>
  <p id="worryNote" style="font-size:14px;color:var(--muted)">Untouched, as promised. Pick the one that actually needs you.</p>
  <div class="book">
-  <div class="cover" aria-hidden="true">THE SELF-DRIVING MIND</div>
-  <p>This walk comes from Chapters 8 and 9 of <i>The Self-Driving Mind</i>, about giving a restless mind something to hold. <a href="https://theselfdrivingmind.com/book/" target="_blank" rel="noopener">Read about the book</a> or <a href="https://www.barnesandnoble.com/w/the-self-driving-mind-sundar-rajan/1151506645?ean=9798895741986" target="_blank" rel="noopener">pre-order at Barnes&nbsp;&amp;&nbsp;Noble</a>.</p>
+  <a href="https://theselfdrivingmind.com/book/" target="_blank" rel="noopener" aria-label="Explore The Self-Driving Mind"><img src="/book/book-cover.jpg" alt="The Self-Driving Mind by Sundar Rajan" width="90" height="135" loading="lazy" style="display:block;width:90px;height:auto;border-radius:4px"></a>
+  <p>This walk comes from Chapters 8 and 9 of <i>The Self-Driving Mind</i>, about giving a restless mind something to hold. <a href="https://theselfdrivingmind.com/book/" target="_blank" rel="noopener">Read about the book</a> or <a href="https://www.barnesandnoble.com/w/the-self-driving-mind-sundar-rajan/1151506645?ean=9798895741986" target="_blank" rel="noopener">Find the book at Barnes&nbsp;&amp;&nbsp;Noble</a>.</p>
  </div>
  <h3>Send someone ten quiet minutes</h3>
  <form id="shareForm" class="shareRow" autocomplete="off">
@@ -374,12 +433,12 @@ const FROM = cleanName(QS.get('from'));
 /* ---------------------------------------------------------------- content */
 const GATES = [
  {place:'Outside the gates', task:'Lesson'},
- {place:'The bazaar', task:'Give attention a task', line:'The trunk reaches for everything. Give it one thing to hold.', yoga:'Yama & Niyama', gloss:'the ground rules: patience, and some kindness toward yourself'},
+ {place:'The bazaar', task:'Give attention a task', line:'Give the trunk one thing to hold. The stick is a support for attention—an ālambanam.', yoga:'Yama & Niyama', gloss:'the ground rules: patience, and some kindness toward yourself'},
  {place:'The cloth market', task:'Return gently', line:'It wandered. You noticed. Bring it back without a struggle.', yoga:'Āsana', gloss:'a steady seat. A settled base makes coming back easier'},
- {place:'The gateway courts', task:'Find the rhythm', line:'Let the body settle. Let the rhythm give attention a place to rest.', yoga:'Prāṇāyāma', gloss:'regulated rhythm. The pulse here is an analogy, not a breathing exercise'},
+ {place:'The gateway courts', task:'Find the rhythm', line:'The beat is a cue to return gently to your anchor. You don’t need to match your breathing to it.', yoga:'Prāṇāyāma', gloss:'regulated rhythm. The pulse here is an analogy, not a breathing exercise'},
  {place:'The stone corridor', task:'Make the agreement', line:'Nothing needs solving right now.', yoga:'Pratyāhāra', gloss:'pulling the senses in. The market can stay; it just stops pulling'},
  {place:'The pillared hall', task:'Keep one place for attention', line:'The worry has a place. Leave it there, and come back to the stick.', yoga:'Dhāraṇā', gloss:'holding attention on one point'},
- {place:'The lamp-lit passage', task:'Let go of the controls', line:'The rhythm is steady. Let go of the controls and let the current carry you.', yoga:'toward Dhyāna', gloss:'continuity grows as corrections get rarer'},
+ {place:'The lamp-lit passage', task:'Let go of the controls', line:'The guides grow quieter. The supports fall away; attention remains. Let the inward current carry you.', yoga:'toward Dhyāna', gloss:'continuity grows as corrections get rarer'},
  {place:'The sanctum', task:'Keep walking, add nothing', line:'Movement continues. You don’t need to add anything.', yoga:'Dhyāna', gloss:'attention that keeps flowing on its own'}
 ];
 /* Thoughts come in three flavours. Each walk draws a fresh mix: 6 drift past in gates 1–3,
@@ -757,7 +816,7 @@ class JourneyController{
   $('gateName').textContent=`Gate ${stage} of 7`; $('gateSub').textContent=g.place;
   const yoga=`Yoga link (my interpretation): <b>${g.yoga}</b>, ${g.gloss}.`;
   const eyebrow = stage===1 ? 'Gate 1 of 7 · Prakāra 1 (one of the temple’s seven walled rings)' : `Gate ${stage} of 7 · Prakāra ${stage}`;
-  if(stage!==4) gateCard(eyebrow, g.place, g.line, yoga, stage===1?5000:4000);
+  if(stage!==4) gateCard(eyebrow, g.place, g.line, yoga, stage===6?7200:stage===1?6500:4000);
   audio.bell([196,220,247,262,294,330,392][stage-1], .085); audio.whoosh();
   updateSupportsUI(stage, true);
   if(stage===2) setTimeout(()=>{ // scripted gentle distraction from the cloth stalls, after the gate title fades
@@ -774,7 +833,7 @@ class JourneyController{
    hideHint(); $('laterBtn').hidden=true; concerns.active.forEach(t=>concerns.shelve(t,true));
    this.faintAt=movement.time+6;
    banner('Let the rhythm carry you. Steering off. Wheels off in three… two…',4200);
-   setTimeout(()=>{ if(this.stage>=6){ this.wheelsOff=true; world.popWheels(); audio.click(); setTimeout(()=>audio.thunk(),650); banner('Training wheels off. Still walking.',4500); } },3000);
+   setTimeout(()=>{ if(this.stage>=6){ this.wheelsOff=true; world.popWheels(); audio.click(); setTimeout(()=>audio.thunk(),650); banner('The supports fall away. Attention remains.',6000); } },3000);
    $('returnBtn').classList.add('free'); $('returnBtn').firstChild.textContent='Optional';
    $('steerL').classList.add('gone'); $('steerR').classList.add('gone');
   }
@@ -1219,19 +1278,19 @@ function countNote(){
  if(state!=='count' || count>=12) return;
  const note=$('note');
  if(!noteReady){ note.classList.remove('nudge'); void note.offsetWidth; note.classList.add('nudge'); $('countStatus').textContent='Wait for it to land.'; return; }
- count++; audio.coin(); noteReady=false; $('countStatus').textContent=`${count} counted.`;
+ count++; audio.coin(); noteReady=false; note.disabled=true; $('countStatus').textContent=`${count} counted.`;
  note.classList.add('out');
  setTimeout(()=>{
-  if(count>=12){ note.parentElement.hidden=true; $('countStatus').textContent=''; $('countDone').hidden=false; $('countDone').style.display='grid'; $('countLede').hidden=true; attention.value=.6; drawRing(); $('hud').hidden=false; $('countNext').focus(); audio.bell(262,.05); return; }
+  if(count>=12){ $('countTalkBefore').hidden=true; $('countTalkAfter').hidden=false; note.parentElement.hidden=true; $('countStatus').textContent=''; $('countDone').hidden=false; $('countDone').style.display='grid'; $('countLede').hidden=true; attention.value=.6; drawRing(); $('hud').hidden=false; $('countNext').focus(); audio.bell(262,.05); return; }
   note.classList.remove('out'); note.classList.add('in'); $('noteNum').textContent=`${count+1} of 12`;
-  void note.offsetWidth; note.classList.remove('in'); setTimeout(()=>{ noteReady=true; },330);
+  void note.offsetWidth; note.classList.remove('in'); setTimeout(()=>{ noteReady=true; note.disabled=false; },330);
  },300);
 }
 function beginLesson(){
- closeDialog('count'); state='play'; journey.stage=0; journey.stageStart=movement.time; attention.reset();
+ closeDialog('anchorLesson'); state='play'; journey.stage=0; journey.stageStart=movement.time; attention.reset();
  $('hud').hidden=false; $('supports').hidden=false; $('controls').hidden=false; $('pauseBtn').hidden=false; $('beatcue').hidden=false;
  updateSupportsUI(0);
- hint(`${tapWord()} when the circles meet`, ()=>world.stickScreen(), 'That’s you handing the trunk its stick. 0 of 3');
+ hint(`${tapWord()} when the circles meet`, ()=>world.stickScreen(), 'The beat is your return cue. The stick is the anchor. 0 of 3');
  $('returnBtn').focus({preventScroll:true});
 }
 function returnAction(){
@@ -1320,7 +1379,8 @@ function setPaused(p){
 $('openBtn').onclick=start;
 $('note').addEventListener('pointerdown',e=>setInput(e.pointerType==='touch'?'touch':'mouse'));
 $('note').onclick=()=>countNote();
-$('countNext').onclick=beginLesson;
+$('countNext').onclick=()=>{ closeDialog('count'); state='anchor'; openDialog('anchorLesson','anchorStart'); };
+$('anchorStart').onclick=beginLesson;
 // Keyboard returns are handled on keydown for timing; ignore the button's own late keyup "click".
 let keyReturnAt=-9;
 $('returnBtn').onclick=e=>{ if(e.detail===0){ if(now()-keyReturnAt<.8) return; setInput('key'); } returnAction(); };
