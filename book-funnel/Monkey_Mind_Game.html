@@ -458,6 +458,7 @@ function exhale(fill, wave){
   BREATH.phase='out'; BREATH.fill=fill;
   BREATH.outDur = Math.max(0.45, p.outS*fill);
   if(!wave) return;
+  S.missedAt=null;
   S.breaths++;
   var full = fill>=0.85;
   if(DEMO.on && fill>=0.999 && !S.wandered) DEMO.caption('release');
@@ -477,7 +478,7 @@ function breathUpdate(dt){
     if(BREATH.level>=1){ BREATH.level=1; BREATH.phase='full'; BREATH.waitT=0; }
   } else if(BREATH.phase==='full'){
     BREATH.waitT+=dt;
-    if(S && S.tap && BREATH.waitT>2.2) exhale(1,false); // ring keeps breathing; no wave without a tap
+    if(S && S.tap && BREATH.waitT>2.2){ if(!S.waiting){ S.missedAt=S.t; S.fx.push({x:CX, y:CY-U*0.55, text:'missed — tap at the top', color:COL.amber, t:0, life:1.8}); announce('Missed it. Tap when the ring is full.'); } exhale(1,false); } // ring keeps breathing; no wave without a tap
   } else if(BREATH.phase==='out'){
     BREATH.level -= dt*BREATH.fill/BREATH.outDur;
     if(BREATH.level<=0){ BREATH.level=0; BREATH.phase='idle'; BREATH.waitT=0;
@@ -718,7 +719,7 @@ function hud(){
   else if(S.waiting) cue = S.tap ? 'Tap when the ring is full' : (kb?'Hold anywhere, or Space, to breathe in':'Press and hold to breathe in');
   else if(BREATH.phase==='in') { cue='in…'; cls='soft'; }
   else if(BREATH.phase==='full'){ cue=S.tap?'tap to let go':'…and let go'; cls='go'; }
-  else if(BREATH.phase==='out'){ cue='out…'; cls='soft'; }
+  else if(BREATH.phase==='out'){ if(S.tap && S.missedAt!=null && S.t-S.missedAt<2.5){ cue='missed — tap at the top'; } else cue='out…'; cls='soft'; }
   else { cue = S.wandered ? 'one full breath to come back' : 'breathe in'; cls='soft'; }
   var key=cue+cls;
   if(key!==lastCue){ lastCue=key; var el=$('cue'); el.textContent=cue; el.className=cls; el.hidden=!cue; }
@@ -848,8 +849,8 @@ function wrap(c,txt,x,y,maxW,lh){ var words=txt.split(' '), line=''; for(var i=0
   if(c.measureText(tl).width>maxW&&line){ c.fillText(line,x,y); y+=lh; line=words[i]; } else line=tl; } if(line) c.fillText(line,x,y); }
 function saveCard(){
   var cc=document.createElement('canvas'); cc.width=1200; cc.height=630; drawCard(cc.getContext('2d'),1200,630,LASTRESULT);
-  cc.toBlob(function(b){ if(!b) return; var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='monkey-mind-sit.png';
-    document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1000); }, 'image/png');
+  cc.toBlob(function(b){ var btn=$('cardBtn'); if(!b){ btn.textContent='Save failed'; setTimeout(function(){ btn.textContent='Save card'; },2000); return; } var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='monkey-mind-sit.png';
+    document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1000); btn.textContent='Download started ✓'; announce('Card download started.'); setTimeout(function(){ btn.textContent='Save card'; },2000); }, 'image/png');
 }
 
 /* ---------- settings UI ---------- */
