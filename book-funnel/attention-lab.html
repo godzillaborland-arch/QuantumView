@@ -17,7 +17,7 @@
 const trailers={
 'monkey-mind':{title:'Monkey Mind',play:'Monkey_Mind_Game.html?demo=off',cta:'Play Monkey Mind'},
 'srirangam-corridor':{title:'The Srirangam Corridor',play:'srirangam-corridor.html',cta:'Enter the corridor'},
-'spawn-srirangam':{title:'Srirangam — God in Exile',play:'https://www.spawn.co/@self_driving_mind/srirangam-god-in-exile/play',cta:'Play on Spawn ↗',external:true,captions:false,version:'reviews-20261116'},
+'spawn-srirangam':{title:'Srirangam — God in Exile',play:'https://www.spawn.co/@self_driving_mind/srirangam-god-in-exile/play',cta:'Play on Spawn ↗',external:true,captions:false,version:'reviews-20261117',file:'spawn-srirangam-reviews-20261117'},
 'attention-lab':{title:'The Attention Lab overview',play:'#experiments',cta:'Choose an experience'}};
 const dialog=document.getElementById('trailer-dialog'),video=document.getElementById('trailer-video'),play=document.getElementById('trailer-play');
 const startButton=document.getElementById('trailer-start');
@@ -28,7 +28,7 @@ function openTrailer(key){
  const t=trailers[key];if(!t)return;startButton.hidden=true;
  opener=document.querySelector('[data-trailer="'+key+'"]');
  document.getElementById('trailer-title').textContent=t.title;
- video.pause();video.replaceChildren();video.src='trailers/'+key+'.mp4'+(t.version?'?v='+t.version:'');video.poster='trailers/'+key+'.jpg'+(t.version?'?v='+t.version:'');
+ video.pause();video.replaceChildren();video.src='trailers/'+(t.file||key)+'.mp4'+(t.version?'?v='+t.version:'');video.poster='trailers/'+(t.file||key)+'.jpg'+(t.version?'?v='+t.version:'');
  if(t.captions!==false){const track=document.createElement('track');track.kind='captions';track.srclang='en';track.label='English';track.src='trailers/'+key+'.vtt';video.append(track);}
  play.href=t.play;play.textContent=t.cta;play.target=t.external?'_blank':'_self';play.rel=t.external?'noopener noreferrer':'';
  document.getElementById('trailer-download').href=video.src;
