@@ -8,7 +8,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="The Self-Driving Mind">
   <meta property="og:title" content="Play | The Self-Driving Mind">
-  <meta property="og:description" content="Seven games inspired by The Self-Driving Mind, from a 3D highway to Dhyāna and the monkey mind to Vijayanagara.">
+  <meta property="og:description" content="Eight games inspired by The Self-Driving Mind, from a 3D highway to Dhyāna and the monkey mind to Vijayanagara.">
   <meta property="og:url" content="https://theselfdrivingmind.com/games.html">
   <meta property="og:image" content="https://theselfdrivingmind.com/highway3d/og.jpg">
   <meta property="og:image:type" content="image/jpeg">
@@ -84,6 +84,13 @@
     .book-bridge p { max-width:720px; margin:0 auto 25px; color:#c5d0d9; line-height:1.7; }
     footer { border-top:1px solid rgba(255,255,255,.08); padding:30px 0 45px; color:#91a4b4; font-size:.9rem; }
     .foot { display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+    /* Desktop: 6 half-tracks so a short last row (1 or 2 cards) sits centered */
+    @media (min-width:951px) {
+      .grid { grid-template-columns:repeat(6,minmax(0,1fr)); }
+      .game-card { grid-column:span 2; }
+      .game-card:nth-child(3n+1):nth-last-child(2) { grid-column:2 / span 2; }
+      .game-card:nth-child(3n+1):last-child { grid-column:3 / span 2; }
+    }
     @media (max-width:950px) {
       .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
     }
@@ -114,7 +121,7 @@
   <section class="hero wrap">
     <div class="eyebrow">Interactive Experiences</div>
     <h1>Don’t Just Read.<br>Enter the Journey.</h1>
-    <p>Seven games inspired by <em>The Self-Driving Mind</em>—from driving the 3D highway to Dhyāna and calming the monkey mind to navigating a lost passport, calibrating the inner vehicle, rescuing Srirangam Namperumal, and entering the world of Vijayanagara.</p>
+    <p>Eight games inspired by <em>The Self-Driving Mind</em>—from driving the 3D highway to Dhyāna and calming the monkey mind to navigating a lost passport, calibrating the inner vehicle, rescuing Srirangam Namperumal, and entering the world of Vijayanagara.</p>
     <div class="hero-actions">
       <a class="button" href="#games">Choose a Game <span>↓</span></a>
       <a class="button secondary" href="https://theselfdrivingmind.com/tesla-dhyana-blog.html">Explore the Book</a>
@@ -182,7 +189,21 @@
         <a class="button" href="https://theselfdrivingmind.com/quantum-encounter/" target="_blank" rel="noopener">Play Game <span>→</span></a>
       </div>
     </article>
-    
+
+    <article class="game-card">
+      <a class="game-image" href="https://theselfdrivingmind.com/book-funnel/quantum-encounter.html" target="_blank" rel="noopener">
+        <img src="book-funnel/Screenshot2026-06-14.png" alt="Quantum Encounter: The Reconstruction game preview">
+        <span class="play-mark" aria-hidden="true">▶</span>
+      </a>
+      <div class="game-copy">
+        <div class="tag">Four Puzzles</div>
+        <h2>Quantum Encounter: The Reconstruction</h2>
+        <p class="kicker">Rebuild the 1978 Encounter</p>
+        <p>True/False, word search, fill in the blank and a crossword about a skeptical engineer, a Siddha Purusha, and a capacity that survived 45 years of neglect.</p>
+        <a class="button" href="https://theselfdrivingmind.com/book-funnel/quantum-encounter.html" target="_blank" rel="noopener">Play Game <span>→</span></a>
+      </div>
+    </article>
+
 
     <article class="game-card">
       <a class="game-image" href="https://theselfdrivingmind.com/book-funnel/Sensor_Calibration.html" target="_blank" rel="noopener">
