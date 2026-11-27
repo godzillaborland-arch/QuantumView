@@ -86,7 +86,7 @@
     .sub { font-size: 14px; }
     #globe { width: 82%; margin: 0 auto; }
   }
-</style>
+.response-context{font:12px/1.5 Inter,sans-serif;color:#66727b;margin-top:12px;padding-top:10px;border-top:1px solid #e1ddd4}</style>
 </head>
 <body>
 
@@ -94,7 +94,7 @@
   <div class="stage-inner">
     <p class="kicker">Global voices</p>
     <h1>The Self-Driving Mind</h1>
-    <p class="sub">Readers around the world on Sundar Rajan's debut</p>
+    <p class="sub">22 voices from 11 countries · Readers around the world</p>
     <canvas id="globe" aria-label="Rotating globe with endorsement locations"></canvas>
     <p class="hint">Tap a pin or drag to explore</p>
   </div>
@@ -108,6 +108,7 @@
     <p class="quote" id="card-quote"></p>
     <p class="name" id="card-name"></p>
     <p class="title" id="card-title"></p>
+    <p class="response-context" id="card-context"></p>
   </div>
 
   <div class="cta-row">
@@ -123,51 +124,229 @@
 <script>
 (function () {
   var E = [
-   {name:"Dr. Niveditha Preeth", title:"Co-Author, The Life of Tolka", loc:"Toronto, Canada", chip:"Dr. Preeth", lat:43.65, lon:-79.38,
-    quote:"The Self-Driving Mind succeeds in building a remarkable bridge between Silicon Valley technology and classical Advaita Vedanta. The Tesla analogy is original, compelling, and one of the manuscript's greatest strengths. Sundar Rajan presents profound contemplative ideas in a way that is both intellectually engaging and accessible to modern readers."},
-   {name:"Adriana Pagotti D'Angelo", title:"IT Initiatives & Projects Specialist", loc:"São Paulo, Brazil", chip:"Adriana", lat:-23.55, lon:-46.63,
-    quote:"The Self-Driving Mind is more than a book—it is a guide you can return to throughout your life. Sundar Rajan offers a practical and accessible way to understand meditation and cultivate a calmer, more focused mind. His perspective is refreshing, clear, and encouraging. Instead of trying to control the mind, he invites us to observe our thoughts and feelings with greater clarity and ease. I recommend reading this book—and putting its ideas into practice."},
-   {name:"Viridiana", title:"Personal Transformation Designer & Energy Alignment Therapist", loc:"Yucatán, Mexico", chip:"Viridiana", lat:20.97, lon:-89.62,
-    quote:"I come from the corporate world and from a life of subtle perception, and I know how frustrating it is to believe that stillness must be earned through sheer discipline. Sundar Rajan proposes something different: <b>peace isn't conquered; it is received.</b> A fresh and provocative bridge between the skeptical mind and spiritual experience, for those who meditate 'well' and still don't arrive."},
-   {name:"Dr Sivasubramanian", title:"International Security Consultant", loc:"Sydney, Australia", chip:"Dr Sivasubramanian", lat:-33.87, lon:151.21,
-    quote:"Lovely writing. It flows like a brook with lilts."},
-   {name:"MeiMei Fox", title:"2x New York Times Bestselling Author & Forbes Contributor", loc:"Hawaii, USA", chip:"MeiMei Fox", lat:21.31, lon:-157.86,
-    quote:"Sundar Rajan is a thoughtful writer… [whose] book sits at the intersection of Eastern spiritual wisdom, neuroscience, and modern technology. You can read his lovely Substack post about losing his passport in Tokyo to get a feel for his voice, and his prose is quite lovely."},
-   {name:"Krishnamachari 'Kris' Srikkanth", title:"World Cup 1983 Winner · Former Indian Cricket Captain", loc:"India", chip:"Kris Srikkanth", lat:13.08, lon:80.27,
-    quote:"I've known Sundar Rajan for over thirty years, and he's always been someone who sees things from a different angle. In The Self-Driving Mind, he brings together modern technology and timeless wisdom in an interesting and accessible way. Typical Sundar—inviting us to see the mind differently. I wish him every success with the book."},
-   {name:"Dr. Jeffery D. Long", title:"Carl W. Zeigler Professor of Religion, Philosophy & Asian Studies · Elizabethtown College", loc:"Pennsylvania, USA", chip:"Dr. Long", lat:40.9, lon:-77.8,
-    quote:"In The Self-Driving Mind, Sundar Rajan offers a brilliantly contemporary manual for an ancient human challenge: mastering the restless mind. By using the technical and philosophical parallels of autonomous driving technology as a metaphor for classical Dhyana, Rajan masterfully deconstructs the paradox of meditation—showing that true stillness is not achieved by forced control, but by setting a deep internal direction and surrendering to the flow of awareness. With deep roots in the Vedanta tradition and a sharp technologist's lens, this book bridges ancient insight with modern life in a way that is profoundly practical, deeply encouraging, and radically original."},
-   {name:"Joe P.", title:"Professional Book Editor · 30 Years in Fiction & Nonfiction", loc:"Chicago, USA", chip:"Joe P.", lat:41.88, lon:-87.63,
-    quote:"I've read through your sample chapter, and I definitely think it shows style and skill. It's not often I see a subject that I've never seen before, but yours is definitely new and exciting. I'm curious to see what your theories are."},
-   {name:"Balasuryan", title:"Owner, Software Services Company", loc:"Boston, USA", chip:"Balasuryan", lat:42.36, lon:-71.06,
-    quote:"Really enjoying it, flows well… <b>we are using it in our study groups.</b>"},
-   {name:"Tim Lyashenko", title:"", loc:"Moscow, Russia", chip:"Tim Lyashenko", lat:55.75, lon:37.62,
-    quote:"I have known the author for almost a decade. Our periodic conversations always spark positive and thought-provoking ideas. I believe this book can be of great help to anyone looking to learn something from the author's life journey."},
-   {name:"Shobha N.", title:"Head of Engineering, AI · Merck", loc:"Germany", chip:"Shobha N.", lat:51.16, lon:10.45,
-    quote:"Nicely written. I can surely spread the word amongst my contacts."},
-   {name:"Ram", title:"After a webinar on Yoga in Advaita", loc:"Ahmedabad, India", chip:"Ram", lat:23.02, lon:72.57,
-    quote:"A very good resonance—the vibe matched really well. It articulated exactly what had been on my mind. A very happy day."},
-   {name:"Gam Thai", title:"Reader Reaction · The Tokyo Passport Story", loc:"Vietnam", chip:"Gam Thai", lat:14.06, lon:108.28,
-    quote:"This story brought back memories of when I lost my own passport—so much stress and panic at the time, but something I can laugh about now. Looking back, I wish I'd stayed a little more calm and collected! Such a fun and relatable story."},
-   {name:"Harinee M", title:"UIUC, CEG’24", loc:"Sunnyvale, California", chip:"Harinee M", lat:37.37, lon:-122.04,
-    quote:"Chapter one is a total cliffhanger. I felt every bit of what Sundar describes—the composure in a crisis, and the scattered mind underneath it once the crisis passes. This book is already pointing me toward the answers."},
-   {name:"Gopikrishna M.", title:"Co-Founder, MVPServ · On the Lost Passport essay", loc:"Bay Area, California", chip:"Gopikrishna", lat:37.2, lon:-122.6,
-    quote:"Amazing."},
-   {name:"Alexander Thomson", title:"Senior Cybersecurity Engineer", loc:"Sacramento, California", chip:"A. Thomson", lat:39.2, lon:-121.6,
-    quote:"I like the premise of your book, and it's consistent with my own experience."},
-   {name:"Srinivasan", title:"Retired Intel Executive", loc:"Granite Bay, California", chip:"Srinivasan", lat:41.2, lon:-120.6,
-    quote:"An illuminating historical narrative connecting Srirangam and the Vijayanagara establishment—I highly appreciate the engaging way you have written it."},
-   {name:"Paulina", title:"", loc:"Santiago, Chile", chip:"Paulina", lat:-33.45, lon:-70.67,
-    quote:"Sundar's insightful thoughts can be of positive help for anyone who is looking to both learn and explore a mindful journey we call 'life.'"},
-   {name:"A reader in Auckland", title:"", loc:"Auckland, New Zealand", chip:"Auckland", lat:-36.85, lon:174.76,
-    quote:"A Reiki practitioner and traveler to Nepal and Tibet, drawn to the book and eager to read it."},
-   {name:"A reader in Wellington", title:"", loc:"Wellington, New Zealand", chip:"Wellington", lat:-41.29, lon:174.78,
-    quote:"An engineer who studied at the College of Engineering, Guindy, in the 1970s—now looking forward to the book."},
-   {name:"Suresh V.", title:"Consulting Member, Cloud Development · Oracle", loc:"Seattle, USA", chip:"Suresh V.", lat:47.61, lon:-122.33,
-    quote:"Listened to the YouTube presentation. Very nice—good presentation."},
-   {name:"V. Subrahmanyan", title:"Advaita Scholar & Speaker", loc:"Bangalore, India", chip:"V. Subrahmanyan", lat:12.97, lon:77.59,
-    quote:"The Self-Driving Mind presents the ancient quest for inner stillness in a remarkably contemporary language. It approaches the timeless wisdom of Vedānta without burdening the reader with doctrinal terminology—through personal experience, rational inquiry and vivid contemporary analogies. The author's journey from scepticism to a deeper appreciation of meditation gives the narrative both authenticity and freshness. A welcome bridge between the timeless contemplative tradition and the language of the modern world."}
-  ];
+  {
+    "name": "Dr. Niveditha Preeth",
+    "title": "Co-Author, The Life of Tolka (with Dr. Nitin Chopra)",
+    "loc": "Toronto, Canada",
+    "chip": "Dr. Preeth",
+    "lat": 43.65,
+    "lon": -79.38,
+    "quote": "The Self-Driving Mind succeeds in building a remarkable bridge between Silicon Valley technology and classical Advaita Vedanta. The Tesla analogy is original, compelling, and one of the manuscript’s greatest strengths. Sundar Rajan presents profound contemplative ideas in a way that is both intellectually engaging and accessible to modern readers.",
+    "context": "Reader response"
+  },
+  {
+    "name": "Adriana Pagotti D'Angelo",
+    "title": "IT Initiatives & Projects Specialist",
+    "loc": "São Paulo, Brazil",
+    "chip": "Adriana",
+    "lat": -23.55,
+    "lon": -46.63,
+    "quote": "The Self-Driving Mind is more than just a book—it’s one you’ll want to revisit throughout your life. In this book, Sundar Rajan offers a practical and accessible way to understand meditation and, more importantly, how to cultivate a calmer, more focused mind. We often hear about mindfulness, but many of us wonder: Can I really achieve it? This book offers a refreshing perspective. Instead of trying to force or control the mind, Sundar invites us to observe our thoughts and feelings with greater clarity and ease. His approach combines modern technology with timeless wisdom, making profound ideas surprisingly practical and relatable. I recommend reading this book—and putting its ideas into practice. I’m doing exactly that myself!",
+    "context": "Reader response"
+  },
+  {
+    "name": "Viridiana",
+    "title": "Personal Transformation Designer & Energy Alignment Therapist",
+    "loc": "Yucatán, Mexico",
+    "chip": "Viridiana",
+    "lat": 20.97,
+    "lon": -89.62,
+    "quote": "Beautiful, so interesting, and very enriching.",
+    "context": "Reader response"
+  },
+  {
+    "name": "Dr. Sivasubramanian",
+    "title": "International Security Consultant",
+    "loc": "Sydney, Australia",
+    "chip": "Dr. Sivasubramanian",
+    "lat": -33.87,
+    "lon": 151.21,
+    "quote": "Lovely writing. It flows like a brook with lilts.",
+    "context": "Reader response"
+  },
+  {
+    "name": "MeiMei Fox",
+    "title": "2x New York Times Bestselling Author & Forbes Contributor",
+    "loc": "Hawaii, USA",
+    "chip": "MeiMei Fox",
+    "lat": 21.31,
+    "lon": -157.86,
+    "quote": "Sundar Rajan is a thoughtful writer whose book sits at the intersection of Eastern spiritual wisdom, neuroscience, and modern technology... his prose is quite lovely.",
+    "context": "On the Tokyo passport story"
+  },
+  {
+    "name": "Krishnamachari 'Kris' Srikkanth",
+    "title": "World Cup 1983 Winner · Former Indian Cricket Captain",
+    "loc": "India",
+    "chip": "Kris Srikkanth",
+    "lat": 13.08,
+    "lon": 80.27,
+    "quote": "I’ve known Sundar Rajan for over thirty years, and he has always had a curious mind and a way of looking at familiar things from a different angle. In The Self-Driving Mind, he brings together modern technology and timeless wisdom in an interesting and accessible way. Typical Sundar—inviting us to see the mind differently. I wish him every success with the book.",
+    "context": "Reader response"
+  },
+  {
+    "name": "Dr. Jeffery D. Long",
+    "title": "Carl W. Zeigler Professor of Religion, Philosophy, and Asian Studies · Elizabethtown College",
+    "loc": "Pennsylvania, USA",
+    "chip": "Dr. Long",
+    "lat": 40.9,
+    "lon": -77.8,
+    "quote": "In The Self-Driving Mind, Sundar Rajan offers a brilliantly contemporary manual for an ancient human challenge: mastering the restless mind. By using the technical and philosophical parallels of autonomous driving technology as a metaphor for classical Dhyāna, Rajan masterfully deconstructs the paradox of meditation—showing that true stillness is not achieved by forced control, but by setting a deep internal direction and surrendering to the flow of awareness. With deep roots in the Vedanta tradition and a sharp technologist’s lens, this book bridges ancient insight with modern life in a way that is profoundly practical, deeply encouraging, and radically original.",
+    "context": "Reader response"
+  },
+  {
+    "name": "Joe P.",
+    "title": "Professional Book Editor · 30 Years in Fiction & Nonfiction",
+    "loc": "Chicago, USA",
+    "chip": "Joe P.",
+    "lat": 41.88,
+    "lon": -87.63,
+    "quote": "I’ve read through your sample chapter, and I definitely think it shows style and skill. It’s not often I see a subject that I’ve never seen before, but yours is definitely new and exciting.",
+    "context": "On a sample chapter"
+  },
+  {
+    "name": "Balasuryan",
+    "title": "Owner, Software Services Company",
+    "loc": "Boston, USA",
+    "chip": "Balasuryan",
+    "lat": 42.36,
+    "lon": -71.06,
+    "quote": "Really enjoying it, flows well... we are reading your book in our Study Group.",
+    "context": "Reader response"
+  },
+  {
+    "name": "Tim Lyashenko",
+    "title": "",
+    "loc": "Moscow, Russia",
+    "chip": "Tim Lyashenko",
+    "lat": 55.75,
+    "lon": 37.62,
+    "quote": "I have known the author for almost a decade. Our periodic conversations always spark positive and thought-provoking ideas. I believe this book can be of great help to anyone looking to learn something from the author’s life journey.",
+    "context": "Reader response"
+  },
+  {
+    "name": "Shobha N.",
+    "title": "Head of Engineering, AI · Merck",
+    "loc": "Germany",
+    "chip": "Shobha N.",
+    "lat": 51.16,
+    "lon": 10.45,
+    "quote": "Nicely written. I can surely spread the word amongst my contacts.",
+    "context": "Reader response"
+  },
+  {
+    "name": "Ram",
+    "title": "After a webinar on Yoga in Advaita",
+    "loc": "Ahmedabad, India",
+    "chip": "Ram",
+    "lat": 23.02,
+    "lon": 72.57,
+    "quote": "A very good resonance—the vibe matched really well. It articulated exactly what had been on my mind. A very happy day.",
+    "context": "On a webinar about Yoga in Advaita"
+  },
+  {
+    "name": "Gam Thai",
+    "title": "HR Executive",
+    "loc": "Vietnam",
+    "chip": "Gam Thai",
+    "lat": 14.06,
+    "lon": 108.28,
+    "quote": "This story brought back memories of when I lost my own passport—so much stress and panic at the time, but something I can laugh about now. Looking back, I wish I'd stayed a little more calm and collected! Such a fun and relatable story.",
+    "context": "On the Tokyo passport story"
+  },
+  {
+    "name": "Harinee M",
+    "title": "UIUC, CEG’24",
+    "loc": "Sunnyvale, California",
+    "chip": "Harinee M",
+    "lat": 37.37,
+    "lon": -122.04,
+    "quote": "Chapter one is a total cliffhanger. I felt every bit of what Sundar describes—the composure in a crisis, and the scattered mind underneath it once the crisis passes. This book is already pointing me toward the answers.",
+    "context": "On the Tokyo passport story"
+  },
+  {
+    "name": "Gopikrishna M.",
+    "title": "Co-Founder, MVPServ · On the Lost Passport essay",
+    "loc": "Bay Area, California",
+    "chip": "Gopikrishna",
+    "lat": 37.2,
+    "lon": -122.6,
+    "quote": "Amazing.",
+    "context": "On the Tokyo passport story"
+  },
+  {
+    "name": "Alexander Thomson",
+    "title": "Senior Cybersecurity Engineer",
+    "loc": "Sacramento, California",
+    "chip": "A. Thomson",
+    "lat": 39.2,
+    "lon": -121.6,
+    "quote": "I like the premise of your book and it’s consistent with my own experience.",
+    "context": "Reader response"
+  },
+  {
+    "name": "Srinivasan",
+    "title": "Retired Intel Executive",
+    "loc": "Granite Bay, California",
+    "chip": "Srinivasan",
+    "lat": 41.2,
+    "lon": -120.6,
+    "quote": "An illuminating historical narrative connecting Srirangam and the Vijayanagara establishment—I highly appreciate the engaging way you have written it.",
+    "context": "On the Srirangam historical essay"
+  },
+  {
+    "name": "Paulina",
+    "title": "",
+    "loc": "Santiago, Chile",
+    "chip": "Paulina",
+    "lat": -33.45,
+    "lon": -70.67,
+    "quote": "Sundar’s insightful thoughts can be of positive help for anyone who is looking to both learn and explore a mindful journey we call ‘life.’",
+    "context": "Reader response"
+  },
+  {
+    "name": "A reader in Auckland",
+    "title": "",
+    "loc": "Auckland, New Zealand",
+    "chip": "Auckland",
+    "lat": -36.85,
+    "lon": 174.76,
+    "quote": "A Reiki practitioner and traveler to Nepal and Tibet, drawn to the book and eager to read it.",
+    "context": "Looking forward to reading · summary",
+    "summary": true
+  },
+  {
+    "name": "A reader in Wellington",
+    "title": "",
+    "loc": "Wellington, New Zealand",
+    "chip": "Wellington",
+    "lat": -41.29,
+    "lon": 174.78,
+    "quote": "An engineer who studied at the College of Engineering, Guindy, in the 1970s—now looking forward to the book.",
+    "context": "Looking forward to reading · summary",
+    "summary": true
+  },
+  {
+    "name": "Suresh V.",
+    "title": "Consulting Member, Cloud Development · Oracle",
+    "loc": "Seattle, USA",
+    "chip": "Suresh V.",
+    "lat": 47.61,
+    "lon": -122.33,
+    "quote": "Listened to the YouTube presentation. Very nice—good presentation.",
+    "context": "On a YouTube presentation"
+  },
+  {
+    "name": "V. Subrahmanyan",
+    "title": "Advaita Scholar & Speaker",
+    "loc": "Bangalore, India",
+    "chip": "V. Subrahmanyan",
+    "lat": 12.97,
+    "lon": 77.59,
+    "quote": "The Self-Driving Mind presents the ancient quest for inner stillness in a remarkably contemporary language. It approaches the timeless wisdom of Vedānta without burdening the reader with doctrinal terminology—through personal experience, rational inquiry and vivid contemporary analogies. The author's journey from scepticism to a deeper appreciation of meditation gives the narrative both authenticity and freshness. A welcome bridge between the timeless contemplative tradition and the language of the modern world.",
+    "context": "Reader response"
+  }
+];
 
   var POLY = [
    [[-168,66],[-140,70],[-125,70],[-110,73],[-95,72],[-80,73],[-70,62],[-55,52],[-65,45],[-75,40],[-76,35],[-81,31],[-81,25],[-90,29],[-97,26],[-97,20],[-105,20],[-110,23],[-114,28],[-124,40],[-125,49],[-135,58],[-153,58],[-166,54]],
@@ -343,9 +522,10 @@
   function paint(i) {
     var e = E[i];
     elLoc.textContent = e.loc;
-    elQuote.innerHTML = '\u201C' + e.quote + '\u201D';
+    elQuote.textContent = e.summary ? e.quote : '“' + e.quote + '”';
     elName.textContent = '\u2014 ' + e.name;
     elTitle.textContent = e.title;
+    document.getElementById("card-context").textContent = e.context;
     elTitle.style.display = e.title ? 'block' : 'none';
     var btns = chipBox.children;
     for (var j = 0; j < btns.length; j++) {
@@ -428,5 +608,6 @@
   requestAnimationFrame(frame);
 })();
 </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"e820c071f401465e971b11ea74e9f6c4","r":1,"spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
